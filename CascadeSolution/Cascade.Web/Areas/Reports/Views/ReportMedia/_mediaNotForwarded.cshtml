@@ -1,0 +1,50 @@
+﻿@model IList<Cascade.Data.Models.MediaViewEditResult>
+@using Cascade.Web.Presentation.ExtensionMethods
+
+<link href="@Url.Content("~/Content/dataTables/demo_table.css")" rel="stylesheet" type="text/css" />
+
+<script src="~/Scripts/datatable/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/index.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/jquery.dataTables.min.js" type="text/javascript"></script>
+
+<h2>Report: Media Not Forwarded  &nbsp;
+
+      @if (Model.Count > 0)
+      {
+        <a href="@Url.Action("Export", new { ReportType = @ViewBag.ReportType })"><img src="@Url.Content("~/Images/excel.jpg")" alt="Export To Excel" /></a>
+      }
+
+</h2>
+
+<div id="divMediaNotForwarded">
+    <table id="mediaNotForwarded" class="display">
+        <thead>
+            <tr> 
+                <th></th>
+                <th>PIMS Account#</th>
+                <th>Portfolio#</th>
+                <th>Lender</th>
+                <th>Name</th>
+            </tr> 
+        </thead> 
+        <tbody> 
+            @foreach (var mediaNotForwarded in Model)
+            {
+                <tr>
+                    <td>@Html.ActionLink("View", "Details", "ReportMedia", new { area = "Recourse", id = mediaNotForwarded.ID }, null)</td>
+                    <td>@mediaNotForwarded.PIMSAcct</td>
+                    <td>@mediaNotForwarded.Portfolio</td>
+                    <td>@mediaNotForwarded.OriginalLender</td>
+                    <td>@mediaNotForwarded.AcctName</td>
+                </tr> 
+            }
+        </tbody>
+        @*Hidden fields for the Export to excel*@
+        <tr>
+            <td>
+                @Html.Hidden("reportType",(string)(@ViewBag.ReportType))
+            </td>
+        </tr>
+        
+    </table>
+</div>

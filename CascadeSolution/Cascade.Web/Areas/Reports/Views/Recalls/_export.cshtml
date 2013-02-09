@@ -1,0 +1,118 @@
+﻿@model IList<Cascade.Data.Models.RecallViewEditResult>
+@using Cascade.Web.Presentation.ExtensionMethods
+
+  @if (@ViewBag.ReportType == "RecallsUpload")
+  {
+     <h2>Recalls Upload Records:</h2> 
+  }
+  else if (@ViewBag.ReportType == "RecallsNotClosed")
+  {
+     <h2>Recalls Not Closed Records:</h2> 
+  }
+  else if (@ViewBag.ReportType == "RecallsNoNoteSent")
+  {
+     <h2>Recalls No Note Sent Records:</h2> 
+  }
+  else if (@ViewBag.ReportType == "RecallsNotUploaded")
+  {
+     <h2>Recalls Not Uploaded Records:</h2> 
+  }
+  else if (@ViewBag.ReportType == "AddSellerCheck")
+  {
+     <h2>Add Seller Check Records:</h2> 
+  }
+  else
+  {
+     <h2>Recall Records:</h2> 
+  }
+
+
+
+<style type="text/css">
+    body {font-family: Arial;}
+    .heading { font-weight:bold}
+    .specialtd { mso-number-format:"0"; }
+</style>
+
+<div id="divRecallRecords">
+    <table id="recallRecords" border="1">
+        <thead>
+            <tr> 
+                
+                <th>Portfolio#</th>
+                <th>Facevalue</th>
+                <th>CostBasis</th>
+                <th>SalesBasis</th>
+                <th>AmtReceivable</th>
+                <th>AmtPayable</th>
+                
+
+                <th>Date</th>
+                <th>Uploaded Date</th>
+                <th>Date Note Sent</th>
+                <th>Acct Closed Date</th>
+                <th>Name</th>
+                <th>Original Account</th>
+                <th>PIMS Account</th>
+                <th>Unique ID #</th>
+
+
+                <th>CurrentResp</th>
+                <th>RecallReason</th>
+                <th>NewStatus</th>
+                <th>NewResp</th>
+                <th>CheckNumber</th>
+                <th>Invoice</th>
+                <th>Explanation</th>
+                <th>SellerCheck</th>
+                <th>Putback</th>
+                <th>Seller</th>
+
+            </tr> 
+        </thead> 
+        <tbody> 
+            @foreach (var recallRecord in Model)
+            {
+                <tr>
+                    
+                    <td>@recallRecord.Portfolio</td>
+                    <td>@recallRecord.FaceValueofAcct.ToIntegerCurrency()</td>
+
+                    <td>@recallRecord.CostBasis.ToIntegerCurrency()</td>
+                    <td>@recallRecord.SalesBasis.ToIntegerCurrency()</td>
+                    <td>@recallRecord.AmtReceivable.ToIntegerCurrency()</td>
+                    <td>@recallRecord.AmtPayable.ToIntegerCurrency()</td>
+
+                    <td>@recallRecord.Date.ConverToDate()</td>
+                    <td>@recallRecord.UploadedDate.ConverToDate()</td>
+
+                    <td>@recallRecord.DateNoteSent.ConverToDate()</td>
+                    <td>@recallRecord.DateAcctClosed.ConverToDate()</td>
+                    <td>@recallRecord.AcctName</td>
+                    <td class="specialtd">@recallRecord.OrigAcct</td>
+                    <td class="specialtd">@recallRecord.PIMSAcct</td>
+                    <td>@recallRecord.GUID</td>
+
+                     <td>@recallRecord.CurrentResp</td>
+                     <td>@recallRecord.RecallReason</td>
+                     <td>@recallRecord.NewStatus</td>
+                     <td>@recallRecord.NewResp</td>
+                     <td>@recallRecord.CheckNumber</td>
+                     <td>@recallRecord.Invoice</td>
+                     <td>@recallRecord.Explanation</td>
+                     <td>@recallRecord.SellerCheck</td>
+                     <td>@recallRecord.Putback</td>
+                     <td>@recallRecord.Seller</td>
+
+                </tr> 
+            }
+        </tbody>
+        @*Hidden fields for the Report Type*@
+        @Html.Hidden("reportType",(string)(@ViewBag.ReportType))
+        
+    </table>
+</div>
+
+        
+    
+    

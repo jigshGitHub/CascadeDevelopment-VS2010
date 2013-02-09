@@ -1,0 +1,42 @@
+﻿@model IList<Cascade.Data.Models.PortfolioTransactions>
+@using Cascade.Web.Presentation.ExtensionMethods
+
+<link href="@Url.Content("~/Content/dataTables/demo_table.css")" rel="stylesheet" type="text/css" />
+
+<script src="~/Scripts/datatable/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/index.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/jquery.dataTables.min.js" type="text/javascript"></script>
+
+<h2>Report: Portfolio Transactions</h2>
+
+<div id="divPortTransactions">
+    <table id="portTransaction" class="display">
+        <thead>
+            <tr> 
+                <th>Account</th>
+                <th>Portfolio#</th>
+                <th>Responsibility</th>
+                <th>Tran Date</th>
+                <th>Amount</th>
+                <th>Trans Code</th>
+                <th>Tran Source</th>
+                
+            </tr> 
+        </thead> 
+        <tbody> 
+            @foreach (var portTransaction in Model)
+            {
+                <tr>
+                    <td>@portTransaction.ACCOUNT</td>
+                    <td>@portTransaction.PRODUCT_CODE</td>
+                    <td>@portTransaction.Responsibility</td>
+                    <td>@portTransaction.Tran_Date.ConverToDate()</td>
+                    <td>@portTransaction.Amount.ToIntegerCurrency()</td>
+                    <td>@portTransaction.TRAN_CODE</td>
+                    <td>@portTransaction.TRAN_SOURCE</td>
+                </tr> 
+            }
+        </tbody>
+    </table>
+</div>
+

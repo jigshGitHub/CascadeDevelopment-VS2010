@@ -1,0 +1,162 @@
+﻿@model IList<Cascade.Data.Models.ComplianceViewResult>
+@using Cascade.Web.Presentation.ExtensionMethods
+
+
+@if (@ViewBag.ReportType == "NCRA")
+  {
+     <h2>New Complaints Requiring Action Report:</h2> 
+  }
+else if (@ViewBag.ReportType == "RC")
+  {
+     <h2>Resolved Complaints Report:</h2> 
+  }
+else if (@ViewBag.ReportType == "ORP")
+  {
+     <h2>Owner Response In Progress Report:</h2> 
+  }
+else if (@ViewBag.ReportType == "SOA")
+  {
+     <h2>Submitted for Owner Action Report:</h2> 
+  }
+else if (@ViewBag.ReportType == "NCP")
+  {
+     <h2>New Complaint In Progress Report:</h2> 
+  }
+else if (@ViewBag.ReportType == "AAI")
+  {
+     <h2>Awaiting Additional Information Report:</h2> 
+  }
+
+<style type="text/css">
+    body {font-family: Arial;}
+    .heading { font-weight:bold}
+    .specialtd { mso-number-format:"0"; }
+</style>
+
+<div id="divcompRecords">
+    <table id="compRecords" border="1">
+        <thead>
+            <tr> 
+                <th>Agency Name</th>
+                <th>PIMS Account</th>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Zip</th>
+                <th>Home Phone</th>
+                <th>Work Phone</th>
+                <th>Mobile Phone</th>
+                <th>LastFourSSN</th>
+                <th>DebtorIdentityVerified?</th>
+                <th>Contact Method</th>
+                <th>Contact Time</th>
+                <th>Creditor Name</th>
+                <th>Debt Product</th>
+                <th>Debt Balance (Purchase)</th>
+                <th>Debt Balance (Current)</th>
+                <th>DisputeDebt?</th>
+                <th>Dispute Debt Amount?</th>
+                <th>Dispute Debt Due Date?</th>
+                <th>ComplaintID</th>
+                <th>Complaint Date</th>
+                <th>Complaint Received Method</th>
+                <th>Complaint Issue</th>
+                <th>Complaint Notes</th>
+                <th>Complaint Submited To Agency?</th>
+                <th>Complaint Submited To Agency Date</th>
+                <th>More Info Required From Debtor</th>
+                <th>More Info Requested Date</th>
+                <th>More Info Requested</th>
+                <th>More Info Received From Debtor</th>
+                <th>More Info Received Date</th>
+                <th>More Info Received</th>
+                <th>Complaint Submitted To Owner</th>
+                <th>Complaint Submitted Date</th>
+                <th>Time To Submit Days</th>
+                <th>More Info From Agency?</th>
+                <th>More Info From Agency Requested Date</th>
+                <th>More Info From Agency Requested</th>
+                <th>More Info From Agency Received</th>
+                <th>More Info From Agency Received Date</th>
+                <th>Owner Response</th>
+                <th>Owner Response Date</th>
+                <th>Owner Response Days</th>
+                <th>Agency Response To Debtor Date</th>
+                <th>Total Response Time Days</th>
+                <th>Debtor Agree?</th>
+                <th>Need Further Action</th>
+                <th>Final Action Step</th>
+                <th>Is Viewed By Owner?</th>
+                <th>CreatedBy</th>
+                <th>Is Viewed By Agency?</th>
+
+
+            </tr> 
+        </thead> 
+        <tbody> 
+            @foreach (var compRecord in Model)
+            {
+                <tr>
+                     <td>@compRecord.AgencyName</td>
+                     <td class="specialtd">@compRecord.Account</td>
+                     <td>@compRecord.LastName</td>
+                     <td>@compRecord.FirstName</td>
+                     <td>@compRecord.Address</td>
+                     <td>@compRecord.City</td>
+                     <td>@compRecord.State</td>
+                     <td>@compRecord.Zip</td>
+                     <td>@compRecord.HomePhone</td>
+                     <td>@compRecord.WorkPhone</td>
+                     <td>@compRecord.MobilePhone</td>
+                     <td>@compRecord.LastFourSSN</td>
+                     <td>@compRecord.DebtorIdentityVerified</td>
+                     <td>@compRecord.ContactMethod</td>
+                     <td>@compRecord.ContactTime</td>
+                     <td>@compRecord.CreditorName</td>
+                     <td>@compRecord.DebtProduct</td>
+                     <td>@compRecord.DebtPurchaseBalance.ToIntegerCurrency()</td>
+                     <td>@compRecord.DebtCurrentBalance.ToIntegerCurrency()</td>
+                     <td>@compRecord.DisputeDebt</td>
+                     <td>@compRecord.DisputeDebtAmount</td>
+                     <td>@compRecord.DisputeDebtDueDate</td>
+                     <td>@compRecord.ComplaintID</td>
+                     <td>@compRecord.ComplaintDate.ConverToDate()</td>
+                     <td>@compRecord.ComplaintReceivedByMethod</td>
+                     <td>@compRecord.ComplaintIssue</td>
+                     <td>@compRecord.ComplaintNotes</td>
+                     <td>@compRecord.ComplaintSubmitedToAgency</td>
+                     <td>@compRecord.ComplaintSubmitedToAgencyDate.ConverToDate()</td>
+                     <td>@compRecord.MoreInfoReqdFromDebtor</td>
+                     <td>@compRecord.MoreInfoRequestedDate.ConverToDate()</td>
+                     <td>@compRecord.MoreInfoRequested</td>
+                     <td>@compRecord.MoreInfoReceivedFromDebtor</td>
+                     <td>@compRecord.MoreInfoReceivedDate.ConverToDate()</td>
+                     <td>@compRecord.MoreInfoReceived</td>
+                     <td>@compRecord.ComplaintSubmittedToOwner</td>
+                     <td>@compRecord.ComplaintSubmittedDate.ConverToDate()</td>
+                     <td>@compRecord.TimeToSubmitDays</td>
+                    <td>@compRecord.MoreInfoFromAgency</td>
+                    <td>@compRecord.MoreInfoFromAgencyRequestedDate.ConverToDate()</td>
+                    <td>@compRecord.MoreInfoFromAgencyRequested</td>                    
+                    <td>@compRecord.MoreInfoFromAgencyReceived</td>
+                    <td>@compRecord.MoreInfoFromAgencyReceivedDate.ConverToDate()</td>
+                    <td>@compRecord.OwnerResponse</td>
+                    <td>@compRecord.OwnerResponseDate.ConverToDate()</td>
+                    <td>@compRecord.OwnerResponseDays</td>
+                    <td>@compRecord.AgencyResponseToDebtorDate.ConverToDate()</td>
+                    <td>@compRecord.TotalResponseTimeDays</td>
+                    <td>@compRecord.DebtorAgree</td>
+                    <td>@compRecord.NeedFurtherAction</td>
+                    <td>@compRecord.FinalActionStep</td>
+                    <td>@compRecord.IsViewedByOwner</td>
+                    <td>@compRecord.CreatedBy</td>
+                    <td>@compRecord.IsViewedByAgency</td>
+
+                </tr> 
+            }
+        </tbody>
+    </table>
+</div>
+        

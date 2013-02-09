@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "PortfolioOwnerBreakDown";
+}
+
+<table style="width: 100%;">
+    <tr>
+        <td style="width: 100%">
+            <div id="chartContainer" style="display: block; text-align: center">
+                <img src="~/Images/indicator_medium.gif" />
+            </div>
+        </td>
+    </tr>
+</table>
+@section scripts{
+    <script type="text/javascript">
+        $.ajax({
+            url: baseUrl + '/api/Chart/',
+            type: 'GET',
+            contentType: 'application/json',
+            data: { strChartId: 'PortfolioOwnerBreakdown', strDrillBy: '', strUserName: 'UserName', strSearchParameter: 'param1' },
+            success: function (data) {
+                log(data);
+                var myChart = new FusionCharts(baseUrl + '/FusionChartLib/' + data.SWF, "test", "100%", "500", '0', '1');
+                myChart.setXMLData(data.ChartXML);
+                myChart.render(chartContainer);
+            }
+        });
+    </script>
+}
+

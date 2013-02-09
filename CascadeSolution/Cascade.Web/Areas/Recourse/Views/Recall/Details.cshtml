@@ -1,0 +1,489 @@
+﻿@{
+    ViewBag.Title = "View Edit Recall";
+}
+
+@Scripts.Render("~/bundles/jquery")
+
+
+<h2>View/Edit Recall:</h2>
+
+<div id="divViewEditRecall">
+
+     <table class="PIMSDatatable">
+        <tr>
+            <td colspan="2">
+                <b>PIMS Data</b>
+            </td>
+        </tr>
+        <tr class="dummyitem">
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td>Name:
+            </td>
+            <td>
+                <input id="newName" type="text" data-bind="value:newName" readonly="true" />
+            </td>
+        </tr>
+        <tr>
+            <td>Portfolio#:
+            </td>
+            <td>
+                <input id="newPortfolio" type="text" data-bind="value:newPortfolio" readonly="true" />
+            </td>
+        </tr>
+        <tr>
+            <td>Seller:
+            </td>
+            <td>
+                <input id="newSeller" type="text" data-bind="value:newSeller" class="txtwidth" readonly="true"/>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>Current Responsibility:
+            </td>
+            <td>
+                <input id="newResponsibility" type="text" data-bind="value:newResponsibility" readonly="true" />
+                
+            </td>
+        </tr>
+        <tr>
+            <td>FaceValueOfAcct:
+            </td>
+            <td>
+                <input id="newFaceValueOfAcct" type="text" data-bind="value:newFaceValueOfAcct" readonly="true"/>
+            </td>
+        </tr>
+        
+    </table>
+
+     <table class="dummyitem"></table>
+    
+     <table class="originaltable">
+        <tr>
+            <td colspan="2">
+                <b>Original Request Data</b>
+            </td>
+        </tr>
+        <tr class="dummyitem">
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td>Original Account:
+            </td>
+            <td>
+                <input type="text" id="newOriginalAccount" data-bind="value:newOriginalAccount"  readonly="true"/>
+            </td>
+        </tr>
+        <tr>
+            <td>PIMS Account Number:
+            </td>
+            <td>
+                <input type="text" id="newPIMSAccount" data-bind="value:newPIMSAccount" readonly="true"/>
+            </td>
+        </tr>
+        <tr>
+            <td>Date:
+            </td>
+            <td>
+                <input type="text" id="newDateRec" data-bind="value:newDateRec" />
+                <input type="checkbox"  data-bind="checked: newPutBack" /> Putback
+            </td>
+        </tr>
+        <tr>
+            <td>Reason for Recall:
+            </td>
+            <td>
+                <select id="newReasonForRecallList" class="ddlwidth" data-bind="options:recallreasons,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: recallreason"></select>
+            </td>
+        </tr>
+        <tr>
+            <td>New Status:
+            </td>
+            <td>
+                <select id="newStatusList" class="ddlwidth" data-bind="options:statuses,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: status"></select>
+            </td>
+        </tr>
+        <tr>
+            <td>New Responsibility:
+            </td>
+            <td>
+                <select id="newResponsibilitiesList" class="ddlwidth" data-bind="options:responsibilities,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: responsibility"></select>
+            </td>
+        </tr>
+    </table>
+
+    <table class="dummyitem"></table>
+
+    <table class="FollowupDatatable">
+        <tr>
+            <td><b>Follow-up Data</b></td>
+            <td><b>Dates/Notes</b></td>
+        </tr>
+        <tr class="dummyitem">
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td>Explanation:
+            </td>
+            <td>
+                <input id="newExplanation" type="text" class="txtwidth" data-bind="value:newExplanation"/>
+            </td>
+        </tr>
+        <tr>
+            <td>Date Notification Sent:
+            </td>
+            <td>
+                <input type="text" id="newDateNotificationSent" data-bind="value:newDateNotificationSent" />
+            </td>
+        </tr>
+        <tr>
+            <td>Date Acct Close:
+            </td>
+            <td>
+                <input type="text" id="newDateAcctClosed"  data-bind="value:newDateAcctClosed" />
+            </td>
+        </tr>
+        <tr>
+            <td>Uploaded Date:
+            </td>
+            <td>
+                <input id="newUploadedDate" type="text" data-bind="value:newUploadedDate" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <tr><td colspan="2"><b>Receivable</b></td></tr>
+                    <tr>
+                        <td>CostBasis:</td>
+                        <td>
+                            <input id="newCostBasis" type="text" data-bind="value:newCostBasis" readonly="true"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>AmtReceivable:</td>
+                        <td>
+                            <input id="newAmtReceivable" type="text"  readonly="true"  data-bind='value: amtReceivableComputed'  />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Invoice:</td>
+                        <td>
+                            <input id="newInvoice" type="text" data-bind="value:newInvoice" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Seller Check#:</td>
+                        <td>
+                            <input id="newSellerCheck" type="text" data-bind="value:newSellerCheck" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table>
+                    <tr><td colspan="2"><b>Payable</b></td></tr>
+                    <tr>
+                        <td>SalesBasis:</td><td>
+                <input id="newSalesBasis" type="text" data-bind="value:newSalesBasis" readonly="true"/>
+                
+            </td>
+                    </tr>
+                    <tr>
+                        <td>AmtPayable:</td><td>
+                <input id="newAmtPayable" type="text"  readonly="true" data-bind='value: amtPayableComputed' />
+                
+            </td>
+                    </tr>
+                    <tr>
+                <td>Check No:</td><td>
+                <input id="newCheckNo" type="text" data-bind="value:newCheckNo" />
+                
+            </td>
+                    </tr>
+                    <tr>
+                    <td>Unique Identification #</td>
+                        <td>
+                            <input id="newGUID" type="text" data-bind="value:newGUID"  class="guidwidth" readonly="true" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="confirmBtnContainer">
+                <input type="button" id="saveEditBtn" title="Add" data-bind="click:save"/>
+                
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div id="resultSummary" style="color: Red">
+                    <ul>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+         @*Hidden filed for the Record Id*@
+        <tr><td>@Html.Hidden("Id",(string)(@ViewBag.Id))</td></tr>
+    </table>
+
+</div>
+
+
+@Scripts.Render("~/bundles/knockout")
+
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.8.11.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        //Client side View Model
+        function recallViewEditVM() {
+
+            var href = window.location.href.split('/');
+            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
+            //var baseUrl = href[0] + '//' + href[2] + '/' + href[3] + '/' + href[4];
+            //alert(baseUrl);
+
+            var apiUrl = '/api/Lookup/';
+
+            var self = this;
+            
+            self.newOriginalAccount = ko.observable('');
+            self.newPIMSAccount = ko.observable('');
+            
+            self.newName = ko.observable('');
+            self.newPortfolio = ko.observable('');
+            self.newResponsibility = ko.observable('');
+            self.newSeller = ko.observable('');
+            self.newFaceValueOfAcct = ko.observable('');
+            //For Date
+            self.newDateRec = ko.observable('');
+                
+            //Reason For Recall
+            self.recallreason = ko.observable('');
+            self.recallreasons = ko.observableArray([]);
+            //New Status
+            self.status = ko.observable('');
+            self.statuses = ko.observableArray([]);
+            //For New Responsibility
+            self.responsibility = ko.observable('');
+            self.responsibilities = ko.observableArray([]);
+            //For Putback
+            self.newPutBack = ko.observable(false);
+
+            //Follow-up Data
+            self.newExplanation = ko.observable('');
+            self.newDateNotificationSent = ko.observable('');
+            self.newDateAcctClosed = ko.observable('');
+            self.newUploadedDate = ko.observable('');
+            self.newInvoice = ko.observable('');
+            self.newSellerCheck = ko.observable('');
+            self.newSalesBasis = ko.observable('');
+            self.newCheckNo = ko.observable('');
+            self.amtPayableComputed = ko.observable('');
+            self.amtReceivableComputed = ko.observable('');
+            self.newCostBasis = ko.observable('');
+            self.newGUID = ko.observable('');
+                        
+            //Lookup Table Section
+            //For Recall Reasons
+            $.ajax({
+                url: apiUrl,
+                type: 'GET',
+                contentType: 'application/json',
+                data: { id: 'Reason' },
+                success: function (data) {
+                    $.each(data, function (i, item) {
+                        self.recallreasons.push(item);
+                    });
+                },
+                error: function (xhr, status, somthing) {
+                    log(status);
+                }
+            });
+
+            //For New Responsibility
+            $.ajax({
+                url: apiUrl,
+                type: 'GET',
+                contentType: 'application/json',
+                data: { id: 'Responsibility' },
+                success: function (data) {
+                    $.each(data, function (i, item) {
+                        self.responsibilities.push(item);
+                    });
+                },
+                error: function (xhr, status, somthing) {
+                    log(status);
+                }
+            });
+            //For Status
+            $.ajax({
+                url: apiUrl,
+                type: 'GET',
+                contentType: 'application/json',
+                data: { id: 'Status' },
+                success: function (data) {
+                    $.each(data, function (i, item) {
+                        self.statuses.push(item);
+                    });
+                },
+                error: function (xhr, status, somthing) {
+                    log(status);
+                }
+            });
+            //This is used to format Date from Json response - We get date like this from Json "\/Date(1283219926108)\/"
+            function JSONDate(dateStr) {
+                if (dateStr != null) {
+                    var m, day;
+                    jsonDate = dateStr;
+                    var d = new Date(parseInt(jsonDate.substr(6)));
+                    m = d.getMonth() + 1;
+                    if (m < 10)
+                        m = '0' + m
+                    if (d.getDate() < 10)
+                        day = '0' + d.getDate()
+                    else
+                        day = d.getDate();
+                    return (m + '/' + day + '/' + d.getFullYear())
+                }
+                else {
+                    return ''
+                }
+            }
+            //For Date with Time
+            function JSONDateWithTime(dateStr) {
+                if (dateStr != null) {
+                    jsonDate = dateStr;
+                    var d = new Date(parseInt(jsonDate.substr(6)));
+                    var m, day;
+                    m = d.getMonth() + 1;
+                    if (m < 10)
+                        m = '0' + m
+                    if (d.getDate() < 10)
+                        day = '0' + d.getDate()
+                    else
+                        day = d.getDate();
+                    var formattedDate = m + "/" + day + "/" + d.getFullYear();
+                    var hours = (d.getHours() < 10) ? "0" + d.getHours() : d.getHours();
+                    var minutes = (d.getMinutes() < 10) ? "0" + d.getMinutes() : d.getMinutes();
+                    var formattedTime = hours + ":" + minutes + ":" + d.getSeconds();
+                    formattedDate = formattedDate + " " + formattedTime;
+                    return formattedDate;
+                }
+                else {
+                    return ''
+                }
+            }
+            
+            //For Page Data
+            $.ajax({
+                url: baseUrl + '/Recall/GetRecallData/',
+                type: 'GET',
+                contentType: 'application/json',
+                data: { id: $('#Id').val() },
+                dataType: 'json',
+                success: function (response) {
+                    //Set Selected options                     
+                    self.newName(response.AcctName);
+                    self.newPortfolio(response.Portfolio);
+                    self.newResponsibility(response.CurrentResp);
+                    self.newOriginalAccount(response.OrigAcct);
+                    self.newPIMSAccount(response.PIMSAcct);
+                    self.newFaceValueOfAcct(response.FaceValueofAcct);
+                    self.newSeller(response.Seller);
+                    self.newSalesBasis(response.SalesBasis);
+                    self.newCostBasis(response.CostBasis);
+                    self.amtPayableComputed(response.AmtPayable);
+                    self.amtReceivableComputed(response.AmtReceivable);
+                    self.newDateRec(JSONDate(response.Date));
+                    self.recallreason(response.RecallReason);
+                    self.newDateNotificationSent(JSONDate(response.DateNoteSent));
+                    self.newExplanation(response.Explanation);
+                    self.newDateAcctClosed(JSONDate(response.DateAcctClosed));
+                    self.newUploadedDate(JSONDate(response.UploadedDate));
+                    self.status(response.NewStatus);
+                    self.responsibility(response.NewResp);
+                    self.newCheckNo(response.CheckNumber);
+                    self.newInvoice(response.Invoice);
+                    self.newSellerCheck(response.SellerCheck);
+                    self.newPutBack(response.Putback);
+                    self.newGUID(response.GUID);
+
+                },
+                error: function (xhr, status, somthing) {
+                    log(status);
+                }
+            });
+
+            //Button Click Save
+            self.save = function () {
+                    //alert($('#Id').val());
+                    //alert(self.transcode());
+                    var json = JSON.stringify({
+                        ID: $('#Id').val(),
+                        Date: self.newDateRec(),
+                        OrigAcct: self.newOriginalAccount(),
+                        PIMSAcct: self.newPIMSAccount(),
+                        RecallReason: self.recallreason(),
+                        NewStatus: self.status(),
+                        NewResp: self.responsibility(),
+                        FaceValueOfAcct: self.newFaceValueOfAcct(),
+                        AcctName: self.newName(),
+                        Seller: self.newSeller(),
+                        CurrentResp: self.newResponsibility(),
+                        Portfolio: self.newPortfolio(),
+                        UploadedDate: self.newUploadedDate(),
+                        Explanation: self.newExplanation(),
+                        DateNoteSent: self.newDateNotificationSent(),
+                        DateAcctClosed: self.newDateAcctClosed(),
+                        CostBasis: self.newCostBasis(),
+                        SalesBasis: self.newSalesBasis(),
+                        Invoice: self.newInvoice(),
+                        SellerCheck: self.newSellerCheck(),
+                        CheckNumber: self.newCheckNo(),
+                        PutBack: self.newPutBack(),
+                        AmtPayable: self.amtPayableComputed(),
+                        AmtReceivable: self.amtReceivableComputed(),
+                        GUID: self.newGUID()
+                    });
+
+                    $.ajax({
+                        url: baseUrl + "/Recall/Add/",
+                        type: "POST",
+                        data: json,
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (response) {
+                            //log(response.ID);
+                            //alert("success");
+                            $('#resultSummary ul').append('<li>Recall Record updated successfully.</li>');
+                            $('#saveEditBtn').hide();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert(errorThrown);
+                            console.log(textStatus, errorThrown);
+                            $('#resultSummary ul').append('<li>We have some issue processing your request. Please try again later.</li>');
+                        }
+                    });
+                                
+            };
+            
+        };
+
+        $(document).ready(function () {
+            //Knockout Bindings
+            ko.applyBindings(new recallViewEditVM(), $('#divViewEditRecall')[0]);
+            //For Date Picker
+            $('#newDateRec').datepicker();
+            $('#newDateNotificationSent').datepicker();
+            $('#newDateAcctClosed').datepicker();
+            $('#newUploadedDate').datepicker();
+                        
+        });
+
+     </script>
+}

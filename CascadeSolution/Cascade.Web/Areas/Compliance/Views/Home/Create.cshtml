@@ -1,0 +1,1193 @@
+﻿@{
+    ViewBag.Title = "Create";
+}
+@Scripts.Render("~/bundles/jquery")
+<h2>
+    Create</h2>
+@Html.Hidden("userId", (string)(@ViewBag.UserID))
+@Html.Hidden("agencyId", (string)(@ViewBag.AgencyID))
+<style>
+    
+</style>
+<div class="tblCommon" id="fileUploadContainer" data-bind="with:complianceModel">
+    @using (Html.BeginForm("UploadDocument","Home", FormMethod.Post,new { enctype="multipart/form-data"})){
+    <div data-bind="visible:complaintinfoDocumentChecked">
+        Select document for complaint information:<input name="complaintDocument" type="file" />
+    </div>
+    <div data-bind="visible:debtOwnerProcessDocumentChecked">
+        Select document for debt owner process:<input name="debtOwnerProcessDocument" type="file" />
+    </div>
+    <input type="hidden" name="hdnAccount" data-bind="value:account" />
+    <input type="hidden" name="hdnAgency" data-bind="value:agency" />
+    <input type="submit" value="Submit" />
+    }
+</div>
+<div id="newComplaintContainer">
+    <table class="tblCommon" style="width: 100%">
+        <tr>
+            <td>
+                Type PIMS Consumer Account # :
+                <input type="text" data-bind="value:pimsAccountNumber" />&nbsp;<input type="button"
+                    class="editButton" value="  Find  " data-bind="click:findDebtors" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="debtorResults" style="font-size: small">
+                    Click the Account to populate debtor information from the below list:
+                    <table style="text-align: center">
+                        <tr>
+                            <th>
+                                Account
+                            </th>
+                            <th>
+                                FirstName
+                            </th>
+                            <th>
+                                LastName
+                            </th>
+                        </tr>
+                        <tbody data-bind="foreach:debtors">
+                            <tr>
+                                <td data-bind="text:account,click:$root.selectedDebtor">
+                                </td>
+                                <td data-bind="text:firstName">
+                                </td>
+                                <td data-bind="text:lastName">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="messageSummary" style="font-size: small">
+                    <ul>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center">
+                <div data-bind="fadeVisible:showMessage" style="background-color: #1f497d; color: #fff">
+                    <span data-bind="text:message"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right">
+                <img src="~/Content/images/savebutton.png" data-bind="click:saveComplaint,visible:saveVisible" />
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 100%; background-color: #1f497d">
+                <a href="#" style="text-decoration: none; font-weight: bold; color: white" data-bind="click:showHideDebtInformation">
+                    Debtor & Debt Information</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="debtInformation" data-bind="with:complianceModel,visible:showDebtInformation">
+                    <table class="debtorInfo">
+                        <tr>
+                            <td colspan="6" style="text-align: right">
+                                * = Required fields
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Agency Name
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left;" colspan="4">
+                                <select data-bind="options:$parent.agencies,optionsValue:'Value', optionsCaption:' ',optionsText: 'Text', value: agency,enable:makeAgencySelectionDisable">
+                                </select>*
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Consumer Account #
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" data-bind="value:account" />*
+                            </td>
+                            <td style="text-align: right; width: 20%">
+                                Last 4 of SSN
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" data-bind="value:lastFourSSN" />*
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Last Name
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" data-bind="value:lastName" />*
+                            </td>
+                            <td style="text-align: right; width: 20%">
+                                Verified Debtor Identity?
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.debtorIdentities,optionsValue:'Value', optionsText: 'Text', value: debtorIdentityVerified">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                First Name
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" data-bind="value:firstName" />
+                            *
+                            <td style="text-align: right; width: 20%">
+                                Best Contact Method
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.contactMethods,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: contactMethodId">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Address
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" data-bind="value:address" />
+                            <td style="text-align: right; width: 20%">
+                                Best Contact Time
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.contactTimeOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: contactTimeId">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                City
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" data-bind="value:city" />
+                            <td style="text-align: right; width: 20%">
+                                Creditor Name
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" data-bind="value:creditorName" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                State
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.stateOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: state">
+                                </select>
+                            <td style="text-align: right; width: 20%">
+                                Debt Product
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.debtProductOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: debtProductId">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Zip
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" data-bind="value:zip" />
+                            <td style="text-align: right; width: 20%">
+                                Debt Balance at Purchase
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" data-bind="value:debtPurchaseBalance" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Home Phone
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" data-bind="value:homePhone" />
+                            <td style="text-align: right; width: 20%">
+                                Debt Balance (Current)
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" data-bind="value:debtCurrentBalance" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Work Phone
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" data-bind="value:workPhone" />
+                            <td style="text-align: right; width: 20%">
+                                Dispute Debt?
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.disputeDebtOptions,optionsValue:'Value', optionsText: 'Text', value: disputeDebt">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Mobile Phone
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" data-bind="value:mobilePhone" />
+                            <td style="text-align: right; width: 20%">
+                                Dispute Debt Amount?
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.disputeDebtAmtOptions,optionsValue:'Value', optionsText: 'Text', value: disputeDebtAmount">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                &nbsp;
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                &nbsp;
+                            <td style="text-align: right; width: 20%">
+                                Dispute Debt Due Date?
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.disputeDebtDueDateOptions,optionsValue:'Value', optionsText: 'Text', value: disputeDebtDueDate">
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 100%; background-color: #1f497d">
+                <a href="#" style="text-decoration: none; font-weight: bold; color: white" data-bind="click:showHideComplaintInformation">
+                    Complaint Information</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="complaintInformation" data-bind="with:complianceModel,visible:showComplaintInformation">
+                    <table class="complaintInfo">
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Complaint ID #
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" data-bind="value:complaintID,enable:false" />
+                            *
+                            <td style="text-align: right; width: 20%">
+                                Complaint Date
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" id="complaiintDate" data-bind="value:complaintDate" />
+                            *
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Complaint Received By
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.complaintRecvdByOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: complaintReceivedByMethodId">
+                                </select>
+                            <td style="text-align: right; width: 20%">
+                                Complaint Issue
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.complaintIssueOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: complaintIssueId">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Complaint Notes
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <textarea rows="4" cols="16" data-bind="value:complaintNotes"></textarea>
+                            <td style="text-align: right; width: 20%">
+                                Upload Document
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="checkbox" data-bind="checked: complaintinfoDocumentChecked" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Need More Info from Debtor?
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.needMoreInfoDebtorOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoReqdFromDebtor">
+                                </select>
+                            <td style="text-align: right; width: 20%">
+                                Date Requested
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" id="moreInfoRequestedDate" data-bind="value:moreInfoRequestedDate" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                More Info Requested
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <textarea rows="4" cols="16" data-bind="value:moreInfoRequested"></textarea>
+                            <td style="text-align: right; width: 20%">
+                                More Debtor Info Received?
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.moreInfoRecvdDebtorOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoReceivedFromDebtor">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Date Received
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" id="moreInfoReceivedDate" data-bind="value:moreInfoReceivedDate" />
+                            <td style="text-align: right; width: 20%">
+                                More Info Received
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <textarea rows="4" cols="16" data-bind="value:moreInfoReceived"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 100%; background-color: #1f497d">
+                <a href="#" style="text-decoration: none; font-weight: bold; color: white" data-bind="click:showHideDebtOwnerProcess">
+                    Debt Owner Process</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="debtOwnerProcess" data-bind="with:complianceModel,visible:showDebtOwnerProcess">
+                    <table class="debtOwnerInfo">
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Submitted Complaint to Owner?
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.complaintSubmittedToOwnerOptions,optionsValue:'Value', optionsText: 'Text', value:complaintSubmittedToOwner">
+                                </select>
+                            <td style="text-align: right; width: 20%">
+                                Date Submitted
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" id="complaintSubmittedDate" data-bind="value:complaintSubmittedDate" />
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Time to Submit (Days)
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <textarea rows="4" cols="16" data-bind="value:timeToSubmitDays"></textarea>
+                            <td style="text-align: right; width: 20%">
+                                Upload Document
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="checkbox" data-bind="checked: debtOwnerProcessDocumentChecked" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Need More Info from Agency?
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.moreInfoFromAgencyOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoFromAgency">
+                                </select>
+                            <td style="text-align: right; width: 20%">
+                                Date Requested
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" id="moreInfoFromAgencyRequestedDate" data-bind="value:moreInfoFromAgencyRequestedDate" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                More Info Requested
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <textarea rows="4" cols="16" data-bind="value:moreInfoFromAgencyRequested"></textarea>
+                            <td style="text-align: right; width: 20%">
+                                More Agency Info Received?
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.moreInfoFromAgencyReceivedOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoFromAgency">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Date Received
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" id="moreInfoFromAgencyReceivedDate" data-bind="value:moreInfoFromAgencyReceivedDate" />
+                            <td style="text-align: right; width: 20%">
+                                More Info Received
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <textarea rows="4" cols="16" data-bind="value:moreInfoFromAgencyReceived"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Owner Response
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.ownerResponseOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption:' ',value:ownerResponseId">
+                                </select>
+                            <td style="text-align: right; width: 20%">
+                                &nbsp;
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Owner Response to Agency Date
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" id="ownerResponseDate" data-bind="value:ownerResponseDate" />
+                            <td style="text-align: right; width: 20%">
+                                Owner Response (Days)
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" data-bind="value:ownerResponseDays" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 100%; background-color: #1f497d">
+                <a href="#" style="text-decoration: none; font-weight: bold; color: white" data-bind="click:showHideComplaintClosure">
+                    Complaint Closure</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="complaintClosure" data-bind="with:complianceModel,visible:showComplaintClosure">
+                    <table class="complaintClosureInfo">
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Agency Response to Debtor Date
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" id="agencyResponseToDebtorDate" data-bind="value:agencyResponseToDebtorDate" />
+                            <td style="text-align: right; width: 20%">
+                                Total Response Time (Days)
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" data-bind="value:totalResponseTimeDays" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Debtor Agree?
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.debtorAgreeOptions,optionsValue:'Value', optionsText: 'Text', value:debtorAgree">
+                                </select>
+                            <td style="text-align: right; width: 20%">
+                                Need further Action?
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.needFurtherActionOptions,optionsValue:'Value', optionsText: 'Text', value:needFurtherAction">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 20%">
+                                Final Action Steps
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.finalActionStepOptions,optionsValue:'Value',optionsCaption: ' ', optionsText: 'Text', value:finalActionStepId">
+                                </select>
+                            <td style="text-align: right; width: 20%">
+                                &nbsp;
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+@Scripts.Render("~/bundles/knockout")
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.8.11.js" type="text/javascript"></script>
+    <script src="~/Scripts/compliance.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.formatCurrency-1.4.0.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var yesNoOptions = [{ Text: 'No', Value: 'false' }, { Text: 'Yes', Value: 'true'}];
+        function pageViewModel(userId, userAgency) {
+            var self = this;
+
+            self.complianceModel = new complianceVM(userId, userAgency);
+            self.populateComplainceFromDebtor = function (account, firstName, lastName, dob, address, city, state, zip, ssn, phoneCell, phoneHome, phoneWork, debtCurrentBalance, debtorPurchaseBalance, creditorName, debtProductId, debtPurchaseBalance, debtCurrentBalance, disputeDebt, disputeDebtAmount, disputeDebtDueDate, complaintID, complaintDate, complaintMethodId, complaintIssueId, complaintNotes, complaintSubmitedToAgency, complaintSubmitedToAgencyDate, moreInfoReqdFromDebtor, moreInfoRequestedDate, moreInfoRequested, moreInfoReceivedFromDebtor, moreInfoReceivedDate, moreInfoReceived, complaintSubmittedToOwner, complaintSubmittedDate, timeToSubmitDays, moreInfoFromAgency, moreInfoFromAgencyRequestedDate, moreInfoFromAgencyRequested, moreInfoFromAgencyReceived, moreInfoFromAgencyReceivedDate, ownerResponseId, ownerResponseDate, ownerResponseDays, agencyResponseToDebtorDate, totalResponseTimeDays, debtorAgree, needFurtherAction, finalActionStepId, createdBy) {
+                self.complianceModel.account(account);
+                self.complianceModel.firstName(firstName);
+                self.complianceModel.lastName(lastName);
+                self.complianceModel.dob(dob);
+                self.complianceModel.address(address);
+                self.complianceModel.city(city);
+                self.complianceModel.state(state);
+                self.complianceModel.zip(zip);
+                self.complianceModel.lastFourSSN(ssn);
+                self.complianceModel.mobilePhone(phoneCell);
+                self.complianceModel.homePhone(phoneHome);
+                self.complianceModel.workPhone(phoneWork);
+                self.complianceModel.debtCurrentBalance(debtCurrentBalance);
+                self.complianceModel.debtPurchaseBalance(debtorPurchaseBalance);
+                self.complianceModel.creditorName(creditorName);
+                self.complianceModel.debtProductId(debtProductId);
+                self.complianceModel.debtPurchaseBalance(debtPurchaseBalance);
+                self.complianceModel.debtCurrentBalance(debtCurrentBalance);
+                self.complianceModel.disputeDebt(disputeDebt);
+                self.complianceModel.disputeDebtAmount(disputeDebtAmount);
+                self.complianceModel.disputeDebtDueDate(disputeDebtDueDate);
+                self.complianceModel.complaintID(complaintID);
+                var complaintDt = new Date(complaintDate);
+                complaintDt.setDate(complaintDt.getDate() + 1);
+                self.complianceModel.complaintDate($.datepicker.formatDate('mm/dd/yy', complaintDt));
+                self.complianceModel.complaintReceivedByMethodId(complaintMethodId);
+                self.complianceModel.complaintIssueId(complaintIssueId);
+                self.complianceModel.complaintNotes(complaintNotes);
+                self.complianceModel.complaintSubmitedToAgency(complaintSubmitedToAgency);
+                self.complianceModel.complaintSubmitedToAgencyDate(complaintSubmitedToAgencyDate);
+                self.complianceModel.moreInfoReqdFromDebtor(moreInfoReqdFromDebtor);
+                self.complianceModel.moreInfoRequestedDate(moreInfoRequestedDate);
+                self.complianceModel.moreInfoRequested(moreInfoRequested);
+                self.complianceModel.moreInfoReceivedFromDebtor(moreInfoReceivedFromDebtor);
+                self.complianceModel.moreInfoReceivedDate(moreInfoReceivedDate);
+                self.complianceModel.moreInfoReceived(moreInfoReceived);
+                self.complianceModel.complaintSubmittedToOwner();
+                self.complianceModel.complaintSubmittedDate(complaintSubmittedDate);
+                self.complianceModel.timeToSubmitDays(timeToSubmitDays);
+                self.complianceModel.moreInfoFromAgency(moreInfoFromAgency);
+                self.complianceModel.moreInfoFromAgencyRequestedDate(moreInfoFromAgencyRequestedDate);
+                self.complianceModel.moreInfoFromAgencyRequested(moreInfoFromAgencyRequested);
+                self.complianceModel.moreInfoFromAgencyReceived(moreInfoFromAgencyReceived);
+                self.complianceModel.moreInfoFromAgencyReceivedDate(moreInfoFromAgencyReceivedDate);
+                self.complianceModel.ownerResponseId(ownerResponseId);
+                self.complianceModel.ownerResponseDate(ownerResponseDate);
+                self.complianceModel.ownerResponseDays(ownerResponseDays);
+                self.complianceModel.agencyResponseToDebtorDate(agencyResponseToDebtorDate);
+                self.complianceModel.totalResponseTimeDays(totalResponseTimeDays);
+                self.complianceModel.debtorAgree(debtorAgree);
+                self.complianceModel.needFurtherAction(needFurtherAction);
+                self.complianceModel.finalActionStepId(finalActionStepId);
+                //self.complianceModel.createdBy(createdBy)
+            }
+            self.pimsAccountNumber = ko.observable('');
+            self.debtors = ko.observableArray([]);
+
+            self.getComplaint = function (account) {
+                //log(debtor.account());
+                function setComplaint(data) {
+
+                    self.populateComplainceFromDebtor(data.Account, data.FirstName, data.LastName, data.DOB, data.Address, data.City, data.State, data.Zip, data.LastFourSSN, data.MobilePhone, data.HomePhone, data.WorkPhone, ((data.DebtCurrentBalance == undefined) ? '' : formatCurrency(data.DebtCurrentBalance)), ((data.DebtPurchaseBalance == undefined) ? '' : formatCurrency(data.DebtPurchaseBalance)), data.CreditorName, data.DebtProductId, data.DebtPurchaseBalance, data.DebtCurrentBalance, data.DisputeDebt, data.DisputeDebtAmount, data.DisputeDebtDueDate, data.ComplaintID, data.ComplaintDate, data.ComplaintReceivedByMethodId, data.ComplaintIssueId, data.ComplaintNotes, data.ComplaintSubmitedToAgency, data.ComplaintSubmitedToAgencyDate, data.MoreInfoReqdFromDebtor, data.MoreInfoRequestedDate, data.MoreInfoRequested, data.MoreInfoReceivedFromDebtor, data.MoreInfoReceivedDate, data.MoreInfoReceived, data.ComplaintSubmittedToOwner, data.ComplaintSubmittedDate, data.TimeToSubmitDays, data.MoreInfoFromAgency, data.MoreInfoFromAgencyRequestedDate, data.MoreInfoFromAgencyRequested, data.MoreInfoFromAgencyReceived, data.MoreInfoFromAgencyReceivedDate, data.OwnerResponseId, data.OwnerResponseDate, data.OwnerResponseDays, data.AgencyResponseToDebtorDate, data.TotalResponseTimeDays, data.DebtorAgree, data.NeedFurtherAction, data.FinalActionStepId, data.CreatedBy);
+                };
+                self.pimsAccountNumber(account);
+                log(account);
+                //self.populateComplainceFromDebtor(debtor.account(), debtor.firstName(), debtor.lastName(), debtor.dob(), debtor.address1(), debtor.address2(), debtor.city(), debtor.state(), debtor.zip(), debtor.ssn(), debtor.phoneCell(), debtor.phoneHome(), debtor.phoneWork(), debtor.debtCurrentBalance(), debtor.debtorPurchaseBalance(), debtor.creditorName());
+                $.ajax({
+                    url: baseUrl + '/api/Compliance/',
+                    type: "GET",
+                    data: { accountNumber: self.pimsAccountNumber(), agencyId: self.complianceModel.agency() },
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    async: false,
+                    success: function (data) {
+                        setComplaint(data);
+                        //self.populateComplainceFromDebtor(data[0].Account, data[0].FirstName, data[0].LastName, data[0].DOB, data[0].Address1, data[0].Address2, data[0].City, data[0].State, data[0].Zip, data[0].LastFourSSN, data[0].MobilePhone, data[0].HomePhone, data[0].WorkPhone, ((data[0].DebtCurrentBalance == undefined) ? '' : formatCurrency(data[0].DebtCurrentBalance)), ((data[0].DebtPurchaseBalance == undefined) ? '' : formatCurrency(data[0].DebtPurchaseBalance)), data[0].CreditorName);
+                    },
+                    error: function (response, errorText) {
+                        log(errorText);
+                        return false;
+                    }
+                });
+                $("#debtorResults").dialog('close');
+                //self.saveVisible(true);
+            }
+            self.selectedDebtor = function (debtor) {
+                self.getComplaint(debtor.account());
+
+                $("#debtorResults").dialog('close');
+                //self.saveVisible(true);
+            };
+            self.agencies = ko.computed(function () {
+                var localAgencies = [];
+                $.ajax({
+                    url: baseUrl + '/api/Lookup/',
+                    type: 'GET',
+                    contentType: 'application/json',
+                    data: { id: 'Agencies' },
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        //log(data.length);
+                        if (data.length > 0) {
+                            $.each(data, function (i, item) {
+                                //log(item.Text);
+                                localAgencies.push(item);
+                            });
+                        }
+                    },
+                    error: function (xhr, status, somthing) {
+                        log(status);
+                    }
+                });
+                return localAgencies;
+            }, self);
+            //For Div debtInformation
+            self.debtorIdentities = ko.observableArray(yesNoOptions);
+            self.debtorIdentities = ko.observableArray(yesNoOptions);
+            self.contactMethods = ko.computed(function () {
+                var localContactMethods = [];
+                $.ajax({
+                    url: baseUrl + '/api/Lookup/',
+                    type: 'GET',
+                    contentType: 'application/json',
+                    data: { id: 'DebtorContactMethods' },
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        //log(data.length);
+                        if (data.length > 0) {
+                            $.each(data, function (i, item) {
+                                //log(item.Text);
+                                localContactMethods.push(item);
+                            });
+                        }
+                    },
+                    error: function (xhr, status, somthing) {
+                        log(status);
+                    }
+                });
+                return localContactMethods;
+            }, self);
+            self.contactTimeOptions = ko.computed(function () {
+                var localTimeOptions = [];
+                $.ajax({
+                    url: baseUrl + '/api/Lookup/',
+                    type: 'GET',
+                    contentType: 'application/json',
+                    data: { id: 'DebtorContactTime' },
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        //log(data.length);
+                        if (data.length > 0) {
+                            $.each(data, function (i, item) {
+                                //log(item.Text);
+                                localTimeOptions.push(item);
+                            });
+                        }
+                    },
+                    error: function (xhr, status, somthing) {
+                        log(status);
+                    }
+                });
+                return localTimeOptions;
+            }, self);
+            self.stateOptions = ko.computed(function () {
+                var localStates = [];
+                $.ajax({
+                    url: baseUrl + '/api/Lookup/',
+                    type: 'GET',
+                    contentType: 'application/json',
+                    data: { id: 'USStates' },
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        //log(data.length);
+                        if (data.length > 0) {
+                            $.each(data, function (i, item) {
+                                //log(item.Text);
+                                localStates.push(item);
+                            });
+                        }
+                    },
+                    error: function (xhr, status, somthing) {
+                        log(status);
+                    }
+                });
+                return localStates;
+            }, self);
+            self.debtProductOptions = ko.computed(function () {
+                var localProducts = [];
+                $.ajax({
+                    url: baseUrl + '/api/Lookup/',
+                    type: 'GET',
+                    contentType: 'application/json',
+                    data: { id: 'DetorProducts' },
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        //log(data.length);
+                        if (data.length > 0) {
+                            $.each(data, function (i, item) {
+                                //log(item.Text);
+                                localProducts.push(item);
+                            });
+                        }
+                    },
+                    error: function (xhr, status, somthing) {
+                        log(status);
+                    }
+                });
+                return localProducts;
+            }, self);
+            self.disputeDebtOptions = ko.observableArray(yesNoOptions);
+            self.disputeDebtAmtOptions = ko.observableArray(yesNoOptions);
+            self.disputeDebtDueDateOptions = ko.observableArray(yesNoOptions);
+
+            //For complaintInformation
+            self.complaintRecvdByOptions = ko.computed(function () {
+                var localComplaintReceivedBy = [];
+                $.ajax({
+                    url: baseUrl + '/api/Lookup/',
+                    type: 'GET',
+                    contentType: 'application/json',
+                    data: { id: 'ComplaintReceivedBy' },
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        //log(data.length);
+                        if (data.length > 0) {
+                            $.each(data, function (i, item) {
+                                //log(item.Text);
+                                localComplaintReceivedBy.push(item);
+                            });
+                        }
+                    },
+                    error: function (xhr, status, somthing) {
+                        log(status);
+                    }
+                });
+                return localComplaintReceivedBy;
+            }, self);
+            self.complaintIssueOptions = ko.computed(function () {
+                var localComplaintIssues = [];
+                $.ajax({
+                    url: baseUrl + '/api/Lookup/',
+                    type: 'GET',
+                    contentType: 'application/json',
+                    data: { id: 'ComplaintIssues' },
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        //log(data.length);
+                        if (data.length > 0) {
+                            $.each(data, function (i, item) {
+                                //log(item.Text);
+                                localComplaintIssues.push(item);
+                            });
+                        }
+                    },
+                    error: function (xhr, status, somthing) {
+                        log(status);
+                    }
+                });
+                return localComplaintIssues;
+            }, self);
+            self.needMoreInfoDebtorOptions = ko.observableArray(yesNoOptions);
+            self.moreInfoRecvdDebtorOptions = ko.observableArray(yesNoOptions);
+
+            //Debt Owner
+            self.complaintSubmittedToOwnerOptions = ko.observableArray(yesNoOptions);
+            self.moreInfoFromAgencyOptions = ko.observableArray(yesNoOptions);
+            self.moreInfoFromAgencyReceivedOptions = ko.observableArray(yesNoOptions);
+            self.ownerResponseOptions = ko.computed(function () {
+                var localOwnerResponse = [];
+                $.ajax({
+                    url: baseUrl + '/api/Lookup/',
+                    type: 'GET',
+                    contentType: 'application/json',
+                    data: { id: 'OwnerResponse' },
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        //log(data.length);
+                        if (data.length > 0) {
+                            $.each(data, function (i, item) {
+                                //log(item.Text);
+                                localOwnerResponse.push(item);
+                            });
+                        }
+                    },
+                    error: function (xhr, status, somthing) {
+                        log(status);
+                    }
+                });
+                return localOwnerResponse;
+            }, self);
+
+            //Complaint closure
+            self.debtorAgreeOptions = ko.observableArray(yesNoOptions);
+            self.needFurtherActionOptions = ko.observableArray(yesNoOptions);
+            self.finalActionStepOptions = ko.computed(function () {
+                var localFinalActionSteps = [];
+                $.ajax({
+                    url: baseUrl + '/api/Lookup/',
+                    type: 'GET',
+                    contentType: 'application/json',
+                    data: { id: 'FinalActionSteps' },
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        //log(data.length);
+                        if (data.length > 0) {
+                            $.each(data, function (i, item) {
+                                //log(item.Text);
+                                localFinalActionSteps.push(item);
+                            });
+                        }
+                    },
+                    error: function (xhr, status, somthing) {
+                        log(status);
+                    }
+                });
+                return localFinalActionSteps;
+            }, self);
+
+
+            self.complianceModel.agency.subscribe(function (agencySelected) {
+                if (self.pimsAccountNumber()) {
+                    self.getComplaint(self.pimsAccountNumber());
+                    var randonNumber = Math.floor((Math.random() * 999) + 101);
+                    log(randonNumber);
+                    self.complianceModel.complaintID(agencySelected + '-' + self.pimsAccountNumber().substring(5, 10) + '-' + randonNumber);
+                    log(self.complianceModel.complaintID());
+                }
+
+            } .bind(self));
+            self.findDebtors = function () {
+                if (self.pimsAccountNumber() != '') {
+                    log(self.pimsAccountNumber());
+                    $.ajax({
+                        url: baseUrl + '/api/Debtors/',
+                        type: 'GET',
+                        contentType: 'application/json',
+                        data: { accountNumber: self.pimsAccountNumber() },
+                        dataType: 'json',
+                        async: true,
+                        success: function (data) {
+                            $("#loading").html("&nbsp;");
+                            $("#loading").dialog('close');
+                            if (data.length > 0) {
+                                if (data.length > 1) {
+                                    $.each(data, function (i, item) {
+                                        self.debtors.push(new pimsDebtor(item.Account, item.FirstName, item.LastName, item.DOB, item.Address1, item.Address2, item.City, item.State, item.Zip, item.LastFourSSN, item.MobilePhone, item.HomePhone, item.WorkPhone, ((item.DebtCurrentBalance == undefined) ? '' : formatCurrency(item.DebtCurrentBalance)), ((item.DebtPurchaseBalance == undefined) ? '' : formatCurrency(item.DebtPurchaseBalance)), item.CreditorName));
+                                        $("#debtorResults").dialog('open');
+                                    });
+                                    //log(self.debtors()[0].account());
+                                }
+                                else {
+                                    //self.populateComplainceFromDebtor(data[0].Account, data[0].FirstName, data[0].LastName, data[0].DOB, data[0].Address1, data[0].Address2, data[0].City, data[0].State, data[0].Zip, data[0].LastFourSSN, data[0].MobilePhone, data[0].HomePhone, data[0].WorkPhone, ((data[0].DebtCurrentBalance == undefined) ? '' : formatCurrency(data[0].DebtCurrentBalance)), ((data[0].DebtPurchaseBalance == undefined) ? '' : formatCurrency(data[0].DebtPurchaseBalance)), data[0].CreditorName);
+                                    log(data[0].Account);
+                                    self.getComplaint(data[0].Account);
+                                    //self.saveVisible(true);
+                                }
+                            }
+                        },
+                        error: function (xhr, status, somthing) {
+                            log(status);
+                        }
+                    });
+                }
+            }
+            self.saveComplaint = function () {
+                $('#messageSummary ul').empty();
+                self.validationErrors([]);
+                if (self.complianceModel.agency() == '' || self.complianceModel.agency() == undefined)
+                    self.validationErrors.push('Agency Name is a required field');
+                if (self.complianceModel.account() == '' || self.complianceModel.account() == undefined)
+                    self.validationErrors.push('Consumer Account is a required field');
+                if (self.complianceModel.lastFourSSN() == '' || self.complianceModel.lastFourSSN() == undefined)
+                    self.validationErrors.push('Last 4 digits of SSN is a required field');
+                if (self.complianceModel.lastName() == '' || self.complianceModel.lastName() == undefined)
+                    self.validationErrors.push('Last Name is a required field');
+                if (self.complianceModel.firstName() == '' || self.complianceModel.firstName() == undefined)
+                    self.validationErrors.push('First Name is a required field');
+                if (self.complianceModel.complaintID() == '' || self.complianceModel.complaintID() == undefined)
+                    self.validationErrors.push('Complaint ID is a required field');
+                if (self.complianceModel.complaintDate() == '' || self.complianceModel.complaintDate() == undefined)
+                    self.validationErrors.push('Complaint Date is a required field');
+                log(self.validationErrors().length);
+                if (self.validationErrors().length > 0) {
+                    $.each(self.validationErrors(), function (i, item) {
+                        $('#messageSummary ul').append('<li>' + item + '</li>');
+                    });
+                    $("#messageSummary").dialog('open');
+                }
+                else {
+                    self.showMessage(true);
+                    self.message('Data saved successfully!');
+                    self.complianceModel.save();
+
+                    if (self.complianceModel.complaintinfoDocumentChecked() == true || self.complianceModel.debtOwnerProcessDocumentChecked() == true) {
+                        log(self.complianceModel.complaintinfoDocumentChecked());
+                        log(self.complianceModel.debtOwnerProcessDocumentChecked());
+                        $('#fileUploadContainer').dialog('open');
+                    }
+                }
+            }
+            self.showMessage = ko.observable(false);
+            self.message = ko.observable('');
+            //self.saveVisible = ko.observable(false);
+            self.saveVisible = ko.computed(function () {
+                if (self.complianceModel.account() != '' && self.complianceModel.lastName() != '' && self.complianceModel.firstName() != '' && self.complianceModel.lastFourSSN() != '' && (self.complianceModel.agency() != '' || self.complianceModel.agency() != undefined))
+                    return true;
+                else
+                    return false;
+            }, self);
+
+
+            /* Show/Hide Options */
+            self.showDebtInformation = ko.observable(true);
+            self.showComplaintInformation = ko.observable(true);
+            self.showDebtOwnerProcess = ko.observable(true);
+            self.showComplaintClosure = ko.observable(true);
+            self.showHideDebtInformation = function () {
+                if (self.showDebtInformation())
+                    self.showDebtInformation(false);
+                else
+                    self.showDebtInformation(true);
+            }
+            self.showHideComplaintInformation = function () {
+                if (self.showComplaintInformation())
+                    self.showComplaintInformation(false);
+                else
+                    self.showComplaintInformation(true);
+            }
+            self.showHideDebtOwnerProcess = function () {
+                if (self.showDebtOwnerProcess())
+                    self.showDebtOwnerProcess(false);
+                else
+                    self.showDebtOwnerProcess(true);
+            }
+            self.showHideComplaintClosure = function () {
+                if (self.showComplaintClosure())
+                    self.showComplaintClosure(false);
+                else
+                    self.showComplaintClosure(true);
+            }
+
+            self.validationErrors = ko.observableArray([]);
+        }
+
+        $(document).ready(function () {
+            //log($('#userId').val())
+            //log($('#agencyId').val())
+            $('#debtorResults').dialog({ modal: true, title: 'Select debtor:', autoOpen: false, width: 500, height: 500 });
+            $('#messageSummary').dialog({ modal: true, title: 'Errors:', autoOpen: false, width: 200, height: 200 });
+            $('#fileUploadContainer').dialog({ modal: true, title: 'Upload documents:', autoOpen: false, width: 500, height: 500 });
+
+            ko.applyBindings(new pageViewModel($('#userId').val(), $('#agencyId').val()));
+
+            //For DatePicker for Complaint section
+            $('#complaiintDate').datepicker();
+            $('#moreInfoRequestedDate').datepicker();
+            $('#moreInfoReceivedDate').datepicker();
+            //Debt Owner
+            $('#complaintSubmittedDate').datepicker();
+            $('#moreInfoFromAgencyRequestedDate').datepicker();
+            $('#moreInfoFromAgencyReceivedDate').datepicker();
+            $('#ownerResponseDate').datepicker();
+
+            $('#agencyResponseToDebtorDate').datepicker();
+        });
+
+
+        ko.bindingHandlers.fadeVisible = {
+            init: function (element, valueAccessor) {
+                var value = valueAccessor();
+            },
+            update: function (element, valueAccessor) {
+                var value = valueAccessor();
+                ko.utils.unwrapObservable(value) ? $(element).fadeIn(3000, function () {
+                    $(element).fadeOut(5000);
+                    value(false)
+                }) : $(element).fadeOut();
+            }
+        };
+
+    </script>
+}

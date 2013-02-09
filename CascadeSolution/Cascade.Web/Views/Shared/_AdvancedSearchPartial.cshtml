@@ -1,0 +1,33 @@
+﻿<form id="advanceSearchFrm" action=@Url.Action("Advance", "Home", new { area = "search" }) method="get">
+    <table>
+        <tr>
+            <td style="border: thin  aqua">
+                <div id="advancedSearchLnk"><a id="lnkAdvanced" href="">Advanced Search</a></div>
+            </td>
+
+        </tr>
+        <tr>
+            <td id="advancedSerach" style="display: none">
+                <table>
+                    <tr>
+                        <td>
+                            @Html.TextBox("account", "account #", new { @class = "searchBox" })</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.TextBox("originator", "originator", new { @class = "searchBox" })</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.TextBox("seller", "seller", new { @class = "searchBox" })&nbsp;<img src="~/Images/search.jpg" id="advanceSearch" style="cursor: pointer; vertical-align: middle;" title="Search" /></td>
+                    </tr>
+                    <tr style="display:none">
+                        <td>
+                            @Html.TextBox("investor", "investor", new { @class = "searchBox" })</td>
+                    </tr>
+                </table>
+            </td>
+
+        </tr>
+    </table>
+</form>

@@ -1,0 +1,204 @@
+﻿@{
+    ViewBag.Title = "ReportCriteria";
+}
+
+@Scripts.Render("~/bundles/jquery")
+
+<h2>Report Criteria</h2>
+
+<div id="divReportCriteria">
+
+    <table class="originaltable">
+        
+        <tr class="dummyitem">
+            <td colspan="2"></td>
+        </tr>
+        <tr id="companytr">
+            <td>Portfolio:</td>
+            <td>
+                <select id="CompanyList" class="ddlwidth" data-bind="options:companies,optionsValue:'Value', optionsText: 'Text',optionsCaption: 'Select..', value: company"></select>
+                <span data-bind="text:companyRequired, visible:companyRequiredHasError" style="color: Red"></span>
+            </td>
+        </tr>
+        
+        <tr id="startdatetr">
+            <td>Start Date:
+            </td>
+            <td>
+                <input type="text" id="StartDate" data-bind="value:StartDate" />
+                <span data-bind="text:StartDateRequired, visible:StartDateRequiredHasError" style="color: Red"></span>
+            </td>
+        </tr>
+        <tr id="enddatetr">
+            <td>End Date:
+            </td>
+            <td>
+                <input type="text" id="EndDate" data-bind="value:EndDate" />
+                <span data-bind="text:EndDateRequired, visible:EndDateRequiredHasError" style="color: Red"></span>
+            </td>
+        </tr>
+        <tr id="rangetr" style="display:none">
+            <td>Check/Inv Range:
+            </td>
+            <td>
+                <input type="text" class="splTBwidth" id="FromRange" data-bind="value:FromRange" /> to <input class="splTBwidth" type="text" id="ToRange" data-bind="value:ToRange" />
+                <span data-bind="text:ToRangeRequired, visible:ToRangeRequiredHasError" style="color: Red"></span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="confirmBtnContainer">
+                <input type="button" id="refreshBtn" title="Run Report" data-bind="click:runReport"/>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div id="resultSummary" style="color: Red">
+                    <ul>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        <tr><td>@Html.Hidden("reportType",(string)(@ViewBag.ReportType))</td></tr>
+        </table>
+   </div>
+
+<div class="dummyitem"></div>
+
+@*This is used to store Report Results*@
+<div id="divReportResults"></div> 
+
+@Scripts.Render("~/bundles/knockout")
+
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.8.11.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+
+        //Client side View Model
+        function reportCriteriaVM() {
+
+            var href = window.location.href.split('/');
+            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
+            //alert(baseUrl);
+
+            var apiUrl = '/api/Lookup/';
+            
+            var self = this;
+            
+            self.StartDate = ko.observable('');
+            //For Validation
+            self.StartDateRequired = ko.observable('*');
+            self.StartDateRequiredMsg = ko.observable('');
+            self.StartDateRequiredHasError = ko.observable(false);
+
+            self.EndDate = ko.observable('');
+            //For Validation
+            self.EndDateRequired = ko.observable('*');
+            self.EndDateRequiredMsg = ko.observable('');
+            self.EndDateRequiredHasError = ko.observable(false);
+            
+            self.company = ko.observable('');
+            self.companies = ko.observableArray([]);
+            //For Validation
+            self.companyRequired = ko.observable('*');
+            self.companyRequiredMsg = ko.observable('');
+            self.companyRequiredHasError = ko.observable(false);
+
+            self.FromRange = ko.observable('');
+
+            self.ToRange = ko.observable('');
+            //For Validation
+            self.ToRangeRequired = ko.observable('*');
+            self.ToRangeRequiredMsg = ko.observable('');
+            self.ToRangeRequiredHasError = ko.observable(false);
+
+            //For validation Messages
+            self.validationErrors = ko.observableArray([]);
+
+            //Lookup Table Section
+
+            //For Companies
+            $.ajax({
+                //url: baseUrl + '/api/Lookup/',
+                url: apiUrl,
+                type: 'GET',
+                contentType: 'application/json',
+                //data: { id: 'SupBrockettCompanies' },
+                data: { id: 'RProdCode' },
+                //RProdCode
+                success: function (data) {
+                    $.each(data, function (i, item) {
+                        self.companies.push(item);
+                    });
+                },
+                error: function (xhr, status, somthing) {
+                    log(status);
+                }
+            });
+            
+            self.runReport = function () {
+                self.validationErrors([]);
+                self.StartDateRequiredHasError(false);
+                self.EndDateRequiredHasError(false);
+                self.companyRequiredHasError(false);
+                self.ToRangeRequiredHasError(false);
+                                
+                //alert("ready for validation checks"); 
+
+                $('#resultSummary ul').empty();
+                //Start Date 
+                if (self.StartDate() == '' && $('#reportType').val() != 'CashPosition'
+                    && $('#reportType').val() != 'PortfolioSummary'
+                    && $('#reportType').val() != 'AddDPSCheck'
+                    && $('#reportType').val() != 'PortTransactions') {
+                    self.StartDateRequiredHasError(true);
+                    self.StartDateRequiredMsg('Start Date is required.');
+                    self.validationErrors.push(self.StartDateRequiredMsg());
+                }
+                //End Date
+                if (self.EndDate() == '' && $('#reportType').val() != 'CashPosition'
+                    && $('#reportType').val() != 'PortfolioSummary'
+                    && $('#reportType').val() != 'AddDPSCheck'
+                    && $('#reportType').val() != 'PortTransactions') {
+                    self.EndDateRequiredHasError(true);
+                    self.EndDateRequiredMsg('End Date is required.');
+                    self.validationErrors.push(self.EndDateRequiredMsg());
+                }
+                //Company
+                if (self.company() == undefined) {
+                    self.companyRequiredHasError(true);
+                    self.companyRequiredMsg('Portfolio is required.');
+                    self.validationErrors.push(self.companyRequiredMsg());
+                }
+                //To Range
+                if (self.FromRange() != '' && self.ToRange() == '') {
+                    self.ToRangeRequiredHasError(true);
+                    self.ToRangeRequiredMsg('To Range is required.');
+                    self.validationErrors.push(self.ToRangeRequiredMsg());
+                }
+                
+                if (self.validationErrors() == '') {
+                    //Get the data and Load in the div
+                    //alert(baseUrl);
+                    $("#divReportResults").load(baseUrl + '/Home/GetReportData?StartDate=' + self.StartDate() + '&EndDate=' + self.EndDate() + '&Company=' + self.company() + '&ToRange=' + self.ToRange() + '&FromRange=' + self.FromRange() + '&ReportType=' + $('#reportType').val());
+                }
+                else {
+                    $.each(self.validationErrors(), function (i, item) {
+                        log(item);
+                        $('#resultSummary ul').append('<li>' + item + '</li>');
+                    });
+                }
+            };
+        };
+              
+        $(document).ready(function () {
+            //Knockout Bindings
+            ko.applyBindings(new reportCriteriaVM(), $('#divReportCriteria')[0]);
+            //For Date Picker
+            $('#StartDate').datepicker();
+            $('#EndDate').datepicker();
+            log($('#reportType').val());
+        });
+        
+    </script>
+}

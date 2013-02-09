@@ -1,0 +1,56 @@
+﻿@model IList<Cascade.Data.Models.DPSViewEditResult>
+@using Cascade.Web.Presentation.ExtensionMethods
+
+<h2>DPS Records:</h2>
+
+<style type="text/css">
+    body {font-family: Arial;}
+    .heading { font-weight:bold}
+    .specialtd { mso-number-format:"0"; }
+</style>
+
+<div id="divDPSRecords">
+    <table id="dpsRecordsExport" border="1">
+        <thead>
+            <tr class="heading"> 
+                <th>Portfolio#</th>
+                <th>Amount</th>
+                <th>NetPayment</th>
+                <th>Date Received</th>
+                <th>Tran Date</th>
+                <th>Name</th>
+                <th>Original Account</th>
+                <th>PIMS Account</th>
+                <th>Unique ID#</th>
+                <th>CheckNumber</th>
+                <th>Pmt Type</th>
+                <th>Trans Source</th>
+                <th>Current Resp</th>
+                <th>Our CheckNumber</th>
+                <th>Uplaoded</th>
+            </tr> 
+        </thead> 
+        <tbody> 
+            @foreach (var dpsRecord in Model)
+            {
+                <tr>
+                    <td>@dpsRecord.Portfolio</td>
+                    <td>@dpsRecord.Amount.ToIntegerCurrency()</td>
+                    <td>@dpsRecord.NetPayment.ToIntegerCurrency()</td>
+                    <td>@dpsRecord.DateRec.ConverToDate()</td>
+                    <td>@dpsRecord.TransDate.ConverToDate()</td>
+                    <td>@dpsRecord.AcctName</td>
+                    <td class="specialtd">@dpsRecord.OriginalAcct</td>
+                    <td class="specialtd">@dpsRecord.PIMSAcct</td>
+                    <td>@dpsRecord.GUID</td>
+                    <td>@dpsRecord.CheckNumber</td>
+                    <td>@dpsRecord.PmtType</td>
+                    <td>@dpsRecord.TransSource</td>
+                    <td>@dpsRecord.CurrentResp</td>
+                    <td>@dpsRecord.OurCheckNumber</td>
+                    <td>@dpsRecord.Uploaded</td>
+                </tr> 
+            }
+        </tbody>
+     </table>
+</div>

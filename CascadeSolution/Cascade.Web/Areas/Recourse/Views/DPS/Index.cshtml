@@ -1,0 +1,494 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+@Scripts.Render("~/bundles/jquery")
+
+
+<h2>DPS(Direct Payments) - Add New Record</h2>
+
+<div id="divDataformNew">
+
+    <table class="searchtable">
+        <tr>
+            <td colspan="2">
+                <b>Search DPS Data:</b>
+            </td>
+        </tr>
+        <tr>
+            <td>PIMS Account Number:
+            </td>
+            <td>
+                <input type="text" id="newPIMSAccount" data-bind="value:newPIMSAccount" />
+                <span data-bind="text:newPIMSAccountRequired, visible:newPIMSAccountRequiredHasError" style="color: Red"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>Original Account:
+            </td>
+            <td>
+                <input type="text" id="newOriginalAccount" data-bind="value:newOriginalAccount" />
+                <span data-bind="text:newOriginalAccountRequired, visible:newOriginalAccountRequiredHasError" style="color: Red"></span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="confirmBtnContainer">
+                <input type="button" id="refreshBtn" title="Add" data-bind="click:search"/>
+                <span data-bind="text:dataNotFound, visible:dataNotFoundHasError" style="color: Red"></span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div id="resultSummary" style="color: Red">
+                    <ul>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+   
+    <table class="dummyitem"></table>
+
+    <table class="PIMSDatatable" style="display:none" id="tblPIMSDataTable">
+        <tr>
+            <td colspan="2">
+                <b>PIMS Data</b>
+            </td>
+        </tr>
+        <tr class="dummyitem">
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td>Name:
+            </td>
+            <td>
+                <input id="newName" type="text" data-bind="value:newName" readonly="true" />
+            </td>
+        </tr>
+        <tr>
+            <td>Portfolio#:
+            </td>
+            <td>
+                <input id="newPortfolio" type="text" data-bind="value:newPortfolio" readonly="true" />
+            </td>
+        </tr>
+        <tr>
+            <td>Current Responsibility:
+            </td>
+            <td>
+                <input id="newResponsibility" type="text" data-bind="value:newResponsibility" readonly="true" />
+            </td>
+        </tr>
+    </table>
+
+    <table class="dummyitem"></table>
+
+    <table class="originaltable" style="display:none" id="tbloriginaltable">
+        <tr>
+            <td colspan="2">
+                <b>Original Request Data</b>
+            </td>
+        </tr>
+        <tr class="dummyitem">
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td>DateRec:
+            </td>
+            <td>
+                <input type="text" id="newDateRec" data-bind="value:newDateRec" />
+            </td>
+        </tr>
+        
+        <tr>
+            <td>Amount:
+            </td>
+            <td>
+                <input type="text" id="newAmount" data-bind="value:newAmount" onkeypress="if ( isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;"/>
+            </td>
+        </tr>
+        <tr>
+            <td>NetPayment:
+            </td>
+            <td>
+                <input type="text" id="newNetPayment" data-bind="value:newNetPayment" onkeypress="if ( isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;"/>
+            </td>
+        </tr>
+        <tr>
+            <td>Trans Codes:
+            </td>
+            <td>
+                <select id="newTransCodesList" class="ddlwidth" data-bind="options:transcodes,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: transcode"></select>
+            </td>
+        </tr>
+        <tr>
+            <td>TranDate:
+            </td>
+            <td>
+                <input type="text" id="newTranDate" data-bind="value:newTranDate" />
+            </td>
+        </tr>
+        <tr>
+            <td>Check Number:
+            </td>
+            <td>
+                <input type="text" maxlength="10" id="newCheckNumber" data-bind="value:newCheckNumber" />
+                @*onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;"*@
+            </td>
+        </tr>
+        <tr>
+            <td>Payment Types:
+            </td>
+            <td>
+                <select id="newPmtTypesList" class="ddlwidth" data-bind="options:pmttypes,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: pmttype"></select>
+            </td>
+        </tr>
+        <tr>
+            <td>Trans Sources:
+            </td>
+            <td>
+                <select id="newTransSourcesList" class="ddlwidth" data-bind="options:transsources,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: transsource"></select>
+            </td>
+        </tr>
+    </table>
+    
+    <table class="dummyitem"></table>
+    
+    <table class="FollowupDatatable" style="display:none" id="tblFollowupDatatable">
+        <tr>
+            <td colspan="2">
+                <b>Follow-up Data</b>
+            </td>
+        </tr>
+        <tr class="dummyitem">
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td>OurCheck:
+            </td>
+            <td>
+                <input id="newOurCheck" type="text" data-bind="value:newOurCheck" />
+            </td>
+        </tr>
+        <tr>
+            
+            <td>Uploaded (Y/N):</td>
+            <td>
+                <input type="checkbox" data-bind="checked: newUploaded" />
+            </td>
+        </tr>
+        <tr class="dummyitem">
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td>Unique Identification #</td>
+            <td>
+                <input id="newGUID" type="text" data-bind="value:newGUID"  class="guidwidth" readonly="true" />
+            </td>
+        </tr>
+       
+        <tr>
+            <td colspan="2" class="confirmBtnContainer">
+                <input type="button" id="saveNewBtn" title="Add" data-bind="click:save"/>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div id="resultSummaryData" style="color: Red">
+                    <ul>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+    
+</div>
+
+@Scripts.Render("~/bundles/knockout")
+
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.8.11.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        //Client side View Model
+        function dpsformVM() {
+
+            var href = window.location.href.split('/');
+            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
+            //var baseUrl = href[0] + '//' + href[2] + '/' + href[3] + '/' + href[4];
+            //alert(baseUrl);
+
+            var apiUrl = '/api/Lookup/';
+            
+            var self = this;
+            //DPS(Direct Payments) Form
+            self.newOriginalAccount = ko.observable('');
+            //For Validation
+            self.newOriginalAccountRequired = ko.observable('*');
+            self.newOriginalAccountRequiredMsg = ko.observable('');
+            self.newOriginalAccountRequiredHasError = ko.observable(false);
+
+            self.newPIMSAccount = ko.observable('');
+            //For Validation
+            self.newPIMSAccountRequired = ko.observable('*');
+            self.newPIMSAccountRequiredMsg = ko.observable('');
+            self.newPIMSAccountRequiredHasError = ko.observable(false);
+                      
+            //PIMS Data
+            self.newName = ko.observable('');
+            self.newPortfolio = ko.observable('');
+            self.newResponsibility = ko.observable('');
+            //For Date
+            self.newDateRec = ko.computed(function () {
+                return dateFormat(Date.parse(new Date()), 'mm/dd/yyyy');
+            });
+            self.newAmount = ko.observable('');
+            self.newNetPayment = ko.observable('');
+            self.transcode = ko.observable('');
+            self.transcodes = ko.observableArray([]);
+            self.newTranDate = ko.observable('');
+            self.newCheckNumber = ko.observable('');
+            self.pmttype = ko.observable('');
+            self.pmttypes = ko.observableArray([]);
+            self.transsource = ko.observable('');
+            self.transsources = ko.observableArray([]);
+            self.newOurCheck = ko.observable('');
+            self.newUploaded = ko.observable('');
+            self.newGUID = ko.observable('');
+            
+            //For validation Messages - if system does not find any matching record
+            self.dataNotFound = ko.observable('');
+            self.dataNotFoundHasError = ko.observable(false);
+
+            self.validationErrors = ko.observableArray([]);
+            self.validationErrorsData = ko.observableArray([]);
+
+            //For TransCode
+            $.ajax({
+                //url: baseUrl + '/api/Lookup/',
+                url: apiUrl,
+                type: 'GET',
+                contentType: 'application/json',
+                data: { id: 'TransCode' },
+                success: function (data) {
+                    $.each(data, function (i, item) {
+                        self.transcodes.push(item);
+                    });
+                },
+                error: function (xhr, status, somthing) {
+                    log(status);
+                }
+            });
+            //For PmtType
+            $.ajax({
+                //url: baseUrl + '/api/Lookup/',
+                url: apiUrl,
+                type: 'GET',
+                contentType: 'application/json',
+                data: { id: 'PmtType' },
+                success: function (data) {
+                    $.each(data, function (i, item) {
+                        self.pmttypes.push(item);
+                    });
+                },
+                error: function (xhr, status, somthing) {
+                    log(status);
+                }
+            });
+            //For TransSource
+            $.ajax({
+                //url: baseUrl + '/api/Lookup/',
+                url: apiUrl,
+                type: 'GET',
+                contentType: 'application/json',
+                data: { id: 'TransSource' },
+                success: function (data) {
+                    $.each(data, function (i, item) {
+                        self.transsources.push(item);
+                    });
+                },
+                error: function (xhr, status, somthing) {
+                    log(status);
+                }
+            });
+            
+            //For Search and get data
+            self.search = function () {
+                self.validationErrors([]);
+                
+                self.newOriginalAccountRequiredHasError(false);
+                self.newPIMSAccountRequiredHasError(false);
+                self.dataNotFoundHasError = ko.observable(false);
+                
+                //Original Account or PIMS Account Number
+                if (self.newOriginalAccount() == '' && self.newPIMSAccount() == '') {
+                    self.newOriginalAccountRequiredHasError(true);
+                    self.newOriginalAccountRequiredMsg('PIMS Account Number or Original Account Number is required.');
+                    self.validationErrors.push(self.newOriginalAccountRequiredMsg());
+                }
+                
+                if (self.validationErrors() == '') {
+                    //let us show loading image
+                    var applicationname = "";
+                    var myhost = window.location.protocol + "//" + window.location.host
+                    var absoluteapp = myhost + applicationname;
+                    var imagedir = "/Content/Images";
+                    $("#loading").dialog('open');
+                    $("#loading").html("<img src=\"" + absoluteapp + imagedir + "/ajax-loader.gif\" />");
+                    //Done for loading image while data is being pulled
+
+                    //Create json and perform Search
+                    var json = JSON.stringify({
+                        OriginalAcct: self.newOriginalAccount(),
+                        PIMSAcct: self.newPIMSAccount(),
+                    });
+
+                    $.ajax({
+                        url: baseUrl + "/DPS/Search/",
+                        type: "POST",
+                        data: json,
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (response) {
+
+                            //Hide the loading image
+                            $("#loading").html("&nbsp;");
+                            $("#loading").dialog('close');
+
+                            if (response.AcctName == null || response.Portfolio == null || response.CurrentResp == null) {
+                                
+                                //Without Data
+                                $('#tblPIMSDataTable').hide();
+                                $('#tblFollowupDatatable').hide();
+                                $('#tbloriginaltable').hide();
+                                $('#resultSummary ul').html("");
+                                self.dataNotFound('System could not find matching record. Please try again.');
+                                self.validationErrors.push(self.dataNotFound());
+                                //show the validation message on the screen
+                                $.each(self.validationErrors(), function (i, item) {
+                                    log(item);
+                                    $('#resultSummary ul').append('<li>' + item + '</li>');
+                                });
+                            }
+                            else {
+
+                                //With Data
+                                $('#resultSummary ul').html("");
+                                $('#tblPIMSDataTable').show();
+                                $('#tblFollowupDatatable').show();
+                                $('#tbloriginaltable').show();
+                                $('#resultSummaryData ul').html("");
+                                //Now push the data received from the server
+                                self.newName(response.AcctName);
+                                self.newPortfolio(response.Portfolio);
+                                self.newResponsibility(response.CurrentResp);
+                                self.newOriginalAccount(response.OriginalAcct);
+                                self.newPIMSAccount(response.PIMSAcct);
+                                self.newGUID(response.GUID);
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            //Hide the loading image
+                            $("#loading").html("&nbsp;");
+                            $("#loading").dialog('close');
+                            console.log(textStatus, errorThrown);
+                            $('#resultSummary ul').append('<li>We have some issue processing your request. Please try again later.</li>');
+                        }
+                     });
+                }
+                else {
+                    //First clear the error message previousely shown
+                    $('#resultSummary ul').html("");
+                    $.each(self.validationErrors(), function (i, item) {
+                        log(item);
+                        $('#resultSummary ul').append('<li>' + item + '</li>');
+                    });
+                }
+            };
+
+            //For Add Feature
+            self.save = function () {
+
+                self.validationErrorsData([]);
+                self.newOriginalAccountRequiredHasError(false);
+                self.newPIMSAccountRequiredHasError(false);
+                
+                //alert("ready for validation checks");
+
+                $('#resultSummaryData ul').empty();
+                
+                //Original Account
+                if (self.newOriginalAccount() == '') {
+                    self.newOriginalAccountRequiredHasError(true);
+                    self.newOriginalAccountRequiredMsg('Original Account Number is required.');
+                    self.validationErrorsData.push(self.newOriginalAccountRequiredMsg());
+                }
+                //PIMS Acccount
+                if (self.newPIMSAccount() == '') {
+                    self.newPIMSAccountRequiredHasError(true);
+                    self.newPIMSAccountRequiredMsg('PIMS Account Number is required.');
+                    self.validationErrorsData.push(self.newPIMSAccountRequiredMsg());
+                }
+                
+                if (self.validationErrorsData() == '') {
+
+                    //alert("we are here");
+
+                    var json = JSON.stringify({
+                        DateRec: self.newDateRec(),
+                        OriginalAcct: self.newOriginalAccount(),
+                        PIMSAcct: self.newPIMSAccount(),
+                        Amount: self.newAmount(),
+                        NetPayment: self.newNetPayment(),
+                        TransCode: self.transcode(),
+                        TransDate: self.newTranDate(),
+                        CheckNumber: self.newCheckNumber(),
+                        PmtType: self.pmttype(),
+                        TransSource: self.transsource(),
+                        AcctName: self.newName(),
+                        Portfolio: self.newPortfolio(),
+                        CurrentResp: self.newResponsibility(),
+                        OurCheckNumber: self.newOurCheck(),
+                        Uploaded: self.newUploaded(),
+                        GUID: self.newGUID()
+                    });
+
+                    $.ajax({
+                        url: baseUrl + "/DPS/Add/",
+                        type: "POST",
+                        data: json,
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (response) {
+                            //log(response.ID);
+                            $('#resultSummaryData ul').append('<li>New DPS Record created successfully.</li>');
+                            $('#saveNewBtn').hide();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert(errorThrown);
+                            console.log(textStatus, errorThrown);
+                            $('#resultSummaryData ul').append('<li>We have some issue processing your request. Please try again later.</li>');
+                        }
+
+                    });
+                }
+                else {
+                    $.each(self.validationErrorsData(), function (i, item) {
+                        log(item);
+                        $('#resultSummaryData ul').append('<li>' + item + '</li>');
+                    });
+                }
+            };
+        };
+              
+        $(document).ready(function () {
+            //Knockout Bindings
+            ko.applyBindings(new dpsformVM(), $('#divDataformNew')[0]);
+            //For Date Picker
+            $('#newDateRec').datepicker();
+            $('#newTranDate').datepicker();
+                        
+         });
+        
+    </script>
+}

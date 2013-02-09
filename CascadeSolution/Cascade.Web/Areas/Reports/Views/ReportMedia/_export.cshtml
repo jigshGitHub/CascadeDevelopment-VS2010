@@ -1,0 +1,123 @@
+﻿@model IList<Cascade.Data.Models.MediaViewEditResult>
+@using Cascade.Web.Presentation.ExtensionMethods
+
+ @if (@ViewBag.ReportType == "MediaNotSubmitted")
+  {
+     <h2>Media Not Submitted Records:</h2> 
+  }
+ else if (@ViewBag.ReportType == "MediaNotConfirmed")
+  {
+     <h2>Media Not Confirmed Records:</h2> 
+  }
+ else if (@ViewBag.ReportType == "MediaNotReceived")
+  {
+     <h2>Media Not Received Records:</h2> 
+  }
+ else if (@ViewBag.ReportType == "MediaNotForwarded")
+  {
+     <h2>Media Not Forwarded Records:</h2> 
+  }
+  else
+  {
+     <h2>Media Records:</h2> 
+  }
+
+<style type="text/css">
+    body {font-family: Arial;}
+    .heading { font-weight:bold}
+    .specialtd { mso-number-format:"0"; }
+</style>
+
+<div id="divMediaRecords">
+    <table id="mediaRecords" border="1">
+        <thead>
+            <tr> 
+                <th>Portfolio#</th>
+                <th>Seller Fee</th>
+                <th>Our Fee</th>
+                <th>Order Date</th>
+                <th>Open Date</th>
+                <th>Close Date</th>
+                <th>Name</th>
+                <th>Original Account</th>
+                <th>PIMS Account</th>
+                <th>Unique ID#</th>
+                <th>CompanyRequesting</th>
+                <th>OriginalLender</th>
+                <th>SSN</th>
+                <th>Application Y/N</th>
+                <th>AffidavitIssuer Y/N</th>
+                <th>AffidavitSeller Y/N</th>
+                <th>Unavailable Y/N</th>
+                <th>Closed Y/N</th>
+                <th>Explanation</th>
+                <th>MediaTypeReceived</th>
+                <th>Notes</th>
+                <th>SellerInvoice</th>
+                <th>BuyerCheck</th>
+                <th>OurCheck</th>
+                <th>Seller</th>
+                <th>OrderNumber</th>
+                <th>OurInvoice</th>
+                <th>StmtsFrom</th>
+                <th>StmtsTo</th>
+                <th>DateSubmitted</th>
+                <th>DateConfirmed</th>
+                <th>DateSellerPaid</th>
+                <th>DateReceived</th>
+                <th>DateForwarded</th>
+                <th>UnavailableDate</th>
+                <th>DatePayRec</th>
+
+            </tr> 
+        </thead> 
+        <tbody> 
+            @foreach (var mediaRecord in Model)
+            {
+                <tr>
+                     <td>@mediaRecord.Portfolio</td>
+                     <td>@mediaRecord.SellerFee.ToIntegerCurrency()</td>
+                     <td>@mediaRecord.OurFee.ToIntegerCurrency()</td>
+                     <td>@mediaRecord.OrderDate.ConverToDate()</td>
+                     <td>@mediaRecord.OpenDate.ConverToDate()</td>
+                     <td>@mediaRecord.CODate.ConverToDate()</td>
+                     <td>@mediaRecord.AcctName</td>
+                     <td class="specialtd">@mediaRecord.OrigAcct</td>
+                     <td class="specialtd">@mediaRecord.PIMSAcct</td>
+                     <td>@mediaRecord.GUID</td>
+                     <td>@mediaRecord.CompanyRequesting</td>
+                     <td>@mediaRecord.OriginalLender</td>
+                     <td>@mediaRecord.SSN</td>
+                     <td>@mediaRecord.IsApplication</td>
+                     <td>@mediaRecord.IsAffidavitIssuer</td>
+                     <td>@mediaRecord.IsAffidavitSeller</td>
+                     <td>@mediaRecord.IsUnavailable</td>
+                     <td>@mediaRecord.IsClosed</td>
+                     <td>@mediaRecord.Explanation</td>
+                     <td>@mediaRecord.MediaTypeReceived</td>
+                     <td>@mediaRecord.Notes</td>
+                     <td>@mediaRecord.SellerInvoice</td>
+                     <td>@mediaRecord.BuyerCheck</td>
+                     <td>@mediaRecord.OurCheck</td>
+                     <td>@mediaRecord.Seller</td>
+                     <td>@mediaRecord.OrderNumber</td>
+                     <td>@mediaRecord.OurInvoice</td>
+                     <td>@mediaRecord.StmtsFrom.ConverToDate()</td>
+                     <td>@mediaRecord.StmtsTo.ConverToDate()</td>
+                     <td>@mediaRecord.DateSubmitted.ConverToDate()</td>
+                     <td>@mediaRecord.DateConfirmed.ConverToDate()</td>
+                     <td>@mediaRecord.DateSellerPaid.ConverToDate()</td>
+                     <td>@mediaRecord.DateReceived.ConverToDate()</td>
+                     <td>@mediaRecord.DateForwarded.ConverToDate()</td>
+                     <td>@mediaRecord.UnavailableDate.ConverToDate()</td>
+                     <td>@mediaRecord.DatePayRec.ConverToDate()</td>
+                                      
+                </tr> 
+            }
+        </tbody>
+         @*Hidden fields for the Report Type*@
+        @Html.Hidden("reportType",(string)(@ViewBag.ReportType))
+        
+    </table>
+</div>
+        

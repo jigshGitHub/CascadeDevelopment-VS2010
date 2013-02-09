@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "View DPS Records";
+}
+
+@Scripts.Render("~/bundles/jquery")
+
+<div id="divDPSRecords"></div>
+
+@Scripts.Render("~/bundles/knockout")
+
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.8.11.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        //Client side View Model
+        function dpsRecordsVM(){
+            //Get the data and Load in the div
+            $("#divDPSRecords").load(baseUrl + '/Collections/Home/GetAllDPSRecords');
+        };
+              
+        $(document).ready(function () {
+            //Knockout Bindings
+            ko.applyBindings(new dpsRecordsVM(), $('#divDPSRecords')[0]);
+        });
+        
+    </script>
+}

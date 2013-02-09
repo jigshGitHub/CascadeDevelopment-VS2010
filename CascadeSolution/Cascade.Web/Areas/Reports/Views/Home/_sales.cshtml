@@ -1,0 +1,40 @@
+﻿@model IList<Cascade.Data.Models.Sales>
+@using Cascade.Web.Presentation.ExtensionMethods
+
+<link href="@Url.Content("~/Content/dataTables/demo_table.css")" rel="stylesheet" type="text/css" />
+
+<script src="~/Scripts/datatable/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/index.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/jquery.dataTables.min.js" type="text/javascript"></script>
+
+<h2>Report: Sales</h2>
+
+<div id="divSales">
+    <table id="sales" class="display">
+        <thead>
+            <tr> 
+                <th>Account</th>
+                <th>Product Code</th>
+                <th>Sold Date</th>
+                <th>Buyer</th>
+                <th>Face Value</th>
+                <th>SalesPrice</th>
+                
+            </tr> 
+        </thead> 
+        <tbody> 
+            @foreach (var sale in Model)
+            {
+                <tr>
+                    <td>@sale.ACCOUNT</td>
+                    <td>@sale.PRODUCT_CODE</td>
+                    <td>@sale.SoldDate.ConverToDate()</td>
+                    <td>@sale.Responsibility</td>
+                    <td>@sale.FaceValue.ToIntegerCurrency()</td>
+                    <td>@sale.SalesPrice.ToIntegerCurrency()</td>
+                    
+                </tr> 
+            }
+        </tbody>
+    </table>
+</div>

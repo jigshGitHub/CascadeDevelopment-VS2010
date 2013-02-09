@@ -1,0 +1,42 @@
+﻿@model IList<Cascade.Data.Models.PortfolioSummary>
+@using Cascade.Web.Presentation.ExtensionMethods
+
+<link href="@Url.Content("~/Content/dataTables/demo_table.css")" rel="stylesheet" type="text/css" />
+
+<script src="~/Scripts/datatable/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/index.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/jquery.dataTables.min.js" type="text/javascript"></script>
+
+<h2>Report: Portfolio Summary</h2>
+
+<div id="divPortSummary">
+    <table id="portSummary" class="display">
+        <thead>
+            <tr> 
+                <th>Portfolio#</th>
+                <th>Type</th>
+                <th>Accounts</th>
+                <th>Balance</th>
+                <th>Industry</th>
+                <th>Seller</th>
+                <th>Status</th>
+                
+            </tr> 
+        </thead> 
+        <tbody> 
+            @foreach (var portSummary  in Model)
+            {
+                <tr>
+                    <td>@portSummary.Description</td>
+                    <td>@portSummary.Type</td>
+                    <td>@portSummary.Accounts</td>
+                    <td>@portSummary.Balance.ToIntegerCurrency()</td>
+                    <td>@portSummary.ShortDescription</td>
+                    <td>@portSummary.Seller</td>
+                    <td>@portSummary.Status</td>
+
+                </tr> 
+            }
+        </tbody>
+    </table>
+</div>

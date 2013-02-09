@@ -1,0 +1,16 @@
+﻿@using MvcContrib.UI.Grid;
+@using MvcContrib.UI.Pager;
+@model Cascade.Web.Models.PagedViewModel<Cascade.Data.Models.SearchResult>
+
+
+@Html.Grid(Model.PagedList).Columns(column =>{
+    column.For(record => record.ACCOUNT).HeaderAttributes(sortcolumn => "ACCOUNT").Named("Account#");
+    column.For(record => record.Name).HeaderAttributes(sortcolumn => "Name");
+    column.For(record => record.Originator).HeaderAttributes(sortcolumn => "Originator");
+    column.For(record => record.Seller).HeaderAttributes(sortcolumn => "Seller");
+    column.For(record => record.ProductDescription).HeaderAttributes(sortcolumn => "ProductDescription").Named("Product");
+    column.For(record => record.StatusDescription).HeaderAttributes(sortcolumn => "StatusDescription").Named("Status");
+    column.For(record => record.WorkStatusDescription).HeaderAttributes(sortcolumn => "WorkStatusDescription").Named("Work Status");
+}).Sort(Model.GridSortOptions).Attributes(@class => "grid-style")
+
+@Html.Pager(Model.PagedList).First("First").Last("Last").Next("Next").Previous("Previous")

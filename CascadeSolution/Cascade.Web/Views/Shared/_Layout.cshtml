@@ -1,0 +1,210 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Cascade</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/themes/base/css", "~/Content/css", "~/Content/themes/Menu/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div id="contentContainer">
+        <table>
+            <tr>
+                <td>
+                    <header>
+                        <table>
+                            <tr>
+                                <td>
+                                    <img src="~/Images/Cascadelogo.png" /></td>
+                                <td style="vertical-align: middle">
+                                    <nav>
+                                        @{Html.RenderPartial("_MenuPartial", ViewData["Menu"]);}
+                                    </nav>
+                                </td>
+
+                                <td style="vertical-align: middle">
+                                    <section id="login">
+                                        @Html.Partial("_LoginPartial")
+                                    </section>
+                                </td>
+                            </tr>
+                        </table>
+                    </header>
+                </td>
+            </tr>
+            <tr>
+                <td class="mainWorkspace">@RenderSection("featured", required: false)
+                    <table>
+                        <tr>
+                            <td style="width: 20%;">
+                                <section style="margin-top: 5px; padding-left: 30px">
+                                    <div id="lhsMenuContainer">
+                                        <nav>
+                                            @{Html.RenderPartial("_LHSMenuPartial", ViewData["Menu"]);}
+                                        </nav>
+                                    </div>
+                                </section>
+                            </td>
+                            <td style="width: 80%">
+                                <section style="margin-top: 5px; padding-right: 30px;">
+                                    <div id="loading"></div>
+                                    <div id="workspaceViewContainer">
+                                        @RenderBody()
+                                    </div>
+                                </section>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"></td>
+                        </tr>
+                    </table>
+
+
+                </td>
+            </tr>
+        </table>
+        <!-- push div is a hidden element that "pushes" down the footer so it doesn't overlap anythiing
+            search online css sticky footer Ryan Fait-->
+        <div class="push"></div>
+    </div>
+    <footer>
+        @Html.Partial("_FooterPartial")
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery", "~/bundles/external")
+    @Scripts.Render("~/bundles/jqueryui")
+
+    <script type="text/javascript">
+
+        var windlowLocation = window.location.href.split('/');
+        var baseUrl = windlowLocation[0] + '//' + windlowLocation[2]// + windlowLocation[3];
+
+        //log(baseUrl);
+        $(document).ready(function () {
+            $('#loading').dialog({ modal: true, title: 'Please wait', autoOpen: false, width: 100, height: 100 });
+
+            $('#lnkAdvanced').click(function (e) {
+                e.preventDefault();
+                if ($('#lnkAdvanced').html() == 'Basic Search') {
+                    $('#advancedSerach').hide(500);
+                    $('#lnkAdvanced').html('Advanced Search');
+
+                }
+                else {
+                    $('#advancedSerach').show(500);
+                    $('#lnkAdvanced').html('Basic Search');
+                    log('here');
+                }
+            });
+
+            var originalAccount = 'account #';
+            var originalOriginator = 'originator';
+            var originalSeller = 'seller';
+            var investor = 'investor'
+            $('#account').focus(function () { $(this).val(''); }).blur(function () { if ($(this).val() == '') $(this).val(originalAccount); });
+            $('#originator').focus(function () { $(this).val(''); }).blur(function () { if ($(this).val() == '') $(this).val(originalOriginator); });
+            $('#seller').focus(function () { $(this).val(''); }).blur(function () { if ($(this).val() == '') $(this).val(originalSeller); });
+            $('#investor').focus(function () { $(this).val(''); }).blur(function () { if ($(this).val() == '') $(this).val(investor); });
+
+            $('#basicSearch').click(function (e) {
+                //$('#loading').show();
+                //$("#workspaceViewContainer").load(baseUrl + '/Search/Home/Basic', { 'name': $('#lhsMenuSerachText').val(), 'parameter2': 'test2' }, function () {
+                //    $('#loading').hide();
+                //});
+                e.preventDefault();
+                log('Basicsearch submit');
+                if ($('#basicSearchVal').val() != '') {
+                    log($('#basicSearchVal').val());
+                    //$('#basicSearchFrm').submit();
+                    $('#workspaceViewContainer').basicSearch('/search/home/basic', '_BasicPartial', $('#basicSearchVal').val(),
+                        {
+                            defaultsort: ''
+                        });
+                }
+            });
+
+            advanceSearchHasFielstToSearch = function () {
+                if ($('#account').val() != originalAccount)
+                    return true;
+                if ($('#originator').val() != originalOriginator)
+                    return true;
+                if ($('#seller').val() != originalSeller)
+                    return true;
+                if ($('#investor').val() != investor)
+                    return true;
+                return false;
+            }
+
+            resetBeforeSubmit = function () {
+                if ($('#account').val() == originalAccount)
+                    $('#account').val('');
+                if ($('#originator').val() == originalOriginator)
+                    $('#originator').val('')
+                if ($('#seller').val() == originalSeller)
+                    $('#seller').val('');
+                if ($('#investor').val() == investor)
+                    $('#investor').val('');
+            }
+            $('#advanceSearch').click(function (e) {
+                e.preventDefault();
+
+                log('advance search submit');
+
+                if (advanceSearchHasFielstToSearch()) {
+                    //resetBeforeSubmit();
+                    //$('#advanceSearchFrm').submit();
+                    $('#workspaceViewContainer').advanceSearch('/search/home/advance', '_BasicPartial', $('#account').val(), $('#originator').val(), $('#seller').val(), $('#investor').val(),
+                        {
+                            defaultsort: ''
+                        });
+                }
+                else {
+                    alert('Please enter something to search!');
+                }
+            });
+            //$('#menu li a').click(function (event) {
+            //    $('#menu  li a').each(function () {
+            //        $(this).removeClass('activeLink');
+            //    });
+            //    event.preventDefault();
+            //    $('#workspaceViewContainer').load($(this).attr('href'));
+            //    $(this).addClass('activeLink');
+            //});
+
+            //$('.lhsLinks a').click(function (event) {
+            //    //$('#menu  li a').each(function () {
+            //    //    $(this).removeClass('activeLink');
+            //    //});
+            //    event.preventDefault();
+            //    $('#workspaceViewContainer').load($(this).attr('href'));
+            //    //$(this).addClass('activeLink');
+            //});
+
+
+            $('#privacyStatementLink').click(function (e) {
+                e.preventDefault();
+                $('#privacyStatementBlock').show(200);
+            });
+
+            $('#closePrivacySt').click(function () {
+                $('#privacyStatementBlock').hide();
+            });
+
+            //log($('footer').position().top);
+            //log($('#messages').position().top);
+            //var msgBoxHt = $('footer').position().top - $('#messages').position().top - 12;
+            //$('#messages').height(msgBoxHt);
+
+            //log($('footer').position().top);
+            //log($('#messages').position().top);
+
+
+        });
+
+    </script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

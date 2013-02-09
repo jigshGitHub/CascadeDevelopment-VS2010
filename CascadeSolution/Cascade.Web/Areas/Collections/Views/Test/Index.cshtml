@@ -1,0 +1,538 @@
+﻿
+
+@Styles.Render("~/Content/kospl/css")
+@Scripts.Render("~/bundles/koexternaljs")
+
+@section scripts{
+    
+    <script src="~/Scripts/kospl/jquery-ui-1.8.20.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/kospl/DataTables-1.9.2/media/js/jquery.dataTables.js" type="text/javascript"></script>
+    <script src="~/Scripts/kospl/knockout-2.1.0.debug.js" type="text/javascript"></script>
+    <script src="~/Scripts/kospl/knockout.mapping-latest.debug.js" type="text/javascript"></script>
+    <script src="~/Scripts/kospl/knockout.bindings.dataTables.js" type="text/javascript"></script>
+    <script src="~/Scripts/kospl/knockout.bindings.jqPlot.js" type="text/javascript"></script>
+
+}
+    <script type="text/javascript">
+
+        $.ajaxSetup({
+            beforeSend: function () {
+                // show gif here
+                $("#loading").show();
+            },
+            complete: function () {
+                // hide gif here
+                $("#loading").hide();
+            }
+        });
+        
+        //var CategoriesCollection = [{ Text: "Food", Value: 1 }, { Text: "Bills", Value: 2 }, { Text: "Clothing", Value: 3 }, { Text: "Gadget", Value: 4 }, { Text: "Misc", Value: 5 }, { Text: "Misc2", Value: 6}];
+        var CategoriesCollection;
+        
+        ////alert(CategoriesCollection.length);
+               
+        //$.getJSON("Test/GetCategories", null, function (data) {
+                      
+        //    //alert(data.length);
+        //    CategoriesCollection = data;
+            
+        //});
+
+
+        function ExpenseEntry(Id, expenseDate, expenseDescription, expenseAmount, categoryId) {
+                        
+            this.ID = Id;
+            this.ExpenseDate = ko.observable(expenseDate);
+            this.ExpenseDescription = ko.observable(expenseDescription);
+            this.ExpenseAmount = ko.observable(expenseAmount);
+            this.CategoryId = ko.observable(categoryId);
+            this.Category = ko.computed(function () {
+
+                //alert(CategoriesCollection.length);
+
+                if (this.CategoryId() != 0 && this.CategoryId() - 1 < CategoriesCollection.length)
+                {
+                    return CategoriesCollection[this.CategoryId() - 1].Text;
+                }
+                else
+                {
+                    return "none";
+                }
+            }, this);
+                        
+        }
+
+        function ViewModel() {
+            var vm = this;
+                        
+            this.categories = function () {
+                $.ajax({
+                    url: 'Test/GetCategories',
+                    type: 'GET',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        //alert(data.length);
+                        for (var i = 0; i < data.length; i++)
+                        {
+                            var nitem = [data[i].Text, data[i].Value];
+                            vm1.categories.push(nitem);
+                            
+                        }
+                    },
+                    error: function (xhr, status, somthing) {
+                        log(status);
+                    }
+                });
+            }
+
+            //this.categories = CategoriesCollection;
+
+            //this.categories = this.categories();
+
+            //this.categories();
+
+            CategoriesCollection = this.categories();
+            
+            //alert(CategoriesCollection.length);
+
+            this.categories = ko.observableArray();
+
+            this.data = ko.observableArray();
+
+            this.chartData = ko.observableArray();
+                        
+            this.jsonData = ko.dependentObservable(function () {
+                return ko.toJSON(this.data);
+            }, this);
+
+            this.canEdit = ko.observable(false);
+            this.selectedEntry = new ExpenseEntry(0, "", "", "", 0);
+            this.originalEntry = new ExpenseEntry(0, "", "", "", 0);
+            this.newEntry = new ExpenseEntry(0, "", "", "", 0);
+            this.mode = ko.observable("hidden");
+            this.errorMsg = ko.observable("");
+
+            this.beginEdit = function () {
+                vm.copyEntry(vm.selectedEntry, vm.originalEntry);
+                vm.clearErrors();
+                vm.mode("edit");
+            }
+
+            this.endEdit = function () {
+                $.ajax({
+                    data: ko.toJSON(vm.selectedEntry),
+                    url: '/Test/EditExpense',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (resultMsg) {
+                        if (resultMsg == "success") {
+                            vm.data.remove(function (item) { return vm.selectedEntry.ID == item.ID });
+                            var editedItem = new ExpenseEntry(0, "", "", "", 0);
+                            vm.copyEntry(vm.selectedEntry, editedItem);
+                            vm.data.push(editedItem);
+                            vm.originalEntry = new ExpenseEntry(0, "", "", "", 0);
+                            vm.clearErrors();
+                            vm.mode("read");
+                            vm.refreshChartData();
+                        }
+                        else {
+                            vm.errorMsg(resultMsg);
+                        }
+
+                    },
+                    error: function (e) {
+                        vm.errorMsg("Error: " + e.statusText);
+                    }
+                });
+            }
+
+            this.cancelEdit = function () {
+                vm.copyEntry(vm.originalEntry, vm.selectedEntry);
+                vm.clearErrors();
+                vm.mode("read");
+            }
+
+            this.deleteEntry = function () {
+                $.ajax({
+                    data: ko.toJSON(vm.selectedEntry),
+                    url: '/Test/DeleteExpense',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (resultMsg) {
+                        if (resultMsg == "success") {
+                            vm.data.remove(function (item) { return vm.selectedEntry.ID == item.ID });
+                            vm.resetEntry(vm.selectedEntry);
+                            vm.canEdit(false);
+                            vm.clearErrors();
+                            vm.mode("hidden");
+                            vm.refreshChartData();
+                        }
+                        else {
+                            vm.errorMsg(resultMsg);
+                        }
+
+                    },
+                    error: function (e) {
+                        vm.errorMsg("Error: " + e.statusText);
+                    }
+                });
+            }
+
+            this.beginNewEntry = function () {
+                vm.resetEntry(vm.newEntry);
+                vm.clearErrors();
+                vm.mode("new");
+            }
+
+            this.endNewEntry = function () {
+                $.ajax({
+                    data: ko.toJSON(vm.newEntry),
+                    url: '/Test/AddExpense',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (insertID) {
+                        if (insertID == -1) {
+                            vm.errorMsg("error inserting new record");
+                        }
+                        else {
+                            vm.newEntry.ID = insertID;
+                            var newItem = new ExpenseEntry(0, "", "", "", 0);
+                            vm.copyEntry(vm.newEntry, vm.selectedEntry);
+                            vm.copyEntry(vm.newEntry, newItem);
+                            vm.resetEntry(vm.newEntry);
+                            vm.data.push(newItem);
+                            vm.clearErrors();
+                            vm.mode("read");
+                            vm.refreshChartData();
+                        }
+                    },
+                    error: function (e) {
+                        vm.errorMsg("Error: " + e.statusText);
+                    }
+                });
+            }
+
+            this.cancelNewEntry = function () {
+                if (vm.selectedEntry.ID == 0) {
+                    vm.mode("hidden");
+                    vm.clearErrors();
+                }
+                else {
+                    vm.mode("read");
+                    vm.clearErrors();
+                }
+            }
+
+            //this.refreshChartData = function () {
+            //    $.ajax({
+            //        cache: false,
+            //        url: '/Test/GetChartData',
+            //        type: 'GET',
+            //        contentType: 'application/json; charset=utf-8',
+            //        success: function (returnData) {
+            //            vm.chartData.remove(function (item) { return true; });
+            //            for (var i = 0; i < returnData.length; i++) {
+            //                var nitem = [returnData[i].category, returnData[i].amount];
+            //                vm.chartData.push(nitem);
+            //            }
+            //        },
+            //        error: function (e) {
+            //            vm.errorMsg("Error: " + e.statusText);
+            //        }
+            //    });
+            //}
+               
+            
+            this.refreshData = function () {
+                $.ajax({
+                    cache: false,
+                    url: '/Test/GetExpenses',
+                    type: 'GET',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (returnData) {
+                        vm.data.remove(function (item) { return true; });
+
+                        //alert(returnData.length);
+
+                        for (var i = 0; i < returnData.length; i++) {
+                            var nitem = new ExpenseEntry(returnData[i].ID,
+                                                         new Date(parseInt(returnData[i].ExpenseDate.substr(6))).format("m/dd/yyyy"),
+                                                         returnData[i].ExpenseDescription, returnData[i].ExpenseAmount, returnData[i].CategoryId);
+                            vm.data.push(nitem);
+                            
+                        }
+                        //alert("success pushing items");
+                        vm.resetEntry(vm.selectedEntry);
+                        vm.canEdit(false);
+                        vm.clearErrors();
+                        vm.mode("hidden");
+                    },
+                    error: function (e) {
+                        vm.errorMsg("Error: " + e.statusText);
+                    }
+                });
+            }
+
+            //helper functions
+            this.setSelectedEntry = function (id, date, desc, amount, categoryId) {
+                vm.selectedEntry.ID = id;
+                vm.selectedEntry.ExpenseDate(date);
+                vm.selectedEntry.ExpenseDescription(desc);
+                vm.selectedEntry.ExpenseAmount(amount);
+                vm.selectedEntry.CategoryId(categoryId);
+                vm.copyEntry(vm.selectedEntry, vm.originalEntry);
+                vm.clearErrors();
+                vm.mode("read");
+            }
+
+            this.copyEntry = function (source, target) {
+                target.ID = source.ID;
+                target.ExpenseDate(source.ExpenseDate());
+                target.ExpenseDescription(source.ExpenseDescription());
+                target.ExpenseAmount(source.ExpenseAmount());
+                target.CategoryId(source.CategoryId());
+            }
+
+            this.clearErrors = function () {
+                vm.errorMsg("");
+            }
+
+            this.resetEntry = function (entry) {
+                var newItem = new ExpenseEntry(0, "", "", "", 0);
+                vm.copyEntry(newItem, entry);
+            }
+        }; //end viewmodel
+
+        $(document).ready(function () {
+
+            $("#newDate").datepicker();
+            $("#editDate").datepicker();
+
+            $('#chart').attr('data-bind', 'piechart : chartData()');
+            $('#example').attr('data-bind', 'dataTable: { dataSource: data, columns: [{ \'bVisible\' : false , mDataProp : \'ID\', sTitle : \'Id\'} ,{ mDataProp : \'ExpenseDate\', sTitle : \'Date\', sWidth: \'100px\'},{ mDataProp : \'CategoryId\', sTitle : \'CategoryId\', \'bVisible\' : false},{ mDataProp : \'Category\', sTitle : \'Category\', sWidth: \'100px\'},{ mDataProp : \'ExpenseDescription\', sTitle : \'Description\', sWidth: \'300px\'},{ mDataProp : \'ExpenseAmount\', sTitle : \'Amount\', sWidth: \'100px\'}], sPaginationType : \'full_numbers\', sDom : \'rt<"bottom"ip><"clear">\' }');
+
+            $('#adderror').attr('data-bind', 'text : errorMsg');
+            $('#editerror').attr('data-bind', 'text : errorMsg');
+
+            $('#readDate').attr('data-bind', 'text : selectedEntry.ExpenseDate');
+            $('#readDesc').attr('data-bind', 'text : selectedEntry.ExpenseDescription');
+            $('#readAmount').attr('data-bind', 'text : selectedEntry.ExpenseAmount');
+            $('#readCategory').attr('data-bind', 'text : selectedEntry.Category');
+
+            $('#editDate').attr('data-bind', 'value : selectedEntry.ExpenseDate');
+            $('#editDesc').attr('data-bind', 'value : selectedEntry.ExpenseDescription');
+            $('#editAmount').attr('data-bind', 'value : selectedEntry.ExpenseAmount');
+            $('#editCategory').attr('data-bind', 'options: categories, optionsCaption: \'Select...\', optionsText: \'Text\', optionsValue:\'Value\', value: selectedEntry.CategoryId');
+
+            $('#newDate').attr('data-bind', 'value : newEntry.ExpenseDate');
+            $('#newDesc').attr('data-bind', 'value : newEntry.ExpenseDescription');
+            $('#newAmount').attr('data-bind', 'value : newEntry.ExpenseAmount');
+            $('#newCategory').attr('data-bind', 'options: categories, optionsCaption: \'Select...\', optionsText: \'Text\', optionsValue:\'Value\', value: newEntry.CategoryId');
+
+            $('#divDataformRead').attr('data-bind', 'visible : mode() == \'read\'');
+            $('#divDataformNew').attr('data-bind', 'visible : mode() == \'new\'');
+            $('#divDataformEdit').attr('data-bind', 'visible : mode() == \'edit\'');
+
+            $('#addRecord').attr('data-bind', 'click : beginNewEntry');
+            $('#editRecord').attr('data-bind', 'click : beginEdit, enable : canEdit() == true');
+            $('#deleteRecord').attr('data-bind', 'click : deleteEntry, enable : canEdit() == true');
+
+            $('#cancelEditBtn').attr('data-bind', 'click : cancelEdit');
+            $('#saveEditBtn').attr('data-bind', 'click : endEdit');
+
+            $('#cancelNewBtn').attr('data-bind', 'click : cancelNewEntry');
+            $('#saveNewBtn').attr('data-bind', 'click : endNewEntry');
+
+            $('#refreshBtn').attr('data-bind', 'click : refreshData');
+
+            var vm1 = new ViewModel();
+            vm1.categories();
+            vm1.refreshData();
+            //vm1.refreshChartData();
+            ko.applyBindings(vm1, $("#demo")[0]);
+
+            //we need to get the otable object first
+            var oTable = $.data(document, 'oTable');
+
+            $("#example tbody").click(function (event) {
+                $(oTable.fnSettings().aoData).each(function () {
+                    $(this.nTr).removeClass('row_selected');
+                });
+
+                if (event.target.parentNode.localName && event.target.parentNode.localName == "tr") {
+                    $(event.target.parentNode).addClass('row_selected');
+                }
+                var id = $(event.target.parentNode)[0].cells[0].innerText || $(event.target.parentNode)[0].cells[0].textContent;
+                var date = $(event.target.parentNode)[0].cells[1].innerText || $(event.target.parentNode)[0].cells[1].textContent;
+                var categoryId = $(event.target.parentNode)[0].cells[2].innerText || $(event.target.parentNode)[0].cells[2].textContent;
+                var desc = $(event.target.parentNode)[0].cells[4].innerText || $(event.target.parentNode)[0].cells[4].textContent;
+                var amount = $(event.target.parentNode)[0].cells[5].innerText || $(event.target.parentNode)[0].cells[5].textContent;
+                
+                vm1.setSelectedEntry(id, date, desc, amount, categoryId);
+                vm1.canEdit(true);
+            });
+
+        });
+    
+    </script>
+   
+
+<div id="demo">
+    <br />
+    <div class="content-box">
+        <div class="box-header clear">
+            <h2>
+                Expenses
+            </h2>
+        </div>
+        
+        <div class="box-body clear">
+            
+            <div id="chart" ></div>
+
+            <div id="gridDiv" >
+
+                <div id="divDataformHeader">
+                    <div id="divDataformTitle">Add / Modify / Delete</div>
+                    <div id="divDataformButtons">
+                        <input type="button" id="addRecord" title="Add Record" />
+                        <input type="button" id="editRecord" title="Edit Record" />
+                        <input type="button" id="deleteRecord" title="Delete Record" />
+                    </div>
+                </div>
+
+                <div id="divDataformRead" class="dataformItem">
+                    <table>
+                        <tr class="title">
+                            <td>
+                                Date
+                            </td>
+                            <td>
+                                Category
+                            </td>
+                            <td>
+                                Description
+                            </td>
+                            <td>
+                                Amount
+                            </td>
+                        </tr>
+                        <tr>
+                            <td id="readDateCell">
+                                <span id="readDate" />&nbsp;
+                            </td>
+                            <td id="readCatagoryCell">
+                                <span id="readCategory" />&nbsp;
+                            </td>
+                            <td id="readDescCell">
+                                <span id="readDesc">&nbsp;</span>
+                            </td>
+                            <td id="readAmountCell">
+                                &nbsp;<span id="readAmount" />&nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="divDataformNew" class="dataformItem">
+                    <table>
+                        <tr class="title">
+                            <td>
+                                Date
+                            </td>
+                            <td>
+                                Category
+                            </td>
+                            <td>
+                                Description
+                            </td>
+                            <td>
+                                Amount
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input id="newDate" class="entryField" maxlength="10" />
+                            </td>
+                            <td>
+                                <select id="newCategory" class="entryFieldOption">
+                                </select>
+                            </td>
+                            <td>
+                                <input id="newDesc" class="entryField" maxlength="30" />
+                            </td>
+                            <td>
+                                <input id="newAmount" class="entryField" maxlength="10" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="confirmBtnContainer">
+                                <div id="adderror">
+                                </div>
+                                <input type="button" id="cancelNewBtn" title="cancel" />
+                                <input type="button" id="saveNewBtn" title="Add" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="divDataformEdit" class="dataformItem">
+                    <table>
+                        <tr class="title">
+                            <td>
+                                Date
+                            </td>
+                            <td>
+                                Category
+                            </td>
+                            <td>
+                                Description
+                            </td>
+                            <td>
+                                Amount
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input id="editDate" class="entryField" maxlength="10" />
+                            </td>
+                            <td>
+                                <select id="editCategory" class="entryFieldOption">
+                                </select>
+                            </td>
+                            <td>
+                                <input id="editDesc" class="entryField" maxlength="30" />
+                            </td>
+                            <td>
+                                <input id="editAmount" class="entryField" maxlength="10" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="confirmBtnContainer">
+                                <div id="editerror">
+                                </div>
+                                <input type="button" id="cancelEditBtn" title="cancel" />
+                                <input type="button" id="saveEditBtn" title="Save" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="loading" style="display: none;">
+                    &nbsp;&nbsp;&nbsp;<img src="../../Content/images/ajax-loader.gif" alt="Loader Image" />
+                    <br />
+                    Working ...
+                </div>
+                <br />
+                <div class="dataTables_wrapper">
+                    <table cellpadding="0" cellspacing="0" border="0" class="ExpenseTable" id="example">
+                        <thead>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <input type="button" id="refreshBtn" title="refresh data from server" />
+
+            </div>
+
+        </div>
+    </div>
+</div>

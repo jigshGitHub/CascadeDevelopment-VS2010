@@ -1,0 +1,806 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+@Scripts.Render("~/bundles/jquery")
+
+<h2>Media Form</h2>
+
+<div id="fileUploadContainer" style="display:none">
+    @using (Html.BeginForm("UploadDocument","Media", FormMethod.Post,new { enctype="multipart/form-data"}))
+    {
+        <div>
+            Upload document for Media:<input name="mediaDocument" type="file" />
+        </div>
+        //Btn Click event to upload file
+        <input type="submit" value="Submit" />
+    }
+</div>
+
+
+<div id="divDataformNew">
+
+     <table class="searchtable">
+        <tr>
+            <td colspan="2">
+                <b>Search Media Data:</b>
+            </td>
+        </tr>
+        <tr>
+            <td>PIMS Account Number:
+            </td>
+            <td>
+                <input type="text" id="newPIMSAccount" data-bind="value:newPIMSAccount" />
+                <span data-bind="text:newPIMSAccountRequired, visible:newPIMSAccountRequiredHasError" style="color: Red"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>Original Account:
+            </td>
+            <td>
+                <input type="text" id="newOriginalAccount" data-bind="value:newOriginalAccount" />
+                <span data-bind="text:newOriginalAccountRequired, visible:newOriginalAccountRequiredHasError" style="color: Red"></span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="confirmBtnContainer">
+                <input type="button" id="refreshBtn" title="Add" data-bind="click:search"/>
+                <span data-bind="text:dataNotFound, visible:dataNotFoundHasError" style="color: Red"></span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div id="resultSummary" style="color: Red">
+                    <ul>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+     </table>
+
+    <table class="dummyitem"></table>
+
+     <table class="PIMSDatatable" style="display:none" id="tblPIMSDataTable">
+        <tr>
+            <td colspan="2">
+                <b>PIMS Data</b>
+            </td>
+        </tr>
+        <tr class="dummyitem">
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td>Portfolios:
+            </td>
+            <td>
+                <input id="newPortfolio" type="text" data-bind="value:newPortfolio" readonly="true" />
+            </td>
+        </tr>
+        <tr>
+            <td>Original Lender/Product:
+            </td>
+            <td>
+                <input id="newOriginalLender" type="text" data-bind="value:newOriginalLender" readonly="true" />
+            </td>
+        </tr>
+        <tr>
+            <td>SSN:
+            </td>
+            <td>
+                <input id="newSSN" type="text" data-bind="value:newSSN" readonly="true" />
+            </td>
+            
+        </tr>
+        <tr>
+            <td>Account Holder's Name:
+            </td>
+            <td>
+                <input id="newName" type="text" data-bind="value:newName" readonly="true" />
+            </td>
+            
+        </tr>
+        <tr>
+            <td>Open Date:
+            </td>
+            <td>
+                <input type="text" id="newOpenDate" data-bind="value:newOpenDate" readonly="true" />
+            </td>
+            
+        </tr>
+        <tr>
+            <td>C/O Date:
+            </td>
+            <td>
+                <input type="text" id="newCODate" data-bind="value:newCODate" readonly="true"/>
+            </td>
+            
+        </tr>
+        <tr>
+            <td>Seller:
+            </td>
+            <td>
+                <input id="newSeller" type="text" class="txtwidth" data-bind="value:newSeller" readonly="true"/>
+            </td>
+            
+        </tr>
+
+    </table>
+
+     <table class="dummyitem"></table>
+
+     <table class="originaltable" style="display:none" id="tbloriginaltable">
+        <tr>
+            <td colspan="3">
+                <b>Original Request Data</b>
+            </td>
+        </tr>
+        <tr class="dummyitem">
+            <td colspan="3"></td>
+        </tr>
+        <tr>
+            <td>Order Date:
+            </td>
+            <td colspan="2">
+                <input type="text" id="newDateRec" data-bind="value:newDateRec" />
+                
+            </td>
+        </tr>
+        <tr>
+            <td>CompanyRequesting:
+            </td>
+            <td colspan="2">
+                <input id="newCompRequesting" type="text" data-bind="value:newCompRequesting" readonly="true" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <b>Documents Requested</b>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <tr><td colspan="2"><input type="checkbox" data-bind="checked: IsaffdvtIssuer"  /> Affidavit (Issuer) Y or N</td></tr>
+                    <tr><td colspan="2"><input type="checkbox" data-bind="checked: IsaffdvtSeller"  /> Affidavit (Seller) Y or N</td></tr>
+                    <tr><td colspan="2"><input type="checkbox" data-bind="checked: Isapplication" /> Application Y or N</td></tr>
+                    <tr><td colspan="2">&nbsp;</td></tr>
+                    <tr>
+                        <td>Explanation:</td>
+                        <td>
+                            <input type="text" id="newExplanation" data-bind="value:newExplanation" maxlength="100"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Upload Media:</td>
+                        <td>
+                            <input type="checkbox" data-bind="checked: uploadChecked" />
+                        </td>
+                    </tr>
+                 </table>
+
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td>Stmt From Date:</td>
+                        <td>
+                            <input type="text" id="newStmtFrom" data-bind="value:newStmtFrom" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Stmt To Date:</td>
+                        <td> 
+                            <input type="text" id="newStmtTo" data-bind="value:newStmtTo" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table class="FollowupDatatable">
+                    <tr><td colspan="2"><input type="checkbox" data-bind="checked: IsClosed"  /> Closed</td></tr>
+                    <tr><td colspan="2"><input type="checkbox" data-bind="checked: IsmediaUnavl"  /> Media unavailable</td></tr>
+                    <tr>
+                        <td>Date:</td>
+                        <td>
+                            <input type="text" id="newDate" data-bind="value:newDate" />
+                        </td>
+                     </tr>
+                </table>
+
+            </td>
+        </tr>
+
+    </table>
+
+     <table class="dummyitem"></table>
+
+     <table class="FollowupDatatable" style="display:none" id="tblFollowupDatatable">
+        <tr>
+            <td colspan="2"><b>Follow-up Data</b></td>
+            
+        </tr>
+        <tr class="dummyitem">
+            <td colspan="2"></td>
+        </tr>
+          
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td>Date Submitted:
+                        </td>
+                        <td>
+                            <input type="text" id="newDateSubmitted" data-bind="value:newDateSubmitted" />
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Date Received:
+                        </td>
+                        <td>
+                            <input type="text" id="newDateReceived" data-bind="value:newDateReceived"/>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Type of Media Received:</td>
+                        <td>
+                            <input type="text" id="newTypeOfMediaRcvd" data-bind="value:newTypeOfMediaRcvd"/>
+                            
+                         </td>
+                    </tr>
+                    
+                </table>
+
+            </td>
+
+            <td>
+                <table>
+                  <tr>
+                    <td>Date Request Confirmed:
+                    </td>
+                    <td>
+                        <input type="text" id="newDateReqConfirmed" data-bind="value:newDateReqConfirmed"/>
+                        
+                    </td>
+                 </tr>
+                    <tr>
+                    <td>Date Forwarded:
+                    </td>
+                    <td>
+                        <input type="text" id="newDateForwarded" data-bind="value:newDateForwarded"/>
+                        
+                    </td>
+                 </tr>
+                
+                   <tr>
+                        <td>Order Number:
+                        </td>
+                        <td>
+                            <input type="text" id="newOrderNumber" data-bind="value:newOrderNumber" readonly="true"/>
+                            
+                        </td>
+                    </tr>
+                </table>
+             </td>
+        </tr>
+        
+        <tr>
+
+            <td>
+                <table>
+                    <tr>
+                        <td colspan="2"><b>Receivable</b></td>
+                    </tr>
+                    <tr>
+                        <td>Our Invoice:
+                        </td>
+                        <td>
+                            <input type="text" id="newOurInvoice" data-bind="value:newOurInvoice"/>
+                            
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td>Our Fee:
+                        </td>
+                        <td>
+                            <input type="text" id="newOurFee" data-bind="value:newOurFee" onkeypress="if ( isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;"/>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Date Payment Received:
+                        </td>
+                        <td>
+                            <input type="text" id="newDatePaymentRcvd" data-bind="value:newDatePaymentRcvd"/>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Buyer Check #:
+                        </td>
+                        <td>
+                            <input type="text" id="newBuyerCheck" data-bind="value:newBuyerCheck" />
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Notes:</td>
+                        <td>
+                            <textarea rows='4' id="newNotes" cols='17' data-bind="value:newNotes"  maxlength="150"></textarea>
+                            
+                         </td>
+                    </tr>
+                </table>
+
+            </td>
+
+            <td>
+                <table>
+
+                 <tr>
+                     <td colspan="2"><b>Payable</b></td>
+                 </tr>
+                 <tr>
+                        <td>Seller Invoice #:
+                        </td>
+                        <td>
+                            <input type="text" id="newSellerInvoice" data-bind="value:newSellerInvoice" maxlength="20" />
+                            
+                        </td>
+                    </tr> 
+                    <tr>
+                        <td>Seller Fee:
+                        </td>
+                        <td>
+                            <input type="text" id="newSellerFee" data-bind="value:newSellerFee" maxlength="20" onkeypress="if ( isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;"/>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Date Seller Paid:
+                        </td>
+                        <td>
+                            <input type="text" id="newDateSellerPaid" data-bind="value:newDateSellerPaid"/>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Our Check #:
+                        </td>
+                        <td>
+                            <input type="text" id="newOurCheck" data-bind="value:newOurCheck"/>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                    <td>Unique Identification #</td>
+                        <td>
+                            <input id="newGUID" type="text" data-bind="value:newGUID"  class="guidwidth" readonly="true" />
+                        </td>
+                    </tr>
+                    
+                </table>
+
+            </td>
+
+        </tr>
+        <tr>
+            <td colspan="2" class="confirmBtnContainer">
+                <input type="button" id="saveNewBtn" title="Add" data-bind="click:save" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div id="resultSummaryData" style="color: Red">
+                    <ul>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+
+@Scripts.Render("~/bundles/knockout")
+
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.8.11.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+
+
+        //Client side View Model
+        function mediaformVM() {
+
+            var href = window.location.href.split('/');
+            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
+            //var baseUrl = href[0] + '//' + href[2] + '/' + href[3] + '/' + href[4];
+            //alert(baseUrl);
+
+            //var apiUrl = '/api/Lookup/';
+            
+            var self = this;
+
+            self.newOriginalAccount = ko.observable('');
+            //For Validation
+            self.newOriginalAccountRequired = ko.observable('*');
+            self.newOriginalAccountRequiredMsg = ko.observable('');
+            self.newOriginalAccountRequiredHasError = ko.observable(false);
+
+            self.newPIMSAccount = ko.observable('');
+            //For Validation
+            self.newPIMSAccountRequired = ko.observable('*');
+            self.newPIMSAccountRequiredMsg = ko.observable('');
+            self.newPIMSAccountRequiredHasError = ko.observable(false);
+
+            //For Date
+            self.newDateRec = ko.computed(function () {
+                return dateFormat(Date.parse(new Date()), 'mm/dd/yyyy');
+            });
+
+            self.newCompRequesting = ko.observable('');
+            self.newExplanation = ko.observable('');
+            self.newStmtFrom = ko.observable('');
+            self.newStmtTo = ko.observable('');
+            //self.newDate = ko.observable('');
+
+            //For Checkboxes
+            self.IsaffdvtIssuer = ko.observable(false);
+            self.IsaffdvtSeller = ko.observable(false);
+            self.Isapplication = ko.observable(false);
+            self.IsClosed = ko.observable(false);
+            self.IsmediaUnavl = ko.observable(false);
+
+            self.newOriginalLender = ko.observable('');
+            self.newName = ko.observable('');
+            self.newPortfolio = ko.observable('');
+            self.newOpenDate = ko.observable('');
+            self.newCODate = ko.observable('');
+            self.newSeller = ko.observable('');
+            self.newSSN = ko.observable('');
+
+            self.newTypeOfMediaRcvd = ko.observable('');
+            self.newOurInvoice = ko.observable('');
+            self.newOurFee = ko.observable('');
+            self.newBuyerCheck = ko.observable('');
+            self.newNotes = ko.observable('');
+            self.newSellerInvoice = ko.observable('');
+            self.newSellerFee = ko.observable('');
+            self.newOurCheck = ko.observable('');
+            self.newGUID = ko.observable('');
+            
+            //For File Upload control
+            self.uploadChecked = ko.observable(false);
+            //Done For File Upload control
+
+
+            //For Unavailable Date
+            self.newDate = ko.computed(function () {
+                return dateFormat(Date.parse(new Date()), 'mm/dd/yyyy');
+            });
+            
+            //For Date Req Confirmed
+            self.newDateReqConfirmed = ko.computed(function () {
+                return dateFormat(Date.parse(new Date()), 'mm/dd/yyyy');
+            });
+
+            //For Date Forwarded
+            self.newDateForwarded = ko.computed(function () {
+                return dateFormat(Date.parse(new Date()), 'mm/dd/yyyy');
+            });
+
+            //For Date Payment Received
+            self.newDatePaymentRcvd = ko.computed(function () {
+                return dateFormat(Date.parse(new Date()), 'mm/dd/yyyy');
+            });
+
+            //For Date Seller Paid
+            self.newDateSellerPaid = ko.computed(function () {
+                return dateFormat(Date.parse(new Date()), 'mm/dd/yyyy');
+            });
+
+            //For Date Submitted
+            self.newDateSubmitted = ko.computed(function () {
+                return dateFormat(Date.parse(new Date()), 'mm/dd/yyyy');
+            });
+
+            //For Date Received
+            self.newDateReceived = ko.computed(function () {
+                return dateFormat(Date.parse(new Date()), 'mm/dd/yyyy');
+            });
+
+            //For Unique order number - This is Random Number
+            self.newOrderNumber = ko.observable('');
+            
+            //For validation Messages - if system does not find any matching record
+            self.dataNotFound = ko.observable('');
+            self.dataNotFoundHasError = ko.observable(false);
+            //For validation Messages
+            self.validationErrors = ko.observableArray([]);
+            self.validationErrorsData = ko.observableArray([]);
+
+
+            //This is used to format Date from Json response - We get date like this from Json "\/Date(1283219926108)\/"
+            function JSONDate(dateStr) {
+                if (dateStr != null) {
+                    var m, day;
+                    jsonDate = dateStr;
+                    var d = new Date(parseInt(jsonDate.substr(6)));
+                    m = d.getMonth() + 1;
+                    if (m < 10)
+                        m = '0' + m
+                    if (d.getDate() < 10)
+                        day = '0' + d.getDate()
+                    else
+                        day = d.getDate();
+                    return (m + '/' + day + '/' + d.getFullYear())
+                }
+                else {
+                    return ''
+                }
+            }
+            //For Date with Time
+            function JSONDateWithTime(dateStr) {
+                if (dateStr != null) {
+                    jsonDate = dateStr;
+                    var d = new Date(parseInt(jsonDate.substr(6)));
+                    var m, day;
+                    m = d.getMonth() + 1;
+                    if (m < 10)
+                        m = '0' + m
+                    if (d.getDate() < 10)
+                        day = '0' + d.getDate()
+                    else
+                        day = d.getDate();
+                    var formattedDate = m + "/" + day + "/" + d.getFullYear();
+                    var hours = (d.getHours() < 10) ? "0" + d.getHours() : d.getHours();
+                    var minutes = (d.getMinutes() < 10) ? "0" + d.getMinutes() : d.getMinutes();
+                    var formattedTime = hours + ":" + minutes + ":" + d.getSeconds();
+                    formattedDate = formattedDate + " " + formattedTime;
+                    return formattedDate;
+                }
+                else {
+                    return ''
+                }
+            }
+
+            //For Search and get data
+            self.search = function () {
+                self.validationErrors([]);
+
+                self.newOriginalAccountRequiredHasError(false);
+                self.newPIMSAccountRequiredHasError(false);
+                self.dataNotFoundHasError = ko.observable(false);
+
+                //Original Account or PIMS Account Number
+                if (self.newOriginalAccount() == '' && self.newPIMSAccount() == '') {
+                    self.newOriginalAccountRequiredHasError(true);
+                    self.newOriginalAccountRequiredMsg('PIMS Account Number or Original Account Number is required.');
+                    self.validationErrors.push(self.newOriginalAccountRequiredMsg());
+                }
+
+                if (self.validationErrors() == '') {
+                    //let us show loading image
+                    var applicationname = "";
+                    var myhost = window.location.protocol + "//" + window.location.host
+                    var absoluteapp = myhost + applicationname;
+                    var imagedir = "/Content/Images";
+                    $("#loading").dialog('open');
+                    $("#loading").html("<img src=\"" + absoluteapp + imagedir + "/ajax-loader.gif\" />");
+                    //Done for loading image while data is being pulled
+
+                    //Create json and perform Search
+                    var json = JSON.stringify({
+                        OrigAcct: self.newOriginalAccount(),
+                        PIMSAcct: self.newPIMSAccount(),
+                    });
+
+                    $.ajax({
+                        url: baseUrl + "/Media/Search/",
+                        type: "POST",
+                        data: json,
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (response) {
+
+                            //Hide the loading image
+                            $("#loading").html("&nbsp;");
+                            $("#loading").dialog('close');
+
+                            //alert(response.OrderNumber);
+                            //alert(response.CODate);
+
+                            //alert(response.CurrentResp);
+                            if (response.AcctName == null || response.Portfolio == null
+                                || response.SSN == null || response.PIMSAcct == null) {
+                                //Without Data
+                                $('#tblPIMSDataTable').hide();
+                                $('#tblFollowupDatatable').hide();
+                                $('#tbloriginaltable').hide();
+                                $('#resultSummary ul').html("");
+                                self.dataNotFound('System could not find matching record. Please try again.');
+                                self.validationErrors.push(self.dataNotFound());
+                                //show the validation message on the screen
+                                $.each(self.validationErrors(), function (i, item) {
+                                    log(item);
+                                    $('#resultSummary ul').append('<li>' + item + '</li>');
+                                });
+                            }
+                            else {
+                                //With Data
+                                $('#resultSummary ul').html("");
+                                $('#tblPIMSDataTable').show();
+                                $('#tblFollowupDatatable').show();
+                                $('#tbloriginaltable').show();
+                                $('#resultSummaryData ul').html("");
+                                //Now push the data received from the server
+                                self.newCompRequesting(response.CompanyRequesting);
+                                self.newOriginalAccount(response.OrigAcct);
+                                self.newPIMSAccount(response.PIMSAcct);
+                                self.newOriginalLender(response.OriginalLender);
+                                self.newName(response.AcctName);
+                                self.newPortfolio(response.Portfolio);
+                                self.newOpenDate(JSONDate(response.OpenDate));
+                                self.newCODate(JSONDate(response.CODate));
+                                self.newSeller(response.Seller);
+                                self.newSSN(response.SSN);
+                                self.newOrderNumber(response.OrderNumber);
+                                self.newGUID(response.GUID);
+                                
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            //Hide the loading image
+                            $("#loading").html("&nbsp;");
+                            $("#loading").dialog('close');
+                            console.log(textStatus, errorThrown);
+                            $('#resultSummary ul').append('<li>We have some issue processing your request. Please try again later.</li>');
+                        }
+                    });
+                }
+                else {
+                    //First clear the error message previousely shown
+                    $('#resultSummary ul').html("");
+                    $.each(self.validationErrors(), function (i, item) {
+                        log(item);
+                        $('#resultSummary ul').append('<li>' + item + '</li>');
+                    });
+                }
+            };
+
+            //Save or Add button click event
+            self.save = function () {
+
+                self.validationErrorsData([]);
+                self.newOriginalAccountRequiredHasError(false);
+                self.newPIMSAccountRequiredHasError(false);
+
+                //alert("ready for validation checks");
+
+                $('#resultSummaryData ul').empty();
+                
+                //Original Account
+                if (self.newOriginalAccount() == '') {
+                    self.newOriginalAccountRequiredHasError(true);
+                    self.newOriginalAccountRequiredMsg('Original Account Number is required.');
+                    self.validationErrorsData.push(self.newOriginalAccountRequiredMsg());
+                }
+                //PIMS Acccount
+                if (self.newPIMSAccount() == '') {
+                    self.newPIMSAccountRequiredHasError(true);
+                    self.newPIMSAccountRequiredMsg('PIMS Account Number is required.');
+                    self.validationErrorsData.push(self.newPIMSAccountRequiredMsg());
+                }
+
+                if (self.validationErrorsData() == '') {
+
+                    //alert("we are here");
+                    //alert(self.imageFile().name);
+                    
+                    var json = JSON.stringify({
+
+                        OrderDate: self.newDateRec(),
+                        OrigAcct: self.newOriginalAccount(),
+                        PIMSAcct: self.newPIMSAccount(),
+                        AcctName: self.newName(),
+                        Seller: self.newSeller(),
+                        CompanyRequesting: self.newCompRequesting(),
+                        Portfolio: self.newPortfolio(),
+                        Explanation: self.newExplanation(),
+                        OriginalLender: self.newOriginalLender(),
+                        SSN: self.newSSN(),
+                        IsApplication: self.Isapplication(),
+                        IsAffidavitIssuer: self.IsaffdvtIssuer(),
+                        IsAffidavitSeller: self.IsaffdvtSeller(),
+                        IsUnavailable: self.IsmediaUnavl(),
+                        IsClosed: self.IsClosed(),
+                        StmtsFrom: self.newStmtFrom(),
+                        StmtsTo: self.newStmtTo(),
+                        OpenDate: self.newOpenDate(),
+                        CODate: self.newCODate(),
+                        DateSubmitted: self.newDateSubmitted(),
+                        DateConfirmed: self.newDateReqConfirmed(),
+                        SellerFee: self.newSellerFee(),
+                        DateSellerPaid: self.newDateSellerPaid(),
+                        OurFee: self.newOurFee(),
+                        DateReceived: self.newDateReceived(),
+                        DateForwarded: self.newDateForwarded(),
+                        Notes: self.newNotes(),
+                        UnavailableDate: self.newDate(),
+                        SellerInvoice: self.newSellerInvoice(),
+                        BuyerCheck: self.newBuyerCheck(),
+                        OurCheck: self.newOurCheck(),
+                        DatePayRec: self.newDatePaymentRcvd(),
+                        MediaTypeReceived: self.newTypeOfMediaRcvd(),
+                        OurInvoice: self.newOurInvoice(),
+                        OrderNumber: self.newOrderNumber(),
+                        GUID: self.newGUID()
+                        
+                    });
+
+                    $.ajax({
+                        url: baseUrl + "/Media/Add/",
+                        type: "POST",
+                        data: json,
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (response) {
+                            //log(response.ID);
+                            //$('#resultSummary ul').append('<li>Coach with username ' + response.UserName + ' has been created.</li>');
+                            $('#resultSummaryData ul').append('<li>Media Record created successfully.</li>');
+                            $('#saveNewBtn').hide();
+
+                            //Now display the File Upload Div
+                            if (self.uploadChecked() == true )
+                            {
+                                //log(self.uploadChecked());
+                                $('#fileUploadContainer').show();
+                                $('#fileUploadContainer').dialog('open');
+                             }
+
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert(errorThrown);
+                            console.log(textStatus, errorThrown);
+                            $('#resultSummaryData ul').append('<li>We have some issue processing your request. Please try again later.</li>');
+                        }
+
+                    });
+                }
+                else {
+                    $.each(self.validationErrorsData(), function (i, item) {
+                        log(item);
+                        $('#resultSummaryData ul').append('<li>' + item + '</li>');
+                    });
+                }
+            };
+            
+        };
+              
+        $(document).ready(function () {
+            //Knockout Bindings
+            ko.applyBindings(new mediaformVM(), $('#divDataformNew')[0]);
+            $('#fileUploadContainer').dialog({ modal: true, title: 'Upload documents:', autoOpen: false, width: 500, height: 500 });
+            //For Date Picker
+            $('#newDateRec').datepicker();
+            $('#newDateSubmitted').datepicker();
+            $('#newDateReceived').datepicker();
+            $('#newDateReqConfirmed').datepicker();
+            $('#newDateForwarded').datepicker();
+            $('#newDatePaymentRcvd').datepicker();
+            $('#newStmtFrom').datepicker();
+            $('#newStmtTo').datepicker();
+            $('#newDate').datepicker();
+            $('#newDateSellerPaid').datepicker();
+                        
+         });
+        
+    </script>
+}

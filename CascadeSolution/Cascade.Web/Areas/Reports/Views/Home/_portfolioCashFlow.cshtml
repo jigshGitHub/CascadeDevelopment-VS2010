@@ -1,0 +1,36 @@
+﻿@model IList<Cascade.Data.Models.vw_PortfolioCashFlow>
+@using Cascade.Web.Presentation.ExtensionMethods
+
+<link href="@Url.Content("~/Content/dataTables/demo_table.css")" rel="stylesheet" type="text/css" />
+
+<script src="~/Scripts/datatable/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/index.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/jquery.dataTables.min.js" type="text/javascript"></script>
+
+<h2>Report: Portfolio Cash Flow</h2>
+
+<div id="divPortCashFlow">
+    <table id="portCashFlow" class="display">
+        <thead>
+            <tr> 
+                <th>Portfolio#</th>
+                <th>Closing Date</th>
+                <th>Trans Type</th>
+                <th>Sales Price</th>
+                <th>Company</th> 
+            </tr> 
+        </thead> 
+        <tbody> 
+            @foreach (var cashflow in Model)
+            {
+                <tr>
+                    <td>@cashflow.Portfolio_</td>
+                    <td>@cashflow.ClosingDate.ConverToDate()</td>
+                    <td>@cashflow.TransType</td>
+                    <td>@cashflow.SalesPrice.ToIntegerCurrency()</td>
+                    <td>@cashflow.Company</td>
+                </tr> 
+            }
+        </tbody>
+    </table>
+</div>

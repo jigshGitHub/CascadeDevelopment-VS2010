@@ -1,0 +1,38 @@
+﻿@model IList<Cascade.Data.Models.vw_CollectionsRecon>
+@using Cascade.Web.Presentation.ExtensionMethods
+
+<link href="@Url.Content("~/Content/dataTables/demo_table.css")" rel="stylesheet" type="text/css" />
+
+<script src="~/Scripts/datatable/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/index.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/jquery.dataTables.min.js" type="text/javascript"></script>
+
+<h2>Report: Collections Reconciliation</h2>
+
+<div id="divCollectionRecon">
+    <table id="CollectionRecon" class="display">
+        <thead>
+            <tr> 
+                <th>Portfolio#</th>
+                <th>Closing Date</th>
+                <th>Company</th>
+                <th>Agency</th>
+                <th>FaceValue</th>
+                <th>SalesPrice</th>
+            </tr> 
+        </thead> 
+        <tbody> 
+            @foreach (var colleRecon in Model)
+            {
+                <tr>
+                    <td>@colleRecon.Portfolio_</td>
+                    <td>@colleRecon.ClosingDate.ConverToDate()</td>
+                    <td>@colleRecon.Company</td>
+                    <td>@colleRecon.Agency</td>
+                    <td>@colleRecon.FaceValue.ToIntegerCurrency()</td>
+                    <td>@colleRecon.SalesPrice.ToIntegerCurrency()</td>
+                </tr> 
+            }
+        </tbody>
+    </table>
+</div>

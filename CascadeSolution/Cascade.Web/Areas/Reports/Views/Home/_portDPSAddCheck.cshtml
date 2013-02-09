@@ -1,0 +1,40 @@
+﻿@model IList<Cascade.Data.Models.vw_AddDPSCheck>
+@using Cascade.Web.Presentation.ExtensionMethods
+
+<link href="@Url.Content("~/Content/dataTables/demo_table.css")" rel="stylesheet" type="text/css" />
+
+<script src="~/Scripts/datatable/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/index.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/jquery.dataTables.min.js" type="text/javascript"></script>
+
+<h2>Report: Add Check Number</h2>
+
+<div id="divAddDPSCheck">
+    <table id="adddpscheck" class="display">
+        <thead>
+            <tr> 
+                <th></th>
+                <th>PIMS#</th>
+                <th>Amount</th>
+                <th>Date Received</th>
+                <th>Current Responsibility</th>
+                <th>Check Number</th>
+                <th>Company</th>
+            </tr> 
+        </thead> 
+        <tbody> 
+            @foreach (var addCheck in Model)
+            {
+                <tr>
+                    <td>@Html.ActionLink("Edit", "Edit", new {  recordid=addCheck.ID })</td>
+                    <td>@addCheck.PIMSAcct_</td>
+                    <td>@addCheck.Amount.ToIntegerCurrency()</td>
+                    <td>@addCheck.DateRec.ConverToDate()</td>
+                    <td>@addCheck.CurrentResp</td>
+                    <td>@addCheck.CheckNumber</td>
+                    <td>@addCheck.Company</td>
+                </tr> 
+            }
+        </tbody>
+    </table>
+</div>

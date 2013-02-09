@@ -1,0 +1,77 @@
+﻿@model Cascade.UI.Controls.CascadeMenuCollection
+@using Cascade.Web.ApplicationIntegration
+<ul id="menu" class="dropdown">
+    @{  
+        if (HttpContext.Current.User.Identity.IsAuthenticated)
+        {
+            IEnumerable<Cascade.UI.Controls.Menu> topMenus = Model.MenuItems.Where(i => i.ParentId == 0).OrderBy(i => i.SortOrder);//.ThenBy(i => i.Text);
+            Cascade.UI.Controls.CascadeMenu menuItem;
+            String[] roles = Roles.GetRolesForUser();
+            foreach (var item in topMenus)
+            {
+
+                menuItem = ((Cascade.UI.Controls.CascadeMenu)item);
+                menuItem.IsVisible = false;
+                foreach (string role in menuItem.Roles)
+                {
+                    if (roles.Contains(role))
+                    {
+                        menuItem.IsVisible = true;
+                    }
+                }
+                if (item.IsActive && menuItem.IsVisible)
+                {
+                
+        <li>@Html.CreateLink(menuItem.Text, menuItem.Action, menuItem.Controller, menuItem.Area)
+            @if (Model.MenuItemHasChildren(menuItem.Id))
+            {
+                IEnumerable<Cascade.UI.Controls.CascadeMenu> items = Model.GetChildMenuItems(menuItem.Id);
+                <ul class="sub_menu">
+                    @foreach (var subItem in items)
+                    {
+                        subItem.IsVisible = false;
+                        foreach (string role in subItem.Roles)
+                        {
+                            if (roles.Contains(role))
+                            {
+                                subItem.IsVisible = true;
+                            }
+                        }
+                        if (subItem.IsActive && subItem.IsVisible)
+                        {
+                        <li>
+                            @Html.ActionLink(subItem.Text, subItem.Action, subItem.Controller, new { area = menuItem.Area }, null)
+                            @if (Model.MenuItemHasChildren(subItem.Id))
+                            {
+                                IEnumerable<Cascade.UI.Controls.CascadeMenu> subItems = Model.GetChildMenuItems(subItem.Id);
+                                <ul class="sub_menu">
+                                    @foreach (var subofSubItem in subItems)
+                                    {
+                                        subofSubItem.IsVisible = false;
+                                        foreach (string role in subofSubItem.Roles)
+                                        {
+                                            if (roles.Contains(role))
+                                            {
+                                                subofSubItem.IsVisible = true;
+                                            }
+                                        }
+                                        if (subofSubItem.IsActive && subofSubItem.IsVisible)
+                                        {
+                                        <li>
+                                            @Html.ActionLink(subofSubItem.Text, subofSubItem.Action, subofSubItem.Controller, new { area = subofSubItem.Area }, null)
+                                        </li>
+                                        }
+                                    }
+                                </ul>
+                            }
+                        </li>
+                        }
+                    }
+                </ul>
+            }
+        </li>
+                }
+            }
+        }
+    }
+</ul>

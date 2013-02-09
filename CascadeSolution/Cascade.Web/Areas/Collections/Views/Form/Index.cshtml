@@ -1,0 +1,853 @@
+﻿
+@Styles.Render("~/Content/kospl/css")
+@Scripts.Render("~/bundles/koexternaljs")
+
+@section scripts{
+    
+    <script src="~/Scripts/kospl/jquery-ui-1.8.20.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/kospl/DataTables-1.9.2/media/js/jquery.dataTables.js" type="text/javascript"></script>
+    <script src="~/Scripts/kospl/knockout-2.1.0.debug.js" type="text/javascript"></script>
+    <script src="~/Scripts/kospl/knockout.mapping-latest.debug.js" type="text/javascript"></script>
+    <script src="~/Scripts/kospl/knockout.bindings.dataTables.js" type="text/javascript"></script>
+    <script src="~/Scripts/kospl/knockout.bindings.jqPlot.js" type="text/javascript"></script>
+
+}
+
+<script type="text/javascript">
+  
+        $.ajaxSetup({
+            beforeSend: function () {
+                // show gif here
+                $("#loading").show();
+            },
+            complete: function () {
+                // hide gif here
+                $("#loading").hide();
+            }
+        });
+
+        //alert("Starting to access TransCodeList");
+
+        var transCodeCollection = "";
+        var transSourceCollection = "";
+        var pmtTypesCollection = "";
+        var portfolioCollection = "";
+        var responsibilitiesCollection = "";
+       
+        $.getJSON("Form/GetTransCodeList", null, function (data){
+            //alert(data.length);
+            transCodeCollection = data;
+            //alert(transCodeCollection.length);
+        });
+
+        //alert("End to access TransCodeList");
+    
+        $.getJSON("Form/GetTransSourceList", null, function (data){
+            transSourceCollection = data;
+            //alert(transSourceCollection.length);
+        });
+
+        $.getJSON("Form/GetPmtTypesList", null, function (data){
+            pmtTypesCollection = data;
+            //alert(pmtTypesCollection.length);
+        });
+
+        $.getJSON("Form/GetPortfoliosList", null, function (data){
+            portfolioCollection = data;
+            //alert(portfolioCollection.length);
+        });
+
+        $.getJSON("Form/GetResponsibilitesList", null, function (data) {
+            responsibilitiesCollection = data;
+            //alert(responsibilitiesCollection.length);
+        });
+
+        
+        function DPSEntry(Id, DateRec, OriginalAccount, PIMSAccount, Amount, NetPayment, TransCode, TranDate,
+            CheckNumber, PmtTypeId, TransSourceId, Name, Portfolio, Responsibility, OurCheck, Uploaded) {
+
+            this.ID = Id;
+            this.DateRec = ko.observable(DateRec);
+            this.OriginalAccount = ko.observable(OriginalAccount);
+            this.PIMSAccount = ko.observable(PIMSAccount);
+            this.Amount = ko.observable(Amount);
+            this.NetPayment = ko.observable(NetPayment);
+            this.TranDate = ko.observable(TranDate);
+            this.CheckNumber = ko.observable(CheckNumber);
+            this.Name = ko.observable(Name);
+            this.OurCheck = ko.observable(OurCheck);
+            this.Uploaded = ko.observable(Uploaded);
+
+            this.TransCode = ko.observable(TransCode);
+            this.Portfolio = ko.observable(Portfolio);
+            this.Responsibility = ko.observable(Responsibility);
+            
+            this.TransSource = ko.computed(function () {
+                if (this.TransSourceId() != 0 && this.TransSourceId() - 1 < transSourceCollection.length) {
+                    return transSourceCollection[this.TransSourceId() - 1].Text;
+                }
+                else {
+                    return "none";
+                }
+            }, this);
+
+            this.PmtType = ko.computed(function () {
+                if (this.PmtTypeId() != 0 && this.PmtTypeId() - 1 < pmtTypesCollection.length) {
+                    return pmtTypesCollection[this.PmtTypeId() - 1].Text;
+                }
+                else {
+                    return "none";
+                }
+            }, this);
+
+        }
+      
+
+        function ViewModel() {
+            var vm = this;
+
+            //this.categories = CategoriesCollection;
+
+            //alert(transCodeCollection);
+
+            this.transCodes = transCodeCollection;
+            this.transSources = transSourceCollection;
+            this.pmtTypes = pmtTypesCollection;
+            this.portfolios = portfolioCollection;
+            this.responsibilities = responsibilitiesCollection;
+            
+            this.data = ko.observableArray();
+
+            this.chartData = ko.observableArray();
+
+            this.jsonData = ko.dependentObservable(function () {
+                return ko.toJSON(this.data);
+            }, this);
+
+            this.canEdit = ko.observable(false);
+            this.selectedEntry = new DPSEntry(0, "", "", "", "", "", "", "", "", 0, 0, "", "", "", "", "");
+            this.originalEntry = new DPSEntry(0, "", "", "", "", "", "", "", "", 0, 0, "", "", "", "", "");
+            this.newEntry = new DPSEntry(0, "", "", "", "", "", "", "", "", 0, 0, "", "", "", "", "");
+            
+            this.mode = ko.observable("hidden");
+            this.errorMsg = ko.observable("");
+
+            this.beginEdit = function () {
+                vm.copyEntry(vm.selectedEntry, vm.originalEntry);
+                vm.clearErrors();
+                vm.mode("edit");
+            }
+
+            this.endEdit = function () {
+                $.ajax({
+                    data: ko.toJSON(vm.selectedEntry),
+                    url: '/Form/EditDPS',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (resultMsg) {
+                        if (resultMsg == "success") {
+                            vm.data.remove(function (item) { return vm.selectedEntry.ID == item.ID });
+                            var editedItem = new DPSEntry(0, "", "", "", "", "", "", "", "", 0, 0, "", "", "", "", "");
+                            vm.copyEntry(vm.selectedEntry, editedItem);
+                            vm.data.push(editedItem);
+                            vm.originalEntry = new DPSEntry(0, "", "", "", "", "", "", "", "", 0, 0, "", "", "", "", "");
+                            vm.clearErrors();
+                            vm.mode("read");
+                            vm.refreshChartData();
+                        }
+                        else {
+                            vm.errorMsg(resultMsg);
+                        }
+
+                    },
+                    error: function (e) {
+                        vm.errorMsg("Error: " + e.statusText);
+                    }
+                });
+            }
+
+            this.cancelEdit = function () {
+                vm.copyEntry(vm.originalEntry, vm.selectedEntry);
+                vm.clearErrors();
+                vm.mode("read");
+            }
+
+            this.deleteEntry = function () {
+                $.ajax({
+                    data: ko.toJSON(vm.selectedEntry),
+                    url: '/Form/DeleteDPS',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (resultMsg) {
+                        if (resultMsg == "success") {
+                            vm.data.remove(function (item) { return vm.selectedEntry.ID == item.ID });
+                            vm.resetEntry(vm.selectedEntry);
+                            vm.canEdit(false);
+                            vm.clearErrors();
+                            vm.mode("hidden");
+                            vm.refreshChartData();
+                        }
+                        else {
+                            vm.errorMsg(resultMsg);
+                        }
+
+                    },
+                    error: function (e) {
+                        vm.errorMsg("Error: " + e.statusText);
+                    }
+                });
+            }
+
+            this.beginNewEntry = function () {
+                vm.resetEntry(vm.newEntry);
+                vm.clearErrors();
+                vm.mode("new");
+            }
+
+            this.endNewEntry = function () {
+                $.ajax({
+                    data: ko.toJSON(vm.newEntry),
+                    url: '/Form/AddDPS',
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (insertID) {
+                        if (insertID == -1) {
+                            vm.errorMsg("error inserting new record");
+                        }
+                        else {
+                            vm.newEntry.ID = insertID;
+                            var newItem = new DPSEntry(0, "", "", "", "", "", "", "", "", 0, 0, "", "", "", "", "");
+                            vm.copyEntry(vm.newEntry, vm.selectedEntry);
+                            vm.copyEntry(vm.newEntry, newItem);
+                            vm.resetEntry(vm.newEntry);
+                            vm.data.push(newItem);
+                            vm.clearErrors();
+                            vm.mode("read");
+                            vm.refreshChartData();
+                        }
+                    },
+                    error: function (e) {
+                        vm.errorMsg("Error: " + e.statusText);
+                    }
+                });
+            }
+
+            this.cancelNewEntry = function () {
+                if (vm.selectedEntry.ID == 0) {
+                    vm.mode("hidden");
+                    vm.clearErrors();
+                }
+                else {
+                    vm.mode("read");
+                    vm.clearErrors();
+                }
+            }
+                        
+            this.refreshData = function () {
+                $.ajax({
+                    cache: false,
+                    url: '/Form/GetAllDPS',
+                    type: 'GET',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (returnData) {
+                        vm.data.remove(function (item) { return true; });
+                        for (var i = 0; i < returnData.length; i++) {
+                            //work on the Return Data
+                            var nitem = new DPSEntry(returnData[i].ID,
+                                                         new Date(parseInt(returnData[i].DateRec.substr(6))).format("m/dd/yyyy"),
+                                                         returnData[i].OriginalAccount, returnData[i].PIMSAccount, returnData[i].Amount,
+                                                         returnData[i].NetPayment, returnData[i].TransCode,
+                                                         new Date(parseInt(returnData[i].TranDate.substr(6))).format("m/dd/yyyy"), returnData[i].CheckNumber,
+                                                         returnData[i].PmtTypeId, returnData[i].TransSourceId, returnData[i].Name, returnData[i].Portfolio,
+                                                         returnData[i].Responsibility, returnData[i].OurCheck, returnData[i].Uploaded);
+
+                            vm.data.push(nitem);
+                        }
+                        vm.resetEntry(vm.selectedEntry);
+                        vm.canEdit(false);
+                        vm.clearErrors();
+                        vm.mode("hidden");
+                    },
+                    error: function (e) {
+                        vm.errorMsg("Error: " + e.statusText);
+                    }
+                });
+            }
+
+            //helper functions
+            this.setSelectedEntry = function (id, daterec, originalaccount, pimsaccount, amount, netpayment, transcode, trandate,
+                                             checknumber, pmttypeId, transsourceId, name, portfolio, responsibility, ourcheck, uploaded) {
+                vm.selectedEntry.ID = id;
+                vm.selectedEntry.DateRec(daterec);
+                vm.selectedEntry.OriginalAccount(originalaccount);
+                vm.selectedEntry.PIMSAccount(pimsaccount);
+                vm.selectedEntry.Amount(amount);
+                vm.selectedEntry.NetPayment(netpayment);
+                vm.selectedEntry.TransCode(transcode);
+                vm.selectedEntry.TranDate(trandate);
+                vm.selectedEntry.CheckNumber(checknumber);
+                vm.selectedEntry.PmtTypeId(pmttypeId);
+                vm.selectedEntry.TransSourceId(transsourceId);
+                vm.selectedEntry.Portfolio(portfolio);
+                vm.selectedEntry.Responsibility(responsibility);
+                vm.selectedEntry.OurCheck(ourcheck);
+                vm.selectedEntry.Uploaded(uploaded);
+                //Now copy the Entry
+                vm.copyEntry(vm.selectedEntry, vm.originalEntry);
+                vm.clearErrors();
+                vm.mode("read");
+            }
+
+            this.copyEntry = function (source, target) {
+                target.ID = source.ID;
+                target.DateRec(source.DateRec());
+                target.OriginalAccount(source.OriginalAccount());
+                target.PIMSAccount(source.PIMSAccount());
+                target.Amount(source.Amount());
+                target.NetPayment(source.NetPayment());
+                target.TransCode(source.TransCode());
+                target.TranDate(source.TranDate());
+                target.CheckNumber(source.CheckNumber());
+                target.PmtTypeId(source.PmtTypeId());
+                target.TransSourceId(source.TransSourceId());
+                target.Portfolio(source.Portfolio());
+                target.Responsibility(source.Responsibility());
+                target.OurCheck(source.OurCheck());
+                target.Uploaded(source.Uploaded());
+            }
+
+            this.clearErrors = function () {
+                vm.errorMsg("");
+            }
+
+            this.resetEntry = function (entry) {
+                var newItem = new DPSEntry(0, "", "", "", "", "", "", "", "", 0, 0, "", "", "", "", "");
+                vm.copyEntry(newItem, entry);
+            }
+        }; //end viewmodel
+
+        $(document).ready(function () {
+
+            $("#newDateRec").datepicker();
+            $("#editDateRec").datepicker();
+            
+            $("#newTranDate").datepicker();
+            $("#editTranDate").datepicker();
+
+            $("#newUploadedDate").datepicker();
+            $("#editUploadedDate").datepicker();
+                        
+            $('#adderror').attr('data-bind', 'text : errorMsg');
+            $('#editerror').attr('data-bind', 'text : errorMsg');
+
+            
+            //$('#example').attr('data-bind', 'dataTable: { dataSource: data, columns: [{ \'bVisible\' : false 
+            //    , mDataProp : \'ID\', sTitle : \'Id\'} 
+            //    ,{ mDataProp : \'ExpenseDate\', sTitle : \'Date\', sWidth: \'100px\'}
+            //        ,{ mDataProp : \'CategoryId\', sTitle : \'CategoryId\', \'bVisible\' : false}
+            //            ,{ mDataProp : \'Category\', sTitle : \'Category\', sWidth: \'100px\'}
+            //                ,{ mDataProp : \'ExpenseDescription\', sTitle : \'Description\', sWidth: \'300px\'}
+            //                    ,{ mDataProp : \'ExpenseAmount\', sTitle : \'Amount\', sWidth: \'100px\'}]
+            //                        , sPaginationType : \'full_numbers\', sDom : \'rt<"bottom"ip><"clear">\' }');
+
+
+            $('#example').attr('data-bind', 'dataTable: { dataSource: data, columns: [{ \'bVisible\' : false , mDataProp : \'ID\', sTitle : \'Id\'} ,{ mDataProp : \'DateRec\', sTitle : \'DateRec\', sWidth: \'100px\'},{ mDataProp : \'OriginalAccount\', sTitle : \'OriginalAccount\'},{ mDataProp : \'Amount\', sTitle : \'Amount\', sWidth: \'100px\'},{ mDataProp : \'NetPayment\', sTitle : \'NetPayment\', sWidth: \'300px\'},{ mDataProp : \'TranDate\', sTitle : \'TranDate\', sWidth: \'100px\'}], sPaginationType : \'full_numbers\', sDom : \'rt<"bottom"ip><"clear">\' }');
+
+            //For Read - View            
+            $('#readDateRec').attr('data-bind', 'text : selectedEntry.DateRec');
+            $('#readOriginalAccount').attr('data-bind', 'text : selectedEntry.OriginalAccount');
+            $('#readPIMSAccount').attr('data-bind', 'text : selectedEntry.PIMSAccount');
+            $('#readAmount').attr('data-bind', 'text : selectedEntry.Amount');
+            $('#readNetPayment').attr('data-bind', 'text : selectedEntry.NetPayment');
+            $('#readTranDate').attr('data-bind', 'text : selectedEntry.TranDate');
+            
+            //For Edit - Update
+            $('#editDateRec').attr('data-bind', 'value : selectedEntry.DateRec');
+            $('#editOriginalAccount').attr('data-bind', 'value : selectedEntry.OriginalAccount');
+            $('#editAmount').attr('data-bind', 'value : selectedEntry.Amount');
+            $('#editNetPayment').attr('data-bind', 'value : selectedEntry.NetPayment');
+            $('#editTranDate').attr('data-bind', 'value : selectedEntry.TranDate');
+            $('#editCheckNumber').attr('data-bind', 'value : selectedEntry.CheckNumber');
+            $('#editTranDate').attr('data-bind', 'value : selectedEntry.TranDate');
+            $('#editName').attr('data-bind', 'value : selectedEntry.Name');
+            $('#editOurCheck').attr('data-bind', 'value : selectedEntry.OurCheck');
+            $('#editUploaded').attr('data-bind', 'value : selectedEntry.Uploaded');
+            $('#editTransCodes').attr('data-bind', 'options: transCodes, optionsCaption: \'Select...\', optionsText: \'Text\', optionsValue:\'Value\', value: selectedEntry.TransCode');
+            $('#editPmtTypes').attr('data-bind', 'options: pmtTypes, optionsCaption: \'Select...\', optionsText: \'Text\', optionsValue:\'Value\', value: selectedEntry.PmtTypeId');
+            $('#editTransSources').attr('data-bind', 'options: transSources, optionsCaption: \'Select...\', optionsText: \'Text\', optionsValue:\'Value\', value: selectedEntry.TransSourceId');
+            $('#editPortfolios').attr('data-bind', 'options: portfolios, optionsCaption: \'Select...\', optionsText: \'Text\', optionsValue:\'Value\', value: selectedEntry.Portfolio');
+            $('#editResponsibilities').attr('data-bind', 'options: responsibilities, optionsCaption: \'Select...\', optionsText: \'Text\', optionsValue:\'Value\', value: selectedEntry.Responsibility');
+
+            //For Add New
+            $('#newDateRec').attr('data-bind', 'value : newEntry.DateRec');
+            $('#newOriginalAccount').attr('data-bind', 'value : newEntry.OriginalAccount');
+            $('#newAmount').attr('data-bind', 'value : newEntry.Amount');
+            $('#newNetPayment').attr('data-bind', 'value : newEntry.NetPayment');
+            $('#newTranDate').attr('data-bind', 'value : newEntry.TranDate');
+            $('#newCheckNumber').attr('data-bind', 'value : newEntry.CheckNumber');
+            $('#newTranDate').attr('data-bind', 'value : newEntry.TranDate');
+            $('#newName').attr('data-bind', 'value : newEntry.Name');
+            $('#newOurCheck').attr('data-bind', 'value : newEntry.OurCheck');
+            $('#newUploaded').attr('data-bind', 'value : newEntry.Uploaded');
+            $('#newTransCodes').attr('data-bind', 'options: transCodes, optionsCaption: \'Select...\', optionsText: \'Text\', optionsValue:\'Value\', value: newEntry.TransCode');
+            $('#newPmtTypes').attr('data-bind', 'options: pmtTypes, optionsCaption: \'Select...\', optionsText: \'Text\', optionsValue:\'Value\', value: newEntry.PmtTypeId');
+            $('#newTransSources').attr('data-bind', 'options: transSources, optionsCaption: \'Select...\', optionsText: \'Text\', optionsValue:\'Value\', value: newEntry.TransSourceId');
+            $('#newPortfolios').attr('data-bind', 'options: portfolios, optionsCaption: \'Select...\', optionsText: \'Text\', optionsValue:\'Value\', value: newEntry.Portfolio');
+            $('#newResponsibilities').attr('data-bind', 'options: responsibilities, optionsCaption: \'Select...\', optionsText: \'Text\', optionsValue:\'Value\', value: newEntry.Responsibility');
+
+
+            $('#divDataformRead').attr('data-bind', 'visible : mode() == \'read\'');
+            $('#divDataformNew').attr('data-bind', 'visible : mode() == \'new\'');
+            $('#divDataformEdit').attr('data-bind', 'visible : mode() == \'edit\'');
+
+            $('#addRecord').attr('data-bind', 'click : beginNewEntry');
+            $('#editRecord').attr('data-bind', 'click : beginEdit, enable : canEdit() == true');
+            $('#deleteRecord').attr('data-bind', 'click : deleteEntry, enable : canEdit() == true');
+
+            $('#cancelEditBtn').attr('data-bind', 'click : cancelEdit');
+            $('#saveEditBtn').attr('data-bind', 'click : endEdit');
+
+            $('#cancelNewBtn').attr('data-bind', 'click : cancelNewEntry');
+            $('#saveNewBtn').attr('data-bind', 'click : endNewEntry');
+
+            $('#refreshBtn').attr('data-bind', 'click : refreshData');
+
+            var vm1 = new ViewModel();
+            vm1.refreshData();
+            //vm1.refreshChartData();
+            ko.applyBindings(vm1, $("#demo")[0]);
+
+            //we need to get the otable object first
+            var oTable = $.data(document, 'oTable');
+
+            $("#example tbody").click(function (event) {
+                $(oTable.fnSettings().aoData).each(function () {
+                    $(this.nTr).removeClass('row_selected');
+                });
+
+                if (event.target.parentNode.localName && event.target.parentNode.localName == "tr") {
+                    $(event.target.parentNode).addClass('row_selected');
+                }
+                var id = $(event.target.parentNode)[0].cells[0].innerText || $(event.target.parentNode)[0].cells[0].textContent;
+                var daterec = $(event.target.parentNode)[0].cells[1].innerText || $(event.target.parentNode)[0].cells[1].textContent;
+                var originalaccount = $(event.target.parentNode)[0].cells[2].innerText || $(event.target.parentNode)[0].cells[2].textContent;
+                var pimsaccount = $(event.target.parentNode)[0].cells[3].innerText || $(event.target.parentNode)[0].cells[3].textContent;
+                var amount = $(event.target.parentNode)[0].cells[4].innerText || $(event.target.parentNode)[0].cells[4].textContent;
+                var netpayment = $(event.target.parentNode)[0].cells[5].innerText || $(event.target.parentNode)[0].cells[5].textContent;
+                var transcode = $(event.target.parentNode)[0].cells[6].innerText || $(event.target.parentNode)[0].cells[6].textContent;
+                var trandate = $(event.target.parentNode)[0].cells[7].innerText || $(event.target.parentNode)[0].cells[7].textContent;
+                var checknumber = $(event.target.parentNode)[0].cells[8].innerText || $(event.target.parentNode)[0].cells[8].textContent;
+                var pmttypeId = $(event.target.parentNode)[0].cells[9].innerText || $(event.target.parentNode)[0].cells[9].textContent;
+                var transsourceId = $(event.target.parentNode)[0].cells[10].innerText || $(event.target.parentNode)[0].cells[10].textContent;
+                var name = $(event.target.parentNode)[0].cells[11].innerText || $(event.target.parentNode)[0].cells[11].textContent;
+                var portfolio = $(event.target.parentNode)[0].cells[12].innerText || $(event.target.parentNode)[0].cells[12].textContent;
+                var responsibility = $(event.target.parentNode)[0].cells[13].innerText || $(event.target.parentNode)[0].cells[13].textContent;
+                var ourcheck = $(event.target.parentNode)[0].cells[14].innerText || $(event.target.parentNode)[0].cells[14].textContent;
+                var uploaded = $(event.target.parentNode)[0].cells[15].innerText || $(event.target.parentNode)[0].cells[15].textContent;
+                //Set the Selected Entry
+                vm1.setSelectedEntry(id, daterec, originalaccount, pimsaccount, amount, netpayment, transcode, trandate,
+                                     checknumber, pmttypeId, transsourceId, name, portfolio, responsibility, ourcheck, uploaded);
+                vm1.canEdit(true);
+            });
+
+        });
+
+     // });
+    
+    </script>
+
+
+
+
+
+<div id="demo">
+    <br />
+    <div class="content-box">
+        <div class="box-header clear">
+            <h2>
+                DPS(Direct Payments)
+            </h2>
+        </div>
+        
+        <div class="box-body clear">
+            
+            
+            <div id="gridDiv">
+                
+                <div id="divDataformHeader">
+                    <div id="divDataformTitle">Add / Modify / Delete</div>
+                    <div id="divDataformButtons">
+                        <input type="button" id="addRecord" title="Add" />
+                        <input type="button" id="editRecord" title="Edit" />
+                        <input type="button" id="deleteRecord" title="Delete" />
+                    </div>
+                </div>
+
+                <div id="divDataformRead" class="dataformItem">
+                    
+                     <table>
+                        <tr class="title">
+                            <td>
+                                DateRec
+                            </td>
+                            <td>
+                                Original Account
+                            </td>
+                            <td>
+                                PIMS Account
+                            </td>
+                            <td>
+                                Amount
+                            </td>
+                            <td>
+                                Net Payment
+                            </td>
+                            <td>
+                                Tran Date
+                            </td>
+                        </tr>
+                        <tr>
+                            <td id="readDateRecCell">
+                                <span id="readDateRec" />&nbsp;
+                            </td>
+                            <td id="readOriginalAccountCell">
+                                <span id="readOriginalAccount" />&nbsp;
+                            </td>
+                            <td id="readPIMSAccountCell">
+                                <span id="readPIMSAccount">&nbsp;</span>
+                            </td>
+                            <td id="readAmountCell">
+                                &nbsp;<span id="readAmount" />&nbsp;
+                            </td>
+                            <td id="readNetPaymentCell">
+                                &nbsp;<span id="readNetPayment" />&nbsp;
+                            </td>
+                            <td id="readTranDateCell">
+                                &nbsp;<span id="readTranDate" />&nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div id="divDataformNew" class="dataformItem">
+                    
+                    <table class="originaltable">
+                        <tr>
+                            <td colspan="2">
+                                <b>DPS(Direct Payments) Form</b>
+                            </td>
+                        </tr>
+                        <tr class="dummyitem"><td colspan="2"></td></tr>
+                        <tr>
+                            <td>
+                                DateRec:
+                            </td>
+                            <td>
+                                <input id="newDateRec" class="entryField" maxlength="10" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               Original Account:
+                            </td>
+                            <td>
+                               <input id="newOriginalAccount" class="entryField" maxlength="70" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               Amount:
+                            </td>
+                            <td>
+                               <input id="newAmount" class="entryField" maxlength="50" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               NetPayment:
+                            </td>
+                            <td>
+                               <input id="newNetPayment" class="entryField" maxlength="50" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               Trans Codes:
+                            </td>
+                            <td>
+                               <select id="newTransCodes" class="entryFieldOption"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               TranDate:
+                            </td>
+                            <td>
+                               <input id="newTranDate" class="entryField" maxlength="10" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               Check Number:
+                            </td>
+                            <td>
+                               <input id="newCheckNumber" class="entryField" maxlength="30" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               Payment Types:
+                            </td>
+                            <td>
+                               <select id="newPmtTypes" class="entryFieldOption"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               Trans Sources:
+                            </td>
+                            <td>
+                               <select id="newTransSources" class="entryFieldOption"></select>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="dummyitem"></table>
+                    <table class="PIMSDatatable">
+                       <tr>
+                            <td colspan="2">
+                                <b>PIMS Data</b>
+                            </td>
+                        </tr>
+                        <tr class="dummyitem"><td colspan="2"></td></tr>
+                        <tr>
+                            <td>
+                                Name:
+                            </td>
+                            <td>
+                                <input id="newName" class="entryField" maxlength="100" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Portfolios:
+                            </td>
+                            <td>
+                               <select id="newPortfolios" class="entryFieldOption"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Responsibilities:
+                            </td>
+                            <td>
+                               <select id="newResponsibilities" class="entryFieldOption"></select>
+                            </td>
+                        </tr>
+                    </table> 
+                    <table class="dummyitem"></table> 
+                    <table class="FollowupDatatable">
+                        <tr>
+                            <td colspan="2">
+                                <b>Follow-up Data</b>
+                            </td>
+                        </tr>
+                        <tr class="dummyitem"><td colspan="2"></td></tr>
+                        <tr>
+                            <td>
+                                OurCheck:
+                            </td>
+                            <td>
+                                <input id="newOurCheck" class="entryField" maxlength="30" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Uploaded:
+                            </td>
+                            <td>
+                                <input id="newUploadedDate"  class="entryField" maxlength="10" />
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="confirmBtnContainer">
+                                <div id="adderror"></div>
+                                <input type="button" id="cancelNewBtn" title="cancel" />
+                                <input type="button" id="saveNewBtn" title="Add" />
+                            </td>
+                        </tr>
+                    </table> 
+                    
+                    
+                </div>
+                <div id="divDataformEdit" class="dataformItem">
+
+                    <table class="originaltable">
+                        <tr>
+                            <td colspan="2">
+                                <b>DPS(Direct Payments) Form</b>
+                            </td>
+                        </tr>
+                        <tr class="dummyitem"><td colspan="2"></td></tr>
+                        <tr>
+                            <td>
+                                DateRec:
+                            </td>
+                            <td>
+                                <input id="editDateRec" class="entryField" maxlength="10" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               Original Account:
+                            </td>
+                            <td>
+                               <input id="editOriginalAccount" class="entryField" maxlength="70" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               Amount:
+                            </td>
+                            <td>
+                               <input id="editAmount" class="entryField" maxlength="50" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               NetPayment:
+                            </td>
+                            <td>
+                               <input id="editNetPayment" class="entryField" maxlength="50" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               Trans Codes:
+                            </td>
+                            <td>
+                               <select id="editTransCodes" class="entryFieldOption"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               TranDate:
+                            </td>
+                            <td>
+                               <input id="editTranDate" class="entryField" maxlength="10" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               Check Number:
+                            </td>
+                            <td>
+                               <input id="editCheckNumber" class="entryField" maxlength="30" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               Payment Types:
+                            </td>
+                            <td>
+                               <select id="editPmtTypes" class="entryFieldOption"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               Trans Sources:
+                            </td>
+                            <td>
+                               <select id="editTransSources" class="entryFieldOption"></select>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="dummyitem"></table>
+                    <table class="PIMSDatatable">
+                       <tr>
+                            <td colspan="2">
+                                <b>PIMS Data</b>
+                            </td>
+                        </tr>
+                        <tr class="dummyitem"><td colspan="2"></td></tr>
+                        <tr>
+                            <td>
+                                Name:
+                            </td>
+                            <td>
+                                <input id="editName" class="entryField" maxlength="100" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Portfolios:
+                            </td>
+                            <td>
+                               <select id="editPortfolios" class="entryFieldOption"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Responsibilities:
+                            </td>
+                            <td>
+                               <select id="editResponsibilities" class="entryFieldOption"></select>
+                            </td>
+                        </tr>
+                    </table> 
+                    <table class="dummyitem"></table> 
+                    <table class="FollowupDatatable">
+                        <tr>
+                            <td colspan="2">
+                                <b>Follow-up Data</b>
+                            </td>
+                        </tr>
+                        <tr class="dummyitem"><td colspan="2"></td></tr>
+                        <tr>
+                            <td>
+                                OurCheck:
+                            </td>
+                            <td>
+                                <input id="editOurCheck" class="entryField" maxlength="30" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Uploaded:
+                            </td>
+                            <td>
+                                <input id="editUploadedDate"  class="entryField" maxlength="10" />
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="confirmBtnContainer">
+                                <div id="editerror">
+                                </div>
+                                <input type="button" id="cancelEditBtn" title="cancel" />
+                                <input type="button" id="saveEditBtn" title="Save" />
+                            </td>
+                        </tr>
+                    </table> 
+                                        
+                </div>
+                
+                <div id="loading" style="display: none;">
+                    &nbsp;&nbsp;&nbsp;<img src="../../Content/images/ajax-loader.gif" alt="Loader Image" />
+                    <br />
+                    Working ...
+                </div>
+                <br />
+                <div class="dataTables_wrapper">
+                    <table border="0" class="ExpenseTable" id="example">
+                        <thead>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <input type="button" id="refreshBtn" title="refresh data from server" />
+             </div>
+          </div>
+    </div>
+</div>

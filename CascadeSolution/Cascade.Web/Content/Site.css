@@ -1,0 +1,499 @@
+﻿
+html {
+    background-color: #1f497d;
+    margin: 0;
+    padding: 0;
+    height:100%
+}
+#contentContainer {    
+    min-height:100%;
+    height:auto !important;
+    height:100%;
+    margin:0 auto -50px;
+}
+body {
+    /*background-color: #1f497d;*/
+    color: #333;
+    font-size: .85em;
+    font-family:  Verdana;
+    margin: 0;
+    padding: 0;
+    height:100%
+}
+
+    body table {
+        /*border: 1px solid #00FFFF;*/
+        vertical-align: top;
+        width: 100%;
+    }
+
+        body table td {
+            vertical-align: top;
+        }
+
+header {
+    background-color: #fff;
+    margin-left:5px;
+    margin-right:5px;
+    margin-top:5px;
+}
+
+
+.mainWorkspace {
+    color: #fff;
+    font-family:Verdana;
+    font-size: .85em;
+}
+footer {
+    height:50px;
+    color:#fff;
+}
+.push {
+    height:50px;
+}
+ul.lhsLinks {
+    position: relative; 
+}
+
+ul.lhsLinks li {
+    margin-left:2px;
+    width: 150px;
+    display:block;
+    float:left;
+    background-color: #fff;
+    text-align:center;
+    margin-top:5px;
+}
+ul.lhsLinks li a {
+    color: #1f497d;
+    text-decoration: none;
+    display: block;
+    padding-top: 0.1em;
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+    padding-bottom: 0.1em;
+    border-style: solid;
+    border-width: .2em;
+    border-color: #FFFFFF #808080 #808080 #FFFFFF;
+}
+ul.lhsLinks li.hover, ul.lhsLinks li:hover {
+    background-color: #ff800d;
+    position: relative;
+}
+ul.lhsLinks li.hover a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+ul.lhsLinks ul {
+    width: 200px;
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 100%;
+}
+ul.lhsLinks ul li {
+    font-weight: normal;
+    background-color: #1f497d;
+    color: #FFFFFF;
+    margin-top: 0px;
+}
+
+ul.lhsLinks ul li a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding-top: 0.1em;
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+    padding-bottom: 0.1em;
+    border-style: solid;
+    border-width: .2em;
+    border-color: #FFFFFF #808080 #808080 #FFFFFF;
+}
+
+ul.lhsLinks ul li.hover, ul.lhsLinks ul li:hover {
+    background-color: #ff800d;
+    color: #fff;
+    position: relative;
+}
+
+ul.lhsLinks ul li.hover a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+.activeLink {
+    background-color: #ff800d;
+    color: #fff;
+}
+    /*
+ul.lhsLinks li a {
+    color: #fff;
+    text-decoration: none;
+}*/
+
+.searchBox {
+    background: lightblue;
+    box-shadow: inset 0 2px 10px blue, 0 1px 1px green;
+    -o-box-shadow: inset 0 2px 10px blue, 0 1px 1px green;
+    -webkit-box-shadow: inset 0 2px 10px blue, 0 1px 1px green;
+    -moz-box-shadow: inset 0 2px 10px blue, 0 1px 1px green;
+    color:#000;
+    padding-left:5px;
+    font-weight:bold;
+    padding-bottom:2px;
+}
+#searchLnk a{
+    width: 150px;
+    color: #fff;
+    text-align:center;
+    text-decoration: none;
+    display: block;
+    padding-top: 0.1em;
+    padding-right: 0.3em;
+    padding-bottom: 0.1em;
+    border-style: solid;
+    border-width: .2em;
+    border-color: #1f497d ;
+}
+
+#searchLnk a:hover{
+    text-decoration:underline;
+}
+
+#advancedSearchLnk a{
+    margin-left:2px;
+    width: 140px;
+    display:block;
+    float:left;
+    background-color: #fff;
+    text-align:center;
+    margin-top:5px;
+    color: #1f497d;
+    text-decoration: none;
+    padding-top: 0.1em;
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+    padding-bottom: 0.1em;
+    border-style: solid;
+    border-width: .2em;
+    border-color: #FFFFFF #808080 #808080 #FFFFFF;
+}
+
+#advancedSearchLnk a:hover{
+    text-decoration:underline;
+}
+
+#messageBoardTitle {
+    width: 150px;
+    color: #fff;    
+    text-align:center;
+    text-decoration: none;
+    display: block;
+    padding-top:5px;
+    padding-bottom:5px;
+}
+.tblCommon {
+    background-color: #fff;
+    color: #1f497d;
+    -moz-border-radius-topleft: 4px /*{cornerRadius}*/;
+    -webkit-border-radius: 4px /*{cornerRadius}*/;
+    border-radius: 4px /*{cornerRadius}*/;
+}
+/* ---------------------------------------------------------------------
+Full Company List
+------------------------------------------------------------------------ */
+
+/*.full_company_list {
+    width:903px;
+}
+.full_company_list th {
+    white-space: nowrap;
+}
+
+#full_company_list_container .dataTables_paginate {
+    background: white;
+    border: 0;    
+    margin-right:50px;
+}
+
+
+td.pagination {
+    background: white !important;
+}
+
+.full_company_list td {
+    padding: 5px 10px;
+    font-size: 11px;
+}
+
+.full_company_list th {
+    padding: 5px 10px;
+}
+
+.full_company_list tr.filter th {
+    background: white;
+    color: #2b2b2b;
+}
+
+.full_company_list tr.filter a 
+{
+    color: #335285;
+    line-height: 22px;
+}
+
+.full_company_list .widget_search {
+    width: 200px;
+}
+
+.full_company_list .widget_serach_filter #search_type 
+{
+    width: 125px;
+}
+
+.full_company_list .widget_search_filter div {
+    margin-right: 15px;
+}
+
+.full_company_list .section h5
+{
+    color: White;
+}
+
+.full_company_list .no-results 
+{
+    font-style: italic;
+    text-align: center;
+}
+
+#full_company_list_container .dataTables_filter
+{
+    border-top:1px solid #cecece;
+    border-right:1px solid #cecece;
+    border-bottom:0;
+    border-left:1px solid #cecece;
+    padding:15px;
+    width:870px;
+}
+#full_company_list_container .dataTables_filter input
+{
+    width: 200px;
+    vertical-align: top;
+}*/
+.ddlwidth
+{
+    width: 153px;
+}
+.txtwidth
+{
+    width: 300px;
+}
+.guidwidth
+{
+    width: 250px;
+}
+.splTBwidth
+{
+    width: 60px;
+}
+
+.searchtable
+{
+    background-color: lightcyan;
+    width: 80%;
+    border: solid 1px #000;
+}
+.originaltable
+{
+    background-color: lightblue;
+    width: 80%;
+    border: solid 1px #000;
+}
+.searchtable td
+{
+    color:black;
+    width: 50%;
+}
+.originaltable td
+{
+    color:black;
+    width: 50%;
+}
+.PIMSDatatable
+{
+    background-color: lightgreen;
+    width: 80%;
+    border: solid 1px #000;
+}
+.PIMSDatatable td
+{
+    color:black;
+    width: 50%;
+}
+.FollowupDatatable
+{
+    background-color: lightgrey;
+    width: 80%;
+    border: solid 1px #000;
+}
+.FollowupDatatable td
+{
+    color:black;
+    width: 50%;
+}
+.dummyitem
+{
+    height: 5px;
+}
+
+.confirmBtnContainer
+    {
+        padding-top: 10px;
+        padding-right: 10px;
+        text-align: right;
+    }
+
+#addRecord{   background-image: url('../Content/images/add.png'); 
+                background-color: transparent;
+                background-repeat: no-repeat;
+                border: none;
+                cursor: pointer;
+                height: 16px;
+                padding-left: 16px;}
+                
+#editRecord{   background-image: url('../Content/images/ico_edit_16.png'); 
+                background-color: transparent;
+                background-repeat: no-repeat;
+                border: none;
+                cursor: pointer;
+                height: 16px;
+                padding-left: 16px;}
+                
+#deleteRecord{   background-image: url('../Content/images/ico_delete_16.png'); 
+                background-color: transparent;
+                background-repeat: no-repeat;
+                border: none;
+                cursor: pointer;
+                height: 16px;
+                padding-left: 16px;}
+                
+ #refreshBtn
+ {
+     background-image: url('../Content/images/refresh.png'); 
+     background-color: transparent;
+                background-repeat: no-repeat;
+                border: none;
+                cursor: pointer;
+                height: 30px;
+                padding-left: 24px;
+ }
+ 
+ #saveNewBtn {
+    background-image: url('../Content/images/Addbutton.png');
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    height: 30px;
+    width: 80px;
+}
+ 
+#saveEditBtn
+ {
+     background-image: url('../Content/images/savebutton.png'); 
+     background-color: transparent;
+                background-repeat: no-repeat;
+                border: none;
+                cursor: pointer;
+                height: 30px;
+                width: 80px;
+ }
+ 
+ #cancelNewBtn, #cancelEditBtn
+ {
+     background-image: url('../Content/images/Cancelbutton.png'); 
+     background-color: transparent;
+                background-repeat: no-repeat;
+                border: none;
+                cursor: pointer;
+                height: 30px;
+                width: 80px;
+ }
+
+ #findBtn {
+    background-image: url('../Content/images/search.jpg'); 
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    height: 19px;
+    width: 19px;
+}
+/********************************************
+   MvcContrib Grid Style
+********************************************/ 
+
+.grid-style th
+{
+    /*border-bottom: 5px solid #8EB50C;*/
+    color:#fff;
+    background-color:#1f497d;
+}
+
+.grid-style th a
+{
+    color:#fff;
+    text-decoration:none;
+}
+
+.grid-style td {
+    padding: 3px 10px;
+}
+
+.grid-style tr {
+    color: #000;
+    background-color: #FFFFFF;
+}
+
+.grid-style .sort_asc {
+    background-image: url('images/sort_desc.png');
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left: 20px;
+}
+
+.grid-style .sort_desc {
+    background-image: url('images/sort_asc.png');
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left: 20px;
+}
+
+.grid-style .gridrow_alternate
+{
+    background-color: #E2E4FF;
+}
+
+
+
+.pagination
+{
+    padding: 5px;
+    background-color: #fff;
+    margin: 10px;
+    color:#1f497d;
+}
+
+#basicSearchFrm td {
+
+}
+
+.editButton {
+    background-color: #93C22B;
+    color: #FFFFFF;
+    -moz-border-radius-topleft: 4px /*{cornerRadius}*/;
+    -webkit-border-radius: 4px /*{cornerRadius}*/;
+    border-radius: 4px /*{cornerRadius}*/;
+   
+}
+

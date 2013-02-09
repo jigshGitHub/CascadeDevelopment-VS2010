@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "View Companies";
+}
+
+@Scripts.Render("~/bundles/jquery")
+
+<div id="divCompanyRecords"></div>
+
+@Scripts.Render("~/bundles/knockout")
+
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.8.11.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        //Client side View Model
+        function companyRecordsVM(){
+            //Get the data and Load in the div
+            $("#divCompanyRecords").load(baseUrl + '/CRM/Company/GetAllCompanies');
+        };
+              
+        $(document).ready(function () {
+            //Knockout Bindings
+            ko.applyBindings(new companyRecordsVM(), $('#divCompanyRecords')[0]);
+        });
+        
+    </script>
+}

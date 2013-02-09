@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@section featured {
+}
+<table style="width: 100%;">
+    <tr>
+        <td style="width: 49%">
+            <div id="chartContainer" style="display: block; text-align: center">
+                <img src="~/Images/indicator_medium.gif" />
+            </div>
+        </td>
+        <td>&nbsp;</td>
+        <td style="width: 49%">
+            <div id="chartContainer1" style="display: block; text-align: center">
+                <img src="~/Images/indicator_medium.gif" />
+            </div>
+        </td>
+    </tr>
+    <tr><td colspan="3">&nbsp;</td></tr>
+    <tr>
+        <td style="width: 49%">
+            <div id="chartContainer2" style="display: block; text-align: center">
+                <img src="~/Images/indicator_medium.gif" />
+            </div>
+        </td>
+        <td>&nbsp;</td>
+        <td style="width: 49%">
+            <div id="chartContainer3" style="display: block; text-align: center">
+                <img src="~/Images/indicator_medium.gif" />
+            </div>
+        </td>
+    </tr>
+</table>
+@section scripts{
+    <script type="text/javascript">
+        log(baseUrl);
+        $.ajax({
+            url: baseUrl + '/api/Chart/',
+            type: 'GET',
+            contentType: 'application/json',
+            data: { strChartId: 'MediaPayble', strDrillBy: 'testDrillby', strUserName: 'UserName', strSearchParameter: 'param1' },
+            success: function (data) {
+                log(data);
+                var myChart = new FusionCharts(baseUrl + '/FusionChartLib/' + data.SWF, "test", "100%", "350", '0', '1');
+                myChart.setXMLData(data.ChartXML);
+                myChart.render(chartContainer);
+            }
+        });
+        $.ajax({
+            url: baseUrl + '/api/Chart/',
+            type: 'GET',
+            contentType: 'application/json',
+            data: { strChartId: 'MediaPaidByCheck', strDrillBy: 'testDrillby', strUserName: 'UserName', strSearchParameter: 'param1' },
+            success: function (data) {
+                log(data);
+                var myChart = new FusionCharts(baseUrl + '/FusionChartLib/' + data.SWF, "test1", "100%", "350", '0', '1');
+                myChart.setXMLData(data.ChartXML);
+                myChart.render(chartContainer1);
+            }
+        });
+        $.ajax({
+            url: baseUrl + '/api/Chart/',
+            type: 'GET',
+            contentType: 'application/json',
+            data: { strChartId: 'NotSubmittedNodateSubmit', strDrillBy: 'testDrillby', strUserName: 'UserName', strSearchParameter: 'param1' },
+            success: function (data) {
+                log(data);
+                var myChart = new FusionCharts(baseUrl + '/FusionChartLib/' + data.SWF, "test2", "100%", "350", '0', '1');
+                myChart.setXMLData(data.ChartXML);
+                myChart.render(chartContainer2);
+            }
+        });
+        $.ajax({
+            url: baseUrl + '/api/Chart/',
+            type: 'GET',
+            contentType: 'application/json',
+            data: { strChartId: 'NotSubmittedNodateConfirm', strDrillBy: 'testDrillby', strUserName: 'UserName', strSearchParameter: 'param1' },
+            success: function (data) {
+                log(data);
+                var myChart = new FusionCharts(baseUrl + '/FusionChartLib/' + data.SWF, "test3", "100%", "350", '0', '1');
+                myChart.setXMLData(data.ChartXML);
+                myChart.render(chartContainer3);
+            }
+        });
+    </script>
+}

@@ -1,0 +1,195 @@
+﻿@{
+    ViewBag.Title = "View Recall Records";
+}
+
+@Scripts.Render("~/bundles/jquery")
+
+<h2>View Recall Records</h2>
+
+<div id="divReportCriteria">
+       
+    <table class="originaltable">
+        
+        <tr class="dummyitem">
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td>Account #:
+            </td>
+            <td>
+                <input type="text" id="newPIMSAccount" data-bind="value:newPIMSAccount" />
+            </td>
+        </tr>
+        <tr>
+            <td>Acct Closed Date From:
+            </td>
+            <td>
+                <input type="text" id="StartDate" data-bind="value:StartDate" />
+            </td>
+        </tr>
+        <tr>
+            <td>Acct Closed Date To:
+            </td>
+            <td>
+                <input type="text" id="EndDate" data-bind="value:EndDate" />
+            </td>
+        </tr>
+        <tr id="companytr">
+            <td>Portfolio:</td>
+            <td>
+                <select id="CompanyList" class="ddlwidth" data-bind="options:companies,optionsValue:'Value', optionsText: 'Text',optionsCaption: 'Select Portfolio..', value: company"></select>
+            </td>
+        </tr>
+        <tr>
+            <td>Responsibility:
+            </td>
+            <td>
+                <select id="newResponsibilitiesList" class="ddlwidth" data-bind="options:responsibilities,optionsValue:'Value', optionsText: 'Text',optionsCaption: 'Select Responsibility..', value: responsibility"></select>
+            </td>
+        </tr>
+        <tr>
+            <td>Unique Identification #:
+            </td>
+            <td>
+                <input type="text" id="newGUID" data-bind="value:newGUID" class="guidwidth" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="confirmBtnContainer">
+                <input type="button" id="refreshBtn" title="Run Report" data-bind="click:runReport"/>
+                <span data-bind="text:atLeastOneOption, visible:atLeastOneOptionHasError" style="color: Red"></span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div id="resultSummary" style="color: Red">
+                    <ul>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        </table>
+   </div>
+
+<div class="dummyitem"></div>
+
+@*This is used to store Recall Results*@
+<div id="divRecallResults"></div> 
+
+@Scripts.Render("~/bundles/knockout")
+
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.8.11.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+
+        //Client side View Model
+        function reportCriteriaVM() {
+
+            var href = window.location.href.split('/');
+            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
+            //alert(baseUrl);
+
+            var apiUrl = '/api/Lookup/';
+
+            var self = this;
+
+            self.StartDate = ko.observable('');
+            self.newGUID = ko.observable('');
+            self.EndDate = ko.observable('');
+            self.company = ko.observable('');
+            self.companies = ko.observableArray([]);
+            self.newPIMSAccount = ko.observable('');
+            self.responsibility = ko.observable('');
+            self.responsibilities = ko.observableArray([]);
+            //For validation Messages
+            self.atLeastOneOption = ko.observable('');
+            self.atLeastOneOptionHasError = ko.observable(false);
+            self.validationErrors = ko.observableArray([]);
+
+            //Lookup Table Section
+
+            //For Companies
+            $.ajax({
+                //url: baseUrl + '/api/Lookup/',
+                url: apiUrl,
+                type: 'GET',
+                contentType: 'application/json',
+                //data: { id: 'SupBrockettCompanies' },
+                data: { id: 'RProdCode' },
+                //RProdCode
+                success: function (data) {
+                    $.each(data, function (i, item) {
+                        self.companies.push(item);
+                    });
+                },
+                error: function (xhr, status, somthing) {
+                    log(status);
+                }
+            });
+            //For New Responsibility
+            $.ajax({
+                url: apiUrl,
+                type: 'GET',
+                contentType: 'application/json',
+                data: { id: 'Responsibility' },
+                success: function (data) {
+                    $.each(data, function (i, item) {
+                        self.responsibilities.push(item);
+                    });
+                },
+                error: function (xhr, status, somthing) {
+                    log(status);
+                }
+            });
+
+            self.runReport = function () {
+                self.validationErrors([]);
+
+                //alert("ready for validation checks");
+
+                $('#resultSummary ul').empty();
+
+                //Validation for atleast one options is selected
+                if (self.company() == undefined && self.responsibility() == undefined && self.EndDate() == '' && self.StartDate() == '' && self.newPIMSAccount() == '' && self.newGUID() == '') {
+                    self.atLeastOneOption('At least one criteria is required.');
+                    self.validationErrors.push(self.atLeastOneOption());
+                }
+
+                if (self.StartDate() != '' && self.EndDate() == '') {
+                    self.atLeastOneOption('To Date is required.');
+                    self.validationErrors.push(self.atLeastOneOption());
+                }
+
+                if (self.StartDate() == '' && self.EndDate() != '') {
+                    self.atLeastOneOption('From Date is required.');
+                    self.validationErrors.push(self.atLeastOneOption());
+                }
+
+                //Go ahaead
+                if (self.validationErrors() == '') {
+
+                    //Get the data and Load in the div
+                    $("#divRecallResults").load(baseUrl + '/Recall/GetAllRecallRecords?StartDate=' + self.StartDate() + '&EndDate=' + self.EndDate() + '&Portfolio=' + self.company() + '&Responsibility=' + self.responsibility() + '&Account=' + self.newPIMSAccount() + '&GUID=' + self.newGUID());
+
+                }
+                else {
+                    $.each(self.validationErrors(), function (i, item) {
+                        log(item);
+                        $('#resultSummary ul').append('<li>' + item + '</li>');
+                    });
+                }
+            };
+        };
+
+        $(document).ready(function () {
+            //Knockout Bindings
+            ko.applyBindings(new reportCriteriaVM(), $('#divReportCriteria')[0]);
+            //For Date Picker
+            $('#StartDate').datepicker();
+            $('#EndDate').datepicker();
+
+        });
+
+    </script>
+}

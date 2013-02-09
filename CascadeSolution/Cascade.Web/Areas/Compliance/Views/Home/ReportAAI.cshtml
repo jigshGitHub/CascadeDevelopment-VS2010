@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Awaiting Additional Information Report";
+}
+
+@Scripts.Render("~/bundles/jquery")
+
+@*We need to store Report Type here*@
+@Html.Hidden("reportType",(string)(@ViewBag.ReportType))
+
+@*This is used to store Report Results*@
+<div id="divReportResults"></div> 
+
+@Scripts.Render("~/bundles/knockout")
+
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.8.11.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            //know the Url parameters
+            var href = window.location.href.split('/');
+            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
+            //Load the Report Grid Here
+            $("#divReportResults").load(baseUrl + '/Home/GetReportData?ReportType=' + $('#reportType').val());
+
+        });
+        
+    </script>
+}

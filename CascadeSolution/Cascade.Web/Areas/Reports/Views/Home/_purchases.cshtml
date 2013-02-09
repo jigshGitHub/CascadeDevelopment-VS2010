@@ -1,0 +1,38 @@
+﻿@model IList<Cascade.Data.Models.Purchases>
+@using Cascade.Web.Presentation.ExtensionMethods
+
+<link href="@Url.Content("~/Content/dataTables/demo_table.css")" rel="stylesheet" type="text/css" />
+
+<script src="~/Scripts/datatable/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/index.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/jquery.dataTables.min.js" type="text/javascript"></script>
+
+<h2>Report: Purchases</h2>
+
+<div id="divPurchases">
+    <table id="purchases" class="display">
+        <thead>
+            <tr> 
+                <th>Account#</th>
+                <th>Portfolio#</th>
+                <th>Closing Date</th>
+                <th>Seller</th>
+                <th>Original Balance</th>
+                <th>Purchase Price</th>
+            </tr> 
+        </thead> 
+        <tbody> 
+            @foreach (var purchase in Model)
+            {
+                <tr>
+                    <td>@purchase.ACCOUNT</td>
+                    <td>@purchase.PRODUCT_CODE</td>
+                    <td>@purchase.PurchaseDate.ConverToDate()</td>
+                    <td>@purchase.Seller</td>
+                    <td>@purchase.OriginalBalance.ToIntegerCurrency()</td>
+                    <td>@purchase.purchaseprice.ToIntegerCurrency()</td>
+                </tr> 
+            }
+        </tbody>
+    </table>
+</div>

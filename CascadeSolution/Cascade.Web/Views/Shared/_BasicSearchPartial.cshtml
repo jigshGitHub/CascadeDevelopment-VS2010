@@ -1,0 +1,8 @@
+﻿<form id="basicSearchFrm" action=@Url.Action("Basic", "Home", new { area = "search" }) method="get">
+    <table>
+        <tr>
+            <td style="width: 100%;border: thin  aqua;padding-left:2px">@Html.TextBox("basicSearchVal", "", new { @class = "searchBox" })
+                <img src="~/Images/search.jpg" id="basicSearch" style="cursor:pointer;vertical-align:middle" title="Search"/></td>
+        </tr>
+    </table>
+</form>

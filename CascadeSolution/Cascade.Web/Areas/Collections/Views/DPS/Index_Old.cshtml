@@ -1,0 +1,177 @@
+﻿@model Cascade.Web.Presentation.ViewModels.DPS.AddDPSViewModel
+
+
+@*Include necessary scripts here*@
+@Scripts.Render("~/bundles/external")
+
+@section scripts{
+    <script src="@Url.Content("~/Scripts/datePicker/jquery-1.4.4.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts//datePicker/jquery.validate.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/datePicker/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/datePicker/jquery-ui.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/datePicker/EditorHookup.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/datePicker/RangeDateValidator.js")" type="text/javascript"></script>
+}
+
+
+@using (Html.BeginForm("Add", "DPS", FormMethod.Post, new { @id = "dps_form", enctype = "multipart/form-data" }))
+{
+    
+    <table class="originaltable">
+        <tr>
+            <td colspan="2">
+                <b>DPS(Direct Payments) Form</b>
+            </td>
+        </tr>
+        <tr class="dummyitem"><td></td></tr>
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.DateRec)
+            </td>
+            <td>
+                @Html.EditorFor(model => model.DateRec)
+                @Html.ValidationMessageFor(model => model.DateRec)
+               
+            </td>
+        </tr>
+        <tr>
+            <td>
+               @Html.LabelFor(model => model.OriginalAccount)
+            </td>
+            <td>
+                @Html.EditorFor(model => model.OriginalAccount)
+               @Html.ValidationMessageFor(model => model.OriginalAccount)
+            </td>
+        </tr>
+        <tr>
+            <td>
+               @Html.LabelFor(model => model.Amount)
+            </td>
+            <td>
+               @Html.EditorFor(model => model.Amount)
+               @Html.ValidationMessageFor(model => model.Amount)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.NetPayment)
+            </td>
+            <td>
+               @Html.EditorFor(model => model.NetPayment)
+               @Html.ValidationMessageFor(model => model.NetPayment)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.TransCodes)
+            </td>
+            <td>
+               <select class="ddlwidth" id="transCodesList"></select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.TranDate)
+            </td>
+            <td>
+                @Html.EditorFor(model => model.TranDate)
+                @Html.ValidationMessageFor(model => model.TranDate)
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.CheckNumber)
+            </td>
+            <td>
+                @Html.EditorFor(model => model.CheckNumber)
+                @Html.ValidationMessageFor(model => model.CheckNumber)
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.PmtTypes)
+            </td>
+            <td>
+               <select class="ddlwidth" id="pmtTypesList"></select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.TransSources)
+            </td>
+            <td>
+               <select class="ddlwidth" id="transSourcesList"></select>
+            </td>
+        </tr>
+    </table>
+    <table class="dummyitem"></table>
+    <table class="PIMSDatatable">
+        
+        <tr>
+            <td colspan="2">
+                <b>PIMS Data</b>
+            </td>
+        </tr>
+        <tr class="dummyitem"><td></td></tr>
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Name)
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Portfolios)
+            </td>
+            <td>
+               <select class="ddlwidth" id="portfoliosList"></select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Responsibilities)
+            </td>
+            <td>
+               <select class="ddlwidth" id="responsibilitiesList"></select>
+            </td>
+        </tr>
+    </table> 
+    <table class="dummyitem"></table> 
+    <table class="FollowupDatatable">
+        <tr>
+            <td colspan="2">
+                <b>Follow-up Data</b>
+            </td>
+        </tr>
+        <tr class="dummyitem"><td></td></tr>
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.OurCheck)
+            </td>
+            <td>
+                @Html.EditorFor(model => model.OurCheck)
+                @Html.ValidationMessageFor(model => model.OurCheck)
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Uploaded)
+            </td>
+            <td>
+                @Html.EditorFor(model => model.Uploaded)
+                @Html.ValidationMessageFor(model => model.Uploaded)
+            </td>
+        </tr>
+
+    </table> 
+       
+}
+
+
+

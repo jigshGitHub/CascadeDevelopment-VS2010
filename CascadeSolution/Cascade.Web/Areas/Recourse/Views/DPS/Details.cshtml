@@ -1,0 +1,418 @@
+﻿@{
+    ViewBag.Title = "View Edit DPS";
+}
+
+@Scripts.Render("~/bundles/jquery")
+
+
+<h2>View/Edit DPS:</h2>
+ 
+    <div id="divViewEditDPS">
+                
+        <table class="PIMSDatatable">
+        <tr>
+            <td colspan="2">
+                <b>PIMS Data</b>
+            </td>
+        </tr>
+        <tr class="dummyitem">
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td>Name:
+            </td>
+            <td>
+                <input id="newName" type="text" data-bind="value:newName" readonly="true"/>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>Portfolio#:
+            </td>
+            <td>
+                <input id="newPortfolio" type="text" data-bind="value:newPortfolio" readonly="true" />
+                
+            </td>
+        </tr>
+        <tr>
+            <td>Responsibility:
+            </td>
+            <td>
+                <input id="newResponsibility" type="text" data-bind="value:newResponsibility" readonly="true" />
+            </td>
+        </tr>
+    </table>
+        <table class="dummyitem"></table>
+        <table class="originaltable">
+        <tr>
+            <td colspan="2">
+                <b>Original Request Data</b>
+            </td>
+        </tr>
+        <tr class="dummyitem">
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td>DateRec:
+            </td>
+            <td>
+                <input type="text" id="newDateRec" data-bind="value:newDateRec" />
+                
+            </td>
+        </tr>
+        <tr>
+            <td>Original Account:
+            </td>
+            <td>
+                <input type="text" id="newOriginalAccount" data-bind="value:newOriginalAccount"  readonly="true"/>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>PIMS Account Number:
+            </td>
+            <td>
+                <input type="text" id="newPIMSAccount" data-bind="value:newPIMSAccount" readonly="true"/>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>Amount:
+            </td>
+            <td>
+                <input type="text" id="newAmount" data-bind="value:newAmount" onkeypress="if ( isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;" />
+                
+            </td>
+        </tr>
+        <tr>
+            <td>NetPayment:
+            </td>
+            <td>
+                <input type="text" id="newNetPayment" data-bind="value:newNetPayment" onkeypress="if ( isNaN(this.value + String.fromCharCode(event.keyCode) )) return false;"/>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>Trans Codes:
+            </td>
+            <td>
+                <select id="newTransCodesList" class="ddlwidth" data-bind="options:transcodes,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: transcode"></select>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>TranDate:
+            </td>
+            <td>
+                <input type="text" id="newTranDate" data-bind="value:newTranDate" />
+                
+            </td>
+        </tr>
+        <tr>
+            <td>Check Number:
+            </td>
+            <td>
+                <input type="text" id="newCheckNumber" data-bind="value:newCheckNumber" />
+                
+            </td>
+        </tr>
+        <tr>
+            <td>Payment Types:
+            </td>
+            <td>
+                <select id="newPmtTypesList" class="ddlwidth" data-bind="options:pmttypes,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: pmttype"></select>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>Trans Sources:
+            </td>
+            <td>
+                <select id="newTransSourcesList" class="ddlwidth" data-bind="options:transsources,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: transsource"></select>
+                
+            </td>
+        </tr>
+    </table>
+        <table class="dummyitem"></table>
+        <table class="FollowupDatatable">
+        <tr>
+            <td colspan="2">
+                <b>Follow-up Data</b>
+            </td>
+        </tr>
+        <tr class="dummyitem">
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td>OurCheck:
+            </td>
+            <td>
+                <input id="newOurCheck" type="text" data-bind="value:newOurCheck" />
+                
+            </td>
+        </tr>
+        <tr>
+            <td>Uploaded (Y/N):
+            </td>
+            <td>
+                <input type="checkbox" data-bind="checked: newUploaded" />
+             </td>
+        </tr>
+        <tr class="dummyitem">
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td>Unique Identification #</td>
+            <td>
+                <input id="newGUID" type="text" data-bind="value:newGUID"  class="guidwidth" readonly="true" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="confirmBtnContainer">
+                <input type="button" id="saveEditBtn" title="Save" data-bind="click:save"/>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div id="resultSummary" style="color: Red">
+                    <ul>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+         @*Hidden filed for the Record Id*@
+        <tr><td>@Html.Hidden("Id",(string)(@ViewBag.Id))</td></tr>
+    </table>
+    
+    </div>
+
+@Scripts.Render("~/bundles/knockout")
+
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.8.11.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        //Client side View Model
+        function dpsViewEditVM() {
+
+            var href = window.location.href.split('/');
+            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
+            //var baseUrl = href[0] + '//' + href[2] + '/' + href[3] + '/' + href[4];
+            //alert(baseUrl);
+
+            var apiUrl = '/api/Lookup/';
+
+            var self = this;
+            //DPS(Direct Payments) Form
+            self.newDateRec = ko.observable('');
+            self.newOriginalAccount = ko.observable('');
+            self.newPIMSAccount = ko.observable('');
+            self.newAmount = ko.observable('');
+            self.newNetPayment = ko.observable('');
+            
+            self.transcode = ko.observable('');
+            self.transcodes = ko.observableArray([]);
+
+            self.newTranDate = ko.observable('');
+            self.newCheckNumber = ko.observable('');
+
+            self.pmttype = ko.observable('');
+            self.pmttypes = ko.observableArray([]);
+            
+            self.transsource = ko.observable('');
+            self.transsources = ko.observableArray([]);
+            
+            //PIMS Data
+            self.newName = ko.observable('');
+            self.newPortfolio = ko.observable('');
+            self.newResponsibility = ko.observable('');
+            //Follow-up Data
+            self.newOurCheck = ko.observable('');
+            self.newUploaded = ko.observable('');
+            self.newGUID = ko.observable('');
+            
+            //Lookup Table Section
+
+            //For TransCode
+            $.ajax({
+                url: apiUrl,
+                type: 'GET',
+                contentType: 'application/json',
+                data: { id: 'TransCode' },
+                success: function (data) {
+                    $.each(data, function (i, item) {
+                        self.transcodes.push(item);
+                    });
+                },
+                error: function (xhr, status, somthing) {
+                    log(status);
+                }
+            });
+            //For PmtType
+            $.ajax({
+                url: apiUrl,
+                type: 'GET',
+                contentType: 'application/json',
+                data: { id: 'PmtType' },
+                success: function (data) {
+                    $.each(data, function (i, item) {
+                        self.pmttypes.push(item);
+                    });
+                },
+                error: function (xhr, status, somthing) {
+                    log(status);
+                }
+            });
+            //For TransSource
+            $.ajax({
+                url: apiUrl,
+                type: 'GET',
+                contentType: 'application/json',
+                data: { id: 'TransSource' },
+                success: function (data) {
+                    $.each(data, function (i, item) {
+                        self.transsources.push(item);
+                    });
+                },
+                error: function (xhr, status, somthing) {
+                    log(status);
+                }
+            });
+            //This is used to format Date from Json response - We get date like this from Json "\/Date(1283219926108)\/"
+            function JSONDate(dateStr) {
+                if (dateStr != null) {
+                    var m, day;
+                    jsonDate = dateStr;
+                    var d = new Date(parseInt(jsonDate.substr(6)));
+                    m = d.getMonth() + 1;
+                    if (m < 10)
+                        m = '0' + m
+                    if (d.getDate() < 10)
+                        day = '0' + d.getDate()
+                    else
+                        day = d.getDate();
+                    return (m + '/' + day + '/' + d.getFullYear())
+                }
+                else {
+                    return ''
+                }
+            }
+            //For Date with Time
+            function JSONDateWithTime(dateStr) {
+                if (dateStr != null) {
+                    jsonDate = dateStr;
+                    var d = new Date(parseInt(jsonDate.substr(6)));
+                    var m, day;
+                    m = d.getMonth() + 1;
+                    if (m < 10)
+                        m = '0' + m
+                    if (d.getDate() < 10)
+                        day = '0' + d.getDate()
+                    else
+                        day = d.getDate();
+                    var formattedDate = m + "/" + day + "/" + d.getFullYear();
+                    var hours = (d.getHours() < 10) ? "0" + d.getHours() : d.getHours();
+                    var minutes = (d.getMinutes() < 10) ? "0" + d.getMinutes() : d.getMinutes();
+                    var formattedTime = hours + ":" + minutes + ":" + d.getSeconds();
+                    formattedDate = formattedDate + " " + formattedTime;
+                    return formattedDate;
+                }
+                else {
+                    return ''
+                }
+            }
+
+
+            //For Page Data
+            $.ajax({
+                url: baseUrl + '/DPS/GetDPSData/',
+                type: 'GET',
+                contentType: 'application/json',
+                data: { id: $('#Id').val() },
+                dataType: 'json',
+                success: function (data) {
+                    //Set Selected options                     
+                    self.newPIMSAccount(data.PIMSAcct);
+                    self.newPortfolio(data.Portfolio);
+                    self.pmttype(data.PmtType);
+                    self.newResponsibility(data.CurrentResp);
+                    self.transsource(data.TransSource);
+                    self.transcode(data.TransCode);
+                    self.newAmount(data.Amount);
+                    self.newNetPayment(data.NetPayment);
+                    self.newName(data.AcctName);
+                    self.newCheckNumber(data.CheckNumber);
+                    self.newDateRec(JSONDate(data.DateRec));
+                    self.newTranDate(JSONDate(data.TransDate));
+                    self.newUploaded(data.Uploaded);
+                    self.newOriginalAccount(data.OriginalAcct);
+                    self.newOurCheck(data.OurCheckNumber);
+                    self.newGUID(data.GUID);
+
+                },
+                error: function (xhr, status, somthing) {
+                    log(status);
+                }
+            });
+
+            //Button Click Save
+            self.save = function () {
+                
+                    //alert($('#Id').val());
+                    //alert(self.transcode());
+                    var json = JSON.stringify({
+                        ID: $('#Id').val(),
+                        DateRec: self.newDateRec(),
+                        OriginalAcct: self.newOriginalAccount(),
+                        PIMSAcct: self.newPIMSAccount(),
+                        Amount: self.newAmount(),
+                        NetPayment: self.newNetPayment(),
+                        TransCode: self.transcode(),
+                        TransDate: self.newTranDate(),
+                        CheckNumber: self.newCheckNumber(),
+                        PmtType: self.pmttype(),
+                        TransSource: self.transsource(),
+                        AcctName: self.newName(),
+                        Portfolio: self.newPortfolio(),
+                        CurrentResp: self.newResponsibility(),
+                        OurCheckNumber: self.newOurCheck(),
+                        Uploaded: self.newUploaded(),
+                        GUID: self.newGUID()
+                    });
+
+                    $.ajax({
+                        url: baseUrl + "/DPS/Add/",
+                        type: "POST",
+                        data: json,
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (response) {
+                            //log(response.ID);
+                            //alert("success");
+                            $('#resultSummary ul').append('<li>DPS Record updated successfully.</li>');
+                            $('#saveEditBtn').hide();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert(errorThrown);
+                            console.log(textStatus, errorThrown);
+                            $('#resultSummary ul').append('<li>We have some issue processing your request. Please try again later.</li>');
+                        }
+                    });
+                                
+            };
+
+            //end
+
+        };
+
+        $(document).ready(function () {
+            //Knockout Bindings
+            ko.applyBindings(new dpsViewEditVM(), $('#divViewEditDPS')[0]);
+            //For Date Picker
+            $('#newDateRec').datepicker();
+            $('#newTranDate').datepicker();
+                        
+        });
+
+     </script>
+}

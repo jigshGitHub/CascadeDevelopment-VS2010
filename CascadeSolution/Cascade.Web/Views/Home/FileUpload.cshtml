@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "FileUpload";
+}
+
+<h2>FileUpload</h2>
+
+<input type="text" data-bind="value:name" />
+
+<form enctype="multipart/form-data">
+<label>
+    Using JQuery</label>
+<input name="file" type="file" />
+<input type="button" id="Upload" value="Upload" />
+</form>
+<input type="text" data-bind="value:fileName" />
+@Scripts.Render("~/bundles/knockout")
+@section scripts {
+    <script type="text/javascript">
+        function pageVM() {
+            var self = this;
+            self.name = ko.observable('test');
+            self.fileName = ko.observable('');
+        }
+        $(document).ready(function () {
+            $('#Upload').click(function () {
+                var formData = new FormData($('form')[0]);
+                $.ajax({
+                    //url: '/api/FileUploader',
+                    url:'http://localhost:58484/api/Upload/',
+                    type: 'POST',
+                    // Form data
+                    data: formData,
+                    //Options to tell JQuery not to process data or worry about content-type
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (res) {
+                        vm.fileName(res[0].name);
+                    }
+                });
+            });
+            var vm = new pageVM();
+            ko.applyBindings(vm);
+        });        
+    </script>
+}
