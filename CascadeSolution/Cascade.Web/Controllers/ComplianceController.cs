@@ -60,6 +60,7 @@ namespace Cascade.Web.Controllers
                 if (data.Count() > 0)
                 {
                     complaint = data.First();
+                    complaint.ComplaintDate = complaint.ComplaintDate.AddDays(1);
                     if (!string.IsNullOrEmpty(userRole))
                     {
                         if (userRole == "user")
@@ -180,6 +181,7 @@ namespace Cascade.Web.Controllers
 
                 if (editingRequired)
                 {
+                    complaintToSave.TimeToSubmitDays = complaintToSave.ComplaintSubmittedDate.Value.Subtract(complaintToSave.ComplaintDate).Days;
                     repository.Update(complaintToSave);
                 }
                 else

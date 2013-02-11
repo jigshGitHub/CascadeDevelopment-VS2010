@@ -6,20 +6,22 @@
     Create</h2>
 @Html.Hidden("userId", (string)(@ViewBag.UserID))
 @Html.Hidden("agencyId", (string)(@ViewBag.AgencyID))
+@Html.Hidden("hdnUserRole", (string)(@ViewBag.UserRole))
 <style>
     
 </style>
 <div class="tblCommon" id="fileUploadContainer" data-bind="with:complianceModel">
-    @using (Html.BeginForm("UploadDocument","Home", FormMethod.Post,new { enctype="multipart/form-data"})){
-    <div data-bind="visible:complaintinfoDocumentChecked">
-        Select document for complaint information:<input name="complaintDocument" type="file" />
-    </div>
-    <div data-bind="visible:debtOwnerProcessDocumentChecked">
-        Select document for debt owner process:<input name="debtOwnerProcessDocument" type="file" />
-    </div>
-    <input type="hidden" name="hdnAccount" data-bind="value:account" />
-    <input type="hidden" name="hdnAgency" data-bind="value:agency" />
-    <input type="submit" value="Submit" />
+    @using (Html.BeginForm("UploadDocument", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div data-bind="visible:complaintinfoDocumentChecked">
+            Select document for complaint information:<input name="complaintDocument" type="file" />
+        </div>
+        <div data-bind="visible:debtOwnerProcessDocumentChecked">
+            Select document for debt owner process:<input name="debtOwnerProcessDocument" type="file" />
+        </div>
+        <input type="hidden" name="hdnAccount" data-bind="value:account" />
+        <input type="hidden" name="hdnAgency" data-bind="value:agency" />
+        <input type="submit" value="Submit" />
     }
 </div>
 <div id="newComplaintContainer">
@@ -104,7 +106,7 @@
                                 :
                             </td>
                             <td style="text-align: left;" colspan="4">
-                                <select data-bind="options:$parent.agencies,optionsValue:'Value', optionsCaption:' ',optionsText: 'Text', value: agency,enable:makeAgencySelectionDisable">
+                                <select data-bind="options:$parent.agencies,optionsValue:'Value', optionsCaption:' ',optionsText: 'Text', value: agency,disable:$parent.agenciesDisable">
                                 </select>*
                             </td>
                         </tr>
@@ -158,17 +160,17 @@
                             </td>
                             <td style="text-align: left; width: 20%">
                                 <input type="text" data-bind="value:firstName" />
-                            *
-                            <td style="text-align: right; width: 20%">
-                                Best Contact Method
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.contactMethods,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: contactMethodId">
-                                </select>
-                            </td>
+                                *
+                                <td style="text-align: right; width: 20%">
+                                    Best Contact Method
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <select data-bind="options:$parent.contactMethods,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: contactMethodId">
+                                    </select>
+                                </td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -179,16 +181,16 @@
                             </td>
                             <td style="text-align: left; width: 20%">
                                 <input type="text" data-bind="value:address" />
-                            <td style="text-align: right; width: 20%">
-                                Best Contact Time
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.contactTimeOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: contactTimeId">
-                                </select>
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    Best Contact Time
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <select data-bind="options:$parent.contactTimeOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: contactTimeId">
+                                    </select>
+                                </td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -199,15 +201,15 @@
                             </td>
                             <td style="text-align: left; width: 20%">
                                 <input type="text" data-bind="value:city" />
-                            <td style="text-align: right; width: 20%">
-                                Creditor Name
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:creditorName" />
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    Creditor Name
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <input type="text" data-bind="value:creditorName" />
+                                </td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -219,16 +221,16 @@
                             <td style="text-align: left; width: 20%">
                                 <select data-bind="options:$parent.stateOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: state">
                                 </select>
-                            <td style="text-align: right; width: 20%">
-                                Debt Product
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.debtProductOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: debtProductId">
-                                </select>
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    Debt Product
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <select data-bind="options:$parent.debtProductOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: debtProductId">
+                                    </select>
+                                </td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -239,15 +241,15 @@
                             </td>
                             <td style="text-align: left; width: 20%">
                                 <input type="text" data-bind="value:zip" />
-                            <td style="text-align: right; width: 20%">
-                                Debt Balance at Purchase
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:debtPurchaseBalance" />
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    Debt Balance at Purchase
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <input type="text" data-bind="value:debtPurchaseBalance" />
+                                </td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -258,15 +260,15 @@
                             </td>
                             <td style="text-align: left; width: 20%">
                                 <input type="text" data-bind="value:homePhone" />
-                            <td style="text-align: right; width: 20%">
-                                Debt Balance (Current)
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:debtCurrentBalance" />
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    Debt Balance (Current)
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <input type="text" data-bind="value:debtCurrentBalance" />
+                                </td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -277,16 +279,16 @@
                             </td>
                             <td style="text-align: left; width: 20%">
                                 <input type="text" data-bind="value:workPhone" />
-                            <td style="text-align: right; width: 20%">
-                                Dispute Debt?
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.disputeDebtOptions,optionsValue:'Value', optionsText: 'Text', value: disputeDebt">
-                                </select>
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    Dispute Debt?
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <select data-bind="options:$parent.disputeDebtOptions,optionsValue:'Value', optionsText: 'Text', value: disputeDebt">
+                                    </select>
+                                </td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -297,16 +299,16 @@
                             </td>
                             <td style="text-align: left; width: 20%">
                                 <input type="text" data-bind="value:mobilePhone" />
-                            <td style="text-align: right; width: 20%">
-                                Dispute Debt Amount?
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.disputeDebtAmtOptions,optionsValue:'Value', optionsText: 'Text', value: disputeDebtAmount">
-                                </select>
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    Dispute Debt Amount?
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <select data-bind="options:$parent.disputeDebtAmtOptions,optionsValue:'Value', optionsText: 'Text', value: disputeDebtAmount">
+                                    </select>
+                                </td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -316,16 +318,16 @@
                             </td>
                             <td style="text-align: left; width: 20%">
                                 &nbsp;
-                            <td style="text-align: right; width: 20%">
-                                Dispute Debt Due Date?
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.disputeDebtDueDateOptions,optionsValue:'Value', optionsText: 'Text', value: disputeDebtDueDate">
-                                </select>
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    Dispute Debt Due Date?
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <select data-bind="options:$parent.disputeDebtDueDateOptions,optionsValue:'Value', optionsText: 'Text', value: disputeDebtDueDate">
+                                    </select>
+                                </td>
                         </tr>
                     </table>
                 </div>
@@ -350,15 +352,15 @@
                             </td>
                             <td style="text-align: left; width: 20%">
                                 <input type="text" data-bind="value:complaintID,enable:false" />
-                            *
-                            <td style="text-align: right; width: 20%">
-                                Complaint Date
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" id="complaiintDate" data-bind="value:complaintDate" />
+                                *
+                                <td style="text-align: right; width: 20%">
+                                    Complaint Date
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <input type="text" id="complaiintDate" data-bind="value:complaintDate" />
                             *
                         </tr>
                         <tr>
@@ -371,16 +373,16 @@
                             <td style="text-align: left; width: 20%">
                                 <select data-bind="options:$parent.complaintRecvdByOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: complaintReceivedByMethodId">
                                 </select>
-                            <td style="text-align: right; width: 20%">
-                                Complaint Issue
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.complaintIssueOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: complaintIssueId">
-                                </select>
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    Complaint Issue
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <select data-bind="options:$parent.complaintIssueOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: complaintIssueId">
+                                    </select>
+                                </td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -391,15 +393,15 @@
                             </td>
                             <td style="text-align: left; width: 20%">
                                 <textarea rows="4" cols="16" data-bind="value:complaintNotes"></textarea>
-                            <td style="text-align: right; width: 20%">
-                                Upload Document
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="checkbox" data-bind="checked: complaintinfoDocumentChecked" />
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    Upload Document
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <input type="checkbox" data-bind="checked: complaintinfoDocumentChecked" />
+                                </td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -411,15 +413,15 @@
                             <td style="text-align: left; width: 20%">
                                 <select data-bind="options:$parent.needMoreInfoDebtorOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoReqdFromDebtor">
                                 </select>
-                            <td style="text-align: right; width: 20%">
-                                Date Requested
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" id="moreInfoRequestedDate" data-bind="value:moreInfoRequestedDate" />
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    Date Requested
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <input type="text" id="moreInfoRequestedDate" data-bind="value:moreInfoRequestedDate" />
+                                </td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -430,16 +432,16 @@
                             </td>
                             <td style="text-align: left; width: 20%">
                                 <textarea rows="4" cols="16" data-bind="value:moreInfoRequested"></textarea>
-                            <td style="text-align: right; width: 20%">
-                                More Debtor Info Received?
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.moreInfoRecvdDebtorOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoReceivedFromDebtor">
-                                </select>
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    More Debtor Info Received?
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <select data-bind="options:$parent.moreInfoRecvdDebtorOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoReceivedFromDebtor">
+                                    </select>
+                                </td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -450,15 +452,15 @@
                             </td>
                             <td style="text-align: left; width: 20%">
                                 <input type="text" id="moreInfoReceivedDate" data-bind="value:moreInfoReceivedDate" />
-                            <td style="text-align: right; width: 20%">
-                                More Info Received
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <textarea rows="4" cols="16" data-bind="value:moreInfoReceived"></textarea>
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    More Info Received
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <textarea rows="4" cols="16" data-bind="value:moreInfoReceived"></textarea>
+                                </td>
                         </tr>
                     </table>
                 </div>
@@ -484,14 +486,14 @@
                             <td style="text-align: left; width: 20%">
                                 <select data-bind="options:$parent.complaintSubmittedToOwnerOptions,optionsValue:'Value', optionsText: 'Text', value:complaintSubmittedToOwner">
                                 </select>
-                            <td style="text-align: right; width: 20%">
-                                Date Submitted
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" id="complaintSubmittedDate" data-bind="value:complaintSubmittedDate" />
+                                <td style="text-align: right; width: 20%">
+                                    Date Submitted
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <input type="text" id="complaintSubmittedDate" data-bind="value:complaintSubmittedDate" />
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -502,15 +504,15 @@
                             </td>
                             <td style="text-align: left; width: 20%">
                                 <textarea rows="4" cols="16" data-bind="value:timeToSubmitDays"></textarea>
-                            <td style="text-align: right; width: 20%">
-                                Upload Document
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="checkbox" data-bind="checked: debtOwnerProcessDocumentChecked" />
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    Upload Document
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <input type="checkbox" data-bind="checked: debtOwnerProcessDocumentChecked" />
+                                </td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -522,15 +524,15 @@
                             <td style="text-align: left; width: 20%">
                                 <select data-bind="options:$parent.moreInfoFromAgencyOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoFromAgency">
                                 </select>
-                            <td style="text-align: right; width: 20%">
-                                Date Requested
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" id="moreInfoFromAgencyRequestedDate" data-bind="value:moreInfoFromAgencyRequestedDate" />
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    Date Requested
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <input type="text" id="moreInfoFromAgencyRequestedDate" data-bind="value:moreInfoFromAgencyRequestedDate" />
+                                </td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -541,16 +543,16 @@
                             </td>
                             <td style="text-align: left; width: 20%">
                                 <textarea rows="4" cols="16" data-bind="value:moreInfoFromAgencyRequested"></textarea>
-                            <td style="text-align: right; width: 20%">
-                                More Agency Info Received?
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.moreInfoFromAgencyReceivedOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoFromAgency">
-                                </select>
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    More Agency Info Received?
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <select data-bind="options:$parent.moreInfoFromAgencyReceivedOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoFromAgency">
+                                    </select>
+                                </td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -561,15 +563,15 @@
                             </td>
                             <td style="text-align: left; width: 20%">
                                 <input type="text" id="moreInfoFromAgencyReceivedDate" data-bind="value:moreInfoFromAgencyReceivedDate" />
-                            <td style="text-align: right; width: 20%">
-                                More Info Received
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <textarea rows="4" cols="16" data-bind="value:moreInfoFromAgencyReceived"></textarea>
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    More Info Received
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <textarea rows="4" cols="16" data-bind="value:moreInfoFromAgencyReceived"></textarea>
+                                </td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -581,14 +583,14 @@
                             <td style="text-align: left; width: 20%">
                                 <select data-bind="options:$parent.ownerResponseOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption:' ',value:ownerResponseId">
                                 </select>
-                            <td style="text-align: right; width: 20%">
-                                &nbsp;
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                &nbsp;
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    &nbsp;
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    &nbsp;
+                                </td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -599,15 +601,15 @@
                             </td>
                             <td style="text-align: left; width: 20%">
                                 <input type="text" id="ownerResponseDate" data-bind="value:ownerResponseDate" />
-                            <td style="text-align: right; width: 20%">
-                                Owner Response (Days)
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:ownerResponseDays" />
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    Owner Response (Days)
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <input type="text" data-bind="value:ownerResponseDays" />
+                                </td>
                         </tr>
                     </table>
                 </div>
@@ -632,15 +634,15 @@
                             </td>
                             <td style="text-align: left; width: 20%">
                                 <input type="text" id="agencyResponseToDebtorDate" data-bind="value:agencyResponseToDebtorDate" />
-                            <td style="text-align: right; width: 20%">
-                                Total Response Time (Days)
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:totalResponseTimeDays" />
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    Total Response Time (Days)
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <input type="text" data-bind="value:totalResponseTimeDays" />
+                                </td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -652,16 +654,16 @@
                             <td style="text-align: left; width: 20%">
                                 <select data-bind="options:$parent.debtorAgreeOptions,optionsValue:'Value', optionsText: 'Text', value:debtorAgree">
                                 </select>
-                            <td style="text-align: right; width: 20%">
-                                Need further Action?
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.needFurtherActionOptions,optionsValue:'Value', optionsText: 'Text', value:needFurtherAction">
-                                </select>
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    Need further Action?
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    <select data-bind="options:$parent.needFurtherActionOptions,optionsValue:'Value', optionsText: 'Text', value:needFurtherAction">
+                                    </select>
+                                </td>
                         </tr>
                         <tr>
                             <td style="text-align: right; width: 20%">
@@ -673,14 +675,14 @@
                             <td style="text-align: left; width: 20%">
                                 <select data-bind="options:$parent.finalActionStepOptions,optionsValue:'Value',optionsCaption: ' ', optionsText: 'Text', value:finalActionStepId">
                                 </select>
-                            <td style="text-align: right; width: 20%">
-                                &nbsp;
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                &nbsp;
-                            </td>
+                                <td style="text-align: right; width: 20%">
+                                    &nbsp;
+                                </td>
+                                <td style="text-align: center; width: 1%">
+                                </td>
+                                <td style="text-align: left; width: 20%">
+                                    &nbsp;
+                                </td>
                         </tr>
                     </table>
                 </div>
@@ -695,7 +697,16 @@
     <script src="~/Scripts/jquery.formatCurrency-1.4.0.min.js" type="text/javascript"></script>
     <script type="text/javascript">
         var yesNoOptions = [{ Text: 'No', Value: 'false' }, { Text: 'Yes', Value: 'true'}];
-        function pageViewModel(userId, userAgency) {
+        function getFormatedDate(data) {
+            if (data != null && data != '' && data != undefined) {
+                var dt = new Date(data);
+                dt.setDate(dt.getDate());
+                return $.datepicker.formatDate('mm/dd/yy', dt)
+            }
+            else
+                return '';
+        }
+        function pageViewModel(userId, userAgency, userRole) {
             var self = this;
 
             self.complianceModel = new complianceVM(userId, userAgency);
@@ -716,38 +727,37 @@
                 self.complianceModel.debtPurchaseBalance(debtorPurchaseBalance);
                 self.complianceModel.creditorName(creditorName);
                 self.complianceModel.debtProductId(debtProductId);
-                self.complianceModel.debtPurchaseBalance(debtPurchaseBalance);
-                self.complianceModel.debtCurrentBalance(debtCurrentBalance);
+                self.complianceModel.debtPurchaseBalance(((debtPurchaseBalance == '') ? '' : formatCurrency(debtPurchaseBalance)));
+                self.complianceModel.debtCurrentBalance(((debtCurrentBalance == '') ? '' : formatCurrency(debtCurrentBalance)));
                 self.complianceModel.disputeDebt(disputeDebt);
                 self.complianceModel.disputeDebtAmount(disputeDebtAmount);
                 self.complianceModel.disputeDebtDueDate(disputeDebtDueDate);
                 self.complianceModel.complaintID(complaintID);
-                var complaintDt = new Date(complaintDate);
-                complaintDt.setDate(complaintDt.getDate() + 1);
-                self.complianceModel.complaintDate($.datepicker.formatDate('mm/dd/yy', complaintDt));
+                self.complianceModel.complaintDate(getFormatedDate(complaintDate));
                 self.complianceModel.complaintReceivedByMethodId(complaintMethodId);
                 self.complianceModel.complaintIssueId(complaintIssueId);
                 self.complianceModel.complaintNotes(complaintNotes);
                 self.complianceModel.complaintSubmitedToAgency(complaintSubmitedToAgency);
-                self.complianceModel.complaintSubmitedToAgencyDate(complaintSubmitedToAgencyDate);
+                log(complaintSubmitedToAgencyDate);
+                self.complianceModel.complaintSubmitedToAgencyDate(getFormatedDate(complaintSubmitedToAgencyDate));
                 self.complianceModel.moreInfoReqdFromDebtor(moreInfoReqdFromDebtor);
-                self.complianceModel.moreInfoRequestedDate(moreInfoRequestedDate);
+                self.complianceModel.moreInfoRequestedDate(getFormatedDate(moreInfoRequestedDate));
                 self.complianceModel.moreInfoRequested(moreInfoRequested);
                 self.complianceModel.moreInfoReceivedFromDebtor(moreInfoReceivedFromDebtor);
-                self.complianceModel.moreInfoReceivedDate(moreInfoReceivedDate);
+                self.complianceModel.moreInfoReceivedDate(getFormatedDate(moreInfoReceivedDate));
                 self.complianceModel.moreInfoReceived(moreInfoReceived);
                 self.complianceModel.complaintSubmittedToOwner();
-                self.complianceModel.complaintSubmittedDate(complaintSubmittedDate);
+                self.complianceModel.complaintSubmittedDate(getFormatedDate(complaintSubmittedDate));
                 self.complianceModel.timeToSubmitDays(timeToSubmitDays);
                 self.complianceModel.moreInfoFromAgency(moreInfoFromAgency);
-                self.complianceModel.moreInfoFromAgencyRequestedDate(moreInfoFromAgencyRequestedDate);
+                self.complianceModel.moreInfoFromAgencyRequestedDate(getFormatedDate(moreInfoFromAgencyRequestedDate));
                 self.complianceModel.moreInfoFromAgencyRequested(moreInfoFromAgencyRequested);
                 self.complianceModel.moreInfoFromAgencyReceived(moreInfoFromAgencyReceived);
-                self.complianceModel.moreInfoFromAgencyReceivedDate(moreInfoFromAgencyReceivedDate);
+                self.complianceModel.moreInfoFromAgencyReceivedDate(getFormatedDate(moreInfoFromAgencyReceivedDate));
                 self.complianceModel.ownerResponseId(ownerResponseId);
                 self.complianceModel.ownerResponseDate(ownerResponseDate);
                 self.complianceModel.ownerResponseDays(ownerResponseDays);
-                self.complianceModel.agencyResponseToDebtorDate(agencyResponseToDebtorDate);
+                self.complianceModel.agencyResponseToDebtorDate(getFormatedDate(agencyResponseToDebtorDate));
                 self.complianceModel.totalResponseTimeDays(totalResponseTimeDays);
                 self.complianceModel.debtorAgree(debtorAgree);
                 self.complianceModel.needFurtherAction(needFurtherAction);
@@ -756,16 +766,14 @@
             }
             self.pimsAccountNumber = ko.observable('');
             self.debtors = ko.observableArray([]);
+            self.userRole = ko.observable(userRole);
 
             self.getComplaint = function (account) {
                 //log(debtor.account());
                 function setComplaint(data) {
-
-                    self.populateComplainceFromDebtor(data.Account, data.FirstName, data.LastName, data.DOB, data.Address, data.City, data.State, data.Zip, data.LastFourSSN, data.MobilePhone, data.HomePhone, data.WorkPhone, ((data.DebtCurrentBalance == undefined) ? '' : formatCurrency(data.DebtCurrentBalance)), ((data.DebtPurchaseBalance == undefined) ? '' : formatCurrency(data.DebtPurchaseBalance)), data.CreditorName, data.DebtProductId, data.DebtPurchaseBalance, data.DebtCurrentBalance, data.DisputeDebt, data.DisputeDebtAmount, data.DisputeDebtDueDate, data.ComplaintID, data.ComplaintDate, data.ComplaintReceivedByMethodId, data.ComplaintIssueId, data.ComplaintNotes, data.ComplaintSubmitedToAgency, data.ComplaintSubmitedToAgencyDate, data.MoreInfoReqdFromDebtor, data.MoreInfoRequestedDate, data.MoreInfoRequested, data.MoreInfoReceivedFromDebtor, data.MoreInfoReceivedDate, data.MoreInfoReceived, data.ComplaintSubmittedToOwner, data.ComplaintSubmittedDate, data.TimeToSubmitDays, data.MoreInfoFromAgency, data.MoreInfoFromAgencyRequestedDate, data.MoreInfoFromAgencyRequested, data.MoreInfoFromAgencyReceived, data.MoreInfoFromAgencyReceivedDate, data.OwnerResponseId, data.OwnerResponseDate, data.OwnerResponseDays, data.AgencyResponseToDebtorDate, data.TotalResponseTimeDays, data.DebtorAgree, data.NeedFurtherAction, data.FinalActionStepId, data.CreatedBy);
+                    self.populateComplainceFromDebtor(data.Account, data.FirstName, data.LastName, data.DOB, data.Address, data.City, data.State, data.Zip, data.LastFourSSN, data.MobilePhone, data.HomePhone, data.WorkPhone, data.DebtCurrentBalance, data.DebtPurchaseBalance, data.CreditorName, data.DebtProductId, data.DebtPurchaseBalance, data.DebtCurrentBalance, data.DisputeDebt, data.DisputeDebtAmount, data.DisputeDebtDueDate, data.ComplaintID, data.ComplaintDate, data.ComplaintReceivedByMethodId, data.ComplaintIssueId, data.ComplaintNotes, data.ComplaintSubmitedToAgency, data.ComplaintSubmitedToAgencyDate, data.MoreInfoReqdFromDebtor, data.MoreInfoRequestedDate, data.MoreInfoRequested, data.MoreInfoReceivedFromDebtor, data.MoreInfoReceivedDate, data.MoreInfoReceived, data.ComplaintSubmittedToOwner, data.ComplaintSubmittedDate, data.TimeToSubmitDays, data.MoreInfoFromAgency, data.MoreInfoFromAgencyRequestedDate, data.MoreInfoFromAgencyRequested, data.MoreInfoFromAgencyReceived, data.MoreInfoFromAgencyReceivedDate, data.OwnerResponseId, data.OwnerResponseDate, data.OwnerResponseDays, data.AgencyResponseToDebtorDate, data.TotalResponseTimeDays, data.DebtorAgree, data.NeedFurtherAction, data.FinalActionStepId, data.CreatedBy);
                 };
                 self.pimsAccountNumber(account);
-                log(account);
-                //self.populateComplainceFromDebtor(debtor.account(), debtor.firstName(), debtor.lastName(), debtor.dob(), debtor.address1(), debtor.address2(), debtor.city(), debtor.state(), debtor.zip(), debtor.ssn(), debtor.phoneCell(), debtor.phoneHome(), debtor.phoneWork(), debtor.debtCurrentBalance(), debtor.debtorPurchaseBalance(), debtor.creditorName());
                 $.ajax({
                     url: baseUrl + '/api/Compliance/',
                     type: "GET",
@@ -775,7 +783,6 @@
                     async: false,
                     success: function (data) {
                         setComplaint(data);
-                        //self.populateComplainceFromDebtor(data[0].Account, data[0].FirstName, data[0].LastName, data[0].DOB, data[0].Address1, data[0].Address2, data[0].City, data[0].State, data[0].Zip, data[0].LastFourSSN, data[0].MobilePhone, data[0].HomePhone, data[0].WorkPhone, ((data[0].DebtCurrentBalance == undefined) ? '' : formatCurrency(data[0].DebtCurrentBalance)), ((data[0].DebtPurchaseBalance == undefined) ? '' : formatCurrency(data[0].DebtPurchaseBalance)), data[0].CreditorName);
                     },
                     error: function (response, errorText) {
                         log(errorText);
@@ -791,6 +798,15 @@
                 $("#debtorResults").dialog('close');
                 //self.saveVisible(true);
             };
+            self.createComplaintId = function () {
+                if (self.complianceModel.account() != '' && self.complianceModel.account() != undefined && self.complianceModel.agency() != '' & self.complianceModel.agency() != undefined) {
+                    var randonNumber = Math.floor((Math.random() * 999) + 101);
+                    return self.complianceModel.agency() + '-' + self.complianceModel.account().substring(5, 10) + '-' + randonNumber;
+                }
+                else
+                    return '';
+            }
+            self.agenciesDisable = ko.computed(function () { return (self.userRole() == 'agency' || self.pimsAccountNumber() == '' || self.pimsAccountNumber() == undefined) ? true : false }, self);
             self.agencies = ko.computed(function () {
                 var localAgencies = [];
                 $.ajax({
@@ -1031,10 +1047,7 @@
             self.complianceModel.agency.subscribe(function (agencySelected) {
                 if (self.pimsAccountNumber()) {
                     self.getComplaint(self.pimsAccountNumber());
-                    var randonNumber = Math.floor((Math.random() * 999) + 101);
-                    log(randonNumber);
-                    self.complianceModel.complaintID(agencySelected + '-' + self.pimsAccountNumber().substring(5, 10) + '-' + randonNumber);
-                    log(self.complianceModel.complaintID());
+                    self.complianceModel.complaintID(self.createComplaintId());
                 }
 
             } .bind(self));
@@ -1051,19 +1064,23 @@
                         success: function (data) {
                             $("#loading").html("&nbsp;");
                             $("#loading").dialog('close');
-                            if (data.length > 0) {
-                                if (data.length > 1) {
-                                    $.each(data, function (i, item) {
-                                        self.debtors.push(new pimsDebtor(item.Account, item.FirstName, item.LastName, item.DOB, item.Address1, item.Address2, item.City, item.State, item.Zip, item.LastFourSSN, item.MobilePhone, item.HomePhone, item.WorkPhone, ((item.DebtCurrentBalance == undefined) ? '' : formatCurrency(item.DebtCurrentBalance)), ((item.DebtPurchaseBalance == undefined) ? '' : formatCurrency(item.DebtPurchaseBalance)), item.CreditorName));
-                                        $("#debtorResults").dialog('open');
-                                    });
-                                    //log(self.debtors()[0].account());
-                                }
-                                else {
-                                    //self.populateComplainceFromDebtor(data[0].Account, data[0].FirstName, data[0].LastName, data[0].DOB, data[0].Address1, data[0].Address2, data[0].City, data[0].State, data[0].Zip, data[0].LastFourSSN, data[0].MobilePhone, data[0].HomePhone, data[0].WorkPhone, ((data[0].DebtCurrentBalance == undefined) ? '' : formatCurrency(data[0].DebtCurrentBalance)), ((data[0].DebtPurchaseBalance == undefined) ? '' : formatCurrency(data[0].DebtPurchaseBalance)), data[0].CreditorName);
-                                    log(data[0].Account);
-                                    self.getComplaint(data[0].Account);
-                                    //self.saveVisible(true);
+                            if (data == null) {
+                                self.showMessage(true);
+                                self.message('No data available for ' + self.pimsAccountNumber());
+                                self.pimsAccountNumber('');
+                            }
+                            else {
+                                if (data.length > 0) {
+                                    if (data.length > 1) {
+                                        $.each(data, function (i, item) {
+                                            self.debtors.push(new pimsDebtor(item.Account, item.FirstName, item.LastName, item.DOB, item.Address1, item.Address2, item.City, item.State, item.Zip, item.LastFourSSN, item.MobilePhone, item.HomePhone, item.WorkPhone, ((item.DebtCurrentBalance == undefined) ? '' : formatCurrency(item.DebtCurrentBalance)), ((item.DebtPurchaseBalance == undefined) ? '' : formatCurrency(item.DebtPurchaseBalance)), item.CreditorName));
+                                            $("#debtorResults").dialog('open');
+                                        });
+                                    }
+                                    else {
+
+                                        self.getComplaint(data[0].Account);
+                                    }
                                 }
                             }
                         },
@@ -1160,7 +1177,7 @@
             $('#messageSummary').dialog({ modal: true, title: 'Errors:', autoOpen: false, width: 200, height: 200 });
             $('#fileUploadContainer').dialog({ modal: true, title: 'Upload documents:', autoOpen: false, width: 500, height: 500 });
 
-            ko.applyBindings(new pageViewModel($('#userId').val(), $('#agencyId').val()));
+            ko.applyBindings(new pageViewModel($('#userId').val(), $('#agencyId').val(), $('#hdnUserRole').val()));
 
             //For DatePicker for Complaint section
             $('#complaiintDate').datepicker();

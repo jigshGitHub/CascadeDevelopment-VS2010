@@ -2,12 +2,6 @@
     var self = this;
     self.account = ko.observable('');
     self.agency = ko.observable(userAgency);
-    self.makeAgencySelectionDisable = ko.computed(function () {
-        if (self.agency() == '')
-            return false;
-        else
-            return true;
-    }, self);
     self.lastName = ko.observable('');
     self.firstName = ko.observable('');
     self.dob = ko.observable('');
@@ -73,6 +67,10 @@
     self.debtOwnerProcessDocument = ko.observable('');
     self.debtOwnerProcessDocUrl = ko.observable('');
 
+    self.save2 = function () {
+        return '';
+    }
+    
     self.save = function () {
         log('saving')
         var json = JSON.stringify({

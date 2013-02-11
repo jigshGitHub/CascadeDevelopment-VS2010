@@ -102,6 +102,7 @@ namespace Cascade.Web.Areas.Compliance.Controllers
         {
             ViewBag.UserID = UserId.ToString();
             ViewBag.AgencyID = UserAgency;
+            ViewBag.UserRole = UserRoles.First().ToLower();
             return View();
         }
 
