@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class vwAccount
     {
         public string ACCOUNT { get; set; }
@@ -512,5 +512,4 @@ namespace Cascade.Data.Models
         public string SoldTo { get; set; }
         public Nullable<bool> Sold { get; set; }
     }
-    
 }

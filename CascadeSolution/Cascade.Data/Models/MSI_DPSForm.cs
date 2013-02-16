@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class MSI_DPSForm
     {
         public int ID { get; set; }
@@ -32,5 +32,4 @@ namespace Cascade.Data.Models
         public Nullable<bool> Uploaded { get; set; }
         public string GUID { get; set; }
     }
-    
 }

@@ -610,5 +610,16 @@ namespace Cascade.Data.Repositories
         {
         }
     }
+    public class MSI_MediaTypesRepository : RepositoryBase<MSI_MediaTypes>
+    {
+        public MSI_MediaTypesRepository(IDatabaseFactory dbFactory)
+            : base(dbFactory)
+        {
+        }
+        public MSI_MediaTypesRepository()
+            : base(new DBFactory())
+        {
+        }
+    }
 
 }

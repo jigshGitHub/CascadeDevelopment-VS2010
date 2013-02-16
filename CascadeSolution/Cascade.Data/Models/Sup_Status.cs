@@ -7,15 +7,14 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class Sup_Status
     {
         public string Status { get; set; }
         public string WorkGroup { get; set; }
     }
-    
 }

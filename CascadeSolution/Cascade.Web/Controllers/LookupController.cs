@@ -161,6 +161,11 @@ namespace Cascade.Web.Controllers
                     lookupData = from step in actionStepsRepository.GetAll()
                                  select new LookUp(step.Step, step.Id.ToString());
                     break;
+                case "MediaTypes":
+                    MSI_MediaTypesRepository mediaTypesRepository = new MSI_MediaTypesRepository();
+                    lookupData = from type in mediaTypesRepository.GetAll().Where(record => record.IsActive == true)
+                                 select new LookUp(type.Name, type.ID.ToString());
+                    break;
                 case "USStates":
                     MSI_USStatesRepository statesRepository = new MSI_USStatesRepository();
                     lookupData = from state in statesRepository.GetAll()

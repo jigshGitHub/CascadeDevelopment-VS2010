@@ -7,12 +7,12 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Data.Entity;
+    using System.Data.Entity.Infrastructure;
+    
     public partial class CascadeDBEntities : DbContext
     {
         public CascadeDBEntities()
@@ -34,6 +34,8 @@ namespace Cascade.Data.Models
         public DbSet<MSI_DPSForm> MSI_DPSForm { get; set; }
         public DbSet<MSI_FinalActionsteps> MSI_FinalActionsteps { get; set; }
         public DbSet<MSI_MediaForm> MSI_MediaForm { get; set; }
+        public DbSet<MSI_MediaRequestResponse> MSI_MediaRequestResponse { get; set; }
+        public DbSet<MSI_MediaTypes> MSI_MediaTypes { get; set; }
         public DbSet<MSI_OwnerResponses> MSI_OwnerResponses { get; set; }
         public DbSet<MSI_Port_Acq_Edited> MSI_Port_Acq_Edited { get; set; }
         public DbSet<MSI_Port_Acq_Original> MSI_Port_Acq_Original { get; set; }
@@ -52,8 +54,23 @@ namespace Cascade.Data.Models
         public DbSet<RACCTLGL> RACCTLGLs { get; set; }
         public DbSet<RACCTREL> RACCTRELs { get; set; }
         public DbSet<RAGENCY> RAGENCies { get; set; }
+        public DbSet<RINTRATE> RINTRATEs { get; set; }
+        public DbSet<RPRODCDE> RPRODCDEs { get; set; }
+        public DbSet<RSTATU> RSTATUS { get; set; }
+        public DbSet<RTRANCDE> RTRANCDEs { get; set; }
         public DbSet<Sup_BrockettCompanies> Sup_BrockettCompanies { get; set; }
+        public DbSet<Sup_Company> Sup_Company { get; set; }
+        public DbSet<Sup_PmtType> Sup_PmtType { get; set; }
+        public DbSet<Sup_Reason> Sup_Reason { get; set; }
+        public DbSet<Sup_Status> Sup_Status { get; set; }
+        public DbSet<Sup_TransCode> Sup_TransCode { get; set; }
+        public DbSet<Sup_TransSource> Sup_TransSource { get; set; }
         public DbSet<TBL_CHART> TBL_CHART { get; set; }
+        public DbSet<TBL_COMPANIES> TBL_COMPANIES { get; set; }
+        public DbSet<Tbl_Money> Tbl_Money { get; set; }
+        public DbSet<Tbl_People> Tbl_People { get; set; }
+        public DbSet<TBL_Portfolio> TBL_Portfolio { get; set; }
+        public DbSet<Tbl_Source> Tbl_Source { get; set; }
         public DbSet<MSI_vwDebtors> MSI_vwDebtors { get; set; }
         public DbSet<MSI_vwMediaData> MSI_vwMediaData { get; set; }
         public DbSet<MSI_vwPurchases> MSI_vwPurchases { get; set; }
@@ -63,22 +80,9 @@ namespace Cascade.Data.Models
         public DbSet<vw_AddDPSCheck> vw_AddDPSCheck { get; set; }
         public DbSet<vw_CollectionsRecon> vw_CollectionsRecon { get; set; }
         public DbSet<vw_PortfolioCashFlow> vw_PortfolioCashFlow { get; set; }
-        public DbSet<vwAccount> vwAccounts { get; set; }
-        public DbSet<RPRODCDE> RPRODCDEs { get; set; }
-        public DbSet<RTRANCDE> RTRANCDEs { get; set; }
-        public DbSet<Sup_Company> Sup_Company { get; set; }
-        public DbSet<Sup_PmtType> Sup_PmtType { get; set; }
-        public DbSet<Sup_Reason> Sup_Reason { get; set; }
-        public DbSet<Sup_Status> Sup_Status { get; set; }
-        public DbSet<Sup_TransCode> Sup_TransCode { get; set; }
-        public DbSet<TBL_COMPANIES> TBL_COMPANIES { get; set; }
-        public DbSet<Tbl_People> Tbl_People { get; set; }
         public DbSet<vw_PortfolioCashPosition> vw_PortfolioCashPosition { get; set; }
         public DbSet<vw_PortfolioSummary> vw_PortfolioSummary { get; set; }
         public DbSet<vw_PortfolioTransactions> vw_PortfolioTransactions { get; set; }
-        public DbSet<Sup_TransSource> Sup_TransSource { get; set; }
-        public DbSet<Tbl_Money> Tbl_Money { get; set; }
-        public DbSet<Tbl_Source> Tbl_Source { get; set; }
-        public DbSet<TBL_Portfolio> TBL_Portfolio { get; set; }
+        public DbSet<vwAccount> vwAccounts { get; set; }
     }
 }

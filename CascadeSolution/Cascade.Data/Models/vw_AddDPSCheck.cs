@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class vw_AddDPSCheck
     {
         public int ID { get; set; }
@@ -24,5 +24,4 @@ namespace Cascade.Data.Models
         public string CheckNumber { get; set; }
         public string Company { get; set; }
     }
-    
 }

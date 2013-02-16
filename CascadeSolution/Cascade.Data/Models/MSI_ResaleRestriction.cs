@@ -7,16 +7,15 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class MSI_ResaleRestriction
     {
         public int ID { get; set; }
         public Nullable<int> Value { get; set; }
         public string Restriction { get; set; }
     }
-    
 }

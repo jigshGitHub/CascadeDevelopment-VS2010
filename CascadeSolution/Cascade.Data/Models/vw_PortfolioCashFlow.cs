@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class vw_PortfolioCashFlow
     {
         public string Portfolio_ { get; set; }
@@ -20,5 +20,4 @@ namespace Cascade.Data.Models
         public Nullable<decimal> SalesPrice { get; set; }
         public string Company { get; set; }
     }
-    
 }

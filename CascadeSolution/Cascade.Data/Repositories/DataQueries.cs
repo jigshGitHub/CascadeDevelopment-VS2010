@@ -964,6 +964,31 @@ namespace Cascade.Data.Repositories
             return data.AsEnumerable<ComplianceViewResult>();
         }
 
+        /// <summary>
+        /// Return account information from vwAccounts based on either 'pims' account or 'original' account number
+        /// </summary>
+        /// <param name="accountNumber"></param>
+        /// <param name="searchType">'pims' or 'origina'</param>
+        /// <returns></returns>
+        public vwAccount GetAccount(string accountNumber, string searchType)
+        {
+            vwAccount account = null;
+            vwAccountRepository data = null;
+
+            try
+            {
+                data = new vwAccountRepository();
+                if (searchType.ToLower() == "pims")
+                    account = data.Get(record => record.ACCOUNT == accountNumber);
+                else
+                    account = data.Get(record => record.OriginalAccount == accountNumber);                
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Exception in DataQueries.GetAccount for id=" + accountNumber + " and type = " + searchType + "\n Message:" + ex.Message);
+            }
+            return account;
+        }
 
         #region Export to Excel Methods
         public IEnumerable<DPSViewEditResult> GetDPSViewEditRecordsExport(DateTime? StartDate, DateTime? EndDate, string PortfolioOwner, string Responsibility, string Account, string GUID)

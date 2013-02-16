@@ -34,7 +34,7 @@
     self.complaintUploadDocument = ko.observable('');
     self.complaintSubmitedToAgency = ko.observable('');
     self.complaintSubmitedToAgencyDate = ko.observable('');
-    self.moreInfoReqdFromDebtor = ko.observable('');
+    self.moreInfoReqdFromDebtor_YesNo = ko.observable('');
     self.moreInfoRequestedDate = ko.observable('');
     self.moreInfoRequested = ko.observable('');
     self.moreInfoReceivedFromDebtor = ko.observable('');
@@ -48,6 +48,7 @@
     self.moreInfoFromAgency = ko.observable('');
     self.moreInfoFromAgencyRequestedDate = ko.observable('');
     self.moreInfoFromAgencyRequested = ko.observable('');
+    self.moreInfoFromAgencyReceived_YesNo = ko.observable('');
     self.moreInfoFromAgencyReceived = ko.observable('');
     self.moreInfoFromAgencyReceivedDate = ko.observable('');
     self.ownerResponseId = ko.observable('');
@@ -67,12 +68,62 @@
     self.debtOwnerProcessDocument = ko.observable('');
     self.debtOwnerProcessDocUrl = ko.observable('');
 
-    self.save2 = function () {
-        return '';
-    }
-    
+    self.moreInfoReqdFromDebtor_YesNo.subscribe(function (value) {
+        if (value == 'true') {
+            var todaysDate = new Date();
+            todaysDate.setDate(todaysDate.getDate());
+            self.moreInfoRequestedDate($.datepicker.formatDate('mm/dd/yy', todaysDate));
+        }
+        else {
+            self.moreInfoRequestedDate('');
+        }
+    }, self);
+
+    self.moreInfoReceivedFromDebtor.subscribe(function (value) {
+        if (value == 'true') {
+            var todaysDate = new Date();
+            todaysDate.setDate(todaysDate.getDate());
+            self.moreInfoReceivedDate($.datepicker.formatDate('mm/dd/yy', todaysDate));
+        }
+        else {
+            self.moreInfoReceivedDate('');
+        }
+    }, self);
+
+    self.complaintSubmittedToOwner.subscribe(function (value) {
+        if(value == 'true'){
+            var todaysDate = new Date();
+            todaysDate.setDate(todaysDate.getDate());
+            self.complaintSubmittedDate($.datepicker.formatDate('mm/dd/yy', todaysDate));    
+        }
+        else{
+            self.complaintSubmittedDate('');   
+        }
+    }, self);
+
+    self.moreInfoFromAgency.subscribe(function (value) {
+        if(value == 'true'){
+            var todaysDate = new Date();
+            todaysDate.setDate(todaysDate.getDate());
+            self.moreInfoFromAgencyRequestedDate($.datepicker.formatDate('mm/dd/yy', todaysDate));    
+        }
+        else{
+            self.moreInfoFromAgencyRequestedDate('');   
+        }
+    }, self);
+
+    self.moreInfoFromAgencyReceived_YesNo.subscribe(function (value) {
+        if (value == 'true') {
+            var todaysDate = new Date();
+            todaysDate.setDate(todaysDate.getDate());
+            self.moreInfoFromAgencyReceivedDate($.datepicker.formatDate('mm/dd/yy', todaysDate));
+        }
+        else {
+            self.moreInfoFromAgencyReceivedDate('');
+        }
+    }, self);
+
     self.save = function () {
-        log('saving')
         var json = JSON.stringify({
             AgencyId: self.agency(),
             Account: self.account(),
@@ -103,7 +154,7 @@
             ComplaintNotes: self.complaintNotes(),
             ComplaintSubmitedToAgency: self.complaintSubmitedToAgency(),
             ComplaintSubmitedToAgencyDate: self.complaintSubmitedToAgencyDate(),
-            MoreInfoReqdFromDebtor: self.moreInfoReqdFromDebtor(),
+            MoreInfoReqdFromDebtor: self.moreInfoReqdFromDebtor_YesNo(),
             MoreInfoRequestedDate: self.moreInfoRequestedDate(),
             MoreInfoRequested: self.moreInfoRequested(),
             MoreInfoReceivedFromDebtor: self.moreInfoReceivedFromDebtor(),
@@ -128,6 +179,10 @@
             CreatedBy: self.createdBy()
         });
 
+        function setComplaint(data) {
+            self.populateComplaint(data.Account, data.FirstName, data.LastName, data.DOB, data.Address, data.City, data.State, data.Zip, data.LastFourSSN, data.MobilePhone, data.HomePhone, data.WorkPhone, data.DebtCurrentBalance, data.DebtPurchaseBalance, data.CreditorName, data.DebtProductId, data.DebtPurchaseBalance, data.DebtCurrentBalance, data.DisputeDebt, data.DisputeDebtAmount, data.DisputeDebtDueDate, data.ComplaintID, data.ComplaintDate, data.ComplaintReceivedByMethodId, data.ComplaintIssueId, data.ComplaintNotes, data.ComplaintSubmitedToAgency, data.ComplaintSubmitedToAgencyDate, data.MoreInfoReqdFromDebtor, data.MoreInfoRequestedDate, data.MoreInfoRequested, data.MoreInfoReceivedFromDebtor, data.MoreInfoReceivedDate, data.MoreInfoReceived, data.ComplaintSubmittedToOwner, data.ComplaintSubmittedDate, data.TimeToSubmitDays, data.MoreInfoFromAgency, data.MoreInfoFromAgencyRequestedDate, data.MoreInfoFromAgencyRequested, data.MoreInfoFromAgencyReceived, data.MoreInfoFromAgencyReceivedDate, data.OwnerResponseId, data.OwnerResponseDate, data.OwnerResponseDays, data.AgencyResponseToDebtorDate, data.TotalResponseTimeDays, data.DebtorAgree, data.NeedFurtherAction, data.FinalActionStepId, data.CreatedBy);
+        };
+
         $.ajax({
             url: baseUrl + '/api/Compliance/',
             type: "POST",
@@ -136,11 +191,66 @@
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (response) {
+                setComplaint(response);
             },
             error: function (response, errorText) {
                 return false;
             }
         });
+    }
+
+    self.populateComplaint = function (account, firstName, lastName, dob, address, city, state, zip, ssn, phoneCell, phoneHome, phoneWork, debtCurrentBalance, debtorPurchaseBalance, creditorName, debtProductId, debtPurchaseBalance, debtCurrentBalance, disputeDebt, disputeDebtAmount, disputeDebtDueDate, complaintID, complaintDate, complaintMethodId, complaintIssueId, complaintNotes, complaintSubmitedToAgency, complaintSubmitedToAgencyDate, moreInfoReqdFromDebtor_YesNo, moreInfoRequestedDate, moreInfoRequested, moreInfoReceivedFromDebtor, moreInfoReceivedDate, moreInfoReceived, complaintSubmittedToOwner, complaintSubmittedDate, timeToSubmitDays, moreInfoFromAgency, moreInfoFromAgencyRequestedDate, moreInfoFromAgencyRequested, moreInfoFromAgencyReceived, moreInfoFromAgencyReceivedDate, ownerResponseId, ownerResponseDate, ownerResponseDays, agencyResponseToDebtorDate, totalResponseTimeDays, debtorAgree, needFurtherAction, finalActionStepId, createdBy) {
+        self.account(account);
+        self.firstName(firstName);
+        self.lastName(lastName);
+        self.dob(dob);
+        self.address(address);
+        self.city(city);
+        self.state(state);
+        self.zip(zip);
+        self.lastFourSSN(ssn);
+        self.mobilePhone(phoneCell);
+        self.homePhone(phoneHome);
+        self.workPhone(phoneWork);
+        self.debtCurrentBalance(debtCurrentBalance);
+        self.debtPurchaseBalance(debtorPurchaseBalance);
+        self.creditorName(creditorName);
+        self.debtProductId(debtProductId);
+        self.debtPurchaseBalance(((debtPurchaseBalance == '') ? '' : formatCurrency(debtPurchaseBalance)));
+        self.debtCurrentBalance(((debtCurrentBalance == '') ? '' : formatCurrency(debtCurrentBalance)));
+        self.disputeDebt(disputeDebt);
+        self.disputeDebtAmount(disputeDebtAmount);
+        self.disputeDebtDueDate(disputeDebtDueDate);
+        self.complaintID(complaintID);
+        self.complaintDate(getFormatedDate(complaintDate));
+        self.complaintReceivedByMethodId(complaintMethodId);
+        self.complaintIssueId(complaintIssueId);
+        self.complaintNotes(complaintNotes);
+        self.complaintSubmitedToAgency(complaintSubmitedToAgency);
+        self.complaintSubmitedToAgencyDate(getFormatedDate(complaintSubmitedToAgencyDate));
+        self.moreInfoReqdFromDebtor_YesNo(moreInfoReqdFromDebtor_YesNo);
+        self.moreInfoRequestedDate(getFormatedDate(moreInfoRequestedDate));
+        self.moreInfoRequested(moreInfoRequested);
+        self.moreInfoReceivedFromDebtor(moreInfoReceivedFromDebtor);
+        self.moreInfoReceivedDate(getFormatedDate(moreInfoReceivedDate));
+        self.moreInfoReceived(moreInfoReceived);
+        self.complaintSubmittedToOwner();
+        self.complaintSubmittedDate(getFormatedDate(complaintSubmittedDate));
+        self.timeToSubmitDays(timeToSubmitDays);
+        self.moreInfoFromAgency(moreInfoFromAgency);
+        self.moreInfoFromAgencyRequestedDate(getFormatedDate(moreInfoFromAgencyRequestedDate));
+        self.moreInfoFromAgencyRequested(moreInfoFromAgencyRequested);
+        self.moreInfoFromAgencyReceived(moreInfoFromAgencyReceived);
+        self.moreInfoFromAgencyReceivedDate(getFormatedDate(moreInfoFromAgencyReceivedDate));
+        self.ownerResponseId(ownerResponseId);
+        self.ownerResponseDate(getFormatedDate(ownerResponseDate));
+        self.ownerResponseDays(ownerResponseDays);
+        self.agencyResponseToDebtorDate(getFormatedDate(agencyResponseToDebtorDate));
+        self.totalResponseTimeDays(totalResponseTimeDays);
+        self.debtorAgree(debtorAgree);
+        self.needFurtherAction(needFurtherAction);
+        self.finalActionStepId(finalActionStepId);
+        //self.createdBy(createdBy)
     }
 }
 

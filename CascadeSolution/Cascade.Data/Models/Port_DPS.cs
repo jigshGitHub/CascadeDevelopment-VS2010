@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class Port_DPS
     {
         public int ID { get; set; }
@@ -31,5 +31,4 @@ namespace Cascade.Data.Models
         public string OurCheckNumber { get; set; }
         public Nullable<System.DateTime> Uploaded__y_n_ { get; set; }
     }
-    
 }

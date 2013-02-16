@@ -7,16 +7,15 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class Tbl_Source
     {
         public int SID { get; set; }
         public string SText { get; set; }
         public Nullable<System.DateTime> CreatedAt { get; set; }
     }
-    
 }

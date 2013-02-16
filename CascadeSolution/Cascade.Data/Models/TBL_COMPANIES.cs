@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class TBL_COMPANIES
     {
         public int COMPANIESID { get; set; }
@@ -58,5 +58,4 @@ namespace Cascade.Data.Models
         public Nullable<int> IndustryId { get; set; }
         public Nullable<int> FranchiseeId { get; set; }
     }
-    
 }

@@ -12,18 +12,17 @@ namespace Cascade.Data.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class RTRANCDE
+    public partial class RINTRATE
     {
-        public string TRAN_CODE { get; set; }
-        public string IS_PAYMENT { get; set; }
-        public string CREDIT_DEBIT { get; set; }
-        public string DESCR { get; set; }
-        public string IS_NSF { get; set; }
-        public string IS_ADJUSTMENT { get; set; }
-        public string IS_COST { get; set; }
-        public Nullable<int> BATCHTYPEID { get; set; }
-        public string UPDATE_ID { get; set; }
+        public string CODE { get; set; }
+        public string TYPE { get; set; }
+        public Nullable<System.DateTime> DATE_STARTED { get; set; }
+        public Nullable<System.DateTime> DATE_ENDED { get; set; }
+        public Nullable<decimal> RATE { get; set; }
+        public string COMPOUND_PERIOD { get; set; }
+        public string GEN_TRAN_CODE { get; set; }
+        public Nullable<decimal> INT_DAYS_PER_YR { get; set; }
         public Nullable<System.DateTime> UPDATE_DATE { get; set; }
-        public int TranCodeID { get; set; }
+        public string UPDATE_USER { get; set; }
     }
 }

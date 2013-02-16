@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class MSI_Port_SalesTrans_Edited
     {
         public int ID { get; set; }
@@ -28,5 +28,4 @@ namespace Cascade.Data.Models
         public Nullable<System.DateTime> PutbackDeadline { get; set; }
         public string Notes { get; set; }
     }
-    
 }

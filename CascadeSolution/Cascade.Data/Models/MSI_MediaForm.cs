@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class MSI_MediaForm
     {
         public int ID { get; set; }
@@ -52,6 +52,7 @@ namespace Cascade.Data.Models
         public string OurInvoice { get; set; }
         public string GUID { get; set; }
         public string FileName { get; set; }
+        public byte[] FileBinary { get; set; }
+        public byte[] FileBinaryImage { get; set; }
     }
-    
 }

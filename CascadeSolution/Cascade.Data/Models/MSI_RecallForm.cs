@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class MSI_RecallForm
     {
         public int ID { get; set; }
@@ -40,5 +40,4 @@ namespace Cascade.Data.Models
         public string Seller { get; set; }
         public string GUID { get; set; }
     }
-    
 }

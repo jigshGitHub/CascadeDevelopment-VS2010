@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class MSI_Port_Acq_Edited
     {
         public string Portfolio_ { get; set; }
@@ -29,5 +29,4 @@ namespace Cascade.Data.Models
         public Nullable<int> ResaleRestrictionId { get; set; }
         public string Company { get; set; }
     }
-    
 }

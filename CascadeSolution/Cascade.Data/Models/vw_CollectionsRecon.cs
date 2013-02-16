@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class vw_CollectionsRecon
     {
         public string TransType { get; set; }
@@ -23,5 +23,4 @@ namespace Cascade.Data.Models
         public Nullable<decimal> SalesPrice { get; set; }
         public string Agency { get; set; }
     }
-    
 }

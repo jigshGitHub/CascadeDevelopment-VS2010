@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class MSI_vwRecallData
     {
         public int ID { get; set; }
@@ -40,5 +40,4 @@ namespace Cascade.Data.Models
         public Nullable<double> Expr1 { get; set; }
         public Nullable<double> Expr2 { get; set; }
     }
-    
 }

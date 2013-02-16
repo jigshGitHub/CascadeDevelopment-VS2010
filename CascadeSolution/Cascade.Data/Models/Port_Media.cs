@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class Port_Media
     {
         public int ID { get; set; }
@@ -50,5 +50,4 @@ namespace Cascade.Data.Models
         public string BuyerCheck_ { get; set; }
         public string OurCheck_ { get; set; }
     }
-    
 }

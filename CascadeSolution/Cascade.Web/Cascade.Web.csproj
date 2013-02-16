@@ -220,6 +220,7 @@
     <Compile Include="Controllers\MSIPortfolioEditedController.cs" />
     <Compile Include="Controllers\MSIPortfolioOriginalController.cs" />
     <Compile Include="Controllers\PortfolioController.cs" />
+    <Compile Include="Controllers\RAccountController.cs" />
     <Compile Include="Controllers\UnderConstructionController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -383,6 +384,10 @@
       <Project>{A1AF78DD-96BA-440A-A19F-34481DB8BADE}</Project>
       <Name>Cascade.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cascade.Helpers\Cascade.Helpers.csproj">
+      <Project>{97303427-3EF5-46E4-AD52-E717B41F1428}</Project>
+      <Name>Cascade.Helpers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cascade.UI.Controls\Cascade.UI.Controls.csproj">
       <Project>{18CAB1ED-114E-482E-A2AB-AB383F10779D}</Project>
       <Name>Cascade.UI.Controls</Name>
@@ -475,6 +480,7 @@
     <Content Include="Areas\Recourse\Views\Recall\_recallRecords.cshtml" />
     <Content Include="Areas\Recourse\Views\Web.config" />
     <Content Include="Areas\Recourse\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Recourse\Views\Media\MediaRequest.cshtml" />
     <None Include="Areas\Reports\Views\Cascade0206Deploy.rar" />
     <Content Include="Areas\Reports\Views\Collections\PortfolioOwnerBreakDown.cshtml" />
     <Content Include="Areas\Reports\Views\Collections\PortfolioWorkStatusBreakDown.cshtml" />

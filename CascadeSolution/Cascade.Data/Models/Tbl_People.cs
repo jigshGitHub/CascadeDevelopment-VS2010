@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class Tbl_People
     {
         public int PID { get; set; }
@@ -20,5 +20,4 @@ namespace Cascade.Data.Models
         public string Address { get; set; }
         public Nullable<System.DateTime> CreatedAt { get; set; }
     }
-    
 }

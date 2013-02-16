@@ -235,5 +235,13 @@ namespace Cascade.Web.Areas.Recourse.Controllers
             return File(fileProcessor.GetFilePath(fileName), "text/plain", fileName);
         }
 
+        public ActionResult MediaRequest()
+        {
+            ViewBag.UserID = UserId.ToString();
+            ViewBag.AgencyID = UserAgency;
+            ViewBag.UserRole = UserRoles.First().ToLower();
+            return View();
+        }
+
     }
 }

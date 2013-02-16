@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class MSI_vwDebtors
     {
         public string ACCOUNT { get; set; }
@@ -33,5 +33,4 @@ namespace Cascade.Data.Models
         public Nullable<decimal> DebtorPurchaseBalance { get; set; }
         public string CreditorName { get; set; }
     }
-    
 }

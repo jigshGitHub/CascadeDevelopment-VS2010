@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class Sup_Company
     {
         public string Agency { get; set; }
@@ -19,5 +19,4 @@ namespace Cascade.Data.Models
         public string Name { get; set; }
         public string Type { get; set; }
     }
-    
 }

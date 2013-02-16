@@ -7,15 +7,14 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class Sup_PmtType
     {
         public int Payment_Type_ID_code { get; set; }
         public string Payment_Type_ID { get; set; }
     }
-    
 }

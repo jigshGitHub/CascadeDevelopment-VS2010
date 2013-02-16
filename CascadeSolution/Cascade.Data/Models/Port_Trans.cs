@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class Port_Trans
     {
         public int ID { get; set; }
@@ -35,5 +35,4 @@ namespace Cascade.Data.Models
         public Nullable<double> ProfitShare_after { get; set; }
         public string Notes { get; set; }
     }
-    
 }

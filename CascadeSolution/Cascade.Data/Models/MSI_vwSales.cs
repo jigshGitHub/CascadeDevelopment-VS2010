@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class MSI_vwSales
     {
         public string Responsibility { get; set; }
@@ -22,5 +22,4 @@ namespace Cascade.Data.Models
         public Nullable<decimal> FaceValue { get; set; }
         public Nullable<decimal> SalesPrice { get; set; }
     }
-    
 }

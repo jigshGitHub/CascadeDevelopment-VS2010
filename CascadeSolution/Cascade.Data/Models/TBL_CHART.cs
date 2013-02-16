@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class TBL_CHART
     {
         public int Id { get; set; }
@@ -39,5 +39,4 @@ namespace Cascade.Data.Models
         public Nullable<System.Guid> LastUpdatedBy { get; set; }
         public Nullable<System.Guid> LastCreatedBy { get; set; }
     }
-    
 }

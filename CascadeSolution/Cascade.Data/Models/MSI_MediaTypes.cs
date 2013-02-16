@@ -12,10 +12,10 @@ namespace Cascade.Data.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class MSI_USStates
+    public partial class MSI_MediaTypes
     {
-        public int Id { get; set; }
+        public int ID { get; set; }
         public string Name { get; set; }
-        public string Value { get; set; }
+        public Nullable<bool> IsActive { get; set; }
     }
 }

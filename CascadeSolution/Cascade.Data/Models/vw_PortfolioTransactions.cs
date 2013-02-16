@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class vw_PortfolioTransactions
     {
         public string Portfolio_ { get; set; }
@@ -24,5 +24,4 @@ namespace Cascade.Data.Models
         public string Lender_FileDescription { get; set; }
         public string Seller { get; set; }
     }
-    
 }

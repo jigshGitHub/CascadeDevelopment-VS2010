@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class MSI_vwPurchases
     {
         public string ACCOUNT { get; set; }
@@ -21,5 +21,4 @@ namespace Cascade.Data.Models
         public Nullable<decimal> purchaseprice { get; set; }
         public string Seller { get; set; }
     }
-    
 }

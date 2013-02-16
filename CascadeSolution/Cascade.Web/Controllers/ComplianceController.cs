@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Cascade.Data.Models;
 using Cascade.Data.Repositories;
-
+using Cascade.Helpers;
 namespace Cascade.Web.Controllers
 {
     public class DebtorsController : ApiController
@@ -60,7 +60,6 @@ namespace Cascade.Web.Controllers
                 if (data.Count() > 0)
                 {
                     complaint = data.First();
-                    complaint.ComplaintDate = complaint.ComplaintDate.AddDays(1);
                     if (!string.IsNullOrEmpty(userRole))
                     {
                         if (userRole == "user")
@@ -146,31 +145,43 @@ namespace Cascade.Web.Controllers
                 complaintToSave.DisputeDebtAmount = complaint.DisputeDebtAmount;
                 complaintToSave.DisputeDebtDueDate = complaint.DisputeDebtDueDate;
                 complaintToSave.ComplaintID = complaint.ComplaintID;
-                complaintToSave.ComplaintDate = complaint.ComplaintDate;
+                //complaintToSave.ComplaintDate = complaint.ComplaintDate;
+                //complaintToSave.ComplaintDate = complaintToSave.ComplaintDate.AddHours(DateTime.Now.Hour);
+                //complaintToSave.ComplaintDate = complaintToSave.ComplaintDate.AddMinutes(DateTime.Now.Minute);
+                //complaintToSave.ComplaintDate = complaintToSave.ComplaintDate.AddSeconds(DateTime.Now.Second);
+                //complaintToSave.ComplaintDate = complaintToSave.ComplaintDate.AddMilliseconds(DateTime.Now.Millisecond);
+                complaintToSave.ComplaintDate = DateHelper.GetDateWithTimings(complaint.ComplaintDate);
                 complaintToSave.ComplaintReceivedByMethodId = complaint.ComplaintReceivedByMethodId;
                 complaintToSave.ComplaintIssueId = complaint.ComplaintIssueId;
                 complaintToSave.ComplaintNotes = complaint.ComplaintNotes;
                 complaintToSave.ComplaintSubmitedToAgency = complaint.ComplaintSubmitedToAgency;
-                complaintToSave.ComplaintSubmitedToAgencyDate = complaint.ComplaintSubmitedToAgencyDate;
+                if(complaint.ComplaintSubmitedToAgencyDate.HasValue)
+                    complaintToSave.ComplaintSubmitedToAgencyDate = DateHelper.GetDateWithTimings(complaint.ComplaintSubmitedToAgencyDate.Value);
                 complaintToSave.MoreInfoReqdFromDebtor = complaint.MoreInfoReqdFromDebtor;
-                complaintToSave.MoreInfoRequestedDate = complaint.MoreInfoRequestedDate;
+                if (complaint.MoreInfoRequestedDate.HasValue)
+                    complaintToSave.MoreInfoRequestedDate = DateHelper.GetDateWithTimings(complaint.MoreInfoRequestedDate.Value);
                 complaintToSave.MoreInfoRequested = complaint.MoreInfoRequested;
                 complaintToSave.MoreInfoReceivedFromDebtor = complaint.MoreInfoReceivedFromDebtor;
-                complaintToSave.MoreInfoReceivedDate = complaint.MoreInfoReceivedDate;
+                if( complaint.MoreInfoReceivedDate.HasValue)
+                    complaintToSave.MoreInfoReceivedDate = DateHelper.GetDateWithTimings(complaint.MoreInfoReceivedDate.Value);
                 complaintToSave.MoreInfoReceived = complaint.MoreInfoReceived;
                 complaintToSave.ComplaintSubmittedToOwner = complaint.ComplaintSubmittedToOwner;
-                complaintToSave.ComplaintSubmittedDate = complaint.ComplaintSubmittedDate;
+                if (complaint.ComplaintSubmittedDate.HasValue)
+                    complaintToSave.ComplaintSubmittedDate = DateHelper.GetDateWithTimings(complaint.ComplaintSubmittedDate.Value);
                 complaintToSave.TimeToSubmitDays = complaint.TimeToSubmitDays;
                 complaintToSave.MoreInfoFromAgency = complaint.MoreInfoFromAgency;
-                complaintToSave.MoreInfoFromAgencyRequestedDate = complaint.MoreInfoFromAgencyRequestedDate;
+                if (complaint.MoreInfoFromAgencyRequestedDate.HasValue)
+                    complaintToSave.MoreInfoFromAgencyRequestedDate = DateHelper.GetDateWithTimings(complaint.MoreInfoFromAgencyRequestedDate.Value);
                 complaintToSave.MoreInfoFromAgencyRequested = complaint.MoreInfoFromAgencyRequested;
                 complaintToSave.MoreInfoFromAgencyReceived = complaint.MoreInfoFromAgencyReceived;
-                complaintToSave.MoreInfoFromAgencyReceivedDate = complaint.MoreInfoFromAgencyReceivedDate;
+                if (complaint.MoreInfoFromAgencyReceivedDate.HasValue)
+                    complaintToSave.MoreInfoFromAgencyReceivedDate = DateHelper.GetDateWithTimings(complaint.MoreInfoFromAgencyReceivedDate.Value);
                 complaintToSave.OwnerResponseId = complaint.OwnerResponseId;
-                complaintToSave.OwnerResponseDate = complaint.OwnerResponseDate;
+                if(complaint.OwnerResponseDate.HasValue)
+                    complaintToSave.OwnerResponseDate = DateHelper.GetDateWithTimings(complaint.OwnerResponseDate.Value);
                 complaintToSave.OwnerResponseDays = complaint.OwnerResponseDays;
                 if (complaint.AgencyResponseToDebtorDate.HasValue)
-                    complaintToSave.AgencyResponseToDebtorDate = complaint.AgencyResponseToDebtorDate;
+                    complaintToSave.AgencyResponseToDebtorDate = DateHelper.GetDateWithTimings(complaint.AgencyResponseToDebtorDate.Value);
                 complaintToSave.TotalResponseTimeDays = complaint.TotalResponseTimeDays;
                 complaintToSave.DebtorAgree = complaint.DebtorAgree;
                 complaintToSave.NeedFurtherAction = complaint.NeedFurtherAction;
@@ -181,7 +192,12 @@ namespace Cascade.Web.Controllers
 
                 if (editingRequired)
                 {
-                    complaintToSave.TimeToSubmitDays = complaintToSave.ComplaintSubmittedDate.Value.Subtract(complaintToSave.ComplaintDate).Days;
+                    if(complaintToSave.ComplaintSubmittedDate.HasValue && complaintToSave.ComplaintDate != null)
+                        complaintToSave.TimeToSubmitDays = complaintToSave.ComplaintSubmittedDate.Value.Subtract(complaintToSave.ComplaintDate).Days;
+                    if (complaintToSave.OwnerResponseDate.HasValue && complaintToSave.ComplaintSubmittedDate.HasValue)
+                        complaintToSave.OwnerResponseDays = complaintToSave.OwnerResponseDate.Value.Subtract(complaintToSave.ComplaintSubmittedDate.Value).Days;
+                    if (complaintToSave.AgencyResponseToDebtorDate.HasValue && complaintToSave.ComplaintDate != null)
+                        complaintToSave.TotalResponseTimeDays = complaintToSave.AgencyResponseToDebtorDate.Value.Subtract(complaintToSave.ComplaintDate).Days;
                     repository.Update(complaintToSave);
                 }
                 else
@@ -190,6 +206,7 @@ namespace Cascade.Web.Controllers
                     complaintToSave.ComplaintSubmitedToAgencyDate = DateTime.Now;
                     repository.Add(complaintToSave);
                 }
+                
             }
             catch (System.Data.Entity.Validation.DbEntityValidationException validationException)
             {
@@ -203,6 +220,7 @@ namespace Cascade.Web.Controllers
             }
             catch (Exception ex)
             {
+                throw ex;
             }
             return complaintToSave;
         }

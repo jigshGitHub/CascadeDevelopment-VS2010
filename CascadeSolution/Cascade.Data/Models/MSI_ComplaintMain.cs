@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class MSI_ComplaintMain
     {
         public string AgencyId { get; set; }
@@ -71,5 +71,4 @@ namespace Cascade.Data.Models
         public string ComplaintDocument { get; set; }
         public string DebtOwnerProcessDocument { get; set; }
     }
-    
 }

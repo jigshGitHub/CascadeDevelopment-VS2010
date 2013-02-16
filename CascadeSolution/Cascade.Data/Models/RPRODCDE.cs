@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class RPRODCDE
     {
         public RPRODCDE()
@@ -45,5 +45,4 @@ namespace Cascade.Data.Models
     
         public virtual ICollection<RACCOUNT> RACCOUNTs { get; set; }
     }
-    
 }

@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class RACCOUNT
     {
         public RACCOUNT()
@@ -258,9 +258,9 @@ namespace Cascade.Data.Models
     
         public virtual ICollection<RACCBKRP> RACCBKRPs { get; set; }
         public virtual RAGENCY RAGENCY { get; set; }
+        public virtual RPRODCDE RPRODCDE { get; set; }
+        public virtual RSTATU RSTATU { get; set; }
         public virtual RACCTLGL RACCTLGL { get; set; }
         public virtual ICollection<RACCTREL> RACCTRELs { get; set; }
-        public virtual RPRODCDE RPRODCDE { get; set; }
     }
-    
 }

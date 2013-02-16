@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class Port_Acq
     {
         public string Portfolio_ { get; set; }
@@ -28,5 +28,4 @@ namespace Cascade.Data.Models
         public string Notes { get; set; }
         public string Company { get; set; }
     }
-    
 }

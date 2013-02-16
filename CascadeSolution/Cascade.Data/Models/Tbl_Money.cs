@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Cascade.Data.Models
 {
+    using System;
+    using System.Collections.Generic;
+    
     public partial class Tbl_Money
     {
         public int MID { get; set; }
@@ -20,5 +20,4 @@ namespace Cascade.Data.Models
         public Nullable<decimal> Amount { get; set; }
         public Nullable<System.DateTime> CreatedAt { get; set; }
     }
-    
 }
