@@ -259,8 +259,9 @@ namespace Cascade.Web.Areas.Recourse.Controllers
         }
 
         [ActionName("Create")]
-        public ActionResult MediaRequestCreate()
+        public ActionResult MediaRequestCreate(string id)
         {
+            ViewBag.Id = id;
             return View();
         }
 

@@ -30,13 +30,18 @@
             @foreach (var mediaRecord in Model)
             {
                 <tr>
-                    <td>@Html.ActionLink("View", "Details", new { id = mediaRecord.Id })
+                    <td style="display: none">@Html.ActionLink("View", "Details", new { id = mediaRecord.Id })
                     </td>
-                    <td>@mediaRecord.Account</td>
-                    <td>@mediaRecord.Portfolio</td>
-                    <td>@mediaRecord.Lender</td>
-                    <td>@mediaRecord.AccountName</td>
-                    <td>@mediaRecord.Seller</td>
+                    <td>@mediaRecord.Account
+                    </td>
+                    <td>@mediaRecord.Portfolio
+                    </td>
+                    <td>@mediaRecord.Lender
+                    </td>
+                    <td>@mediaRecord.AccountName
+                    </td>
+                    <td>@mediaRecord.Seller
+                    </td>
                 </tr> 
             }
         </tbody>

@@ -8,6 +8,7 @@
 @Html.Hidden("userId", (string)(@ViewBag.UserID))
 @Html.Hidden("agencyId", (string)(@ViewBag.AgencyID))
 @Html.Hidden("hdnUserRole", (string)(@ViewBag.UserRole))
+@Html.Hidden("hdnId", (string)(@ViewBag.Id))
 <div id="messageSummary" style="font-size: small">
     <ul>
     </ul>
@@ -169,7 +170,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#messageSummary').dialog({ modal: true, title: 'Summary:', autoOpen: false, width: 200, height: 200 });
-            ko.applyBindings(new pageViewModel($('#userId').val(), $('#agencyId').val(), $('#hdnUserRole').val(), ''));
+            ko.applyBindings(new pageViewModel($('#userId').val(), $('#agencyId').val(), $('#hdnUserRole').val(), $('#hdnId').val()));
         });
     </script>
 }
