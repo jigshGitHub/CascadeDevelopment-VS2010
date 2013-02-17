@@ -963,7 +963,24 @@ namespace Cascade.Data.Repositories
             }
             return data.AsEnumerable<ComplianceViewResult>();
         }
+        public IEnumerable<MSI_MediaRequestResponse> GetMediaRequestResponses(string agency)
+        {
+            IEnumerable<MSI_MediaRequestResponse> data = null;
+            MSI_MediaRequestResponseRepository repository = new MSI_MediaRequestResponseRepository();
+            try
+            {
+                data = from requestResponse in repository.GetAll().Where(record => record.AgencyId == agency)
+                       select requestResponse;
+            }
 
+            catch (Exception ex)
+            {
+                throw ex;
+
+            }
+            return data;
+
+        }
         /// <summary>
         /// Return account information from vwAccounts based on either 'pims' account or 'original' account number
         /// </summary>

@@ -14,8 +14,15 @@ namespace Cascade.Data.Models
     
     public partial class MSI_MediaTypes
     {
+        public MSI_MediaTypes()
+        {
+            this.MSI_MediaRequestedTypes = new HashSet<MSI_MediaRequestedTypes>();
+        }
+    
         public int ID { get; set; }
         public string Name { get; set; }
         public Nullable<bool> IsActive { get; set; }
+    
+        public virtual ICollection<MSI_MediaRequestedTypes> MSI_MediaRequestedTypes { get; set; }
     }
 }

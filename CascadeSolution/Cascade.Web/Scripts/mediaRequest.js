@@ -6,7 +6,18 @@
 /// <reference path="jquery.validate.unobtrusive.js" />
 /// <reference path="knockout-2.0.0.debug.js" />
 
-function pageViewModel(userId, userAgency, userRole) {
+function mediaReuqestedType(id, reqId, typeId, documents, reqDt, reqUser, respDt, respUser) {
+    this.Id = id;
+    this.RequestedId = reqId;
+    this.TypeId = typeId;
+    this.RespondedDocuments = documents;
+    this.RequestedDate = reqDt;
+    this.RequestedUserID = reqUser;
+    this.RespondedDate = respDt;
+    this.RespondedUserID = respUser;
+}
+function pageViewModel(userId, userAgency, userRole, id) {
+    log(userId + ' ' + userAgency + ' ' + userRole);
     var self = this;
     self.userId = ko.observable(userId);
     self.agency = ko.observable(userAgency);
@@ -32,6 +43,7 @@ function pageViewModel(userId, userAgency, userRole) {
             self.showPIMSData(true);
     }
     self.showMediaTypeSelection = ko.observable(false);
+    self.id = id;
     self.pimsAccountNumber = ko.observable('');
     self.pimsAccountNumberRequired = ko.observable('*');
     self.pimsAccountNumberRequiredMsg = ko.observable('');
@@ -57,6 +69,8 @@ function pageViewModel(userId, userAgency, userRole) {
     };
 
     self.setPimsData = function (data) {
+        self.pimsAccountNumber(data.ACCOUNT);
+        self.originalAccountNumber(data.OriginalAccount);
         self.portfolio(data.Portfolio);
         self.lender(data.Originator);
         self.ssn(data.SSN);
@@ -118,7 +132,7 @@ function pageViewModel(userId, userAgency, userRole) {
                         //log(item.Text);
                         self.mediaTypes.push(item);
                     });
-                    log(self.mediaTypes());
+                   // log(self.mediaTypes());
                 }
             },
             error: function (xhr, status, somthing) {
@@ -142,11 +156,52 @@ function pageViewModel(userId, userAgency, userRole) {
             self.selectedMediaTypes.remove(media);
         }
         //Need to return to to allow the Checkbox to process checked/unchecked
-        log(self.selectedMediaTypes());
+        //log(self.selectedMediaTypes());
         return true;
     }
+    self.showSubmit = ko.computed(function () { return (self.selectedMediaTypes().length > 0); }, self);
+    self.submit = function () {
 
-    
+        function getSelectedMediaRequested() {
+            var localSelectedMediaTypes = [];
+            $.each(self.selectedMediaTypes(), function (i, item) {
+                log(item);
+                localSelectedMediaTypes.push(new mediaReuqestedType(undefined, undefined, item.Value, undefined, new Date(), self.userId(), undefined, undefined));
+            });
+            log(localSelectedMediaTypes);
+            return localSelectedMediaTypes;
+        }
+        var json = JSON.stringify({
+            Id:self.id,
+            AgencyId: self.agency(),
+            Account: self.pimsAccountNumber(),
+            OriginalAccount: self.originalAccountNumber(),
+            Portfolio: self.portfolio(),
+            Lender: self.lender(),
+            SSN: self.ssn(),
+            AccountName: self.name(),
+            OpenDate: self.openDate(),
+            CODate: self.coDate(),
+            Seller: self.seller(),
+            RequestedDate: new Date(),
+            RequestedByUserId: self.userId(),
+            MSI_MediaRequestedTypes: getSelectedMediaRequested()
+        });
+
+        $.ajax({
+            url: baseUrl + '/api/MediaRequest/',
+            type: "POST",
+            data: json,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (response) {
+            },
+            error: function (response, errorText) {
+                return false;
+            }
+        });
+    }
 }
 
 ko.bindingHandlers.fadeVisible = {

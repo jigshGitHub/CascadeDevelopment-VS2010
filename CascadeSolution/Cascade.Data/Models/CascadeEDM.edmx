@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="CascadeDBModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+    <Schema Namespace="CascadeDBModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityContainer Name="CascadeDBModelStoreContainer">
           <EntitySet Name="MSI_ComplaintIssues" EntityType="CascadeDBModel.Store.MSI_ComplaintIssues" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_ComplaintMain" EntityType="CascadeDBModel.Store.MSI_ComplaintMain" store:Type="Tables" Schema="dbo" />
@@ -15,25 +15,8 @@
           <EntitySet Name="MSI_DPSForm" EntityType="CascadeDBModel.Store.MSI_DPSForm" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_FinalActionsteps" EntityType="CascadeDBModel.Store.MSI_FinalActionsteps" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_MediaForm" EntityType="CascadeDBModel.Store.MSI_MediaForm" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="MSI_MediaRequestResponse" EntityType="CascadeDBModel.Store.MSI_MediaRequestResponse" store:Type="Tables" store:Schema="dbo" store:Name="MSI_MediaRequestResponse">
-            <DefiningQuery>SELECT 
-      [MSI_MediaRequestResponse].[Id] AS [Id], 
-      [MSI_MediaRequestResponse].[AgencyId] AS [AgencyId], 
-      [MSI_MediaRequestResponse].[Account] AS [Account], 
-      [MSI_MediaRequestResponse].[OriginalAccount] AS [OriginalAccount], 
-      [MSI_MediaRequestResponse].[Portfolio] AS [Portfolio], 
-      [MSI_MediaRequestResponse].[Lender] AS [Lender], 
-      [MSI_MediaRequestResponse].[SSN] AS [SSN], 
-      [MSI_MediaRequestResponse].[AccountName] AS [AccountName], 
-      [MSI_MediaRequestResponse].[OpenDate] AS [OpenDate], 
-      [MSI_MediaRequestResponse].[CODate] AS [CODate], 
-      [MSI_MediaRequestResponse].[Seller] AS [Seller], 
-      [MSI_MediaRequestResponse].[RequestedDate] AS [RequestedDate], 
-      [MSI_MediaRequestResponse].[RespondedDate] AS [RespondedDate], 
-      [MSI_MediaRequestResponse].[RequestedByUserId] AS [RequestedByUserId], 
-      [MSI_MediaRequestResponse].[RespondedByUserId] AS [RespondedByUserId]
-      FROM [dbo].[MSI_MediaRequestResponse] AS [MSI_MediaRequestResponse]</DefiningQuery>
-          </EntitySet>
+          <EntitySet Name="MSI_MediaRequestedTypes" EntityType="CascadeDBModel.Store.MSI_MediaRequestedTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MSI_MediaRequestResponse" EntityType="CascadeDBModel.Store.MSI_MediaRequestResponse" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_MediaTypes" EntityType="CascadeDBModel.Store.MSI_MediaTypes" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_OwnerResponses" EntityType="CascadeDBModel.Store.MSI_OwnerResponses" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_Port_Acq_Edited" EntityType="CascadeDBModel.Store.MSI_Port_Acq_Edited" store:Type="Tables" Schema="dbo" />
@@ -1001,6 +984,14 @@
       [vwAccounts].[Sold] AS [Sold]
       FROM [dbo].[vwAccounts] AS [vwAccounts]</DefiningQuery>
           </EntitySet>
+          <AssociationSet Name="FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse" Association="CascadeDBModel.Store.FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse">
+            <End Role="MSI_MediaRequestResponse" EntitySet="MSI_MediaRequestResponse" />
+            <End Role="MSI_MediaRequestedTypes" EntitySet="MSI_MediaRequestedTypes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MSI_MediaRequestedTypes_MSI_MediaTypes" Association="CascadeDBModel.Store.FK_MSI_MediaRequestedTypes_MSI_MediaTypes">
+            <End Role="MSI_MediaTypes" EntitySet="MSI_MediaTypes" />
+            <End Role="MSI_MediaRequestedTypes" EntitySet="MSI_MediaRequestedTypes" />
+          </AssociationSet>
           <AssociationSet Name="FK_RACCBKRP_RACCOUNT" Association="CascadeDBModel.Store.FK_RACCBKRP_RACCOUNT">
             <End Role="RACCOUNT" EntitySet="RACCOUNT" />
             <End Role="RACCBKRP" EntitySet="RACCBKRP" />
@@ -1194,18 +1185,23 @@
           <Property Name="OurInvoice" Type="varchar" MaxLength="50" />
           <Property Name="GUID" Type="varchar" Nullable="false" MaxLength="255" />
           <Property Name="FileName" Type="varchar" MaxLength="150" />
-          <Property Name="FileBinary" Type="varbinary(max)" />
-          <Property Name="FileBinaryImage" Type="image" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'CascadeDB.dbo.MSI_MediaRequestResponse' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
-      -->
+        <EntityType Name="MSI_MediaRequestedTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RequestedId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="TypeId" Type="int" Nullable="false" />
+          <Property Name="RespondedDocuments" Type="varchar(max)" />
+          <Property Name="RequestedDate" Type="datetime" />
+          <Property Name="RequestedUserID" Type="uniqueidentifier" />
+          <Property Name="RespondedUserID" Type="uniqueidentifier" />
+          <Property Name="RespondedDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="MSI_MediaRequestResponse">
           <Key>
             <PropertyRef Name="Id" />
-            <PropertyRef Name="AgencyId" />
-            <PropertyRef Name="RequestedDate" />
-            <PropertyRef Name="RequestedByUserId" />
           </Key>
           <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="AgencyId" Type="varchar" Nullable="false" MaxLength="20" />
@@ -1280,7 +1276,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Type="int" Nullable="false" />
           <Property Name="Portfolio#" Type="nvarchar" MaxLength="255" />
           <Property Name="Cut-OffDate" Type="datetime" />
           <Property Name="ClosingDate" Type="datetime" />
@@ -3345,6 +3341,30 @@
           <Property Name="SoldTo" Type="varchar" MaxLength="60" />
           <Property Name="Sold" Type="bit" />
         </EntityType>
+        <Association Name="FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse">
+          <End Role="MSI_MediaRequestResponse" Type="CascadeDBModel.Store.MSI_MediaRequestResponse" Multiplicity="1" />
+          <End Role="MSI_MediaRequestedTypes" Type="CascadeDBModel.Store.MSI_MediaRequestedTypes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MSI_MediaRequestResponse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MSI_MediaRequestedTypes">
+              <PropertyRef Name="RequestedId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MSI_MediaRequestedTypes_MSI_MediaTypes">
+          <End Role="MSI_MediaTypes" Type="CascadeDBModel.Store.MSI_MediaTypes" Multiplicity="1" />
+          <End Role="MSI_MediaRequestedTypes" Type="CascadeDBModel.Store.MSI_MediaRequestedTypes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MSI_MediaTypes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MSI_MediaRequestedTypes">
+              <PropertyRef Name="TypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_RACCBKRP_RACCOUNT">
           <End Role="RACCOUNT" Type="CascadeDBModel.Store.RACCOUNT" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -3427,8 +3447,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="CascadeDBModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
@@ -3441,8 +3460,6 @@
           <EntitySet Name="MSI_DebtorProducts" EntityType="CascadeDBModel.MSI_DebtorProducts" />
           <EntitySet Name="MSI_DPSForm" EntityType="CascadeDBModel.MSI_DPSForm" />
           <EntitySet Name="MSI_FinalActionsteps" EntityType="CascadeDBModel.MSI_FinalActionsteps" />
-          <EntitySet Name="MSI_MediaForm" EntityType="CascadeDBModel.MSI_MediaForm" />
-          <EntitySet Name="MSI_MediaRequestResponse" EntityType="CascadeDBModel.MSI_MediaRequestResponse" />
           <EntitySet Name="MSI_MediaTypes" EntityType="CascadeDBModel.MSI_MediaTypes" />
           <EntitySet Name="MSI_OwnerResponses" EntityType="CascadeDBModel.MSI_OwnerResponses" />
           <EntitySet Name="MSI_Port_Acq_Edited" EntityType="CascadeDBModel.MSI_Port_Acq_Edited" />
@@ -3515,6 +3532,17 @@
           <AssociationSet Name="FK_RACCTREL_RACCOUNT" Association="CascadeDBModel.FK_RACCTREL_RACCOUNT">
             <End Role="RACCOUNT" EntitySet="RACCOUNTs" />
             <End Role="RACCTREL" EntitySet="RACCTRELs" />
+          </AssociationSet>
+          <EntitySet Name="MSI_MediaRequestResponse" EntityType="CascadeDBModel.MSI_MediaRequestResponse" />
+          <EntitySet Name="MSI_MediaForm" EntityType="CascadeDBModel.MSI_MediaForm" />
+          <EntitySet Name="MSI_MediaRequestedTypes" EntityType="CascadeDBModel.MSI_MediaRequestedTypes" />
+          <AssociationSet Name="FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse" Association="CascadeDBModel.FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse">
+            <End Role="MSI_MediaRequestResponse" EntitySet="MSI_MediaRequestResponse" />
+            <End Role="MSI_MediaRequestedTypes" EntitySet="MSI_MediaRequestedTypes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MSI_MediaRequestedTypes_MSI_MediaTypes" Association="CascadeDBModel.FK_MSI_MediaRequestedTypes_MSI_MediaTypes">
+            <End Role="MSI_MediaTypes" EntitySet="MSI_MediaTypes" />
+            <End Role="MSI_MediaRequestedTypes" EntitySet="MSI_MediaRequestedTypes" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="MSI_ComplaintIssues">
@@ -3642,75 +3670,6 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Step" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
         </EntityType>
-        <EntityType Name="MSI_MediaForm">
-          <Key>
-            <PropertyRef Name="Portfolio" />
-            <PropertyRef Name="OrderNumber" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="OrderDate" Type="DateTime" />
-          <Property Name="CompanyRequesting" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="Portfolio" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="OriginalLender" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="OrigAcct" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="SSN" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="AcctName" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="IsApplication" Type="Boolean" />
-          <Property Name="IsAffidavitIssuer" Type="Boolean" />
-          <Property Name="IsAffidavitSeller" Type="Boolean" />
-          <Property Name="StmtsFrom" Type="DateTime" />
-          <Property Name="StmtsTo" Type="DateTime" />
-          <Property Name="OpenDate" Type="DateTime" />
-          <Property Name="CODate" Type="DateTime" />
-          <Property Name="Explanation" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
-          <Property Name="DateSubmitted" Type="DateTime" />
-          <Property Name="DateConfirmed" Type="DateTime" />
-          <Property Name="SellerFee" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="DateSellerPaid" Type="DateTime" />
-          <Property Name="OurFee" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="DateReceived" Type="DateTime" />
-          <Property Name="DateForwarded" Type="DateTime" />
-          <Property Name="MediaTypeReceived" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="Notes" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
-          <Property Name="IsUnavailable" Type="Boolean" />
-          <Property Name="IsClosed" Type="Boolean" />
-          <Property Name="UnavailableDate" Type="DateTime" />
-          <Property Name="SellerInvoice" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="DatePayRec" Type="DateTime" />
-          <Property Name="BuyerCheck" Type="String" MaxLength="150" Unicode="false" FixedLength="false" />
-          <Property Name="OurCheck" Type="String" MaxLength="150" Unicode="false" FixedLength="false" />
-          <Property Name="PIMSAcct" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="Seller" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="OrderNumber" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="OurInvoice" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="GUID" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="FileName" Type="String" MaxLength="150" Unicode="false" FixedLength="false" />
-          <Property Name="FileBinary" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="FileBinaryImage" Type="Binary" MaxLength="Max" FixedLength="false" />
-        </EntityType>
-        <EntityType Name="MSI_MediaRequestResponse">
-          <Key>
-            <PropertyRef Name="Id" />
-            <PropertyRef Name="AgencyId" />
-            <PropertyRef Name="RequestedDate" />
-            <PropertyRef Name="RequestedByUserId" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="AgencyId" Type="String" Nullable="false" MaxLength="20" Unicode="false" FixedLength="false" />
-          <Property Name="Account" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
-          <Property Name="OriginalAccount" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="Portfolio" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="Lender" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="SSN" Type="String" MaxLength="11" Unicode="false" FixedLength="false" />
-          <Property Name="AccountName" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
-          <Property Name="OpenDate" Type="DateTime" />
-          <Property Name="CODate" Type="DateTime" />
-          <Property Name="Seller" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="RequestedDate" Type="DateTime" Nullable="false" />
-          <Property Name="RespondedDate" Type="DateTime" />
-          <Property Name="RequestedByUserId" Type="Guid" Nullable="false" />
-          <Property Name="RespondedByUserId" Type="Guid" />
-        </EntityType>
         <EntityType Name="MSI_MediaTypes">
           <Key>
             <PropertyRef Name="ID" />
@@ -3718,6 +3677,7 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
           <Property Name="IsActive" Type="Boolean" />
+          <NavigationProperty Name="MSI_MediaRequestedTypes" Relationship="CascadeDBModel.FK_MSI_MediaRequestedTypes_MSI_MediaTypes" FromRole="MSI_MediaTypes" ToRole="MSI_MediaRequestedTypes" />
         </EntityType>
         <EntityType Name="MSI_OwnerResponses">
           <Key>
@@ -5888,6 +5848,110 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="MSI_MediaRequestResponse">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Guid" Name="Id" Nullable="false" />
+          <Property Type="String" Name="AgencyId" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Account" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="OriginalAccount" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Portfolio" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Lender" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="SSN" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="AccountName" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="OpenDate" />
+          <Property Type="DateTime" Name="CODate" />
+          <Property Type="String" Name="Seller" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="RequestedDate" Nullable="false" />
+          <Property Type="DateTime" Name="RespondedDate" />
+          <Property Type="Guid" Name="RequestedByUserId" Nullable="false" />
+          <Property Type="Guid" Name="RespondedByUserId" />
+          <NavigationProperty Name="MSI_MediaRequestedTypes" Relationship="CascadeDBModel.FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse" FromRole="MSI_MediaRequestResponse" ToRole="MSI_MediaRequestedTypes" />
+        </EntityType>
+        <EntityType Name="MSI_MediaForm">
+          <Key>
+            <PropertyRef Name="Portfolio" />
+            <PropertyRef Name="OrderNumber" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="DateTime" Name="OrderDate" />
+          <Property Type="String" Name="CompanyRequesting" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Portfolio" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="OriginalLender" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="OrigAcct" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="SSN" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="AcctName" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="IsApplication" />
+          <Property Type="Boolean" Name="IsAffidavitIssuer" />
+          <Property Type="Boolean" Name="IsAffidavitSeller" />
+          <Property Type="DateTime" Name="StmtsFrom" />
+          <Property Type="DateTime" Name="StmtsTo" />
+          <Property Type="DateTime" Name="OpenDate" />
+          <Property Type="DateTime" Name="CODate" />
+          <Property Type="String" Name="Explanation" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="DateSubmitted" />
+          <Property Type="DateTime" Name="DateConfirmed" />
+          <Property Type="Decimal" Name="SellerFee" Precision="19" Scale="4" />
+          <Property Type="DateTime" Name="DateSellerPaid" />
+          <Property Type="Decimal" Name="OurFee" Precision="19" Scale="4" />
+          <Property Type="DateTime" Name="DateReceived" />
+          <Property Type="DateTime" Name="DateForwarded" />
+          <Property Type="String" Name="MediaTypeReceived" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Notes" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="IsUnavailable" />
+          <Property Type="Boolean" Name="IsClosed" />
+          <Property Type="DateTime" Name="UnavailableDate" />
+          <Property Type="String" Name="SellerInvoice" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="DatePayRec" />
+          <Property Type="String" Name="BuyerCheck" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="OurCheck" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="PIMSAcct" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Seller" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="OrderNumber" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="OurInvoice" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="GUID" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="FileName" MaxLength="150" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="MSI_MediaRequestedTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Guid" Name="Id" Nullable="false" />
+          <Property Type="Guid" Name="RequestedId" Nullable="false" />
+          <Property Type="Int32" Name="TypeId" Nullable="false" />
+          <Property Type="String" Name="RespondedDocuments" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="RequestedDate" />
+          <Property Type="Guid" Name="RequestedUserID" />
+          <Property Type="Guid" Name="RespondedUserID" />
+          <Property Type="DateTime" Name="RespondedDate" />
+          <NavigationProperty Name="MSI_MediaRequestResponse" Relationship="CascadeDBModel.FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse" FromRole="MSI_MediaRequestedTypes" ToRole="MSI_MediaRequestResponse" />
+          <NavigationProperty Name="MSI_MediaTypes" Relationship="CascadeDBModel.FK_MSI_MediaRequestedTypes_MSI_MediaTypes" FromRole="MSI_MediaRequestedTypes" ToRole="MSI_MediaTypes" />
+        </EntityType>
+        <Association Name="FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse">
+          <End Type="CascadeDBModel.MSI_MediaRequestResponse" Role="MSI_MediaRequestResponse" Multiplicity="1" />
+          <End Type="CascadeDBModel.MSI_MediaRequestedTypes" Role="MSI_MediaRequestedTypes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MSI_MediaRequestResponse">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MSI_MediaRequestedTypes">
+              <PropertyRef Name="RequestedId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MSI_MediaRequestedTypes_MSI_MediaTypes">
+          <End Type="CascadeDBModel.MSI_MediaTypes" Role="MSI_MediaTypes" Multiplicity="1" />
+          <End Type="CascadeDBModel.MSI_MediaRequestedTypes" Role="MSI_MediaRequestedTypes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MSI_MediaTypes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MSI_MediaRequestedTypes">
+              <PropertyRef Name="TypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5994,65 +6058,6 @@
           <EntitySetMapping Name="MSI_FinalActionsteps"><EntityTypeMapping TypeName="CascadeDBModel.MSI_FinalActionsteps"><MappingFragment StoreEntitySet="MSI_FinalActionsteps">
             <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="Step" ColumnName="Step" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="MSI_MediaForm"><EntityTypeMapping TypeName="CascadeDBModel.MSI_MediaForm"><MappingFragment StoreEntitySet="MSI_MediaForm">
-            <ScalarProperty Name="ID" ColumnName="ID" />
-            <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
-            <ScalarProperty Name="CompanyRequesting" ColumnName="CompanyRequesting" />
-            <ScalarProperty Name="Portfolio" ColumnName="Portfolio" />
-            <ScalarProperty Name="OriginalLender" ColumnName="OriginalLender" />
-            <ScalarProperty Name="OrigAcct" ColumnName="OrigAcct" />
-            <ScalarProperty Name="SSN" ColumnName="SSN" />
-            <ScalarProperty Name="AcctName" ColumnName="AcctName" />
-            <ScalarProperty Name="IsApplication" ColumnName="IsApplication" />
-            <ScalarProperty Name="IsAffidavitIssuer" ColumnName="IsAffidavitIssuer" />
-            <ScalarProperty Name="IsAffidavitSeller" ColumnName="IsAffidavitSeller" />
-            <ScalarProperty Name="StmtsFrom" ColumnName="StmtsFrom" />
-            <ScalarProperty Name="StmtsTo" ColumnName="StmtsTo" />
-            <ScalarProperty Name="OpenDate" ColumnName="OpenDate" />
-            <ScalarProperty Name="CODate" ColumnName="CODate" />
-            <ScalarProperty Name="Explanation" ColumnName="Explanation" />
-            <ScalarProperty Name="DateSubmitted" ColumnName="DateSubmitted" />
-            <ScalarProperty Name="DateConfirmed" ColumnName="DateConfirmed" />
-            <ScalarProperty Name="SellerFee" ColumnName="SellerFee" />
-            <ScalarProperty Name="DateSellerPaid" ColumnName="DateSellerPaid" />
-            <ScalarProperty Name="OurFee" ColumnName="OurFee" />
-            <ScalarProperty Name="DateReceived" ColumnName="DateReceived" />
-            <ScalarProperty Name="DateForwarded" ColumnName="DateForwarded" />
-            <ScalarProperty Name="MediaTypeReceived" ColumnName="MediaTypeReceived" />
-            <ScalarProperty Name="Notes" ColumnName="Notes" />
-            <ScalarProperty Name="IsUnavailable" ColumnName="IsUnavailable" />
-            <ScalarProperty Name="IsClosed" ColumnName="IsClosed" />
-            <ScalarProperty Name="UnavailableDate" ColumnName="UnavailableDate" />
-            <ScalarProperty Name="SellerInvoice" ColumnName="SellerInvoice" />
-            <ScalarProperty Name="DatePayRec" ColumnName="DatePayRec" />
-            <ScalarProperty Name="BuyerCheck" ColumnName="BuyerCheck" />
-            <ScalarProperty Name="OurCheck" ColumnName="OurCheck" />
-            <ScalarProperty Name="PIMSAcct" ColumnName="PIMSAcct" />
-            <ScalarProperty Name="Seller" ColumnName="Seller" />
-            <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
-            <ScalarProperty Name="OurInvoice" ColumnName="OurInvoice" />
-            <ScalarProperty Name="GUID" ColumnName="GUID" />
-            <ScalarProperty Name="FileName" ColumnName="FileName" />
-            <ScalarProperty Name="FileBinary" ColumnName="FileBinary" />
-            <ScalarProperty Name="FileBinaryImage" ColumnName="FileBinaryImage" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="MSI_MediaRequestResponse"><EntityTypeMapping TypeName="CascadeDBModel.MSI_MediaRequestResponse"><MappingFragment StoreEntitySet="MSI_MediaRequestResponse">
-            <ScalarProperty Name="Id" ColumnName="Id" />
-            <ScalarProperty Name="AgencyId" ColumnName="AgencyId" />
-            <ScalarProperty Name="Account" ColumnName="Account" />
-            <ScalarProperty Name="OriginalAccount" ColumnName="OriginalAccount" />
-            <ScalarProperty Name="Portfolio" ColumnName="Portfolio" />
-            <ScalarProperty Name="Lender" ColumnName="Lender" />
-            <ScalarProperty Name="SSN" ColumnName="SSN" />
-            <ScalarProperty Name="AccountName" ColumnName="AccountName" />
-            <ScalarProperty Name="OpenDate" ColumnName="OpenDate" />
-            <ScalarProperty Name="CODate" ColumnName="CODate" />
-            <ScalarProperty Name="Seller" ColumnName="Seller" />
-            <ScalarProperty Name="RequestedDate" ColumnName="RequestedDate" />
-            <ScalarProperty Name="RespondedDate" ColumnName="RespondedDate" />
-            <ScalarProperty Name="RequestedByUserId" ColumnName="RequestedByUserId" />
-            <ScalarProperty Name="RespondedByUserId" ColumnName="RespondedByUserId" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="MSI_MediaTypes"><EntityTypeMapping TypeName="CascadeDBModel.MSI_MediaTypes"><MappingFragment StoreEntitySet="MSI_MediaTypes">
             <ScalarProperty Name="ID" ColumnName="ID" />
@@ -7956,6 +7961,85 @@
             <ScalarProperty Name="SoldTo" ColumnName="SoldTo" />
             <ScalarProperty Name="Sold" ColumnName="Sold" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="MSI_MediaRequestResponse">
+            <EntityTypeMapping TypeName="CascadeDBModel.MSI_MediaRequestResponse">
+              <MappingFragment StoreEntitySet="MSI_MediaRequestResponse">
+                <ScalarProperty Name="RespondedByUserId" ColumnName="RespondedByUserId" />
+                <ScalarProperty Name="RequestedByUserId" ColumnName="RequestedByUserId" />
+                <ScalarProperty Name="RespondedDate" ColumnName="RespondedDate" />
+                <ScalarProperty Name="RequestedDate" ColumnName="RequestedDate" />
+                <ScalarProperty Name="Seller" ColumnName="Seller" />
+                <ScalarProperty Name="CODate" ColumnName="CODate" />
+                <ScalarProperty Name="OpenDate" ColumnName="OpenDate" />
+                <ScalarProperty Name="AccountName" ColumnName="AccountName" />
+                <ScalarProperty Name="SSN" ColumnName="SSN" />
+                <ScalarProperty Name="Lender" ColumnName="Lender" />
+                <ScalarProperty Name="Portfolio" ColumnName="Portfolio" />
+                <ScalarProperty Name="OriginalAccount" ColumnName="OriginalAccount" />
+                <ScalarProperty Name="Account" ColumnName="Account" />
+                <ScalarProperty Name="AgencyId" ColumnName="AgencyId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MSI_MediaForm">
+            <EntityTypeMapping TypeName="CascadeDBModel.MSI_MediaForm">
+              <MappingFragment StoreEntitySet="MSI_MediaForm">
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+                <ScalarProperty Name="OurInvoice" ColumnName="OurInvoice" />
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+                <ScalarProperty Name="Seller" ColumnName="Seller" />
+                <ScalarProperty Name="PIMSAcct" ColumnName="PIMSAcct" />
+                <ScalarProperty Name="OurCheck" ColumnName="OurCheck" />
+                <ScalarProperty Name="BuyerCheck" ColumnName="BuyerCheck" />
+                <ScalarProperty Name="DatePayRec" ColumnName="DatePayRec" />
+                <ScalarProperty Name="SellerInvoice" ColumnName="SellerInvoice" />
+                <ScalarProperty Name="UnavailableDate" ColumnName="UnavailableDate" />
+                <ScalarProperty Name="IsClosed" ColumnName="IsClosed" />
+                <ScalarProperty Name="IsUnavailable" ColumnName="IsUnavailable" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="MediaTypeReceived" ColumnName="MediaTypeReceived" />
+                <ScalarProperty Name="DateForwarded" ColumnName="DateForwarded" />
+                <ScalarProperty Name="DateReceived" ColumnName="DateReceived" />
+                <ScalarProperty Name="OurFee" ColumnName="OurFee" />
+                <ScalarProperty Name="DateSellerPaid" ColumnName="DateSellerPaid" />
+                <ScalarProperty Name="SellerFee" ColumnName="SellerFee" />
+                <ScalarProperty Name="DateConfirmed" ColumnName="DateConfirmed" />
+                <ScalarProperty Name="DateSubmitted" ColumnName="DateSubmitted" />
+                <ScalarProperty Name="Explanation" ColumnName="Explanation" />
+                <ScalarProperty Name="CODate" ColumnName="CODate" />
+                <ScalarProperty Name="OpenDate" ColumnName="OpenDate" />
+                <ScalarProperty Name="StmtsTo" ColumnName="StmtsTo" />
+                <ScalarProperty Name="StmtsFrom" ColumnName="StmtsFrom" />
+                <ScalarProperty Name="IsAffidavitSeller" ColumnName="IsAffidavitSeller" />
+                <ScalarProperty Name="IsAffidavitIssuer" ColumnName="IsAffidavitIssuer" />
+                <ScalarProperty Name="IsApplication" ColumnName="IsApplication" />
+                <ScalarProperty Name="AcctName" ColumnName="AcctName" />
+                <ScalarProperty Name="SSN" ColumnName="SSN" />
+                <ScalarProperty Name="OrigAcct" ColumnName="OrigAcct" />
+                <ScalarProperty Name="OriginalLender" ColumnName="OriginalLender" />
+                <ScalarProperty Name="Portfolio" ColumnName="Portfolio" />
+                <ScalarProperty Name="CompanyRequesting" ColumnName="CompanyRequesting" />
+                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MSI_MediaRequestedTypes">
+            <EntityTypeMapping TypeName="CascadeDBModel.MSI_MediaRequestedTypes">
+              <MappingFragment StoreEntitySet="MSI_MediaRequestedTypes">
+                <ScalarProperty Name="RespondedDate" ColumnName="RespondedDate" />
+                <ScalarProperty Name="RespondedUserID" ColumnName="RespondedUserID" />
+                <ScalarProperty Name="RequestedUserID" ColumnName="RequestedUserID" />
+                <ScalarProperty Name="RequestedDate" ColumnName="RequestedDate" />
+                <ScalarProperty Name="RespondedDocuments" ColumnName="RespondedDocuments" />
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+                <ScalarProperty Name="RequestedId" ColumnName="RequestedId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -7986,8 +8070,6 @@
         <EntityTypeShape EntityType="CascadeDBModel.MSI_DebtorProducts" Width="1.5" PointX="9.75" PointY="0.75" Height="1.2636116536458326" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_DPSForm" Width="1.5" PointX="9.75" PointY="3.75" Height="3.7288216145833317" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_FinalActionsteps" Width="1.5" PointX="9.75" PointY="8.75" Height="1.2636116536458317" IsExpanded="true" />
-        <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaForm" Width="1.5" PointX="11.75" PointY="0.75" Height="7.5088102213541674" IsExpanded="true" />
-        <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaRequestResponse" Width="1.5" PointX="7.75" PointY="11.75" Height="3.4001269531250031" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaTypes" Width="1.5" PointX="11.75" PointY="9.75" Height="1.4279589843750031" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_OwnerResponses" Width="1.5" PointX="9.75" PointY="12.75" Height="1.2636116536458388" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_Port_Acq_Edited" Width="1.5" PointX="11.75" PointY="12.75" Height="3.2357796223958388" IsExpanded="true" />
@@ -8060,6 +8142,23 @@
         <AssociationConnector Association="CascadeDBModel.FK_RACCTREL_RACCOUNT" ManuallyRouted="false">
           <ConnectorPoint PointX="4.5" PointY="25.044830729166662" />
           <ConnectorPoint PointX="5.25" PointY="25.044830729166662" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaRequestResponse" Width="1.5" PointX="11.75" PointY="32.5" Height="4.0956022135416674" />
+        <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaForm" Width="1.5" PointX="14.375" PointY="27.75" Height="8.3262337239583246" />
+        <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaRequestedTypes" Width="1.5" PointX="17" PointY="27.75" Height="2.9417936197916674" />
+        <AssociationConnector Association="CascadeDBModel.FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse" >
+          <ConnectorPoint PointX="13.25" PointY="36.367167968749996" />
+          <ConnectorPoint PointX="17.75" PointY="36.367167968749996" />
+          <ConnectorPoint PointX="17.75" PointY="30.691793619791667" />
+        </AssociationConnector>
+        <AssociationConnector Association="CascadeDBModel.FK_MSI_MediaRequestedTypes_MSI_MediaTypes" >
+          <ConnectorPoint PointX="12.5" PointY="11.537985026041666" />
+          <ConnectorPoint PointX="12.5" PointY="12.5" />
+          <ConnectorPoint PointX="15.5" PointY="12.5" />
+          <ConnectorPoint PointX="15.5" PointY="27.5" />
+          <ConnectorPoint PointX="16.125" PointY="27.5" />
+          <ConnectorPoint PointX="16.125" PointY="29.220896809895834" />
+          <ConnectorPoint PointX="17" PointY="29.220896809895834" />
         </AssociationConnector>
       </Diagram>
     </Diagrams>

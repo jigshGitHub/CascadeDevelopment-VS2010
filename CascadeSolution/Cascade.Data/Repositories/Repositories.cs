@@ -621,5 +621,16 @@ namespace Cascade.Data.Repositories
         {
         }
     }
+    public class MSI_MediaRequestResponseRepository : RepositoryBase<MSI_MediaRequestResponse>
+    {
+        public MSI_MediaRequestResponseRepository(IDatabaseFactory dbFactory)
+            : base(dbFactory)
+        {
+        }
+        public MSI_MediaRequestResponseRepository()
+            : base(new DBFactory())
+        {
+        }
+    }
 
 }

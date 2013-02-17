@@ -67,7 +67,7 @@ GO
 
 GO
 
-/****** Object:  Table [dbo].[MSI_MediaRequestResponse]    Script Date: 02/15/2013 11:05:31 ******/
+/****** Object:  Table [dbo].[MSI_MediaRequestResponse]    Script Date: 02/16/2013 06:15:18 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[MSI_MediaRequestResponse]') AND type in (N'U'))
 DROP TABLE [dbo].[MSI_MediaRequestResponse]
 GO
@@ -75,7 +75,7 @@ GO
 
 GO
 
-/****** Object:  Table [dbo].[MSI_MediaRequestResponse]    Script Date: 02/15/2013 11:05:31 ******/
+/****** Object:  Table [dbo].[MSI_MediaRequestResponse]    Script Date: 02/16/2013 06:15:18 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -100,7 +100,11 @@ CREATE TABLE [dbo].[MSI_MediaRequestResponse](
 	[RequestedDate] [datetime] NOT NULL,
 	[RespondedDate] [datetime] NULL,
 	[RequestedByUserId] [uniqueidentifier] NOT NULL,
-	[RespondedByUserId] [uniqueidentifier] NULL
+	[RespondedByUserId] [uniqueidentifier] NULL,
+ CONSTRAINT [PK_MSI_MediaRequestResponse] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
 GO
@@ -109,5 +113,71 @@ SET ANSI_PADDING OFF
 GO
 
 ALTER TABLE [dbo].[MSI_MediaRequestResponse] ADD  CONSTRAINT [DF_MSI_MediaRequestResponse_RequestedDate]  DEFAULT (getdate()) FOR [RequestedDate]
+GO
+
+
+GO
+
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse]') AND parent_object_id = OBJECT_ID(N'[dbo].[MSI_MediaRequestedTypes]'))
+ALTER TABLE [dbo].[MSI_MediaRequestedTypes] DROP CONSTRAINT [FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse]
+GO
+
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_MSI_MediaRequestedTypes_MSI_MediaTypes]') AND parent_object_id = OBJECT_ID(N'[dbo].[MSI_MediaRequestedTypes]'))
+ALTER TABLE [dbo].[MSI_MediaRequestedTypes] DROP CONSTRAINT [FK_MSI_MediaRequestedTypes_MSI_MediaTypes]
+GO
+
+
+GO
+
+/****** Object:  Table [dbo].[MSI_MediaRequestedTypes]    Script Date: 02/16/2013 06:16:03 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[MSI_MediaRequestedTypes]') AND type in (N'U'))
+DROP TABLE [dbo].[MSI_MediaRequestedTypes]
+GO
+
+
+GO
+
+/****** Object:  Table [dbo].[MSI_MediaRequestedTypes]    Script Date: 02/16/2013 06:16:03 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+CREATE TABLE [dbo].[MSI_MediaRequestedTypes](
+	[Id] [uniqueidentifier] NOT NULL,
+	[RequestedId] [uniqueidentifier] NOT NULL,
+	[TypeId] [int] NOT NULL,
+	[RespondedDocuments] [varchar](max) NULL,
+	[RequestedDate] [datetime] NULL,
+	[RequestedUserID] [uniqueidentifier] NULL,
+	[RespondedUserID] [uniqueidentifier] NULL,
+	[RespondedDate] [datetime] NULL,
+ CONSTRAINT [PK_MSI_MediaRequestedTypes] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[MSI_MediaRequestedTypes]  WITH CHECK ADD  CONSTRAINT [FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse] FOREIGN KEY([RequestedId])
+REFERENCES [dbo].[MSI_MediaRequestResponse] ([Id])
+GO
+
+ALTER TABLE [dbo].[MSI_MediaRequestedTypes] CHECK CONSTRAINT [FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse]
+GO
+
+ALTER TABLE [dbo].[MSI_MediaRequestedTypes]  WITH CHECK ADD  CONSTRAINT [FK_MSI_MediaRequestedTypes_MSI_MediaTypes] FOREIGN KEY([TypeId])
+REFERENCES [dbo].[MSI_MediaTypes] ([ID])
+GO
+
+ALTER TABLE [dbo].[MSI_MediaRequestedTypes] CHECK CONSTRAINT [FK_MSI_MediaRequestedTypes_MSI_MediaTypes]
 GO
 

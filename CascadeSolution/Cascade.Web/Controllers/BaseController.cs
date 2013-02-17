@@ -30,6 +30,9 @@ namespace Cascade.Web.Controllers
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             FillMenu();
+            ViewBag.UserID = UserId.ToString();
+            ViewBag.AgencyID = UserAgency;
+            ViewBag.UserRole = UserRoles.First().ToLower();
             base.OnActionExecuting(filterContext);
         }
 

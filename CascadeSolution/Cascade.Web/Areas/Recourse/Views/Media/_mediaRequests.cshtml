@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Cascade.Data.Models.MSI_MediaRequestResponse>
+<link href="@Url.Content("~/Content/dataTables/demo_table.css")" rel="stylesheet" type="text/css" />
+<script src="~/Scripts/datatable/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/index.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/jquery.dataTables.min.js" type="text/javascript"></script>
+<div id="divMediaRecords">
+    <table id="mediaRecords" class="display">
+        <thead>
+            <tr>
+                <th>
+                </th>
+                <th>
+                    PIMS Account
+                </th>
+                <th>
+                    Portfolio
+                </th>
+                <th>
+                    Lender
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Seller
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var mediaRecord in Model)
+            {
+                <tr>
+                    <td>@Html.ActionLink("View", "Details", new { id = mediaRecord.Id })
+                    </td>
+                    <td>@mediaRecord.Account</td>
+                    <td>@mediaRecord.Portfolio</td>
+                    <td>@mediaRecord.Lender</td>
+                    <td>@mediaRecord.AccountName</td>
+                    <td>@mediaRecord.Seller</td>
+                </tr> 
+            }
+        </tbody>
+    </table>
+</div>

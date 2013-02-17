@@ -211,6 +211,7 @@
     <Compile Include="Areas\Search\Controllers\HomeController.cs" />
     <Compile Include="Areas\Search\SearchAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\API\Media\MediaRequestController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ChartController.cs" />
     <Compile Include="Controllers\ComplianceController.cs" />
@@ -297,6 +298,7 @@
     <Content Include="Scripts\jquery-1.7.1.min.js" />
     <Content Include="Scripts\jquery-ui-1.8.20.js" />
     <Content Include="Scripts\jquery-ui-1.8.20.min.js" />
+    <Content Include="Scripts\jquery.cascade.search.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate-vsdoc.js" />
@@ -481,6 +483,8 @@
     <Content Include="Areas\Recourse\Views\Web.config" />
     <Content Include="Areas\Recourse\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Recourse\Views\Media\MediaRequest.cshtml" />
+    <Content Include="Areas\Recourse\Views\Media\MediaRequestCreate.cshtml" />
+    <Content Include="Areas\Recourse\Views\Media\_mediaRequests.cshtml" />
     <None Include="Areas\Reports\Views\Cascade0206Deploy.rar" />
     <Content Include="Areas\Reports\Views\Collections\PortfolioOwnerBreakDown.cshtml" />
     <Content Include="Areas\Reports\Views\Collections\PortfolioWorkStatusBreakDown.cshtml" />

@@ -52,7 +52,5 @@ namespace Cascade.Data.Models
         public string OurInvoice { get; set; }
         public string GUID { get; set; }
         public string FileName { get; set; }
-        public byte[] FileBinary { get; set; }
-        public byte[] FileBinaryImage { get; set; }
     }
 }

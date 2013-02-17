@@ -33,8 +33,6 @@ namespace Cascade.Data.Models
         public DbSet<MSI_DebtorProducts> MSI_DebtorProducts { get; set; }
         public DbSet<MSI_DPSForm> MSI_DPSForm { get; set; }
         public DbSet<MSI_FinalActionsteps> MSI_FinalActionsteps { get; set; }
-        public DbSet<MSI_MediaForm> MSI_MediaForm { get; set; }
-        public DbSet<MSI_MediaRequestResponse> MSI_MediaRequestResponse { get; set; }
         public DbSet<MSI_MediaTypes> MSI_MediaTypes { get; set; }
         public DbSet<MSI_OwnerResponses> MSI_OwnerResponses { get; set; }
         public DbSet<MSI_Port_Acq_Edited> MSI_Port_Acq_Edited { get; set; }
@@ -84,5 +82,8 @@ namespace Cascade.Data.Models
         public DbSet<vw_PortfolioSummary> vw_PortfolioSummary { get; set; }
         public DbSet<vw_PortfolioTransactions> vw_PortfolioTransactions { get; set; }
         public DbSet<vwAccount> vwAccounts { get; set; }
+        public DbSet<MSI_MediaRequestResponse> MSI_MediaRequestResponse { get; set; }
+        public DbSet<MSI_MediaForm> MSI_MediaForm { get; set; }
+        public DbSet<MSI_MediaRequestedTypes> MSI_MediaRequestedTypes { get; set; }
     }
 }

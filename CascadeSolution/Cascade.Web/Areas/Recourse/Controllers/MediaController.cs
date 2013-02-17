@@ -237,9 +237,30 @@ namespace Cascade.Web.Areas.Recourse.Controllers
 
         public ActionResult MediaRequest()
         {
-            ViewBag.UserID = UserId.ToString();
-            ViewBag.AgencyID = UserAgency;
-            ViewBag.UserRole = UserRoles.First().ToLower();
+            //ViewBag.UserID = UserId.ToString();
+            //ViewBag.AgencyID = UserAgency;
+            //ViewBag.UserRole = UserRoles.First().ToLower();
+            return View();
+        }
+
+        public ActionResult GetMediaRequests()
+        {
+            IEnumerable<MSI_MediaRequestResponse> data = null;
+            DataQueries query = new DataQueries();
+            try
+            {
+                data = query.GetMediaRequestResponses(UserAgency);
+            }
+            catch (Exception ex)
+            {
+            }
+            return PartialView("_mediaRequests", data);
+
+        }
+
+        [ActionName("Create")]
+        public ActionResult MediaRequestCreate()
+        {
             return View();
         }
 
