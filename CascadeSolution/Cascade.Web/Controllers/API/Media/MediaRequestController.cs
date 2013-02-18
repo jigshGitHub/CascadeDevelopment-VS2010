@@ -33,9 +33,34 @@ namespace Cascade.Web.Controllers.API.Media
 
         }
 
+        [HttpGet]
         public MSI_MediaRequestResponse Details(string id)
         {
-            return new MSI_MediaRequestResponse();
+            MSI_MediaRequestResponse data = null;
+            DataQueries query = new DataQueries();
+            try
+            {
+                data = query.GetMediaRequestResponse(id);
+            }
+
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent(string.Format("Error occur in Gets MediaRequest : {0}", ex.Message))
+                });
+
+            }
+            if (data == null)
+            {
+                var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new StringContent(string.Format("No data available id = {0}", id)),
+                    ReasonPhrase = "No request found"
+                };
+                throw new HttpResponseException(resp);
+            }
+            return data;
         }
 
         public MSI_MediaRequestResponse Post(MSI_MediaRequestResponse submittedRequest)
@@ -43,13 +68,13 @@ namespace Cascade.Web.Controllers.API.Media
             MSI_MediaRequestResponseRepository repository = new MSI_MediaRequestResponseRepository();
             try
             {
-                if (submittedRequest.Id == Guid.Empty)
+                if (string.IsNullOrEmpty(submittedRequest.Id))
                 {
-                    submittedRequest.Id =  Guid.NewGuid();
+                    submittedRequest.Id =  Guid.NewGuid().ToString();
                     
                     foreach (MSI_MediaRequestedTypes mediaReqType in submittedRequest.MSI_MediaRequestedTypes)
                     {
-                        mediaReqType.Id = Guid.NewGuid();
+                        mediaReqType.Id = Guid.NewGuid().ToString();
                         mediaReqType.RequestedId = submittedRequest.Id;
                     }
                     submittedRequest.RequestedDate = DateHelper.GetDateWithTimings(submittedRequest.RequestedDate);

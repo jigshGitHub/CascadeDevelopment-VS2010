@@ -981,6 +981,23 @@ namespace Cascade.Data.Repositories
             return data;
 
         }
+        public MSI_MediaRequestResponse GetMediaRequestResponse(string id)
+        {
+            MSI_MediaRequestResponse data = null;
+            MSI_MediaRequestResponseRepository repository = new MSI_MediaRequestResponseRepository();
+            try
+            {
+                data = repository.GetById(id);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+
+            }
+            return data;
+
+        }
         /// <summary>
         /// Return account information from vwAccounts based on either 'pims' account or 'original' account number
         /// </summary>

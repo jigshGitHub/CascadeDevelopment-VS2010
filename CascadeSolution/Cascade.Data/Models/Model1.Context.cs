@@ -82,8 +82,8 @@ namespace Cascade.Data.Models
         public DbSet<vw_PortfolioSummary> vw_PortfolioSummary { get; set; }
         public DbSet<vw_PortfolioTransactions> vw_PortfolioTransactions { get; set; }
         public DbSet<vwAccount> vwAccounts { get; set; }
-        public DbSet<MSI_MediaRequestResponse> MSI_MediaRequestResponse { get; set; }
         public DbSet<MSI_MediaForm> MSI_MediaForm { get; set; }
         public DbSet<MSI_MediaRequestedTypes> MSI_MediaRequestedTypes { get; set; }
+        public DbSet<MSI_MediaRequestResponse> MSI_MediaRequestResponse { get; set; }
     }
 }

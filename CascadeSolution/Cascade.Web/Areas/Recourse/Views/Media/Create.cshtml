@@ -14,7 +14,7 @@
     </ul>
 </div>
 <div id="newComplaintContainer">
-    <table class="searchtable" style="width: 60%">
+    <table class="searchtable" style="width: 60%" data-bind="visible:showSearchCriteria">
         <tr>
             <td colspan="2">
                 <b>Retrieve Account to begin Media Request:</b>
@@ -170,7 +170,11 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('#messageSummary').dialog({ modal: true, title: 'Summary:', autoOpen: false, width: 200, height: 200 });
-            ko.applyBindings(new pageViewModel($('#userId').val(), $('#agencyId').val(), $('#hdnUserRole').val(), $('#hdnId').val()));
+            var pageVM = new pageViewModel($('#userId').val(), $('#agencyId').val(), $('#hdnUserRole').val(), $('#hdnId').val())
+            ko.applyBindings(pageVM);
+            if ($('#hdnId').val() != '') {
+                pageVM.loadExisitingRequest();
+            }
         });
     </script>
 }

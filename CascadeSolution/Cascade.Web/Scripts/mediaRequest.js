@@ -34,6 +34,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
             return '';
     }
 
+    self.showSearchCriteria = ko.observable(true);
     self.pimsDataAvailable = ko.observable(false);
     self.showPIMSData = ko.observable(true);
     self.showHidePimsData = function () {
@@ -43,7 +44,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
             self.showPIMSData(true);
     }
     self.showMediaTypeSelection = ko.observable(false);
-    self.id = id;
+    self.id = ko.observable(id);
     self.pimsAccountNumber = ko.observable('');
     self.pimsAccountNumberRequired = ko.observable('*');
     self.pimsAccountNumberRequiredMsg = ko.observable('');
@@ -69,6 +70,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
     };
 
     self.setPimsData = function (data) {
+        log(data);
         self.pimsAccountNumber(data.ACCOUNT);
         self.originalAccountNumber(data.OriginalAccount);
         self.portfolio(data.Portfolio);
@@ -117,6 +119,39 @@ function pageViewModel(userId, userAgency, userRole, id) {
         });
     };
 
+    self.loadExisitingRequest = function () {
+        log(self.id());
+        self.showSearchCriteria(false);
+
+        function setSelectedMediaRequested(data) {
+            //var localSelectedMediaTypes = [];
+            $.each(data, function (i, item) {
+                //localSelectedMediaTypes.push(new mediaReuqestedType(data.Id, data.RequestedId, data.TypeId, data.RespondedDocuments, data.RequestedDate, data.RequestedUserID, data.RespondedDate, data.RespondedUserID));
+                self.selectedMediaTypes.push({ Value: data.TypeId });
+            });
+            log(self.selectedMediaTypes());
+            //return localSelectedMediaTypes;
+        }
+        $.ajax({
+            url: baseUrl + '/api/MediaRequest/Details',
+            type: "GET",
+            data: { id: self.id() },
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (response) {
+                self.pimsDataAvailable(true);
+                self.setPimsData(response);
+                self.showMediaTypeSelection(true);
+                self.loadMediaTypes();
+                setSelectedMediaRequested(response.MSI_MediaRequestedTypes);
+            },
+            error: function (response, errorText) {
+                return false;
+            }
+        });
+
+    }
+
     self.loadMediaTypes = function () {
         $.ajax({
             url: baseUrl + '/api/Lookup/',
@@ -132,7 +167,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
                         //log(item.Text);
                         self.mediaTypes.push(item);
                     });
-                   // log(self.mediaTypes());
+                    // log(self.mediaTypes());
                 }
             },
             error: function (xhr, status, somthing) {
@@ -161,7 +196,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
     }
     self.showSubmit = ko.computed(function () { return (self.selectedMediaTypes().length > 0); }, self);
     self.submit = function () {
-
+        log(baseUrl);
         function getSelectedMediaRequested() {
             var localSelectedMediaTypes = [];
             $.each(self.selectedMediaTypes(), function (i, item) {
@@ -172,16 +207,16 @@ function pageViewModel(userId, userAgency, userRole, id) {
             return localSelectedMediaTypes;
         }
         var json = JSON.stringify({
-            Id:self.id,
+            Id: self.id,
             AgencyId: self.agency(),
             Account: self.pimsAccountNumber(),
             OriginalAccount: self.originalAccountNumber(),
             Portfolio: self.portfolio(),
-            Lender: self.lender(),
+            Originator: self.lender(),
             SSN: self.ssn(),
-            AccountName: self.name(),
+            Name: self.name(),
             OpenDate: self.openDate(),
-            CODate: self.coDate(),
+            ChargeOffDate: self.coDate(),
             Seller: self.seller(),
             RequestedDate: new Date(),
             RequestedByUserId: self.userId(),
@@ -196,11 +231,13 @@ function pageViewModel(userId, userAgency, userRole, id) {
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (response) {
+                self.setShowMessagePanel(true, 'Media request submitted');
             },
             error: function (response, errorText) {
                 return false;
             }
         });
+
     }
 }
 
