@@ -633,4 +633,16 @@ namespace Cascade.Data.Repositories
         }
     }
 
+    public class MSI_MediaRequestedTypesRepository : RepositoryBase<MSI_MediaRequestedTypes>
+    {
+        public MSI_MediaRequestedTypesRepository(IDatabaseFactory dbFactory)
+            : base(dbFactory)
+        {
+        }
+        public MSI_MediaRequestedTypesRepository()
+            : base(new DBFactory())
+        {
+        }
+    }
+
 }

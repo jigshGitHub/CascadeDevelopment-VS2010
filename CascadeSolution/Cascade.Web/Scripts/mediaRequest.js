@@ -16,6 +16,14 @@ function mediaReuqestedType(id, reqId, typeId, documents, reqDt, reqUser, respDt
     this.RespondedDate = respDt;
     this.RespondedUserID = respUser;
 }
+
+function mediaType(text, value, enable, checked) {
+    var self = this;
+    self.text = ko.observable(text);
+    self.value = ko.observable(value);
+    self.enable = ko.observable(enable);
+    self.checked = ko.observable(checked);
+}
 function pageViewModel(userId, userAgency, userRole, id) {
     log(userId + ' ' + userAgency + ' ' + userRole);
     var self = this;
@@ -70,7 +78,8 @@ function pageViewModel(userId, userAgency, userRole, id) {
     };
 
     self.setPimsData = function (data) {
-        log(data);
+        //log(data);
+        self.id(data.Id);
         self.pimsAccountNumber(data.ACCOUNT);
         self.originalAccountNumber(data.OriginalAccount);
         self.portfolio(data.Portfolio);
@@ -97,41 +106,81 @@ function pageViewModel(userId, userAgency, userRole, id) {
             self.searchedIdnetity = self.originalAccountNumber();
             self.searchedType = 'original';
         }
+        $("#loading").html("<img src=\"" + absoluteapp + imagedir + "/ajax-loader.gif\" />");
+        $("#loading").dialog('open');
+
         $.ajax({
-            url: baseUrl + '/api/RAccount/',
-            type: 'GET',
-            contentType: 'application/json',
-            data: { accountNumber: self.searchedIdnetity, searchType: self.searchedType },
+            url: baseUrl + '/api/MediaRequest/Details',
+            type: "GET",
+            data: { id: self.id() },
+            data: { accountNumber: self.searchedIdnetity, agency: self.agency() },
             dataType: 'json',
             async: true,
             success: function (data) {
-                $("#loading").html("&nbsp;");
-                $("#loading").dialog('close');
                 log(data);
-                self.pimsDataAvailable(true);
-                self.setPimsData(data);
-                self.showMediaTypeSelection(true);
-                self.loadMediaTypes();
+                if (data == null) {
+                    $.ajax({
+                        url: baseUrl + '/api/RAccount/',
+                        type: 'GET',
+                        contentType: 'application/json',
+                        data: { accountNumber: self.searchedIdnetity, searchType: self.searchedType },
+                        dataType: 'json',
+                        async: true,
+                        success: function (data) {
+                            $("#loading").html("&nbsp;");
+                            $("#loading").dialog('close');
+                            //log(data);
+                            self.pimsDataAvailable(true);
+                            self.setPimsData(data);
+                            self.showMediaTypeSelection(true);
+                            self.loadMediaTypes();
+                        },
+                        error: function (xhr, status, error) {
+                            self.setShowMessagePanel(true, xhr.responseText);
+                            $("#loading").html("&nbsp;");
+                            $("#loading").dialog('close');
+                        }
+                    });
+                }
+                else {
+                    $("#loading").html("&nbsp;");
+                    $("#loading").dialog('close');
+                    self.pimsDataAvailable(true);
+                    self.setPimsData(data);
+                    self.showMediaTypeSelection(true);
+                    self.loadMediaTypes();
+                    self.setSelectedMediaRequested(data.MSI_MediaRequestedTypes);
+                }
             },
             error: function (xhr, status, error) {
-                self.setShowMessagePanel(true, xhr.responseText);
+
             }
         });
+
     };
 
+    self.setSelectedMediaRequested = function (data) {
+
+        $.each(data, function (i, item) {
+            $.each(self.mediaTypes(), function (i, mediaItem) {
+                if (mediaItem.value() == item.TypeId) {
+                    //log(item.TypeId);
+                    mediaItem.enable(false);
+                    mediaItem.checked(true);
+                    self.selectedMediaTypes.push(mediaItem);
+                }
+            });
+
+        });
+        if (self.selectedMediaTypes.length == self.mediaTypes.length)
+            self.selectedMediaTypes([]);
+    }
+
+
     self.loadExisitingRequest = function () {
-        log(self.id());
+        //log(self.id());
         self.showSearchCriteria(false);
 
-        function setSelectedMediaRequested(data) {
-            //var localSelectedMediaTypes = [];
-            $.each(data, function (i, item) {
-                //localSelectedMediaTypes.push(new mediaReuqestedType(data.Id, data.RequestedId, data.TypeId, data.RespondedDocuments, data.RequestedDate, data.RequestedUserID, data.RespondedDate, data.RespondedUserID));
-                self.selectedMediaTypes.push({ Value: data.TypeId });
-            });
-            log(self.selectedMediaTypes());
-            //return localSelectedMediaTypes;
-        }
         $.ajax({
             url: baseUrl + '/api/MediaRequest/Details',
             type: "GET",
@@ -143,7 +192,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
                 self.setPimsData(response);
                 self.showMediaTypeSelection(true);
                 self.loadMediaTypes();
-                setSelectedMediaRequested(response.MSI_MediaRequestedTypes);
+                self.setSelectedMediaRequested(response.MSI_MediaRequestedTypes);
             },
             error: function (response, errorText) {
                 return false;
@@ -165,7 +214,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
                 if (data.length > 0) {
                     $.each(data, function (i, item) {
                         //log(item.Text);
-                        self.mediaTypes.push(item);
+                        self.mediaTypes.push(new mediaType(item.Text, item.Value, true, false));
                     });
                     // log(self.mediaTypes());
                 }
@@ -200,14 +249,14 @@ function pageViewModel(userId, userAgency, userRole, id) {
         function getSelectedMediaRequested() {
             var localSelectedMediaTypes = [];
             $.each(self.selectedMediaTypes(), function (i, item) {
-                log(item);
-                localSelectedMediaTypes.push(new mediaReuqestedType(undefined, undefined, item.Value, undefined, new Date(), self.userId(), undefined, undefined));
+                //log(item.value());
+                localSelectedMediaTypes.push(new mediaReuqestedType(undefined, undefined, item.value(), undefined, new Date(), self.userId(), undefined, undefined));
             });
-            log(localSelectedMediaTypes);
+            //log(localSelectedMediaTypes);
             return localSelectedMediaTypes;
         }
         var json = JSON.stringify({
-            Id: self.id,
+            Id: self.id(),
             AgencyId: self.agency(),
             Account: self.pimsAccountNumber(),
             OriginalAccount: self.originalAccountNumber(),

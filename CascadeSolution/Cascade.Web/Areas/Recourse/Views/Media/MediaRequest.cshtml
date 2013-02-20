@@ -2,17 +2,6 @@
     ViewBag.Title = "MediaRequest";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<style>
-    
-    a
-    {
-        color:White;
-    }
-    #divRequestedMediaRecords
-    {
-        color:White;
-    }
-</style>
 @Scripts.Render("~/bundles/jquery")
 @Html.Hidden("userId", (string)(@ViewBag.UserID))
 @Html.Hidden("agencyId", (string)(@ViewBag.AgencyID))

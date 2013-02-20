@@ -16,32 +16,34 @@
 <div id="newComplaintContainer">
     <table class="searchtable" style="width: 60%" data-bind="visible:showSearchCriteria">
         <tr>
-            <td colspan="2">
+            <td colspan="3">
                 <b>Retrieve Account to begin Media Request:</b>
             </td>
         </tr>
         <tr>
-            <td>
-                PIMS Account Number:
+            <td style="width:30%;text-align:left">
+                PIMS Account Number
             </td>
-            <td>
+            <td style="width:1%;text-align:center">:</td>
+            <td style="width:69%;text-align:left">
                 <input type="text" id="pimsAccount" data-bind="hasfocus:setFocus,value:pimsAccountNumber" />
                 <span data-bind="text:pimsAccountNumberRequired, visible:pimsAccountNumberRequiredHasError"
                     style="color: Red"></span>
             </td>
         </tr>
         <tr>
-            <td>
-                Original Account:
+            <td style="width:30%;text-align:left">
+                Original Account
             </td>
-            <td>
+            <td style="width:1%;text-align:center">:</td>
+            <td style="width:69%;text-align:left">
                 <input type="text" id="originalAccount" data-bind="value:originalAccountNumber" />
                 <span data-bind="text:originalAccountNumberRequired, visible:originalAccountNumberRequiredHasError"
                     style="color: Red"></span>
             </td>
         </tr>
         <tr>
-            <td colspan="2" class="confirmBtnContainer">
+            <td colspan="3" class="confirmBtnContainer">
                 <input type="button" id="refreshBtn" title="Search" data-bind="click:search" />
             </td>
         </tr>
@@ -66,73 +68,73 @@
             <td>
                 <table data-bind="visible:showPIMSData">
                     <tr>
-                        <td style="text-align: right; width: 49%">
+                        <td style="text-align: left; width: 30%">
                             Portfolio
                         </td>
-                        <td style="text-align: center; width: 2%">
+                        <td style="text-align: center; width: 1%">
                             :
                         </td>
-                        <td data-bind="text:portfolio" style="text-align: left; width: 49%">
+                        <td data-bind="text:portfolio" style="text-align: left; width: 69%">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; width: 49%">
+                        <td style="text-align: left; width: 30%">
                             Original Lender / Product
                         </td>
-                        <td style="text-align: center; width: 2%">
+                        <td style="text-align: center; width: 1%">
                             :
                         </td>
-                        <td data-bind="text:lender" style="text-align: left; width: 24%">
+                        <td data-bind="text:lender" style="text-align: left; width: 69%">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; width: 49%">
+                        <td style="text-align: left; width: 30%">
                             SSN
                         </td>
-                        <td style="text-align: center; width: 2%">
+                        <td style="text-align: center; width: 1%">
                             :
                         </td>
-                        <td data-bind="text:ssn" style="text-align: left; width: 49%">
+                        <td data-bind="text:ssn" style="text-align: left; width: 69%">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; width: 49%">
+                        <td style="text-align: left; width: 30%">
                             Account Holder's Name
                         </td>
-                        <td style="text-align: center; width: 2%">
+                        <td style="text-align: center; width: 1%">
                             :
                         </td>
-                        <td data-bind="text:name" style="text-align: left; width: 49%">
+                        <td data-bind="text:name" style="text-align: left; width: 69%">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; width: 49%">
+                        <td style="text-align: left; width: 30%">
                             Open Date
                         </td>
-                        <td style="text-align: center; width: 2%">
+                        <td style="text-align: center; width: 1%">
                             :
                         </td>
-                        <td data-bind="text:openDate" style="text-align: left; width: 49%">
+                        <td data-bind="text:openDate" style="text-align: left; width: 69%">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; width: 49%">
+                        <td style="text-align: left; width: 30%">
                             C/O date
                         </td>
-                        <td style="text-align: center; width: 2%">
+                        <td style="text-align: center; width: 1%">
                             :
                         </td>
-                        <td data-bind="text:coDate" style="text-align: left; width: 49%">
+                        <td data-bind="text:coDate" style="text-align: left; width: 69%">
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align: right; width: 49%">
+                        <td style="text-align: left; width: 30%">
                             Seller
                         </td>
-                        <td style="text-align: center; width: 2%">
+                        <td style="text-align: center; width: 1%">
                             :
                         </td>
-                        <td data-bind="text:seller" style="width: 49%">
+                        <td data-bind="text:seller" style="width: 69%">
                         </td>
                     </tr>
                 </table>
@@ -151,8 +153,8 @@
             <td>
                 <ul data-bind="foreach: mediaTypes">
                     <li>
-                        <input type="checkbox" data-bind="click: $parent.mediaChecked,value:Value,attr: {id: 'mediaType' + Value}" />&nbsp;<span
-                            data-bind="text: Text, attr:{for: 'mediaType'+ Value}"></span></li>
+                        <input type="checkbox" data-bind="enable:enable,checked:checked,click: $parent.mediaChecked,value:value,attr: {id: 'mediaType' + value}" />&nbsp;<span
+                            data-bind="text: text, attr:{for: 'mediaType'+ value}"></span></li>
                 </ul>
             </td>
         </tr>

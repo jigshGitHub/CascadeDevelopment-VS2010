@@ -670,6 +670,9 @@ $(document).ready(function () {
         $('#searchRecords').dataTable();
     }
 
+    if($("#mediaRequestRecords").length != 0) {
+        $('#mediaRequestRecords').dataTable();
+    }
     //"bFilter": false 
 
     //alert("here beginning");

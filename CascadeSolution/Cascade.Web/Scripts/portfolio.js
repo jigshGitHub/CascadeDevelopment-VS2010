@@ -1,9 +1,9 @@
 ﻿var portfolioViewModels = namespace("cascade.viewModels.portfolio");
 //var applicationname = "/Cascade";
-var applicationname = "";
-var myhost = window.location.protocol + "//" + window.location.host
-var absoluteapp = myhost + applicationname;
-var imagedir = "/Content/Images";
+//var applicationname = "";
+//var myhost = window.location.protocol + "//" + window.location.host
+//var absoluteapp = myhost + applicationname;
+//var imagedir = "/Content/Images";
 function allCommentedCode() {
     //function interestRecord(id, portfolioNumber, agencyName, checkNumber, closingDt, salesPrice, transType) {
     //    this.id = id;

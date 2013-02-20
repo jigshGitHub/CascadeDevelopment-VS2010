@@ -963,6 +963,7 @@ namespace Cascade.Data.Repositories
             }
             return data.AsEnumerable<ComplianceViewResult>();
         }
+
         public IEnumerable<MSI_MediaRequestResponse> GetMediaRequestResponses(string agency)
         {
             IEnumerable<MSI_MediaRequestResponse> data = null;
@@ -997,6 +998,80 @@ namespace Cascade.Data.Repositories
             }
             return data;
 
+        }
+        public MSI_MediaRequestResponse GetMediaRequestResponse(string accountNumber, string agency)
+        {
+            MSI_MediaRequestResponse data = null;
+            MSI_MediaRequestResponseRepository repository = new MSI_MediaRequestResponseRepository();
+            try
+            {
+                data = repository.GetAll().Where(record => (record.ACCOUNT == accountNumber || record.OriginalAccount == accountNumber) && record.AgencyId == agency).SingleOrDefault();
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+
+            }
+            return data;
+
+        }
+        public MSI_MediaRequestResponse AddMediaRequestResponse(MSI_MediaRequestResponse submittedRequest)
+        {
+            MSI_MediaRequestResponseRepository repository = new MSI_MediaRequestResponseRepository();
+            try
+            {
+                repository.Add(submittedRequest); 
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+
+            }
+            return submittedRequest;
+        }
+
+        public void UpdateMediaRequestdType(MSI_MediaRequestedTypes submittedMediatype)
+        {
+            MSI_MediaRequestedTypesRepository repository = new MSI_MediaRequestedTypesRepository();
+            try
+            {
+                repository.Update(submittedMediatype);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public void AddMediaRequestdType(MSI_MediaRequestedTypes submittedMediatype)
+        {
+            MSI_MediaRequestedTypesRepository repository = new MSI_MediaRequestedTypesRepository();
+            try
+            {
+                repository.Add(submittedMediatype);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public MSI_MediaRequestedTypes GetMediaRequestdType(string requestedId, int typeId)
+        {
+            MSI_MediaRequestedTypesRepository repository = new MSI_MediaRequestedTypesRepository();
+            MSI_MediaRequestedTypes mediaType = null;
+            try
+            {
+                mediaType = repository.GetAll().Where(record => record.RequestedId == requestedId && record.TypeId == typeId).SingleOrDefault();
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return mediaType;
         }
         /// <summary>
         /// Return account information from vwAccounts based on either 'pims' account or 'original' account number

@@ -47,7 +47,7 @@ namespace Cascade.Web.Controllers.API.Media
             {
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
                 {
-                    Content = new StringContent(string.Format("Error occur in Gets MediaRequest : {0}", ex.Message))
+                    Content = new StringContent(string.Format("Error occur in Details MediaRequest : {0}", ex.Message))
                 });
 
             }
@@ -63,15 +63,36 @@ namespace Cascade.Web.Controllers.API.Media
             return data;
         }
 
+        [HttpGet]
+        public MSI_MediaRequestResponse Details(string accountNumber, string agency)
+        {
+            MSI_MediaRequestResponse data = null;
+            DataQueries query = new DataQueries();
+            try
+            {
+                data = query.GetMediaRequestResponse(accountNumber,agency);
+            }
+
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent(string.Format("Error occur in Details MediaRequest : {0}", ex.Message))
+                });
+
+            }
+            return data;
+        }
+
         public MSI_MediaRequestResponse Post(MSI_MediaRequestResponse submittedRequest)
         {
-            MSI_MediaRequestResponseRepository repository = new MSI_MediaRequestResponseRepository();
+            DataQueries query = new DataQueries();
             try
             {
                 if (string.IsNullOrEmpty(submittedRequest.Id))
                 {
-                    submittedRequest.Id =  Guid.NewGuid().ToString();
-                    
+                    submittedRequest.Id = Guid.NewGuid().ToString();
+
                     foreach (MSI_MediaRequestedTypes mediaReqType in submittedRequest.MSI_MediaRequestedTypes)
                     {
                         mediaReqType.Id = Guid.NewGuid().ToString();
@@ -79,8 +100,27 @@ namespace Cascade.Web.Controllers.API.Media
                     }
                     submittedRequest.RequestedDate = DateHelper.GetDateWithTimings(submittedRequest.RequestedDate);
 
-                    repository.Add(submittedRequest); 
+                    query.AddMediaRequestResponse(submittedRequest); 
 
+                }
+                else
+                {
+                    MSI_MediaRequestedTypes mediaType = null;
+                    foreach (MSI_MediaRequestedTypes mediaReqType in submittedRequest.MSI_MediaRequestedTypes)
+                    {
+                        mediaType = query.GetMediaRequestdType(submittedRequest.Id, mediaReqType.TypeId);
+                        if (mediaType == null)
+                        {
+                            mediaReqType.Id = Guid.NewGuid().ToString();
+                            mediaReqType.RequestedId = submittedRequest.Id;
+                            query.AddMediaRequestdType(mediaReqType);
+                        }
+                        else
+                        {
+                        }
+                        mediaType = null;
+
+                    }
                 }
             }
 
