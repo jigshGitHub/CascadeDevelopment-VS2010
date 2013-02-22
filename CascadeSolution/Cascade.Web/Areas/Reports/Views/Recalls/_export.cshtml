@@ -21,6 +21,26 @@
   {
      <h2>Add Seller Check Records:</h2> 
   }
+  else if (@ViewBag.ReportType == "RecallsReceivable")
+  {
+     <h2>Recalls Receivable Records:</h2> 
+  }
+  else if (@ViewBag.ReportType == "RecallsInvoiceLookup")
+  {
+     <h2>Recalls Invoice Lookup Records:</h2> 
+  }
+  else if (@ViewBag.ReportType == "RecallsSellerCheckLookup")
+  {
+     <h2>Recalls SellerCheck Lookup Records:</h2> 
+  }
+  else if (@ViewBag.ReportType == "RecallsPayable")
+  {
+     <h2>Recalls Payable Records:</h2> 
+  }
+  else if (@ViewBag.ReportType == "RecallsPaidByOurCheck")
+  {
+     <h2>Recalls Paid By Our Check Records:</h2> 
+  }
   else
   {
      <h2>Recall Records:</h2> 
@@ -105,6 +125,14 @@
                      <td>@recallRecord.Seller</td>
 
                 </tr> 
+            }
+            if (@ViewBag.ReportType == "RecallsReceivable"  || "RecallsInvoiceLookup" || "RecallsSellerCheckLookup" || "RecallsPayable" || "RecallsPaidByOurCheck")
+            {
+                <tr>
+                    <td colspan="21" style="text-align:right;">Total Amount:</td>                
+                    <td colspan="3" style="text-align:Left;">@Model.First().TotalAmount.ToIntegerCurrency()</td> 
+                                                                    
+                </tr>
             }
         </tbody>
         @*Hidden fields for the Report Type*@

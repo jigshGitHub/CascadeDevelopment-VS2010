@@ -33,20 +33,17 @@
                             </li>
                             <li>@Html.CreateLink("Recalls Receivable", "Index", "UnderConstruction", "")
                                 <ul>
-                                    <li>@Html.CreateLink("Recalls Receivable", "Index", "UnderConstruction", "")</li>
-                                    <li>@Html.CreateLink("Recalls Receivable Summary", "Index", "UnderConstruction", "")</li>
-                                    <li>@Html.CreateLink("Recall Inventory Lookup", "Index", "UnderConstruction", "")</li>
-                                    <li>@Html.CreateLink("Recall Seller Check Lookup", "Index", "UnderConstruction", "")</li>
+                                    <li>@Html.ActionLink("Recalls Receivable", "Index", "Recalls", new { area = "Reports", id = "RecallsReceivable" }, null)</li>
+                                    <li>@Html.ActionLink("Recall Invoice Lookup", "Index", "Recalls", new { area = "Reports", id = "RecallsInvoiceLookup" }, null)</li>
+                                    <li>@Html.ActionLink("Recall Seller Check Lookup", "Index", "Recalls", new { area = "Reports", id = "RecallsSellerCheckLookup" }, null)</li>
                                     <li>@Html.ActionLink("Add Seller Check", "Index", "Recalls", new { area = "Reports", id = "AddSellerCheck" }, null)</li>
-                                    <li>@Html.CreateLink("Recall Receivables Upon", "Index", "UnderConstruction", "")</li>
                                 </ul>
                             </li>
 
                             <li>@Html.CreateLink("Recalls Payable", "Index", "UnderConstruction", "")
                                 <ul>
-                                    <li>@Html.CreateLink("Recalls Payable", "Index", "UnderConstruction", "")</li>
-                                    <li>@Html.CreateLink("Recalls Payable Summary", "Index", "UnderConstruction", "")</li>
-                                    <li>@Html.CreateLink("Recalls Paid by Our Check", "Index", "UnderConstruction", "")</li>
+                                    <li>@Html.ActionLink("Recalls Payable", "Index", "Recalls", new { area = "Reports", id = "RecallsPayable" }, null)</li>
+                                    <li>@Html.ActionLink("Recalls Paid by Our Check", "Index", "Recalls", new { area = "Reports", id = "RecallsPaidByOurCheck" }, null)</li>
                                 </ul>
                             </li>
 
@@ -77,12 +74,10 @@
                             </li>
                             <li>@Html.CreateLink("DPS", "Index", "UnderConstruction", "")
                                 <ul>
-                                    <li>@Html.CreateLink("Find DPS Check", "Index", "UnderConstruction", "")</li>
-                                    <li>@Html.CreateLink("DPS Payable", "Index", "UnderConstruction", "")</li>
-                                    <li>@Html.CreateLink("DPS Payable Summary", "Index", "UnderConstruction", "")</li>
-                                    <li>@Html.CreateLink("Add In-House Check", "Index", "UnderConstruction", "")</li>
-                                    <li>@Html.CreateLink("DPS Paid by Our Check", "Index", "UnderConstruction", "")</li>
-                                    <li>@Html.ActionLink("Add Check", "Index", "UnderConstruction", "")</li>
+                                    <li>@Html.ActionLink("Find DPS Check", "Index", "Recalls", new { area = "Reports", id = "DPSCheckDetail" }, null)</li>
+                                    <li>@Html.ActionLink("DPS Payable", "Index", "Recalls", new { area = "Reports", id = "DPSPayable" }, null)</li>
+                                    <li>@Html.ActionLink("DPS Paid by Our Check", "Index", "Recalls", new { area = "Reports", id = "DPSPaidByOurCheck" }, null)</li>
+                                    
                                 </ul>
                             </li>
                         </ul>

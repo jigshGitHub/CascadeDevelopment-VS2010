@@ -2609,6 +2609,239 @@ namespace Cascade.Data.Repositories
 
         #endregion
 
+        public IEnumerable<RecallViewEditResult> GetRecallsReceivableReportRecords(string Export, string reportName)
+        {
+            DBFactory db;
+            SqlDataReader rdr;
+            List<RecallViewEditResult> data = null;
+            try
+            {
+                db = new DBFactory();
+                string reportProcedureName = "";
+
+                switch (reportName)
+                {
+                    case "RecallsReceivable": reportProcedureName = "MSI_spGetRecallsReceivableReportData";
+                        break;
+                    case "RecallsInvoiceLookup": reportProcedureName = "MSI_spGetRecallsInvoiceLookupReportData";
+                        break;
+                    case "RecallsSellerCheckLookup": reportProcedureName = "MSI_spGetRecallsSellerCheckLookupReportData";
+                        break;
+                    case "RecallsPayable": reportProcedureName = "MSI_spGetRecallsPayableReportData";
+                        break;
+                    case "RecallsPaidByOurCheck": reportProcedureName = "MSI_spGetRecallsPaidByOurCheckReportData";
+                        break;
+
+                }
+                rdr = db.ExecuteReader(reportProcedureName, new SqlParameter("@Export", Export));
+                data = new List<RecallViewEditResult>();
+                RecallViewEditResult record;
+                while (rdr.Read())
+                {
+                    record = new RecallViewEditResult();
+                    record.TotalAmount = rdr["TotalAmount"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["TotalAmount"]);
+                    if (record.TotalAmount == Convert.ToDecimal(0.0))
+                    {
+                        record.TotalAmount = null;
+                    }
+                    record.OrigAcct = rdr["OrigAcct"].ToString();
+                    record.Date = Convert.ToDateTime(rdr["Date"]);
+                    record.AcctName = rdr["AcctName"].ToString();
+                    record.Portfolio = rdr["Portfolio"].ToString();
+                    record.PIMSAcct = rdr["PIMSAcct"].ToString();
+                    record.FaceValueofAcct = rdr["FaceValueofAcct"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["FaceValueofAcct"]);
+                    if (record.FaceValueofAcct == Convert.ToDecimal(0.0))
+                    {
+                        record.FaceValueofAcct = null;
+                    }
+                    record.CostBasis = rdr["CostBasis"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["CostBasis"]);
+                    record.AmtReceivable = rdr["AmtReceivable"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["AmtReceivable"]);
+                    record.Invoice = rdr["Invoice"].ToString();
+                    record.ID = Convert.ToInt32(rdr["ID"].ToString());
+                    record.SellerCheck = rdr["SellerCheck"].ToString();
+                    record.SalesBasis = rdr["SalesBasis"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["SalesBasis"]);
+                    record.AmtPayable = rdr["AmtPayable"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["AmtPayable"]);
+                    record.CheckNumber = rdr["CheckNumber"].ToString();
+                    if (Export != null)
+                    {
+                        record.OrigAcct = rdr["OrigAcct"].ToString();
+                        record.Date = Convert.ToDateTime(rdr["Date"]);
+                        record.AcctName = rdr["AcctName"].ToString();
+                        record.Portfolio = rdr["Portfolio"].ToString();
+                        record.PIMSAcct = rdr["PIMSAcct"].ToString();
+                        record.FaceValueofAcct = rdr["FaceValueofAcct"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["FaceValueofAcct"]);
+                        if (record.FaceValueofAcct == Convert.ToDecimal(0.0))
+                        {
+                            record.FaceValueofAcct = null;
+                        }
+                        record.CostBasis = rdr["CostBasis"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["CostBasis"]);
+                        record.AmtReceivable = rdr["AmtReceivable"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["AmtReceivable"]);
+                        record.Invoice = rdr["Invoice"].ToString();
+                        record.CurrentResp = rdr["CurrentResp"].ToString();
+                        record.RecallReason = rdr["RecallReason"].ToString();
+                        record.DateNoteSent = Convert.ToDateTime(rdr["DateNoteSent"]);
+                        record.NewStatus = rdr["NewStatus"].ToString();
+                        record.NewResp = rdr["NewResp"].ToString();
+                        record.UploadedDate = Convert.ToDateTime(rdr["UploadedDate"]);
+                        record.CheckNumber = rdr["CheckNumber"].ToString();
+                        record.Explanation = rdr["Explanation"].ToString();
+                        record.SalesBasis = rdr["SalesBasis"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["SalesBasis"]);
+                        record.Seller = rdr["Seller"].ToString();
+                        record.SellerCheck = rdr["SellerCheck"].ToString();
+                        record.Putback = rdr["Putback"].ToString();
+                        record.DateAcctClosed = Convert.ToDateTime(rdr["DateAcctClosed"]);
+                        record.AmtReceivable = rdr["AmtReceivable"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["AmtReceivable"]);
+                        record.AmtPayable = rdr["AmtPayable"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["AmtPayable"]);
+                        record.GUID = rdr["GUID"].ToString();
+                        if (record.Putback.ToUpper() == "TRUE")
+                        {
+                            record.Putback = "Yes";
+                        }
+                        else
+                        {
+                            record.Putback = "No";
+                        }
+
+                        if (record.CostBasis == Convert.ToDecimal(0.0))
+                        {
+                            record.CostBasis = null;
+                        }
+                        if (record.SalesBasis == Convert.ToDecimal(0.0))
+                        {
+                            record.SalesBasis = null;
+                        }
+                        if (record.AmtReceivable == Convert.ToDecimal(0.0))
+                        {
+                            record.AmtReceivable = null;
+                        }
+                        if (record.AmtPayable == Convert.ToDecimal(0.0))
+                        {
+                            record.AmtPayable = null;
+                        }
+
+                        if (record.DateAcctClosed.ToString() == "1/1/1900 12:00:00 AM")
+                        {
+                            record.DateAcctClosed = null;
+                        }
+                        if (record.DateNoteSent.ToString() == "1/1/1900 12:00:00 AM")
+                        {
+                            record.DateNoteSent = null;
+                        }
+                        if (record.Date.ToString() == "1/1/1900 12:00:00 AM")
+                        {
+                            record.Date = null;
+                        }
+                        if (record.UploadedDate.ToString() == "1/1/1900 12:00:00 AM")
+                        {
+                            record.UploadedDate = null;
+                        }
+                    }
+                    data.Add(record);
+                }
+                //Close the datareader
+                rdr.Close();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Exception in DataQueries.GetRecallsReceivableReportRecords:" + ex.Message);
+            }
+            return data.AsEnumerable<RecallViewEditResult>();
+        }
+
+        public IEnumerable<DPSViewEditResult> GetDPSReportRecords(string Export, string reportName)
+        {
+            DBFactory db;
+            SqlDataReader rdr;
+            List<DPSViewEditResult> data = null;
+            try
+            {
+                db = new DBFactory();
+                string reportProcedureName = "";
+
+                switch (reportName)
+                {
+                    case "DPSCheckDetail": reportProcedureName = "MSI_spGetDPSCheckDetailReportData";
+                        break;
+                    case "DPSPayable": reportProcedureName = "MSI_spGetDPSPayableReportData";
+                        break;
+                    case "DPSPaidByOurCheck": reportProcedureName = "MSI_spGetDPSPaidByOurCheckReportData";
+                        break;
+
+                }
+                rdr = db.ExecuteReader(reportProcedureName, new SqlParameter("@Export", Export));
+
+                data = new List<DPSViewEditResult>();
+                DPSViewEditResult record;
+                while (rdr.Read())
+                {
+                    record = new DPSViewEditResult();
+                    //record.OriginalAcct = rdr["OriginalAcct"].ToString();
+                    //record.TransDate = Convert.ToDateTime(rdr["TransDate"]);
+                    //record.AcctName = rdr["AcctName"].ToString();
+                    //record.Portfolio = rdr["Portfolio"].ToString();
+                    //record.PIMSAcct = rdr["PIMSAcct"].ToString();
+                    //record.Amount = rdr["Amount"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["Amount"]);
+                    //record.NetPayment = rdr["NetPayment"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["NetPayment"]);
+                    //record.PmtType = rdr["PmtType"].ToString();
+                    //record.CurrentResp = rdr["CurrentResp"].ToString();
+                    //record.GUID = rdr["GUID"].ToString();
+
+                    //record.ID = Convert.ToInt32(rdr["ID"].ToString());
+                    //if (Export != null)
+                    //{
+                    record.AcctName = rdr["AcctName"].ToString();
+                    record.PIMSAcct = rdr["PIMSAcct"].ToString();
+                    record.OriginalAcct = rdr["OriginalAcct"].ToString();
+                    record.TransDate = Convert.ToDateTime(rdr["TransDate"]);
+                    record.DateRec = Convert.ToDateTime(rdr["DateRec"]);
+                    record.TransCode = rdr["TransCode"].ToString();
+                    record.GUID = rdr["GUID"].ToString();
+                    record.CheckNumber = rdr["CheckNumber"].ToString();
+                    record.PmtType = rdr["PmtType"].ToString();
+                    record.TransSource = rdr["TransSource"].ToString();
+                    record.CurrentResp = rdr["CurrentResp"].ToString();
+                    record.OurCheckNumber = rdr["OurCheckNumber"].ToString();
+                    record.Uploaded = rdr["Uploaded"].ToString();
+                    record.Portfolio = rdr["Portfolio"].ToString();
+                    record.ID = Convert.ToInt32(rdr["ID"].ToString());
+                    record.Amount = rdr["Amount"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["Amount"]);
+                    record.NetPayment = rdr["NetPayment"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["NetPayment"]);
+
+                    record.TotalAmount = rdr["TotalAmount"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["TotalAmount"]);
+                    if (record.TotalAmount == Convert.ToDecimal(0.0))
+                    {
+                        record.TotalAmount = null;
+                    }
+
+                    //}
+                    if (record.Amount == Convert.ToDecimal(0.0))
+                    {
+                        record.Amount = null;
+                    }
+                    if (record.NetPayment == Convert.ToDecimal(0.0))
+                    {
+                        record.NetPayment = null;
+                    }
+                    if (record.TransDate.ToString() == "1/1/1900 12:00:00 AM")
+                    {
+                        record.TransDate = null;
+                    }
+                    if (record.DateRec.ToString() == "1/1/1900 12:00:00 AM")
+                    {
+                        record.DateRec = null;
+                    }
+                    data.Add(record);
+                }
+                //Close the datareader
+                rdr.Close();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Exception in DataQueries.GetDPSReportRecords:" + ex.Message);
+            }
+            return data.AsEnumerable<DPSViewEditResult>();
+        }
+
     }
 
 }

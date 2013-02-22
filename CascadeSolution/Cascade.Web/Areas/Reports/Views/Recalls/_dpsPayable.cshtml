@@ -1,0 +1,75 @@
+﻿@model IList<Cascade.Data.Models.DPSViewEditResult>
+@using Cascade.Web.Presentation.ExtensionMethods
+
+<link href="@Url.Content("~/Content/dataTables/demo_table.css")" rel="stylesheet" type="text/css" />
+
+<script src="~/Scripts/datatable/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/index.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/jquery.dataTables.min.js" type="text/javascript"></script>
+
+<h2>Report: DPS Payable  &nbsp;
+
+      @if (Model.Count > 0)
+      {
+        <a href="@Url.Action("Export", new { ReportType = @ViewBag.ReportType })"><img src="@Url.Content("~/Images/excel.jpg")" alt="Export To Excel" /></a>
+      }
+
+</h2>
+
+<div id="divRecallsPayable">
+    <table id="dpsPayable" class="display">
+        <thead>
+            <tr> 
+                <th></th>
+                 <th>Original Account#</th>
+                <th>Transaction Date</th>
+                <th>Account Name</th>
+                <th>Portfolio#</th>
+                <th>PIMS Account#</th>                
+                <th>Amount</th>
+                <th>Check Number</th>                
+            </tr> 
+        </thead> 
+        <tbody> 
+            
+            @foreach (var dpsPayable in Model)
+            {
+                <tr>
+                    <td>@Html.ActionLink("View", "Details", "DPS", new { area = "Recourse", id = dpsPayable.ID }, null)</td>
+                    <td>@dpsPayable.OriginalAcct</td>
+                    <td>@dpsPayable.TransDate.ConverToDate()</td>
+                    <td>@dpsPayable.AcctName</td>
+                    <td>@dpsPayable.Portfolio</td>
+                    <td>@dpsPayable.PIMSAcct</td>
+                    <td>@dpsPayable.Amount.ToIntegerCurrency()</td>                    
+                    <td>@dpsPayable.CheckNumber</td>                    
+                </tr> 
+            }
+                      
+        </tbody>
+        @*Hidden fields for the Export to excel*@
+        <tr>
+            <td>
+                @Html.Hidden("reportType",(string)(@ViewBag.ReportType))
+            </td>
+        </tr>
+        
+    </table>
+
+      @if (Model.Count > 0)
+      {
+     
+     <table id="dpsPayableAmt">
+        <tbody> 
+             <tr valign="top">
+                    
+                    <td style="width:670px">&nbsp;</td>
+                    <td style="text-align:Left;"><b>Total Amount:</b> @Model.First().TotalAmount.ToIntegerCurrency()</td> 
+                                                                                        
+               </tr>
+           
+        </tbody>
+                
+    </table>
+      }
+</div>

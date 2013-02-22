@@ -205,6 +205,175 @@ $(document).ready(function () {
             });
     }
 
+    //Recalls Receivable
+    if ($("#recallsReceivable").length != 0) {
+        $('#recallsReceivable').dataTable(
+            {
+                "bFilter": false,
+                "aoColumns": [
+                    {
+                        "bSearchable": false,
+                        "bSortable": false
+
+                    },
+                    null,
+                    null,
+                    null,
+                    null,
+                     null,
+                      { "sType": "currency" },
+                       null,
+                         { "sType": "currency" },
+                         null
+                ]
+            });
+    }
+
+    if ($("#recallsInvoiceLookup").length != 0) {
+        $('#recallsInvoiceLookup').dataTable(
+            {
+                "bFilter": false,
+                "aoColumns": [
+                    {
+                        "bSearchable": false,
+                        "bSortable": false
+
+                    },
+                    null,
+                    null,
+                    null,
+                    null,
+                     null,
+                      { "sType": "currency" },
+                       null,
+                         { "sType": "currency" },
+                         null
+                ]
+            });
+    }
+
+    if ($("#recallsSellerCheckLookup").length != 0) {
+        $('#recallsSellerCheckLookup').dataTable(
+            {
+                "bFilter": false,
+                "aoColumns": [
+                    {
+                        "bSearchable": false,
+                        "bSortable": false
+
+                    },
+                    null,
+                    null,
+                    null,
+                    null,
+                     null,
+                      { "sType": "currency" },
+                       null,
+                         { "sType": "currency" },
+                         null,
+                         null
+                ]
+            });
+    }
+
+
+    if ($("#recallsPayable").length != 0) {
+        $('#recallsPayable').dataTable(
+            {
+                "bFilter": false,
+                "aoColumns": [
+                    {
+                        "bSearchable": false,
+                        "bSortable": false
+
+                    },
+                    null,
+                    null,
+                    null,
+                    null,
+                     null,
+                      { "sType": "currency" },
+                       null,
+                         { "sType": "currency" },
+                         null
+                ]
+            });
+    }
+
+    if ($("#dpsPayable").length != 0) {
+        $('#dpsPayable').dataTable(
+            {
+                "bFilter": false,
+                "aoColumns": [
+                    {
+                        "bSearchable": false,
+                        "bSortable": false
+
+                    },
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    { "sType": "currency" },
+                    null
+
+
+                ]
+            });
+    }
+
+
+    if ($("#recallsPaidByOurCheck").length != 0) {
+        $('#recallsPaidByOurCheck').dataTable(
+            {
+                "bFilter": false,
+                "aoColumns": [
+                    {
+                        "bSearchable": false,
+                        "bSortable": false
+
+                    },
+                    null,
+                    null,
+                    null,
+                    null,
+                     null,
+                      { "sType": "currency" },
+                       null,
+                         { "sType": "currency" },
+                         null,
+                         null,
+                         null,
+                ]
+            });
+    }
+
+    if ($("#DPSCheckDetails").length != 0) {
+        $('#DPSCheckDetails').dataTable(
+            {
+                "bFilter": false,
+                "aoColumns": [
+                    {
+                        "bSearchable": false,
+                        "bSortable": false
+
+                    },
+                    null,
+                    null,
+                    null,
+                    null,
+                     null,
+                      { "sType": "currency" },
+                         { "sType": "currency" },
+                          null,
+                         null,
+                ]
+            });
+    }
+
+
+
     //Media Not Submitted
     if ($("#mediaNotSubmitted").length != 0) {
         $('#mediaNotSubmitted').dataTable(
@@ -670,7 +839,7 @@ $(document).ready(function () {
         $('#searchRecords').dataTable();
     }
 
-    if($("#mediaRequestRecords").length != 0) {
+    if ($("#mediaRequestRecords").length != 0) {
         $('#mediaRequestRecords').dataTable();
     }
     //"bFilter": false 

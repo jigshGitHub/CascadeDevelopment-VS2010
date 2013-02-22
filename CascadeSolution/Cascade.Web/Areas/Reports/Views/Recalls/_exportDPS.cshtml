@@ -1,0 +1,90 @@
+﻿@model IList<Cascade.Data.Models.DPSViewEditResult>
+@using Cascade.Web.Presentation.ExtensionMethods
+
+  @if (@ViewBag.ReportType == "DPSCheckDetail")
+  {
+     <h2>DPS Check Detail Records:</h2> 
+  }
+  else if (@ViewBag.ReportType == "DPSPayable")
+  {
+     <h2>DPS Payable Records:</h2> 
+  }
+  else if (@ViewBag.ReportType == "DPSPaidByOurCheck")
+  {
+     <h2>DPS Paid By Our Check Records:</h2> 
+  }  
+  else
+  {
+     <h2>DPS Records:</h2> 
+  }
+
+
+
+<style type="text/css">
+    body {font-family: Arial;}
+    .heading { font-weight:bold}
+    .specialtd { mso-number-format:"0"; }
+</style>
+
+<div id="divRecallRecords">
+    <table id="recallRecords" border="1">
+        <thead>
+            <tr> 
+                
+               <th>Original Account</th>
+                <th>Transaction Date</th>
+                <th>Account Name</th>
+                <th>Portfolio#</th>
+                <th>PIMS Account</th>
+                <th>Amount</th>
+                <th>Check Number</th>
+                <th>Net Payment</th>
+                <th>Transaction Code</th>
+                <th>Payment Type</th>
+                <th>Transaction Source</th>
+                <th>Date Received</th>
+                <th>Current Responsibility</th>
+                <th>Our Check Number</th>
+                <th>Uploaded</th>
+                <th>Unique ID #</th>
+            </tr> 
+        </thead> 
+        <tbody> 
+            @foreach (var dpsRecord in Model)
+            {
+                <tr>
+                    
+                     <td class="specialtd">@dpsRecord.OriginalAcct</td>
+                    <td>@dpsRecord.TransDate.ConverToDate()</td>
+                    <td>@dpsRecord.AcctName</td>
+                    <td>@dpsRecord.Portfolio</td>
+                    <td class="specialtd">@dpsRecord.PIMSAcct</td>
+                    <td>@dpsRecord.Amount.ToIntegerCurrency()</td>
+                    <td>@dpsRecord.CheckNumber</td>
+                    <td>@dpsRecord.NetPayment.ToIntegerCurrency()</td>
+                    <td>@dpsRecord.TransCode</td>
+                    <td>@dpsRecord.PmtType</td>
+                    <td>@dpsRecord.TransSource</td>
+                    <td>@dpsRecord.DateRec.ConverToDate()</td>
+                    <td>@dpsRecord.CurrentResp</td>
+                    <td>@dpsRecord.OurCheckNumber</td>
+                    <td>@dpsRecord.Uploaded</td>
+                    <td>@dpsRecord.GUID</td>
+
+                </tr> 
+            }
+            <tr>
+                    <td colspan="13" style="text-align:right;">Total Amount:</td>                
+                    <td colspan="3" style="text-align:Left;">@Model.First().TotalAmount.ToIntegerCurrency()</td> 
+                                                                    
+                </tr>
+        </tbody>
+        @*Hidden fields for the Report Type*@
+        @Html.Hidden("reportType",(string)(@ViewBag.ReportType))
+        
+    </table>
+</div>
+
+        
+    
+    

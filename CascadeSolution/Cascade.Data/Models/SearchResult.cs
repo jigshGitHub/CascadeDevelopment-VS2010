@@ -326,6 +326,7 @@ namespace Cascade.Data.Models
         public string CheckNumber;
         public string PmtType;
         public string TransSource;
+        public string TransCode;
         public string CurrentResp;
         public string OurCheckNumber;
         public string Uploaded;
@@ -335,6 +336,7 @@ namespace Cascade.Data.Models
         public string OriginalAcct;
         public string GUID;
         public int ID;
+        public Decimal? TotalAmount;
         public DPSViewEditResult()
         {
         }
@@ -403,7 +405,6 @@ namespace Cascade.Data.Models
         public string IsViewedByAgency;
     }
 
-
     public class MediaViewEditResult
     {
         public string Portfolio;
@@ -451,7 +452,7 @@ namespace Cascade.Data.Models
     }
 
     #region Recalls
-    
+
     public class RecallViewEditResult
     {
         public string Portfolio;
@@ -479,6 +480,7 @@ namespace Cascade.Data.Models
         public string OrigAcct;
         public string GUID;
         public int ID;
+        public Decimal? TotalAmount;
         public RecallViewEditResult()
         {
         }
