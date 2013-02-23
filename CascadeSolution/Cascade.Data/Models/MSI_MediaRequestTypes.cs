@@ -12,7 +12,7 @@ namespace Cascade.Data.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class MSI_MediaRequestedTypes
+    public partial class MSI_MediaRequestTypes
     {
         public string Id { get; set; }
         public string RequestedId { get; set; }
@@ -22,8 +22,17 @@ namespace Cascade.Data.Models
         public Nullable<System.Guid> RequestedUserID { get; set; }
         public Nullable<System.Guid> RespondedUserID { get; set; }
         public Nullable<System.DateTime> RespondedDate { get; set; }
+        public Nullable<bool> MediaDownloaded { get; set; }
+        public Nullable<bool> MediaUploaded { get; set; }
+        public Nullable<System.DateTime> LastUpdatedDate { get; set; }
+        public Nullable<System.Guid> LastUpdatedBy { get; set; }
+        public Nullable<int> RequestStatusId { get; set; }
+        public Nullable<System.DateTime> ReSubmittedDate { get; set; }
+        public Nullable<System.Guid> ReSubmittedBy { get; set; }
+        public string TypeConstraints { get; set; }
     
-        public virtual MSI_MediaRequestResponse MSI_MediaRequestResponse { internal get; set; }
+        public virtual MSI_MediaRequestResponse MSI_MediaRequestResponse {internal get; set; }
+        public virtual MSI_MediaRequestStatus MSI_MediaRequestStatus { internal get; set; }
         public virtual MSI_MediaTypes MSI_MediaTypes { internal get; set; }
     }
 }

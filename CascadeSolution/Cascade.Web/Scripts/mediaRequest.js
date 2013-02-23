@@ -6,7 +6,7 @@
 /// <reference path="jquery.validate.unobtrusive.js" />
 /// <reference path="knockout-2.0.0.debug.js" />
 
-function mediaReuqestedType(id, reqId, typeId, documents, reqDt, reqUser, respDt, respUser) {
+function mediaReuqestType(id, reqId, typeId, documents, reqDt, reqUser, respDt, respUser, typeConstraints) {
     this.Id = id;
     this.RequestedId = reqId;
     this.TypeId = typeId;
@@ -15,6 +15,7 @@ function mediaReuqestedType(id, reqId, typeId, documents, reqDt, reqUser, respDt
     this.RequestedUserID = reqUser;
     this.RespondedDate = respDt;
     this.RespondedUserID = respUser;
+    this.TypeConstraints = typeConstraints;
 }
 
 function mediaType(text, value, enable, checked) {
@@ -23,6 +24,7 @@ function mediaType(text, value, enable, checked) {
     self.value = ko.observable(value);
     self.enable = ko.observable(enable);
     self.checked = ko.observable(checked);
+    self.typeConstraints = ko.observable('');
 }
 function pageViewModel(userId, userAgency, userRole, id) {
     log(userId + ' ' + userAgency + ' ' + userRole);
@@ -132,7 +134,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
                             //log(data);
                             self.pimsDataAvailable(true);
                             self.setPimsData(data);
-                            self.showMediaTypeSelection(true);
+                            self.showMediaTypeSelection(false);
                             self.loadMediaTypes();
                         },
                         error: function (xhr, status, error) {
@@ -147,9 +149,9 @@ function pageViewModel(userId, userAgency, userRole, id) {
                     $("#loading").dialog('close');
                     self.pimsDataAvailable(true);
                     self.setPimsData(data);
-                    self.showMediaTypeSelection(true);
+                    self.showMediaTypeSelection(false);
                     self.loadMediaTypes();
-                    self.setSelectedMediaRequested(data.MSI_MediaRequestedTypes);
+                    self.setSelectedMediaRequested(data.MSI_MediaRequestTypes);
                 }
             },
             error: function (xhr, status, error) {
@@ -159,6 +161,9 @@ function pageViewModel(userId, userAgency, userRole, id) {
 
     };
 
+    self.viewMedia = function () {
+        self.showMediaTypeSelection(true);
+    }
     self.setSelectedMediaRequested = function (data) {
 
         $.each(data, function (i, item) {
@@ -192,7 +197,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
                 self.setPimsData(response);
                 self.showMediaTypeSelection(true);
                 self.loadMediaTypes();
-                self.setSelectedMediaRequested(response.MSI_MediaRequestedTypes);
+                self.setSelectedMediaRequested(response.MSI_MediaRequestTypes);
             },
             error: function (response, errorText) {
                 return false;
@@ -234,6 +239,9 @@ function pageViewModel(userId, userAgency, userRole, id) {
         //If it is checked and not in the array, add it
         if (isChecked && self.selectedMediaTypes.indexOf(media) < 0) {
             self.selectedMediaTypes.push(media);
+            if (media.value() == '5') {
+                $("#statementMediaTypeConstraint").dialog('open');
+            }
         }
         //If it is in the array and not checked remove it                
         else if (!isChecked && self.selectedMediaTypes.indexOf(media) >= 0) {
@@ -243,16 +251,25 @@ function pageViewModel(userId, userAgency, userRole, id) {
         //log(self.selectedMediaTypes());
         return true;
     }
+
+    self.statementStDt = ko.observable();
+    self.statementEndDt = ko.observable();
+    self.submitStatementDateRange = function () {
+        $("#statementMediaTypeConstraint").dialog('close');
+        $.each(self.selectedMediaTypes(), function (i, item) {
+            var media = item;
+            if (media.value() == '5') {
+                media.typeConstraints(self.statementStDt() + ';' + self.statementEndDt());
+            }
+        });
+    }
     self.showSubmit = ko.computed(function () { return (self.selectedMediaTypes().length > 0); }, self);
-    self.submit = function () {
-        log(baseUrl);
+    self.submit = function () {        
         function getSelectedMediaRequested() {
             var localSelectedMediaTypes = [];
-            $.each(self.selectedMediaTypes(), function (i, item) {
-                //log(item.value());
-                localSelectedMediaTypes.push(new mediaReuqestedType(undefined, undefined, item.value(), undefined, new Date(), self.userId(), undefined, undefined));
+            $.each(self.selectedMediaTypes(), function (i, item) {                
+                localSelectedMediaTypes.push(new mediaReuqestType(undefined, undefined, item.value(), undefined, new Date(), self.userId(), undefined, undefined, item.typeConstraints()));
             });
-            //log(localSelectedMediaTypes);
             return localSelectedMediaTypes;
         }
         var json = JSON.stringify({
@@ -269,7 +286,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
             Seller: self.seller(),
             RequestedDate: new Date(),
             RequestedByUserId: self.userId(),
-            MSI_MediaRequestedTypes: getSelectedMediaRequested()
+            MSI_MediaRequestTypes: getSelectedMediaRequested()
         });
 
         $.ajax({

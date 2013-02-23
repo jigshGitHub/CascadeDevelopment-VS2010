@@ -93,10 +93,13 @@ namespace Cascade.Web.Controllers.API.Media
                 {
                     submittedRequest.Id = Guid.NewGuid().ToString();
 
-                    foreach (MSI_MediaRequestedTypes mediaReqType in submittedRequest.MSI_MediaRequestedTypes)
+                    foreach (MSI_MediaRequestTypes mediaReqType in submittedRequest.MSI_MediaRequestTypes)
                     {
                         mediaReqType.Id = Guid.NewGuid().ToString();
                         mediaReqType.RequestedId = submittedRequest.Id;
+                        mediaReqType.RequestStatusId = (int)MediaRequestStatus.RequestReceived;
+                        mediaReqType.LastUpdatedDate = DateTime.Now;
+                        mediaReqType.LastUpdatedBy = submittedRequest.RequestedByUserId;
                     }
                     submittedRequest.RequestedDate = DateHelper.GetDateWithTimings(submittedRequest.RequestedDate);
 
@@ -105,14 +108,17 @@ namespace Cascade.Web.Controllers.API.Media
                 }
                 else
                 {
-                    MSI_MediaRequestedTypes mediaType = null;
-                    foreach (MSI_MediaRequestedTypes mediaReqType in submittedRequest.MSI_MediaRequestedTypes)
+                    MSI_MediaRequestTypes mediaType = null;
+                    foreach (MSI_MediaRequestTypes mediaReqType in submittedRequest.MSI_MediaRequestTypes)
                     {
                         mediaType = query.GetMediaRequestdType(submittedRequest.Id, mediaReqType.TypeId);
                         if (mediaType == null)
                         {
                             mediaReqType.Id = Guid.NewGuid().ToString();
                             mediaReqType.RequestedId = submittedRequest.Id;
+                            mediaReqType.RequestStatusId = (int)MediaRequestStatus.RequestReceived;
+                            mediaReqType.LastUpdatedDate = DateTime.Now;
+                            mediaReqType.LastUpdatedBy = submittedRequest.RequestedByUserId;
                             query.AddMediaRequestdType(mediaReqType);
                         }
                         else

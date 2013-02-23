@@ -15,8 +15,9 @@
           <EntitySet Name="MSI_DPSForm" EntityType="CascadeDBModel.Store.MSI_DPSForm" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_FinalActionsteps" EntityType="CascadeDBModel.Store.MSI_FinalActionsteps" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_MediaForm" EntityType="CascadeDBModel.Store.MSI_MediaForm" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="MSI_MediaRequestedTypes" EntityType="CascadeDBModel.Store.MSI_MediaRequestedTypes" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_MediaRequestResponse" EntityType="CascadeDBModel.Store.MSI_MediaRequestResponse" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MSI_MediaRequestStatus" EntityType="CascadeDBModel.Store.MSI_MediaRequestStatus" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MSI_MediaRequestTypes" EntityType="CascadeDBModel.Store.MSI_MediaRequestTypes" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_MediaTypes" EntityType="CascadeDBModel.Store.MSI_MediaTypes" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_OwnerResponses" EntityType="CascadeDBModel.Store.MSI_OwnerResponses" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_Port_Acq_Edited" EntityType="CascadeDBModel.Store.MSI_Port_Acq_Edited" store:Type="Tables" Schema="dbo" />
@@ -984,13 +985,17 @@
       [vwAccounts].[Sold] AS [Sold]
       FROM [dbo].[vwAccounts] AS [vwAccounts]</DefiningQuery>
           </EntitySet>
-          <AssociationSet Name="FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse" Association="CascadeDBModel.Store.FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse">
+          <AssociationSet Name="FK_MSI_MediaRequestTypes_MSI_MediaRequestResponse" Association="CascadeDBModel.Store.FK_MSI_MediaRequestTypes_MSI_MediaRequestResponse">
             <End Role="MSI_MediaRequestResponse" EntitySet="MSI_MediaRequestResponse" />
-            <End Role="MSI_MediaRequestedTypes" EntitySet="MSI_MediaRequestedTypes" />
+            <End Role="MSI_MediaRequestTypes" EntitySet="MSI_MediaRequestTypes" />
           </AssociationSet>
-          <AssociationSet Name="FK_MSI_MediaRequestedTypes_MSI_MediaTypes" Association="CascadeDBModel.Store.FK_MSI_MediaRequestedTypes_MSI_MediaTypes">
+          <AssociationSet Name="FK_MSI_MediaRequestTypes_MSI_MediaRequestStatus" Association="CascadeDBModel.Store.FK_MSI_MediaRequestTypes_MSI_MediaRequestStatus">
+            <End Role="MSI_MediaRequestStatus" EntitySet="MSI_MediaRequestStatus" />
+            <End Role="MSI_MediaRequestTypes" EntitySet="MSI_MediaRequestTypes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MSI_MediaRequestTypes_MSI_MediaTypes" Association="CascadeDBModel.Store.FK_MSI_MediaRequestTypes_MSI_MediaTypes">
             <End Role="MSI_MediaTypes" EntitySet="MSI_MediaTypes" />
-            <End Role="MSI_MediaRequestedTypes" EntitySet="MSI_MediaRequestedTypes" />
+            <End Role="MSI_MediaRequestTypes" EntitySet="MSI_MediaRequestTypes" />
           </AssociationSet>
           <AssociationSet Name="FK_RACCBKRP_RACCOUNT" Association="CascadeDBModel.Store.FK_RACCBKRP_RACCOUNT">
             <End Role="RACCOUNT" EntitySet="RACCOUNT" />
@@ -1186,19 +1191,6 @@
           <Property Name="GUID" Type="varchar" Nullable="false" MaxLength="255" />
           <Property Name="FileName" Type="varchar" MaxLength="150" />
         </EntityType>
-        <EntityType Name="MSI_MediaRequestedTypes">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="RequestedId" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="TypeId" Type="int" Nullable="false" />
-          <Property Name="RespondedDocuments" Type="varchar(max)" />
-          <Property Name="RequestedDate" Type="datetime" />
-          <Property Name="RequestedUserID" Type="uniqueidentifier" />
-          <Property Name="RespondedUserID" Type="uniqueidentifier" />
-          <Property Name="RespondedDate" Type="datetime" />
-        </EntityType>
         <EntityType Name="MSI_MediaRequestResponse">
           <Key>
             <PropertyRef Name="Id" />
@@ -1218,6 +1210,34 @@
           <Property Name="RespondedDate" Type="datetime" />
           <Property Name="RequestedByUserId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="RespondedByUserId" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="MSI_MediaRequestStatus">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="varchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="MSI_MediaRequestTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="RequestedId" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="TypeId" Type="int" Nullable="false" />
+          <Property Name="RespondedDocuments" Type="varchar(max)" />
+          <Property Name="RequestedDate" Type="datetime" />
+          <Property Name="RequestedUserID" Type="uniqueidentifier" />
+          <Property Name="RespondedUserID" Type="uniqueidentifier" />
+          <Property Name="RespondedDate" Type="datetime" />
+          <Property Name="MediaDownloaded" Type="bit" />
+          <Property Name="MediaUploaded" Type="bit" />
+          <Property Name="LastUpdatedDate" Type="datetime" />
+          <Property Name="LastUpdatedBy" Type="uniqueidentifier" />
+          <Property Name="RequestStatusId" Type="int" />
+          <Property Name="ReSubmittedDate" Type="datetime" />
+          <Property Name="ReSubmittedBy" Type="uniqueidentifier" />
+          <Property Name="TypeConstraints" Type="varchar" MaxLength="1000" />
         </EntityType>
         <EntityType Name="MSI_MediaTypes">
           <Key>
@@ -3341,26 +3361,38 @@
           <Property Name="SoldTo" Type="varchar" MaxLength="60" />
           <Property Name="Sold" Type="bit" />
         </EntityType>
-        <Association Name="FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse">
+        <Association Name="FK_MSI_MediaRequestTypes_MSI_MediaRequestResponse">
           <End Role="MSI_MediaRequestResponse" Type="CascadeDBModel.Store.MSI_MediaRequestResponse" Multiplicity="1" />
-          <End Role="MSI_MediaRequestedTypes" Type="CascadeDBModel.Store.MSI_MediaRequestedTypes" Multiplicity="*" />
+          <End Role="MSI_MediaRequestTypes" Type="CascadeDBModel.Store.MSI_MediaRequestTypes" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MSI_MediaRequestResponse">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="MSI_MediaRequestedTypes">
+            <Dependent Role="MSI_MediaRequestTypes">
               <PropertyRef Name="RequestedId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_MSI_MediaRequestedTypes_MSI_MediaTypes">
+        <Association Name="FK_MSI_MediaRequestTypes_MSI_MediaRequestStatus">
+          <End Role="MSI_MediaRequestStatus" Type="CascadeDBModel.Store.MSI_MediaRequestStatus" Multiplicity="0..1" />
+          <End Role="MSI_MediaRequestTypes" Type="CascadeDBModel.Store.MSI_MediaRequestTypes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MSI_MediaRequestStatus">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MSI_MediaRequestTypes">
+              <PropertyRef Name="RequestStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MSI_MediaRequestTypes_MSI_MediaTypes">
           <End Role="MSI_MediaTypes" Type="CascadeDBModel.Store.MSI_MediaTypes" Multiplicity="1" />
-          <End Role="MSI_MediaRequestedTypes" Type="CascadeDBModel.Store.MSI_MediaRequestedTypes" Multiplicity="*" />
+          <End Role="MSI_MediaRequestTypes" Type="CascadeDBModel.Store.MSI_MediaRequestTypes" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MSI_MediaTypes">
               <PropertyRef Name="ID" />
             </Principal>
-            <Dependent Role="MSI_MediaRequestedTypes">
+            <Dependent Role="MSI_MediaRequestTypes">
               <PropertyRef Name="TypeId" />
             </Dependent>
           </ReferentialConstraint>
@@ -3534,15 +3566,20 @@
             <End Role="RACCTREL" EntitySet="RACCTRELs" />
           </AssociationSet>
           <EntitySet Name="MSI_MediaForm" EntityType="CascadeDBModel.MSI_MediaForm" />
-          <EntitySet Name="MSI_MediaRequestedTypes" EntityType="CascadeDBModel.MSI_MediaRequestedTypes" />
           <EntitySet Name="MSI_MediaRequestResponse" EntityType="CascadeDBModel.MSI_MediaRequestResponse" />
-          <AssociationSet Name="FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse" Association="CascadeDBModel.FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse">
+          <EntitySet Name="MSI_MediaRequestStatus" EntityType="CascadeDBModel.MSI_MediaRequestStatus" />
+          <EntitySet Name="MSI_MediaRequestTypes" EntityType="CascadeDBModel.MSI_MediaRequestTypes" />
+          <AssociationSet Name="FK_MSI_MediaRequestTypes_MSI_MediaRequestResponse" Association="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaRequestResponse">
             <End Role="MSI_MediaRequestResponse" EntitySet="MSI_MediaRequestResponse" />
-            <End Role="MSI_MediaRequestedTypes" EntitySet="MSI_MediaRequestedTypes" />
+            <End Role="MSI_MediaRequestTypes" EntitySet="MSI_MediaRequestTypes" />
           </AssociationSet>
-          <AssociationSet Name="FK_MSI_MediaRequestedTypes_MSI_MediaTypes" Association="CascadeDBModel.FK_MSI_MediaRequestedTypes_MSI_MediaTypes">
+          <AssociationSet Name="FK_MSI_MediaRequestTypes_MSI_MediaRequestStatus" Association="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaRequestStatus">
+            <End Role="MSI_MediaRequestStatus" EntitySet="MSI_MediaRequestStatus" />
+            <End Role="MSI_MediaRequestTypes" EntitySet="MSI_MediaRequestTypes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MSI_MediaRequestTypes_MSI_MediaTypes" Association="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaTypes">
             <End Role="MSI_MediaTypes" EntitySet="MSI_MediaTypes" />
-            <End Role="MSI_MediaRequestedTypes" EntitySet="MSI_MediaRequestedTypes" />
+            <End Role="MSI_MediaRequestTypes" EntitySet="MSI_MediaRequestTypes" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="MSI_ComplaintIssues">
@@ -3677,7 +3714,7 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
           <Property Name="IsActive" Type="Boolean" />
-          <NavigationProperty Name="MSI_MediaRequestedTypes" Relationship="CascadeDBModel.FK_MSI_MediaRequestedTypes_MSI_MediaTypes" FromRole="MSI_MediaTypes" ToRole="MSI_MediaRequestedTypes" />
+          <NavigationProperty Name="MSI_MediaRequestTypes" Relationship="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaTypes" FromRole="MSI_MediaTypes" ToRole="MSI_MediaRequestTypes" />
         </EntityType>
         <EntityType Name="MSI_OwnerResponses">
           <Key>
@@ -5892,21 +5929,6 @@
           <Property Type="String" Name="GUID" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="FileName" MaxLength="150" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="MSI_MediaRequestedTypes">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Type="String" Name="Id" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="RequestedId" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Type="Int32" Name="TypeId" Nullable="false" />
-          <Property Type="String" Name="RespondedDocuments" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Type="DateTime" Name="RequestedDate" />
-          <Property Type="Guid" Name="RequestedUserID" />
-          <Property Type="Guid" Name="RespondedUserID" />
-          <Property Type="DateTime" Name="RespondedDate" />
-          <NavigationProperty Name="MSI_MediaRequestResponse" Relationship="CascadeDBModel.FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse" FromRole="MSI_MediaRequestedTypes" ToRole="MSI_MediaRequestResponse" a:GetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
-          <NavigationProperty Name="MSI_MediaTypes" Relationship="CascadeDBModel.FK_MSI_MediaRequestedTypes_MSI_MediaTypes" FromRole="MSI_MediaRequestedTypes" ToRole="MSI_MediaTypes" a:GetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
-        </EntityType>
         <EntityType Name="MSI_MediaRequestResponse">
           <Key>
             <PropertyRef Name="Id" />
@@ -5926,28 +5948,72 @@
           <Property Type="DateTime" Name="RespondedDate" />
           <Property Type="Guid" Name="RequestedByUserId" Nullable="false" />
           <Property Type="Guid" Name="RespondedByUserId" />
-          <NavigationProperty Name="MSI_MediaRequestedTypes" Relationship="CascadeDBModel.FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse" FromRole="MSI_MediaRequestResponse" ToRole="MSI_MediaRequestedTypes" />
+          <NavigationProperty Name="MSI_MediaRequestTypes" Relationship="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaRequestResponse" FromRole="MSI_MediaRequestResponse" ToRole="MSI_MediaRequestTypes" />
         </EntityType>
-        <Association Name="FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse">
+        <EntityType Name="MSI_MediaRequestStatus">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="MSI_MediaRequestTypes" Relationship="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaRequestStatus" FromRole="MSI_MediaRequestStatus" ToRole="MSI_MediaRequestTypes" />
+        </EntityType>
+        <EntityType Name="MSI_MediaRequestTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="String" Name="Id" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="RequestedId" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="TypeId" Nullable="false" />
+          <Property Type="String" Name="RespondedDocuments" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="RequestedDate" />
+          <Property Type="Guid" Name="RequestedUserID" />
+          <Property Type="Guid" Name="RespondedUserID" />
+          <Property Type="DateTime" Name="RespondedDate" />
+          <Property Type="Boolean" Name="MediaDownloaded" />
+          <Property Type="Boolean" Name="MediaUploaded" />
+          <Property Type="DateTime" Name="LastUpdatedDate" />
+          <Property Type="Guid" Name="LastUpdatedBy" />
+          <Property Type="Int32" Name="RequestStatusId" />
+          <Property Type="DateTime" Name="ReSubmittedDate" />
+          <Property Type="Guid" Name="ReSubmittedBy" />
+          <Property Type="String" Name="TypeConstraints" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="MSI_MediaRequestResponse" Relationship="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaRequestResponse" FromRole="MSI_MediaRequestTypes" ToRole="MSI_MediaRequestResponse" />
+          <NavigationProperty Name="MSI_MediaRequestStatus" Relationship="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaRequestStatus" FromRole="MSI_MediaRequestTypes" ToRole="MSI_MediaRequestStatus" />
+          <NavigationProperty Name="MSI_MediaTypes" Relationship="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaTypes" FromRole="MSI_MediaRequestTypes" ToRole="MSI_MediaTypes" />
+        </EntityType>
+        <Association Name="FK_MSI_MediaRequestTypes_MSI_MediaRequestResponse">
           <End Type="CascadeDBModel.MSI_MediaRequestResponse" Role="MSI_MediaRequestResponse" Multiplicity="1" />
-          <End Type="CascadeDBModel.MSI_MediaRequestedTypes" Role="MSI_MediaRequestedTypes" Multiplicity="*" />
+          <End Type="CascadeDBModel.MSI_MediaRequestTypes" Role="MSI_MediaRequestTypes" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MSI_MediaRequestResponse">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="MSI_MediaRequestedTypes">
+            <Dependent Role="MSI_MediaRequestTypes">
               <PropertyRef Name="RequestedId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_MSI_MediaRequestedTypes_MSI_MediaTypes">
+        <Association Name="FK_MSI_MediaRequestTypes_MSI_MediaRequestStatus">
+          <End Type="CascadeDBModel.MSI_MediaRequestStatus" Role="MSI_MediaRequestStatus" Multiplicity="0..1" />
+          <End Type="CascadeDBModel.MSI_MediaRequestTypes" Role="MSI_MediaRequestTypes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MSI_MediaRequestStatus">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MSI_MediaRequestTypes">
+              <PropertyRef Name="RequestStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MSI_MediaRequestTypes_MSI_MediaTypes">
           <End Type="CascadeDBModel.MSI_MediaTypes" Role="MSI_MediaTypes" Multiplicity="1" />
-          <End Type="CascadeDBModel.MSI_MediaRequestedTypes" Role="MSI_MediaRequestedTypes" Multiplicity="*" />
+          <End Type="CascadeDBModel.MSI_MediaRequestTypes" Role="MSI_MediaRequestTypes" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="MSI_MediaTypes">
               <PropertyRef Name="ID" />
             </Principal>
-            <Dependent Role="MSI_MediaRequestedTypes">
+            <Dependent Role="MSI_MediaRequestTypes">
               <PropertyRef Name="TypeId" />
             </Dependent>
           </ReferentialConstraint>
@@ -8005,20 +8071,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="MSI_MediaRequestedTypes">
-            <EntityTypeMapping TypeName="CascadeDBModel.MSI_MediaRequestedTypes">
-              <MappingFragment StoreEntitySet="MSI_MediaRequestedTypes">
-                <ScalarProperty Name="RespondedDate" ColumnName="RespondedDate" />
-                <ScalarProperty Name="RespondedUserID" ColumnName="RespondedUserID" />
-                <ScalarProperty Name="RequestedUserID" ColumnName="RequestedUserID" />
-                <ScalarProperty Name="RequestedDate" ColumnName="RequestedDate" />
-                <ScalarProperty Name="RespondedDocuments" ColumnName="RespondedDocuments" />
-                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
-                <ScalarProperty Name="RequestedId" ColumnName="RequestedId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="MSI_MediaRequestResponse">
             <EntityTypeMapping TypeName="CascadeDBModel.MSI_MediaRequestResponse">
               <MappingFragment StoreEntitySet="MSI_MediaRequestResponse">
@@ -8040,7 +8092,37 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-        </EntityContainerMapping>
+          <EntitySetMapping Name="MSI_MediaRequestStatus">
+            <EntityTypeMapping TypeName="CascadeDBModel.MSI_MediaRequestStatus">
+              <MappingFragment StoreEntitySet="MSI_MediaRequestStatus">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MSI_MediaRequestTypes">
+            <EntityTypeMapping TypeName="CascadeDBModel.MSI_MediaRequestTypes">
+              <MappingFragment StoreEntitySet="MSI_MediaRequestTypes">
+                <ScalarProperty Name="TypeConstraints" ColumnName="TypeConstraints" />
+                <ScalarProperty Name="ReSubmittedBy" ColumnName="ReSubmittedBy" />
+                <ScalarProperty Name="ReSubmittedDate" ColumnName="ReSubmittedDate" />
+                <ScalarProperty Name="RequestStatusId" ColumnName="RequestStatusId" />
+                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
+                <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+                <ScalarProperty Name="MediaUploaded" ColumnName="MediaUploaded" />
+                <ScalarProperty Name="MediaDownloaded" ColumnName="MediaDownloaded" />
+                <ScalarProperty Name="RespondedDate" ColumnName="RespondedDate" />
+                <ScalarProperty Name="RespondedUserID" ColumnName="RespondedUserID" />
+                <ScalarProperty Name="RequestedUserID" ColumnName="RequestedUserID" />
+                <ScalarProperty Name="RequestedDate" ColumnName="RequestedDate" />
+                <ScalarProperty Name="RespondedDocuments" ColumnName="RespondedDocuments" />
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+                <ScalarProperty Name="RequestedId" ColumnName="RequestedId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>
@@ -8144,20 +8226,29 @@
           <ConnectorPoint PointX="5.25" PointY="25.044830729166662" />
         </AssociationConnector>
         <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaForm" Width="1.5" PointX="14.375" PointY="27.75" Height="8.3262337239583246" />
-        <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaRequestedTypes" Width="1.5" PointX="12" PointY="0.75" Height="2.9417936197916674" />
-        <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaRequestResponse" Width="1.5" PointX="11.75" PointY="32.5" Height="4.0956022135416674" />
-        <AssociationConnector Association="CascadeDBModel.FK_MSI_MediaRequestedTypes_MSI_MediaRequestResponse" >
-          <ConnectorPoint PointX="12.5" PointY="32.5" />
+        <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaRequestResponse" Width="1.5" PointX="11.75" PointY="33.125" Height="4.0956022135416674" />
+        <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaRequestStatus" Width="1.5" PointX="11.75" PointY="38" Height="1.5956835937499818" />
+        <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaRequestTypes" Width="1.5" PointX="14" PointY="0.75" Height="4.6725065104166674" />
+        <AssociationConnector Association="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaRequestResponse" >
+          <ConnectorPoint PointX="12.5" PointY="33.125" />
           <ConnectorPoint PointX="12.5" PointY="26.480205078125003" />
-          <ConnectorPoint PointX="11.5" PointY="26.480205078125003" />
-          <ConnectorPoint PointX="11.5" PointY="2.2208968098958337" />
-          <ConnectorPoint PointX="12" PointY="2.2208968098958337" />
+          <ConnectorPoint PointX="13.5" PointY="26.480205078125003" />
+          <ConnectorPoint PointX="13.5" PointY="4.6054996744791659" />
+          <ConnectorPoint PointX="14" PointY="4.6054996744791659" />
         </AssociationConnector>
-        <AssociationConnector Association="CascadeDBModel.FK_MSI_MediaRequestedTypes_MSI_MediaTypes" >
-          <ConnectorPoint PointX="12.625" PointY="9.75" />
-          <ConnectorPoint PointX="12.625" PointY="3.6917936197916674" />
+        <AssociationConnector Association="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaRequestStatus" >
+          <ConnectorPoint PointX="12.5" PointY="38" />
+          <ConnectorPoint PointX="12.5" PointY="37.470602213541667" />
+          <ConnectorPoint PointX="13.625" PointY="37.470602213541667" />
+          <ConnectorPoint PointX="13.625" PointY="4.6367521744791595" />
+          <ConnectorPoint PointX="14" PointY="4.6367521744791595" />
         </AssociationConnector>
-      </Diagram>
+        <AssociationConnector Association="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaTypes" >
+          <ConnectorPoint PointX="12.5" PointY="9.75" />
+          <ConnectorPoint PointX="12.5" PointY="4.5742471744791722" />
+          <ConnectorPoint PointX="14" PointY="4.5742471744791722" />
+        </AssociationConnector>
+        </Diagram>
     </Diagrams>
   </Designer>
 </edmx:Edmx>

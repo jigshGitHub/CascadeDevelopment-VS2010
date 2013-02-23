@@ -1032,9 +1032,9 @@ namespace Cascade.Data.Repositories
             return submittedRequest;
         }
 
-        public void UpdateMediaRequestdType(MSI_MediaRequestedTypes submittedMediatype)
+        public void UpdateMediaRequestdType(MSI_MediaRequestTypes submittedMediatype)
         {
-            MSI_MediaRequestedTypesRepository repository = new MSI_MediaRequestedTypesRepository();
+            MSI_MediaRequestTypesRepository repository = new MSI_MediaRequestTypesRepository();
             try
             {
                 repository.Update(submittedMediatype);
@@ -1045,9 +1045,9 @@ namespace Cascade.Data.Repositories
                 throw ex;
             }
         }
-        public void AddMediaRequestdType(MSI_MediaRequestedTypes submittedMediatype)
+        public void AddMediaRequestdType(MSI_MediaRequestTypes submittedMediatype)
         {
-            MSI_MediaRequestedTypesRepository repository = new MSI_MediaRequestedTypesRepository();
+            MSI_MediaRequestTypesRepository repository = new MSI_MediaRequestTypesRepository();
             try
             {
                 repository.Add(submittedMediatype);
@@ -1058,10 +1058,10 @@ namespace Cascade.Data.Repositories
                 throw ex;
             }
         }
-        public MSI_MediaRequestedTypes GetMediaRequestdType(string requestedId, int typeId)
+        public MSI_MediaRequestTypes GetMediaRequestdType(string requestedId, int typeId)
         {
-            MSI_MediaRequestedTypesRepository repository = new MSI_MediaRequestedTypesRepository();
-            MSI_MediaRequestedTypes mediaType = null;
+            MSI_MediaRequestTypesRepository repository = new MSI_MediaRequestTypesRepository();
+            MSI_MediaRequestTypes mediaType = null;
             try
             {
                 mediaType = repository.GetAll().Where(record => record.RequestedId == requestedId && record.TypeId == typeId).SingleOrDefault();

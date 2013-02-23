@@ -12,16 +12,15 @@ namespace Cascade.Data.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class MSI_MediaTypes
+    public partial class MSI_MediaRequestStatus
     {
-        public MSI_MediaTypes()
+        public MSI_MediaRequestStatus()
         {
             this.MSI_MediaRequestTypes = new HashSet<MSI_MediaRequestTypes>();
         }
     
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
-        public Nullable<bool> IsActive { get; set; }
     
         public virtual ICollection<MSI_MediaRequestTypes> MSI_MediaRequestTypes { get; set; }
     }

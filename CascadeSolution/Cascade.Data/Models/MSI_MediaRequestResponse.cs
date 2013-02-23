@@ -16,7 +16,7 @@ namespace Cascade.Data.Models
     {
         public MSI_MediaRequestResponse()
         {
-            this.MSI_MediaRequestedTypes = new HashSet<MSI_MediaRequestedTypes>();
+            this.MSI_MediaRequestTypes = new HashSet<MSI_MediaRequestTypes>();
         }
     
         public string Id { get; set; }
@@ -35,6 +35,6 @@ namespace Cascade.Data.Models
         public System.Guid RequestedByUserId { get; set; }
         public Nullable<System.Guid> RespondedByUserId { get; set; }
     
-        public virtual ICollection<MSI_MediaRequestedTypes> MSI_MediaRequestedTypes { get; set; }
+        public virtual ICollection<MSI_MediaRequestTypes> MSI_MediaRequestTypes { get; set; }
     }
 }
