@@ -11,7 +11,27 @@ namespace Cascade.Web.Controllers
     public class RAccountController : ApiController
     {
         [HttpGet]
-        public vwAccount Get(string accountNumber, string searchType)
+        public IEnumerable<vwAccount> Get(string nameSearch)
+        {
+            DataQueries query = new DataQueries();
+            IEnumerable<vwAccount> accounts = null;
+            try
+            {
+                accounts = query.GetAccounts(nameSearch);
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent(string.Format("Error occur in GetAccount : {0}", ex.Message))
+                });                
+                
+            }
+            return accounts;
+        }
+
+        [HttpGet]
+        public vwAccount Details(string accountNumber, string searchType)
         {
             DataQueries query = new DataQueries();
             vwAccount account = null;
@@ -24,8 +44,8 @@ namespace Cascade.Web.Controllers
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
                 {
                     Content = new StringContent(string.Format("Error occur in GetAccount : {0}", ex.Message))
-                });                
-                
+                });
+
             }
             if (account == null)
             {

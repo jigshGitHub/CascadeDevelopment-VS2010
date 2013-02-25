@@ -117,6 +117,20 @@ namespace Cascade.Data.Repositories
             return rdr;
         }
 
+        public SqlDataReader ExecuteReaderFromQuery(string strQeury)
+        {
+
+            SqlConnection cn = GetConnection();
+            SqlDataReader rdr = null;
+
+            SqlCommand cmd = new SqlCommand(strQeury, cn);
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandTimeout = 0;
+            rdr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            cmd.Dispose();
+            return rdr;
+        }
+
         public object ExecuteScalar(string strSP)
         {
 

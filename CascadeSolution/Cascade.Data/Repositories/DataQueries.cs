@@ -1099,6 +1099,43 @@ namespace Cascade.Data.Repositories
             return account;
         }
 
+        public IEnumerable<vwAccount> GetAccounts(string nameLike)
+        {
+            DBFactory db;
+            SqlDataReader rdr;
+            List<vwAccount> data = null;
+            try
+            {
+                db = new DBFactory();
+                rdr = db.ExecuteReaderFromQuery("Select * FROM vwAccounts WHERE (FirstName LIKE '" + nameLike + "%') OR (LastName LIKE '" + nameLike + "%')");
+                data = new List<vwAccount>();
+                vwAccount record;
+                while (rdr.Read())
+                {
+                    record = new vwAccount();
+
+                    record.FirstName = rdr["FirstName"].ToString();
+                    record.LastName = rdr["LastName"].ToString();
+                    record.NAME = rdr["NAME"].ToString();
+                    record.ACCOUNT = rdr["ACCOUNT"].ToString();
+                    record.OriginalAccount = rdr["OriginalAccount"].ToString();
+                    if (!string.IsNullOrEmpty(rdr["OpenDate"].ToString()))
+                        record.OpenDate = Convert.ToDateTime(rdr["OpenDate"].ToString());
+                    if (!string.IsNullOrEmpty(rdr["ChargeOffDate"].ToString()))
+                        record.ChargeOffDate = Convert.ToDateTime(rdr["ChargeOffDate"].ToString());
+                    record.SSN = rdr["SSN"].ToString();
+
+                    data.Add(record);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Exception in DataQueries.GetSearchResults:" + ex.Message);
+            }
+            return data.AsQueryable<vwAccount>();
+        }
+
         #region Export to Excel Methods
         public IEnumerable<DPSViewEditResult> GetDPSViewEditRecordsExport(DateTime? StartDate, DateTime? EndDate, string PortfolioOwner, string Responsibility, string Account, string GUID)
         {

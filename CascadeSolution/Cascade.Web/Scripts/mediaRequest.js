@@ -5,6 +5,9 @@
 /// <reference path="jquery.validate.js" />
 /// <reference path="jquery.validate.unobtrusive.js" />
 /// <reference path="knockout-2.0.0.debug.js" />
+var pimsAccountFocusString = 'Client Account Number';
+var originalAccountFocusString = 'Original Account Number';
+var fOrlNameFocusString = 'First Or Last Name';
 
 function mediaReuqestType(id, reqId, typeId, documents, reqDt, reqUser, respDt, respUser, typeConstraints) {
     this.Id = id;
@@ -35,7 +38,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
     self.validationErrors = ko.observableArray([]);
     self.showMessage = ko.observable(false);
     self.message = ko.observable('');
-    self.setFocus = ko.observable(true);
+    self.setFocus = ko.observable(false);
     function getFormatedDate(data) {
         if (data != null && data != '' && data != undefined) {
             return $.datepicker.formatDate('mm/dd/yy', new Date(data));
@@ -55,23 +58,26 @@ function pageViewModel(userId, userAgency, userRole, id) {
     }
     self.showMediaTypeSelection = ko.observable(false);
     self.id = ko.observable(id);
-    self.pimsAccountNumber = ko.observable('');
+    self.pimsAccountNumber = ko.observable(pimsAccountFocusString);
     self.pimsAccountNumberRequired = ko.observable('*');
     self.pimsAccountNumberRequiredMsg = ko.observable('');
     self.pimsAccountNumberRequiredHasError = ko.observable(false);
 
-    self.originalAccountNumber = ko.observable('');
+    self.originalAccountNumber = ko.observable(originalAccountFocusString);
     self.originalAccountNumberRequired = ko.observable('*');
     self.originalAccountNumberRequiredMsg = ko.observable('');
     self.originalAccountNumberRequiredHasError = ko.observable(false);
 
-    self.portfolio = ko.observable('12345');
-    self.lender = ko.observable('lender 12345');
-    self.ssn = ko.observable('455-565-5656');
-    self.name = ko.observable('fname lname');
-    self.openDate = ko.observable('05/23/1943');
-    self.coDate = ko.observable('02/12/2015');
-    self.seller = ko.observable('seller');
+    self.clientName = ko.observable(fOrlNameFocusString);
+
+    self.pimsRecords = ko.observableArray([]);
+    self.portfolio = ko.observable('');
+    self.lender = ko.observable('');
+    self.ssn = ko.observable('');
+    self.name = ko.observable('');
+    self.openDate = ko.observable('');
+    self.coDate = ko.observable('');
+    self.seller = ko.observable('');
 
     self.mediaTypes = ko.observableArray([]);
     self.setShowMessagePanel = function (isVisible, message) {
@@ -88,33 +94,74 @@ function pageViewModel(userId, userAgency, userRole, id) {
         self.lender(data.Originator);
         self.ssn(data.SSN);
         self.name(data.NAME);
+        self.clientName(data.NAME);
         self.openDate(getFormatedDate(data.OpenDate));
         self.coDate(getFormatedDate(data.ChargeOffDate));
         self.seller(data.Seller);
     };
 
     self.searchedIdnetity = '';
-    self.searchedType = 'pims';
+    self.searchedType = 'pims'; //default
+
+    self.selectedAccount = function (record) {
+        $("#pimsResults").dialog('close');
+        self.searchedIdnetity = record.ACCOUNT;
+        self.searchedType = 'pims';
+        self.getPimsDetails();
+    }
 
     self.search = function () {
         self.setShowMessagePanel(false, '');
-        if (self.pimsAccountNumber() == '' & self.originalAccountNumber() == '') {
-            self.setShowMessagePanel(true, 'PIMS Account Number OR Original Account Number is required for searching');
+        if (self.pimsAccountNumber() == pimsAccountFocusString && self.originalAccountNumber() == originalAccountFocusString && self.clientName() == fOrlNameFocusString) {
+            self.setShowMessagePanel(true, pimsAccountFocusString + ' OR ' + originalAccountFocusString + ' OR ' + fOrlNameFocusString + ' is required for searching');
             self.setFocus(true);
             return;
         }
-        self.searchedIdnetity = self.pimsAccountNumber();
-        if (self.originalAccountNumber() != '') {
+        self.searchedIdnetity = self.pimsAccountNumber(); //default
+        if (self.originalAccountNumber() != originalAccountFocusString) {
             self.searchedIdnetity = self.originalAccountNumber();
             self.searchedType = 'original';
         }
+        if (self.clientName() != fOrlNameFocusString) {
+            self.searchedIdnetity = self.clientName();
+            self.searchedType = 'name';
+        }
         $("#loading").html("<img src=\"" + absoluteapp + imagedir + "/ajax-loader.gif\" />");
         $("#loading").dialog('open');
+        if (self.searchedType == 'name') {
+            $.ajax({
+                url: baseUrl + '/api/RAccount/',
+                type: "GET",
+                data: { nameSearch: self.clientName() },
+                dataType: 'json',
+                async: true,
+                success: function (data) {
+                    $("#loading").html("&nbsp;");
+                    $("#loading").dialog('close');
+                    if (data != null) {
+                        $.each(data, function (i, item) {
+                            item.OpenDate = getFormatedDate(item.OpenDate);
+                            item.ChargeOffDate = getFormatedDate(item.ChargeOffDate);
+                            self.pimsRecords.push(item);
+                        });
+                        $("#pimsResults").dialog('open');
+                    }
+                },
+                error: function (xhr, status, error) {
 
+                }
+            });
+        }
+        else {
+            self.getPimsDetails();
+        }
+
+    };
+
+    self.getPimsDetails = function () {
         $.ajax({
             url: baseUrl + '/api/MediaRequest/Details',
             type: "GET",
-            data: { id: self.id() },
             data: { accountNumber: self.searchedIdnetity, agency: self.agency() },
             dataType: 'json',
             async: true,
@@ -122,7 +169,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
                 log(data);
                 if (data == null) {
                     $.ajax({
-                        url: baseUrl + '/api/RAccount/',
+                        url: baseUrl + '/api/RAccount/Details/',
                         type: 'GET',
                         contentType: 'application/json',
                         data: { accountNumber: self.searchedIdnetity, searchType: self.searchedType },
@@ -158,9 +205,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
 
             }
         });
-
-    };
-
+    }
     self.viewMedia = function () {
         self.showMediaTypeSelection(true);
     }
@@ -264,14 +309,15 @@ function pageViewModel(userId, userAgency, userRole, id) {
         });
     }
     self.showSubmit = ko.computed(function () { return (self.selectedMediaTypes().length > 0); }, self);
-    self.submit = function () {        
-        function getSelectedMediaRequested() {
-            var localSelectedMediaTypes = [];
-            $.each(self.selectedMediaTypes(), function (i, item) {                
-                localSelectedMediaTypes.push(new mediaReuqestType(undefined, undefined, item.value(), undefined, new Date(), self.userId(), undefined, undefined, item.typeConstraints()));
-            });
-            return localSelectedMediaTypes;
-        }
+    function getSelectedMediaRequested() {
+        var localSelectedMediaTypes = [];
+        $.each(self.selectedMediaTypes(), function (i, item) {
+            localSelectedMediaTypes.push(new mediaReuqestType(undefined, undefined, item.value(), undefined, new Date(), self.userId(), undefined, undefined, item.typeConstraints()));
+        });
+        return localSelectedMediaTypes;
+    }
+    self.saveData = function () {
+
         var json = JSON.stringify({
             Id: self.id(),
             AgencyId: self.agency(),
@@ -304,6 +350,15 @@ function pageViewModel(userId, userAgency, userRole, id) {
             }
         });
 
+    }
+    self.submit = function () {
+        self.saveData();
+        window.open(baseUrl + '/Recourse/Home', '_self', '', '');
+    }
+
+    self.submitRequestMore = function () {
+        self.submit();
+        window.open(baseUrl + '/Recourse/Media/Create', '_self', '', ''); 
     }
 }
 
