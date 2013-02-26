@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewBag.Title = "MediaRequestNotFulfilled";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>
+    MediaRequestNotFulfilled</h2>
+    
+@Scripts.Render("~/bundles/jquery")
+
+<div id="divPimsMediaRecords"></div> 
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.8.11.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var href = window.location.href.split('/');
+            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
+        });
+        
+    </script>
+}
+

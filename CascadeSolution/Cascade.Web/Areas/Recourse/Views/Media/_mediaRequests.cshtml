@@ -8,8 +8,6 @@
         <thead>
             <tr>
                 <th>
-                </th>
-                <th>
                     PIMS Account
                 </th>
                 <th>
@@ -24,14 +22,15 @@
                 <th>
                     Seller
                 </th>
+                <th>
+                </th>
             </tr>
         </thead>
         <tbody>
             @foreach (var mediaRecord in Model)
             {
+
                 <tr>
-                    <td style="display: block">@Html.ActionLink("View", "Create", new { id = mediaRecord.Id })
-                    </td>
                     <td>@mediaRecord.ACCOUNT
                     </td>
                     <td>@mediaRecord.Portfolio
@@ -41,6 +40,8 @@
                     <td>@mediaRecord.NAME
                     </td>
                     <td>@mediaRecord.Seller
+                    </td>
+                    <td style="display: block">@Html.ActionLink("View", "Create", new { id = mediaRecord.Id })
                     </td>
                 </tr> 
             }

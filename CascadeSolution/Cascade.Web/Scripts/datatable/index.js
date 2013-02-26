@@ -842,6 +842,13 @@ $(document).ready(function () {
     if ($("#mediaRequestRecords").length != 0) {
         $('#mediaRequestRecords').dataTable();
     }
+
+    if ($("#pimsMediaRecords").length != 0) {
+        $('#pimsMediaRecords').dataTable();
+    }
+
+    if ($('#mediaRecordsNotFulfilled').length != 0)
+        $('#mediaRecordsNotFulfilled').dataTable(); ;
     //"bFilter": false 
 
     //alert("here beginning");

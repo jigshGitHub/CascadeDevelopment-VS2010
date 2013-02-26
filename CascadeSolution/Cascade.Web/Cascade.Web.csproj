@@ -201,6 +201,7 @@
     <Compile Include="Areas\Recourse\Controllers\HomeController.cs" />
     <Compile Include="Areas\Recourse\Controllers\MediaController.cs" />
     <Compile Include="Areas\Recourse\Controllers\RecallController.cs" />
+    <Compile Include="Areas\Recourse\Models\MediaRequestTypes.cs" />
     <Compile Include="Areas\Recourse\Models\Random.cs" />
     <Compile Include="Areas\Recourse\RecourseAreaRegistration.cs" />
     <Compile Include="Areas\Reports\Controllers\CollectionsController.cs" />
@@ -487,6 +488,10 @@
     <Content Include="Areas\Recourse\Views\Media\MediaRequest.cshtml" />
     <Content Include="Areas\Recourse\Views\Media\Create.cshtml" />
     <Content Include="Areas\Recourse\Views\Media\_mediaRequests.cshtml" />
+    <Content Include="Areas\Recourse\Views\Media\PIMSDataSearch.cshtml" />
+    <Content Include="Areas\Recourse\Views\Media\_pimsMediaRecords.cshtml" />
+    <Content Include="Areas\Recourse\Views\Media\MediaRequestNotFulfilled.cshtml" />
+    <Content Include="Areas\Recourse\Views\Media\_mediaRequestNotFulfilled.cshtml" />
     <None Include="Areas\Reports\Views\Cascade0206Deploy.rar" />
     <Content Include="Areas\Reports\Views\Collections\PortfolioOwnerBreakDown.cshtml" />
     <Content Include="Areas\Reports\Views\Collections\PortfolioWorkStatusBreakDown.cshtml" />

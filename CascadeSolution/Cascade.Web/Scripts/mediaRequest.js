@@ -29,7 +29,7 @@ function mediaType(text, value, enable, checked) {
     self.checked = ko.observable(checked);
     self.typeConstraints = ko.observable('');
 }
-function pageViewModel(userId, userAgency, userRole, id) {
+function pageViewModel(userId, userAgency, userRole, id, account) {
     log(userId + ' ' + userAgency + ' ' + userRole);
     var self = this;
     self.userId = ko.observable(userId);
@@ -58,7 +58,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
     }
     self.showMediaTypeSelection = ko.observable(false);
     self.id = ko.observable(id);
-    self.pimsAccountNumber = ko.observable(pimsAccountFocusString);
+    self.pimsAccountNumber = ko.observable((account == '') ? pimsAccountFocusString : account);
     self.pimsAccountNumberRequired = ko.observable('*');
     self.pimsAccountNumberRequiredMsg = ko.observable('');
     self.pimsAccountNumberRequiredHasError = ko.observable(false);
@@ -129,6 +129,8 @@ function pageViewModel(userId, userAgency, userRole, id) {
         $("#loading").html("<img src=\"" + absoluteapp + imagedir + "/ajax-loader.gif\" />");
         $("#loading").dialog('open');
         if (self.searchedType == 'name') {
+            window.open(baseUrl + '/Recourse/Media/PIMSDataSearch?nameSearch=' + self.clientName(), '_self', '', '');
+        /*
             $.ajax({
                 url: baseUrl + '/api/RAccount/',
                 type: "GET",
@@ -151,6 +153,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
 
                 }
             });
+            */
         }
         else {
             self.getPimsDetails();
@@ -297,6 +300,33 @@ function pageViewModel(userId, userAgency, userRole, id) {
         return true;
     }
 
+    checkMediaTypeChecked = function (isChecked,media) {
+        if (isChecked && self.selectedMediaTypes.indexOf(media) < 0) {
+            self.selectedMediaTypes.push(media);
+            if (media.value() == '5') {
+                $("#statementMediaTypeConstraint").dialog('open');
+            }
+        }
+        //If it is in the array and not checked remove it                
+        else if (!isChecked && self.selectedMediaTypes.indexOf(media) >= 0) {
+            self.selectedMediaTypes.remove(media);
+        }
+    }
+    self.selectAll = ko.computed({
+        read: function () {
+            var firstUnchecked = ko.utils.arrayFirst(self.mediaTypes(), function (item) {
+                return item.checked() == false;
+            });
+            return firstUnchecked == null;
+        },
+        write: function (value) {
+            
+            ko.utils.arrayForEach(self.mediaTypes(), function (item) {
+                item.checked(value);
+                checkMediaTypeChecked(value, item);
+            });
+        }
+    });
     self.statementStDt = ko.observable();
     self.statementEndDt = ko.observable();
     self.submitStatementDateRange = function () {

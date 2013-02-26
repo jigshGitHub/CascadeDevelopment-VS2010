@@ -9,6 +9,7 @@
 @Html.Hidden("agencyId", (string)(@ViewBag.AgencyID))
 @Html.Hidden("hdnUserRole", (string)(@ViewBag.UserRole))
 @Html.Hidden("hdnId", (string)(@ViewBag.Id))
+@Html.Hidden("hdnAccount", (string)(@ViewBag.Account))
 <div id="messageSummary" style="font-size: small">
     <ul>
     </ul>
@@ -16,8 +17,6 @@
 <div id="pimsResults" style="font-size: small">
     <table style="text-align: center">
         <tr>
-            <th>
-            </th>
             <th>
                 Last name
             </th>
@@ -35,13 +34,12 @@
             </th>
             <th>
                 C/O Date
+            </th><th>
             </th>
+            
         </tr>
         <tbody data-bind="foreach:pimsRecords">
             <tr>
-                <td>
-                    <a href="#" data-bind="click:$root.selectedAccount">Select</a>
-                </td>
                 <td data-bind="text:LastName">
                 </td>
                 <td data-bind="text:FirstName">
@@ -53,6 +51,9 @@
                 <td data-bind="text:OpenDate">
                 </td>
                 <td data-bind="text:ChargeOffDate">
+                </td>
+                <td>
+                    <a href="#" data-bind="click:$root.selectedAccount">View Details</a>
                 </td>
             </tr>
         </tbody>
@@ -247,6 +248,7 @@
                 Select Media Type and Click "Submit" (Note: Media Shown is Immediately Available)
             </td>
         </tr>
+        <tr><td><input type=checkbox data-bind="checked:selectAll" />Select All</td></tr>
         <tr>
             <td>
                 <ul data-bind="foreach: mediaTypes">
@@ -273,10 +275,13 @@
             $('#messageSummary').dialog({ modal: true, title: 'Summary:', autoOpen: false, width: 200, height: 200 });
             $('#pimsResults').dialog({ modal: true, title: 'Select account:', autoOpen: false, width: 800, height: 500 });
             $('#statementMediaTypeConstraint').dialog({ modal: true, title: '', autoOpen: false, width: 500, height: 200 });
-            var pageVM = new pageViewModel($('#userId').val(), $('#agencyId').val(), $('#hdnUserRole').val(), $('#hdnId').val())
+            var pageVM = new pageViewModel($('#userId').val(), $('#agencyId').val(), $('#hdnUserRole').val(), $('#hdnId').val(), $('#hdnAccount').val())
             ko.applyBindings(pageVM);
             if ($('#hdnId').val() != '') {
                 pageVM.loadExisitingRequest();
+            }
+            if ($('#hdnAccount').val() != '') {
+                pageVM.search();
             }
 
             $('#pimsAccount').focus(function () { $(this).val(''); }).blur(function () { if ($(this).val() == '') $(this).val(pimsAccountFocusString); });

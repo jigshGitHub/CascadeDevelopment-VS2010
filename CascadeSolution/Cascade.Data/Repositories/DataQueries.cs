@@ -982,6 +982,25 @@ namespace Cascade.Data.Repositories
             return data;
 
         }
+
+        public IEnumerable<MSI_MediaRequestTypes> GetMediaRequestTypes(string agency)
+        {
+            IEnumerable<MSI_MediaRequestTypes> data = null;
+            MSI_MediaRequestTypesRepository repository = new MSI_MediaRequestTypesRepository();
+            try
+            {
+                data = from requestType in repository.GetAll().Where(record => record.MSI_MediaRequestResponse.AgencyId == agency)
+                       select requestType;
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+
+            }
+            return data;
+
+        }
         public MSI_MediaRequestResponse GetMediaRequestResponse(string id)
         {
             MSI_MediaRequestResponse data = null;
@@ -1107,7 +1126,7 @@ namespace Cascade.Data.Repositories
             try
             {
                 db = new DBFactory();
-                rdr = db.ExecuteReaderFromQuery("Select * FROM vwAccounts WHERE (FirstName LIKE '" + nameLike + "%') OR (LastName LIKE '" + nameLike + "%')");
+                rdr = db.ExecuteReader("MSI_spGetVWAccountNameSearch", new SqlParameter("@nameSearch", nameLike));
                 data = new List<vwAccount>();
                 vwAccount record;
                 while (rdr.Read())

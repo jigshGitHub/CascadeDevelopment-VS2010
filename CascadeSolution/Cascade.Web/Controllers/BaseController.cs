@@ -24,6 +24,13 @@ namespace Cascade.Web.Controllers
 
             }
         }
+        public string BaseUrl
+        {
+            get
+            {
+                return Request.Url.AbsoluteUri.ToLower().Substring(0,this.Request.Url.AbsoluteUri.ToLower().IndexOf("recourse"));
+            }
+        }
         public BaseController()
         {
         }
@@ -40,6 +47,7 @@ namespace Cascade.Web.Controllers
         {
             ViewData["Menu"] = (CascadeMenuCollection)MenuFactory.CurrentMenu.MenuCollection;
         }
+
 
     }
 }

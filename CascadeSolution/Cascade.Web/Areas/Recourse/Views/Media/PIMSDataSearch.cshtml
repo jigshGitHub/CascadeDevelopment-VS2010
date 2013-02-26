@@ -1,0 +1,21 @@
+﻿@model IEnumerable<Cascade.Data.Models.vwAccount>
+@{
+    ViewBag.Title = "GetPIMSDataForMedia";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Scripts.Render("~/bundles/jquery")
+
+@Html.Hidden("nameSearch", (string)(@ViewBag.NameSearch))
+<div id="divPimsMediaRecords"></div> 
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.8.11.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var href = window.location.href.split('/');
+            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
+            $("#divPimsMediaRecords").load(baseUrl + '/Media/GetPIMSDataForMedia?nameSearch=' + $('#nameSearch').val());
+        });
+        
+    </script>
+}

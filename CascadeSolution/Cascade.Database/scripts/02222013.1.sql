@@ -1,3 +1,5 @@
+/* Executed in DBPCS on 02/26 1:00AM */
+
 ALTER TABLE [dbo].[MSI_MediaRequestResponse] ADD  CONSTRAINT [DF_MSI_MediaRequestResponse_RequestedDate]  DEFAULT (getdate()) FOR [RequestedDate]
 GO
 
@@ -121,3 +123,24 @@ Update MSI_MediaTypes Set Name = 'Right to Cure' WHERE ID = 7;
 Update MSI_MediaTypes Set Name = 'Charge off Statement' WHERE ID = 6;
 Update MSI_MediaTypes Set Name = 'Statement' WHERE ID = 5;
 Update MSI_MediaTypes Set Name = 'Contract' WHERE ID = 4;
+
+
+/****** Object:  StoredProcedure [dbo].[MSI_spGetVWAccountNameSearch]    Script Date: 02/26/2013 01:19:50 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[MSI_spGetVWAccountNameSearch]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[MSI_spGetVWAccountNameSearch]
+GO
+
+/****** Object:  StoredProcedure [dbo].[MSI_spGetVWAccountNameSearch]    Script Date: 02/26/2013 01:19:50 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+Create Procedure [dbo].[MSI_spGetVWAccountNameSearch](@nameSearch VARCHAR(255))
+As
+select ACCOUNT,OriginalAccount,Portfolio,FirstName,LastName,NAME,Seller,OpenDate,ChargeOffDate,SSN,Originator
+from vwAccounts where FirstName Like @nameSearch + '%' or LastName like @nameSearch + '%'
+
+GO
+

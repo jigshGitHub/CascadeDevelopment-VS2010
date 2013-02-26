@@ -645,4 +645,15 @@ namespace Cascade.Data.Repositories
         }
     }
 
+    public class MSI_MediaRequestStatusRepository : RepositoryBase<MSI_MediaRequestStatus>
+    {
+        public MSI_MediaRequestStatusRepository(IDatabaseFactory dbFactory)
+            : base(dbFactory)
+        {
+        }
+        public MSI_MediaRequestStatusRepository()
+            : base(new DBFactory())
+        {
+        }
+    }
 }

@@ -9,7 +9,9 @@ using Cascade.Data.Models;
 using Cascade.Web.Presentation.ViewModels.DPS;
 using Cascade.Web.Areas.Recourse.Models;
 using Cascade.Web.ApplicationIntegration;
-
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Cascade.Data.Models;
 namespace Cascade.Web.Areas.Recourse.Controllers
 {
     public class MediaController : BaseController
@@ -261,9 +263,48 @@ namespace Cascade.Web.Areas.Recourse.Controllers
         [ActionName("Create")]
         public ActionResult MediaRequestCreate(string id)
         {
-            ViewBag.Id = id;
+
+            if (!string.IsNullOrEmpty(id))
+            {
+                Guid result;
+                if (Guid.TryParse(id, out result))
+                {
+                    ViewBag.Id = result.ToString();                      
+                }
+                else
+                    ViewBag.Account = id;
+                    
+            }
             return View();
         }
+
+        public ActionResult PIMSDataSearch(string nameSearch)
+        {
+            ViewBag.NameSearch = nameSearch;
+            return View();
+        }
+
+        public ActionResult GetPIMSDataForMedia(string nameSearch)
+        {
+            IEnumerable<vwAccount> data = new DataQueries().GetAccounts(nameSearch);
+            return PartialView("_pimsMediaRecords", data);
+        }
+
+        public ActionResult MediaRequestNotFulfilled()
+        {
+            return View();
+        }
+
+        public ActionResult GetMediaRequestNotFulfilled()
+        {
+            DataQueries query = new DataQueries();
+            IEnumerable<MediaRequestTypes> data = from mainRecord in query.GetMediaRequestResponses(this.UserAgency)
+                                                  from mediaRequestType in query.GetMediaRequestTypes(UserAgency).Where(record => record.RequestedId == mainRecord.Id)
+                                                  from mediaType in new MSI_MediaTypesRepository().GetAll().Where(record => record.IsActive.Value == true && record.ID == mediaRequestType.TypeId)
+                                                  from mediaStatus in new MSI_MediaRequestStatusRepository().GetAll().Where(record => record.Id == mediaRequestType.RequestStatusId)
+                                                  select new MediaRequestTypes(mediaRequestType, mainRecord) { MediaType = mediaType.Name, MediaStatus = mediaStatus.Name };
+            return PartialView("_mediaRequestNotFulfilled", data);
+        }   
 
     }
 }
