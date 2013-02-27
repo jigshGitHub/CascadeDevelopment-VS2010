@@ -7,6 +7,7 @@ using System.Web.Http;
 using Cascade.Data.Models;
 using Cascade.Data.Repositories;
 using Cascade.Helpers;
+using CascadeBusiness = Cascade.Business;
 
 namespace Cascade.Web.Controllers.API.Media
 {
@@ -64,13 +65,21 @@ namespace Cascade.Web.Controllers.API.Media
         }
 
         [HttpGet]
-        public MSI_MediaRequestResponse Details(string accountNumber, string agency)
+        public MSI_MediaRequestResponse Details(string accountNumber, string agency, string scenario)
         {
             MSI_MediaRequestResponse data = null;
             DataQueries query = new DataQueries();
+            CascadeBusiness.MediaRequest business;
             try
             {
-                data = query.GetMediaRequestResponse(accountNumber,agency);
+                if (!string.IsNullOrEmpty(scenario))
+                {
+                    business = new CascadeBusiness.MediaRequest();
+                    if(scenario == "PerfomPreFulfillmentProcess")
+                        return business.PerfomPreFulfillmentProcess(accountNumber);
+                }
+
+                data = query.GetMediaRequestResponse(accountNumber, agency);
             }
 
             catch (Exception ex)
@@ -87,6 +96,8 @@ namespace Cascade.Web.Controllers.API.Media
         public MSI_MediaRequestResponse Post(MSI_MediaRequestResponse submittedRequest)
         {
             DataQueries query = new DataQueries();
+            bool isMediaRequestTypeUpdateMode = false;
+            CascadeBusiness.MediaRequest business = new CascadeBusiness.MediaRequest();
             try
             {
                 if (string.IsNullOrEmpty(submittedRequest.Id))
@@ -95,15 +106,26 @@ namespace Cascade.Web.Controllers.API.Media
 
                     foreach (MSI_MediaRequestTypes mediaReqType in submittedRequest.MSI_MediaRequestTypes)
                     {
-                        mediaReqType.Id = Guid.NewGuid().ToString();
-                        mediaReqType.RequestedId = submittedRequest.Id;
-                        mediaReqType.RequestStatusId = (int)MediaRequestStatus.RequestReceived;
-                        mediaReqType.LastUpdatedDate = DateTime.Now;
-                        mediaReqType.LastUpdatedBy = submittedRequest.RequestedByUserId;
+                        if (mediaReqType.RequestStatusId.HasValue)
+                        {
+                            if (mediaReqType.RequestStatusId == (int)MediaRequestStatus.RequestFulfillment)
+                            {
+                                isMediaRequestTypeUpdateMode = true;
+                                business.PerfomPostFulfillmentProcess(mediaReqType.Id, mediaReqType.RespondedUserID.Value);
+                            }
+                        }
+                        else
+                        {
+                            mediaReqType.Id = Guid.NewGuid().ToString();
+                            mediaReqType.RequestedId = submittedRequest.Id;
+                            mediaReqType.RequestStatusId = (int)MediaRequestStatus.RequestReceived;
+                            mediaReqType.LastUpdatedDate = DateTime.Now;
+                            mediaReqType.LastUpdatedBy = submittedRequest.RequestedByUserId;
+                        }
                     }
                     submittedRequest.RequestedDate = DateHelper.GetDateWithTimings(submittedRequest.RequestedDate);
-
-                    query.AddMediaRequestResponse(submittedRequest); 
+                    if(!isMediaRequestTypeUpdateMode)
+                        query.AddMediaRequestResponse(submittedRequest); 
 
                 }
                 else
@@ -150,5 +172,6 @@ namespace Cascade.Web.Controllers.API.Media
 
             return submittedRequest;
         }
+
     }
 }

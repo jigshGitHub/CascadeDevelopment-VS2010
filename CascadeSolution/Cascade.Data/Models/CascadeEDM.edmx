@@ -18,6 +18,7 @@
           <EntitySet Name="MSI_MediaRequestResponse" EntityType="CascadeDBModel.Store.MSI_MediaRequestResponse" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_MediaRequestStatus" EntityType="CascadeDBModel.Store.MSI_MediaRequestStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_MediaRequestTypes" EntityType="CascadeDBModel.Store.MSI_MediaRequestTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MSI_MediaTracker" EntityType="CascadeDBModel.Store.MSI_MediaTracker" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_MediaTypes" EntityType="CascadeDBModel.Store.MSI_MediaTypes" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_OwnerResponses" EntityType="CascadeDBModel.Store.MSI_OwnerResponses" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_Port_Acq_Edited" EntityType="CascadeDBModel.Store.MSI_Port_Acq_Edited" store:Type="Tables" Schema="dbo" />
@@ -997,6 +998,10 @@
             <End Role="MSI_MediaTypes" EntitySet="MSI_MediaTypes" />
             <End Role="MSI_MediaRequestTypes" EntitySet="MSI_MediaRequestTypes" />
           </AssociationSet>
+          <AssociationSet Name="FK_MSI_MediaTracker_MSI_MediaTypes" Association="CascadeDBModel.Store.FK_MSI_MediaTracker_MSI_MediaTypes">
+            <End Role="MSI_MediaTypes" EntitySet="MSI_MediaTypes" />
+            <End Role="MSI_MediaTracker" EntitySet="MSI_MediaTracker" />
+          </AssociationSet>
           <AssociationSet Name="FK_RACCBKRP_RACCOUNT" Association="CascadeDBModel.Store.FK_RACCBKRP_RACCOUNT">
             <End Role="RACCOUNT" EntitySet="RACCOUNT" />
             <End Role="RACCBKRP" EntitySet="RACCBKRP" />
@@ -1238,6 +1243,22 @@
           <Property Name="ReSubmittedDate" Type="datetime" />
           <Property Name="ReSubmittedBy" Type="uniqueidentifier" />
           <Property Name="TypeConstraints" Type="varchar" MaxLength="1000" />
+        </EntityType>
+        <EntityType Name="MSI_MediaTracker">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Account" Type="varchar" MaxLength="20" />
+          <Property Name="OriginalAccount" Type="varchar" MaxLength="255" />
+          <Property Name="MediaTypeId" Type="int" />
+          <Property Name="MediaDocuments" Type="varchar(max)" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="UpdatedBy" Type="varchar" MaxLength="50" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="TypeConstraints" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="MSI_MediaTypes">
           <Key>
@@ -3397,6 +3418,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_MSI_MediaTracker_MSI_MediaTypes">
+          <End Role="MSI_MediaTypes" Type="CascadeDBModel.Store.MSI_MediaTypes" Multiplicity="0..1" />
+          <End Role="MSI_MediaTracker" Type="CascadeDBModel.Store.MSI_MediaTracker" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MSI_MediaTypes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MSI_MediaTracker">
+              <PropertyRef Name="MediaTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_RACCBKRP_RACCOUNT">
           <End Role="RACCOUNT" Type="CascadeDBModel.Store.RACCOUNT" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -3581,6 +3614,11 @@
             <End Role="MSI_MediaTypes" EntitySet="MSI_MediaTypes" />
             <End Role="MSI_MediaRequestTypes" EntitySet="MSI_MediaRequestTypes" />
           </AssociationSet>
+          <EntitySet Name="MSI_MediaTracker" EntityType="CascadeDBModel.MSI_MediaTracker" />
+          <AssociationSet Name="FK_MSI_MediaTracker_MSI_MediaTypes" Association="CascadeDBModel.FK_MSI_MediaTracker_MSI_MediaTypes">
+            <End Role="MSI_MediaTypes" EntitySet="MSI_MediaTypes" />
+            <End Role="MSI_MediaTracker" EntitySet="MSI_MediaTracker" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="MSI_ComplaintIssues">
           <Key>
@@ -3715,6 +3753,7 @@
           <Property Name="Name" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
           <Property Name="IsActive" Type="Boolean" />
           <NavigationProperty Name="MSI_MediaRequestTypes" Relationship="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaTypes" FromRole="MSI_MediaTypes" ToRole="MSI_MediaRequestTypes" />
+          <NavigationProperty Name="MSI_MediaTracker" Relationship="CascadeDBModel.FK_MSI_MediaTracker_MSI_MediaTypes" FromRole="MSI_MediaTypes" ToRole="MSI_MediaTracker" />
         </EntityType>
         <EntityType Name="MSI_OwnerResponses">
           <Key>
@@ -6018,6 +6057,35 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="MSI_MediaTracker">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Account" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="OriginalAccount" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="MediaTypeId" />
+          <Property Type="String" Name="MediaDocuments" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="CreatedBy" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="CreatedDate" />
+          <Property Type="String" Name="UpdatedBy" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="UpdatedDate" />
+          <Property Type="Boolean" Name="IsActive" />
+          <Property Type="String" Name="TypeConstraints" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="MSI_MediaTypes" Relationship="CascadeDBModel.FK_MSI_MediaTracker_MSI_MediaTypes" FromRole="MSI_MediaTracker" ToRole="MSI_MediaTypes" />
+        </EntityType>
+        <Association Name="FK_MSI_MediaTracker_MSI_MediaTypes">
+          <End Type="CascadeDBModel.MSI_MediaTypes" Role="MSI_MediaTypes" Multiplicity="0..1" />
+          <End Type="CascadeDBModel.MSI_MediaTracker" Role="MSI_MediaTracker" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MSI_MediaTypes">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MSI_MediaTracker">
+              <PropertyRef Name="MediaTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -8122,6 +8190,23 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="MSI_MediaTracker">
+            <EntityTypeMapping TypeName="CascadeDBModel.MSI_MediaTracker">
+              <MappingFragment StoreEntitySet="MSI_MediaTracker">
+                <ScalarProperty Name="TypeConstraints" ColumnName="TypeConstraints" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="MediaDocuments" ColumnName="MediaDocuments" />
+                <ScalarProperty Name="MediaTypeId" ColumnName="MediaTypeId" />
+                <ScalarProperty Name="OriginalAccount" ColumnName="OriginalAccount" />
+                <ScalarProperty Name="Account" ColumnName="Account" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -8232,6 +8317,8 @@
         <AssociationConnector Association="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaRequestResponse" >
           <ConnectorPoint PointX="12.5" PointY="33.125" />
           <ConnectorPoint PointX="12.5" PointY="26.480205078125003" />
+          <ConnectorPoint PointX="13.291666666666666" PointY="26.480205078125003" />
+          <ConnectorPoint PointX="13.458333333333334" PointY="26.480205078125003" />
           <ConnectorPoint PointX="13.5" PointY="26.480205078125003" />
           <ConnectorPoint PointX="13.5" PointY="4.6054996744791659" />
           <ConnectorPoint PointX="14" PointY="4.6054996744791659" />
@@ -8239,6 +8326,8 @@
         <AssociationConnector Association="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaRequestStatus" >
           <ConnectorPoint PointX="12.5" PointY="38" />
           <ConnectorPoint PointX="12.5" PointY="37.470602213541667" />
+          <ConnectorPoint PointX="13.291666666666666" PointY="37.470602213541667" />
+          <ConnectorPoint PointX="13.458333333333334" PointY="37.470602213541667" />
           <ConnectorPoint PointX="13.625" PointY="37.470602213541667" />
           <ConnectorPoint PointX="13.625" PointY="4.6367521744791595" />
           <ConnectorPoint PointX="14" PointY="4.6367521744791595" />
@@ -8247,6 +8336,14 @@
           <ConnectorPoint PointX="12.5" PointY="9.75" />
           <ConnectorPoint PointX="12.5" PointY="4.5742471744791722" />
           <ConnectorPoint PointX="14" PointY="4.5742471744791722" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaTracker" Width="1.5" PointX="14" PointY="37.125" Height="3.3263964843749818" />
+        <AssociationConnector Association="CascadeDBModel.FK_MSI_MediaTracker_MSI_MediaTypes" >
+          <ConnectorPoint PointX="12.5" PointY="11.730286458333334" />
+          <ConnectorPoint PointX="12.5" PointY="12.5" />
+          <ConnectorPoint PointX="13.375" PointY="12.5" />
+          <ConnectorPoint PointX="13.375" PointY="38.960998848958326" />
+          <ConnectorPoint PointX="14" PointY="38.960998848958326" />
         </AssociationConnector>
         </Diagram>
     </Diagrams>

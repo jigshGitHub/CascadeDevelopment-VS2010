@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <h2>
-    MediaRequestNotFulfilled</h2>
+    @ViewBag.RoleBasedHeaderTitle - Accounts with Requested Media Not Yet Fulfilled</h2>
     
 @Scripts.Render("~/bundles/jquery")
 
@@ -16,6 +16,7 @@
         $(document).ready(function () {
             var href = window.location.href.split('/');
             var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
+            $("#divPimsMediaRecords").load(baseUrl + '/Media/GetMediaRequestNotFulfilled/');
         });
         
     </script>

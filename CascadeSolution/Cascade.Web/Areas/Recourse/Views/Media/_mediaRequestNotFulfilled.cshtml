@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Cascade.Web.Areas.Recourse.Models.MediaRequestTypes>
+﻿@model IEnumerable<Cascade.ViewModels.Recourse.Media.MediaRequestTypes>
 @using Cascade.Web.Presentation.ExtensionMethods
 <link href="@Url.Content("~/Content/dataTables/demo_table.css")" rel="stylesheet" type="text/css" />
 <script src="~/Scripts/datatable/jquery-1.4.4.min.js" type="text/javascript"></script>
@@ -7,32 +7,65 @@
 <div id="divpimsMediaRecords">
     <table id="mediaRecordsNotFulfilled" class="display">
         <thead>
-            <tr>
-                <th>
-                    Client Account #
-                </th>
-                <th>
-                    Original Account #
-                </th>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Media Type
-                </th>
-                <th>
-                    Date Requested
-                </th>
-                <th>
-                    Fulfillment Status
-                </th>
-                <th></th>
-            </tr>
+            @if (ViewBag.UserRole == "agency")
+            {
+                <tr>
+                    <th>
+                        Client Account #
+                    </th>
+                    <th>
+                        Original Account #
+                    </th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Media Type
+                    </th>
+                    <th>
+                        Date Requested
+                    </th>
+                    <th>
+                        Fulfillment Status
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <th>
+                        PIMS Account #
+                    </th>
+                    <th>
+                        Requested By
+                    </th>
+                    <th>
+                        Portfolio #
+                    </th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Media Type
+                    </th>
+                    <th>
+                        Date Requested
+                    </th>
+                    <th>
+                        Fulfillment Status
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+            }
         </thead>
         <tbody>
             @foreach (var pimsRecord in Model)
             {
-
+                if (ViewBag.UserRole == "agency")
+                {
                 <tr>
                     <td>@pimsRecord.MSIMediaRequestResponse.ACCOUNT
                     </td>
@@ -49,8 +82,29 @@
                     <td style="">@Html.ActionLink("Request Status Update", "Create", new { id = pimsRecord.MSIMediaRequestResponse.ACCOUNT })
                     </td>
                 </tr> 
+                }
+                else
+                {
+                <tr>
+                    <td>@pimsRecord.MSIMediaRequestResponse.ACCOUNT
+                    </td>
+                    <td>@pimsRecord.MSIMediaRequestResponse.AgencyId
+                    </td>                    
+                    <td>@pimsRecord.MSIMediaRequestResponse.Portfolio
+                    </td>
+                    <td>@pimsRecord.MSIMediaRequestResponse.NAME
+                    </td>
+                    <td>@pimsRecord.MediaType
+                    </td>
+                    <td>@pimsRecord.MSIMediaRequestTypes.RequestedDate.ConverToDate()
+                    </td>
+                    <td>@pimsRecord.MediaStatus
+                    </td>
+                    <td style="">@Html.ActionLink("View Details", "MediaFulfillment", new { id = pimsRecord.MSIMediaRequestResponse.ACCOUNT })
+                    </td>
+                </tr> 
+                }
             }
         </tbody>
     </table>
 </div>
-

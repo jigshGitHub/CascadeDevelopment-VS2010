@@ -201,7 +201,6 @@
     <Compile Include="Areas\Recourse\Controllers\HomeController.cs" />
     <Compile Include="Areas\Recourse\Controllers\MediaController.cs" />
     <Compile Include="Areas\Recourse\Controllers\RecallController.cs" />
-    <Compile Include="Areas\Recourse\Models\MediaRequestTypes.cs" />
     <Compile Include="Areas\Recourse\Models\Random.cs" />
     <Compile Include="Areas\Recourse\RecourseAreaRegistration.cs" />
     <Compile Include="Areas\Reports\Controllers\CollectionsController.cs" />
@@ -381,6 +380,10 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Cascade.Business\Cascade.Business.csproj">
+      <Project>{848406C4-7754-4A7E-A641-0ECB884A252F}</Project>
+      <Name>Cascade.Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cascade.Charts\Cascade.Charts.csproj">
       <Project>{CC11B158-3BA8-413E-BF42-1D36A3BC6059}</Project>
       <Name>Cascade.Charts</Name>
@@ -396,6 +399,10 @@
     <ProjectReference Include="..\Cascade.UI.Controls\Cascade.UI.Controls.csproj">
       <Project>{18CAB1ED-114E-482E-A2AB-AB383F10779D}</Project>
       <Name>Cascade.UI.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cascade.ViewModels\Cascade.ViewModels.csproj">
+      <Project>{FA3094E1-2921-44EF-87C7-AC95D69535E3}</Project>
+      <Name>Cascade.ViewModels</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -492,6 +499,8 @@
     <Content Include="Areas\Recourse\Views\Media\_pimsMediaRecords.cshtml" />
     <Content Include="Areas\Recourse\Views\Media\MediaRequestNotFulfilled.cshtml" />
     <Content Include="Areas\Recourse\Views\Media\_mediaRequestNotFulfilled.cshtml" />
+    <Content Include="Areas\Recourse\Views\Media\MediaFulfillment.cshtml" />
+    <Content Include="Areas\Recourse\Views\Media\MediaUpload.cshtml" />
     <None Include="Areas\Reports\Views\Cascade0206Deploy.rar" />
     <Content Include="Areas\Reports\Views\Collections\PortfolioOwnerBreakDown.cshtml" />
     <Content Include="Areas\Reports\Views\Collections\PortfolioWorkStatusBreakDown.cshtml" />

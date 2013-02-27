@@ -964,14 +964,20 @@ namespace Cascade.Data.Repositories
             return data.AsEnumerable<ComplianceViewResult>();
         }
 
+        #region Media Request Response Data
+
         public IEnumerable<MSI_MediaRequestResponse> GetMediaRequestResponses(string agency)
         {
             IEnumerable<MSI_MediaRequestResponse> data = null;
             MSI_MediaRequestResponseRepository repository = new MSI_MediaRequestResponseRepository();
             try
             {
-                data = from requestResponse in repository.GetAll().Where(record => record.AgencyId == agency)
-                       select requestResponse;
+                if (string.IsNullOrEmpty(agency))
+                    data = from requestResponse in repository.GetAll()
+                           select requestResponse;
+                else
+                    data = from requestResponse in repository.GetAll().Where(record => record.AgencyId == agency)
+                           select requestResponse;
             }
 
             catch (Exception ex)
@@ -983,24 +989,6 @@ namespace Cascade.Data.Repositories
 
         }
 
-        public IEnumerable<MSI_MediaRequestTypes> GetMediaRequestTypes(string agency)
-        {
-            IEnumerable<MSI_MediaRequestTypes> data = null;
-            MSI_MediaRequestTypesRepository repository = new MSI_MediaRequestTypesRepository();
-            try
-            {
-                data = from requestType in repository.GetAll().Where(record => record.MSI_MediaRequestResponse.AgencyId == agency)
-                       select requestType;
-            }
-
-            catch (Exception ex)
-            {
-                throw ex;
-
-            }
-            return data;
-
-        }
         public MSI_MediaRequestResponse GetMediaRequestResponse(string id)
         {
             MSI_MediaRequestResponse data = null;
@@ -1018,13 +1006,17 @@ namespace Cascade.Data.Repositories
             return data;
 
         }
+
         public MSI_MediaRequestResponse GetMediaRequestResponse(string accountNumber, string agency)
         {
             MSI_MediaRequestResponse data = null;
             MSI_MediaRequestResponseRepository repository = new MSI_MediaRequestResponseRepository();
             try
             {
-                data = repository.GetAll().Where(record => (record.ACCOUNT == accountNumber || record.OriginalAccount == accountNumber) && record.AgencyId == agency).SingleOrDefault();
+                if (string.IsNullOrEmpty(agency))
+                    data = repository.GetAll().Where(record => (record.ACCOUNT == accountNumber || record.OriginalAccount == accountNumber)).SingleOrDefault();
+                else
+                    data = repository.GetAll().Where(record => (record.ACCOUNT == accountNumber || record.OriginalAccount == accountNumber) && record.AgencyId == agency).SingleOrDefault();
             }
 
             catch (Exception ex)
@@ -1035,12 +1027,13 @@ namespace Cascade.Data.Repositories
             return data;
 
         }
+
         public MSI_MediaRequestResponse AddMediaRequestResponse(MSI_MediaRequestResponse submittedRequest)
         {
             MSI_MediaRequestResponseRepository repository = new MSI_MediaRequestResponseRepository();
             try
             {
-                repository.Add(submittedRequest); 
+                repository.Add(submittedRequest);
             }
 
             catch (Exception ex)
@@ -1049,6 +1042,33 @@ namespace Cascade.Data.Repositories
 
             }
             return submittedRequest;
+        }
+
+        #endregion
+
+        #region Media Request Types Data
+
+        public IEnumerable<MSI_MediaRequestTypes> GetMediaRequestTypes(string agency)
+        {
+            IEnumerable<MSI_MediaRequestTypes> data = null;
+            MSI_MediaRequestTypesRepository repository = new MSI_MediaRequestTypesRepository();
+            try
+            {
+                if (string.IsNullOrEmpty(agency))
+                    data = from requestType in repository.GetAll()
+                           select requestType;
+                else
+                    data = from requestType in repository.GetAll().Where(record => record.MSI_MediaRequestResponse.AgencyId == agency)
+                           select requestType;
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+
+            }
+            return data;
+
         }
 
         public void UpdateMediaRequestdType(MSI_MediaRequestTypes submittedMediatype)
@@ -1064,6 +1084,7 @@ namespace Cascade.Data.Repositories
                 throw ex;
             }
         }
+
         public void AddMediaRequestdType(MSI_MediaRequestTypes submittedMediatype)
         {
             MSI_MediaRequestTypesRepository repository = new MSI_MediaRequestTypesRepository();
@@ -1077,6 +1098,7 @@ namespace Cascade.Data.Repositories
                 throw ex;
             }
         }
+
         public MSI_MediaRequestTypes GetMediaRequestdType(string requestedId, int typeId)
         {
             MSI_MediaRequestTypesRepository repository = new MSI_MediaRequestTypesRepository();
@@ -1092,12 +1114,54 @@ namespace Cascade.Data.Repositories
             }
             return mediaType;
         }
+
+        public MSI_MediaRequestTypes GetMediaRequestdType(string id)
+        {
+            MSI_MediaRequestTypesRepository repository = new MSI_MediaRequestTypesRepository();
+            MSI_MediaRequestTypes mediaType = null;
+            try
+            {
+                mediaType = repository.GetById(id);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return mediaType;
+        }
+
+        #endregion
+
+        #region Media Tracker Data
+
+        public IEnumerable<MSI_MediaTracker> GetMediaTrackers(string accountNumber)
+        {
+            IEnumerable<MSI_MediaTracker> data = null;
+            MSIMediaTrackerRepository repository = new MSIMediaTrackerRepository();
+            try
+            {
+                data = from requestType in repository.GetAll().Where(record => record.Account == accountNumber)
+                       select requestType;
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+
+            }
+            return data;
+
+        }
+
+        #endregion
         /// <summary>
         /// Return account information from vwAccounts based on either 'pims' account or 'original' account number
         /// </summary>
         /// <param name="accountNumber"></param>
         /// <param name="searchType">'pims' or 'origina'</param>
         /// <returns></returns>
+        /// 
         public vwAccount GetAccount(string accountNumber, string searchType)
         {
             vwAccount account = null;
@@ -1109,7 +1173,7 @@ namespace Cascade.Data.Repositories
                 if (searchType.ToLower() == "pims")
                     account = data.Get(record => record.ACCOUNT == accountNumber);
                 else
-                    account = data.Get(record => record.OriginalAccount == accountNumber);                
+                    account = data.Get(record => record.OriginalAccount == accountNumber);
             }
             catch (Exception ex)
             {

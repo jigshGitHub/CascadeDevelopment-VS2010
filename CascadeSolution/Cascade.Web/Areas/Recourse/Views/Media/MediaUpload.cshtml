@@ -1,0 +1,323 @@
+﻿@{
+    ViewBag.Title = "MediaUploadCreate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Scripts.Render("~/bundles/jquery")
+<h2>Media : Search for Account</h2>
+@Html.Hidden("userId", (string)(@ViewBag.UserID))
+@Html.Hidden("agencyId", (string)(@ViewBag.AgencyID))
+@Html.Hidden("hdnUserRole", (string)(@ViewBag.UserRole))
+@Html.Hidden("hdnId", (string)(@ViewBag.Id))
+
+@*Message Summary*@
+<div id="messageSummary" style="font-size: small">
+    <ul>
+    </ul>
+</div>
+
+@*PIMS Results set*@
+<div id="pimsResults" style="font-size: small; display:none">
+    <table style="text-align: center">
+        <tr>
+            <th>
+            </th>
+            <th>
+                Last name
+            </th>
+            <th>
+                First Name
+            </th>
+            <th>
+                PIMS Account #
+            </th>
+            <th>
+                Original Account #
+            </th>
+            <th>
+                Opened Date
+            </th>
+            <th>
+                C/O Date
+            </th>
+        </tr>
+        <tbody data-bind="foreach:pimsRecords">
+            <tr>
+                <td>
+                    <a href="#" data-bind="click:$root.selectedAccount">Select</a>
+                </td>
+                <td data-bind="text:LastName">
+                </td>
+                <td data-bind="text:FirstName">
+                </td>
+                <td data-bind="text:ACCOUNT">
+                </td>
+                <td data-bind="text:OriginalAccount">
+                </td>
+                <td data-bind="text:OpenDate">
+                </td>
+                <td data-bind="text:ChargeOffDate">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+@*New Media Process*@
+<div id="newComplaintContainer">
+    <table class="searchtable" style="width: 60%" data-bind="visible:showSearchCriteria" id="tblserchCriteria">
+        <tr>
+            <td colspan="3">
+                <b>Retrieve Account Information to begin Media Process (use any field to search):</b>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 30%; text-align: left">
+                PIMS Account Number
+            </td>
+            <td style="width: 1%; text-align: center">
+                :
+            </td>
+            <td style="width: 69%; text-align: left">
+                <input type="text" id="pimsAccount" data-bind="hasfocus:setFocus,value:pimsAccountNumber" />
+                <span data-bind="text:pimsAccountNumberRequired, visible:pimsAccountNumberRequiredHasError" style="color: Red"></span>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 30%; text-align: left">
+                Client Name
+            </td>
+            <td style="width: 1%; text-align: center">
+                :
+            </td>
+            <td style="width: 69%; text-align: left">
+                <input type="text" id="clientName" data-bind="value:clientName" />
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 30%; text-align: left">
+                Original Account Number
+            </td>
+            <td style="width: 1%; text-align: center">
+                :
+            </td>
+            <td style="width: 69%; text-align: left">
+                <input type="text" id="originalAccount" data-bind="value:originalAccountNumber" />
+                <span data-bind="text:originalAccountNumberRequired, visible:originalAccountNumberRequiredHasError"
+                    style="color: Red"></span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" class="confirmBtnContainer">
+                <input type="button" id="refreshBtn" title="Search" data-bind="click:search" />
+            </td>
+        </tr>
+    </table>
+    <table class="dummyitem" style="width: 60%">
+        <tr>
+            <td style="text-align: center">
+                <div data-bind="fadeVisible:showMessage" style="background-color: #1f497d; color: #fff;">
+                    <span data-bind="text:message"></span>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <table class="searchtable" style="width: 60%; display:none" data-bind="visible:pimsDataAvailable" id="tblAccountInfo">
+        <tr>
+            <td  colspan="2" style="width: 100%; background-color: #1f497d; display: none">
+                <a href="#" style="text-decoration: none; font-weight: bold; color: white" data-bind="click:showHidePimsData">
+                    PIMS Data:</a>
+            </td>
+        </tr>
+        <tr>
+            <td  colspan="2">
+                <b>Verify the Account Information to retrieve the Account:</b>
+            </td>
+        </tr>
+        <tr>
+            <td  colspan="2">
+                <table data-bind="visible:showPIMSData">
+                    <tr>
+                        <td style="text-align: left; width: 30%">
+                            Portfolio
+                        </td>
+                        <td style="text-align: center; width: 1%">
+                            :
+                        </td>
+                        <td data-bind="text:portfolio" style="text-align: left; width: 69%">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; width: 30%">
+                            Original Lender / Product
+                        </td>
+                        <td style="text-align: center; width: 1%">
+                            :
+                        </td>
+                        <td data-bind="text:lender" style="text-align: left; width: 69%">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; width: 30%">
+                            SSN
+                        </td>
+                        <td style="text-align: center; width: 1%">
+                            :
+                        </td>
+                        <td data-bind="text:ssn" style="text-align: left; width: 69%">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; width: 30%">
+                            Name
+                        </td>
+                        <td style="text-align: center; width: 1%">
+                            :
+                        </td>
+                        <td data-bind="text:name" style="text-align: left; width: 69%">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; width: 30%">
+                            Open Date
+                        </td>
+                        <td style="text-align: center; width: 1%">
+                            :
+                        </td>
+                        <td data-bind="text:openDate" style="text-align: left; width: 69%">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; width: 30%">
+                            C/O date
+                        </td>
+                        <td style="text-align: center; width: 1%">
+                            :
+                        </td>
+                        <td data-bind="text:coDate" style="text-align: left; width: 69%">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; width: 30%">
+                            Seller
+                        </td>
+                        <td style="text-align: center; width: 1%">
+                            :
+                        </td>
+                        <td data-bind="text:seller" style="width: 69%">
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr><td colspan="2" class="dummyitem">&nbsp;</td></tr>
+        <tr>
+            <td style="text-align: left">
+                <input type="button" class="editButton" value="&nbsp;Search for Another Account&nbsp;" data-bind="click:searchForAnother" />
+            </td>
+            <td style="text-align: right">
+                <input type="button" class="editButton" value="&nbsp;Initiate Media Upload&nbsp;" data-bind="click:initiateMediaUpload" />
+            </td>
+        
+        </tr>
+    </table>
+    <table class="dummyitem"></table>
+</div>
+
+
+<div id="fileUploadContainer" style="display:none;font-size:small">
+    @using (Html.BeginForm("UploadAllDocuments", "Media", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <table class="FollowupDatatable">
+                <tr>
+                    <td colspan="2">PIMS Account Number:</td>
+                    <td colspan="2"><input id="enteredPIMSAccountNumber" type="text" data-bind="value:pimsAccountNumber" readonly="true" /></td>
+                </tr>
+                <tr><td colspan="4"><b>Select/Browser document to upload for each Media Type:</b></td></tr>
+                <tr>
+                    <td colspan="2">Affidavit (Issuer)</td>
+                    <td colspan="2"><input name="AfdvtIssuerfiles" id="mediaAfdvtIssuer" data-bind="value:mediaAfdvtIssuer"  type="file" multiple /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">Affidavit (Seller)</td>
+                    <td colspan="2"><input name="AfdvtSellerfiles" id="mediaAfdvtSeller" data-bind="value:mediaAfdvtSeller"  type="file" multiple /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">Applicaton</td>
+                    <td colspan="2"><input name="Applicationfiles" id="mediaApplication" data-bind="value:mediaApplication" type="file" multiple /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">Contact</td>
+                    <td colspan="2"><input  name="Contactfiles" id="mediaContact" data-bind="value:mediaContact" type="file" multiple /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">Statment</td>
+                    <td colspan="2"><input name="Statementfiles" id="mediaStatement" data-bind="value:mediaStatement" type="file" multiple /></td>
+                </tr>
+                <tr>
+                    <td colspan="4">&nbsp;&nbsp;From:
+                    <input type="text" id="statementStDt" data-bind="value:statementStDt" />
+                    &nbsp;To:&nbsp;
+                    <input type="text" id="statementEndDt" data-bind="value:statementEndDt" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">Charge Off Statement</td>
+                    <td colspan="2"><input name="ChargeOffStmtfiles" id="mediaChargeOffStmt" data-bind="value:mediaChargeOffStmt" type="file" multiple /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">Right of Cure</td>
+                    <td colspan="2"><input name="RightOfCurefiles" id="mediaRightOfCure" data-bind="value:mediaRightOfCure" type="file" multiple /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">Balance Deficiency Letter</td>
+                    <td colspan="2"><input name="BalanceLtrfiles" id="mediaBalanceLtr" data-bind="value:mediaBalanceLtr" type="file" multiple /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">Notice of Intent to Sell</td>
+                    <td colspan="2"><input name="NoticeOfIntentfiles" id="mediaNoticeIntent" data-bind="value:mediaNoticeIntent" type="file" multiple /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">Card Holder Agreement</td>
+                    <td colspan="2"><input name="CardHolderAgrmtfiles" id="mediaCardHolderAgrmt" data-bind="value:mediaCardHolderAgrmt" type="file" multiple /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">Terms and Conditions</td>
+                    <td colspan="2"><input name="TermAndCndfiles" id="mediaTermsAndCnd" data-bind="value:mediaTermsAndCnd" type="file" multiple /></td>
+                </tr>
+                
+        </table>
+        <input type="hidden" name="hdnpimsAccountNumber" data-bind="value:pimsAccountNumber" />
+        <input type="hidden" name="hdnoriginalAccountNumber" data-bind="value:originalAccountNumber" />
+        <input type="hidden" name="hdnstatementStDt" data-bind="value:statementStDt" />
+        <input type="hidden" name="hdnstatementEndDt" data-bind="value:statementEndDt" />
+        //Btn Click event to upload file
+        <input type="submit" class="editButton" value="&nbsp;Upload&nbsp;& Exit" data-bind="visible:showUpload" />
+    }
+</div>
+
+@Scripts.Render("~/bundles/knockout")
+
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.8.11.js" type="text/javascript"></script>
+    <script src="~/Scripts/mediaUpload.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#messageSummary').dialog({ modal: true, title: 'Summary:', autoOpen: false, width: 200, height: 200 });
+            $('#pimsResults').dialog({ modal: true, title: 'Select account:', autoOpen: false, width: 800, height: 500 });
+            //For file upload Div
+            $('#fileUploadContainer').dialog({ modal: true, title: 'Upload document(s) for this account:', autoOpen: false, width: 700, height: 600 });
+            //Page view model
+            var pageVM = new pageViewModel($('#userId').val(), $('#agencyId').val(), $('#hdnUserRole').val(), $('#hdnId').val());
+            //Knockout Bindings
+            ko.applyBindings(pageVM);
+            //Initial settings
+            $('#pimsAccount').focus(function () { $(this).val(''); }).blur(function () { if ($(this).val() == '') $(this).val(pimsAccountFocusString); });
+            $('#clientName').focus(function () { $(this).val(''); }).blur(function () { if ($(this).val() == '') $(this).val(fOrlNameFocusString); });
+            $('#originalAccount').focus(function () { $(this).val(''); }).blur(function () { if ($(this).val() == '') $(this).val(originalAccountFocusString); });
+            //For From and To Dates
+            $('#statementStDt').datepicker({ dateFormat: 'mm/dd/yy' });
+            $('#statementEndDt').datepicker({ dateFormat: 'mm/dd/yy' });
+        });
+    </script>
+}

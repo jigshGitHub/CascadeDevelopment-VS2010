@@ -12,6 +12,8 @@ using Cascade.Web.ApplicationIntegration;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Cascade.Data.Models;
+using CascadeBusiness = Cascade.Business;
+using Cascade.ViewModels.Recourse.Media;
 namespace Cascade.Web.Areas.Recourse.Controllers
 {
     public class MediaController : BaseController
@@ -278,6 +280,167 @@ namespace Cascade.Web.Areas.Recourse.Controllers
             return View();
         }
 
+        public ActionResult MediaUpload()
+        {
+            //ViewBag.UserID = UserId.ToString();
+            //ViewBag.AgencyID = UserAgency;
+            //ViewBag.UserRole = UserRoles.First().ToLower();
+            return View();
+        }
+
+        public bool PerformFileUploadOperation(MSI_MediaTracker _mediaTracker, int MediaTypeId,  IEnumerable<HttpPostedFileBase> FilesCollection)
+        {
+            Cascade.Data.Repositories.MSIMediaTrackerRepository repository = new MSIMediaTrackerRepository();
+            string _allMediaDocuments = "";
+            string _additionalIdentifier = Guid.NewGuid().ToString() + "_" + _mediaTracker.Account + "_" + MediaTypeId.ToString();
+            //Get all fileNames together so store in the Database
+            foreach (var file in FilesCollection)
+            {
+                if (file != null)
+                {
+                    if (_allMediaDocuments.Length > 0)
+                    {
+                        _allMediaDocuments = _allMediaDocuments + "|" + _additionalIdentifier + "_" + file.FileName;
+                    }
+                    else
+                    {
+                        _allMediaDocuments = _additionalIdentifier + "_" + file.FileName;
+                    }
+                }
+
+            }
+            //Now Upload and set the properties
+            foreach (var file in FilesCollection)
+            {
+                if (file != null)
+                {
+                    if (file.ContentLength > 0)
+                    {
+                        //Upload the file
+                        fileProcessor.SaveUploadedFileWithIdentifier(file, _additionalIdentifier);
+                    }
+                }
+
+            }
+            if (_allMediaDocuments != "")
+            {
+                //Perform Save Operation
+                _mediaTracker.MediaTypeId = MediaTypeId;
+                _mediaTracker.MediaDocuments = _allMediaDocuments;
+                repository.Add(_mediaTracker);
+            }
+            //response
+            return true;
+
+        }
+
+        [HttpPost]
+        public ActionResult UploadAllDocuments(IEnumerable<HttpPostedFileBase> AfdvtIssuerfiles, IEnumerable<HttpPostedFileBase> AfdvtSellerfiles,
+            IEnumerable<HttpPostedFileBase> Applicationfiles, IEnumerable<HttpPostedFileBase> Contactfiles,
+            IEnumerable<HttpPostedFileBase> Statementfiles, IEnumerable<HttpPostedFileBase> ChargeOffStmtfiles, IEnumerable<HttpPostedFileBase> RightOfCurefiles,
+            IEnumerable<HttpPostedFileBase> BalanceLtrfiles, IEnumerable<HttpPostedFileBase> NoticeOfIntentfiles,
+            IEnumerable<HttpPostedFileBase> CardHolderAgrmtfiles, IEnumerable<HttpPostedFileBase> TermAndCndfiles)
+        {
+            //Collect information from the hiddern fields
+            string PIMSAcctNumber = Request.Form["hdnpimsAccountNumber"];
+            string OrigAcctNumber = Request.Form["hdnoriginalAccountNumber"];
+            string hdnstatementStDt = Request.Form["hdnstatementStDt"];
+            string hdnstatementEndDt = Request.Form["hdnstatementEndDt"];
+            //Get the Object
+            MSI_MediaTracker _mediaTracker = new MSI_MediaTracker();
+            //Get the necessary Information 
+            _mediaTracker.Account = PIMSAcctNumber;
+            _mediaTracker.OriginalAccount = OrigAcctNumber;
+            _mediaTracker.CreatedDate = DateTime.Now;
+            _mediaTracker.CreatedBy = UserId.ToString();
+            _mediaTracker.IsActive = true;
+            //For Files
+            #region [[ Affedavit(Issuer) ]]
+            if (AfdvtIssuerfiles.Count() >= 1)
+            {
+                PerformFileUploadOperation(_mediaTracker, 1, AfdvtIssuerfiles);
+            }
+            #endregion
+
+            #region [[ Affedavit(Seller) ]]
+            if (AfdvtSellerfiles.Count() > 1)
+            {
+                PerformFileUploadOperation(_mediaTracker, 2,  AfdvtSellerfiles);
+            }
+            #endregion
+
+            #region [[ Application ]]
+            if (Applicationfiles.Count() >= 1)
+            {
+                PerformFileUploadOperation(_mediaTracker, 3,  Applicationfiles);
+            }
+            #endregion
+
+            #region [[ Contact ]]
+            if (Contactfiles.Count() >= 1)
+            {
+                PerformFileUploadOperation(_mediaTracker, 4, Contactfiles);
+            }
+            #endregion
+
+            #region [[ Charge of Statement ]]
+            if (ChargeOffStmtfiles.Count() >= 1)
+            {
+                PerformFileUploadOperation(_mediaTracker, 6,  ChargeOffStmtfiles);
+            }
+            #endregion
+
+            #region [[ Right of Cure ]]
+            if (RightOfCurefiles.Count() >= 1)
+            {
+                PerformFileUploadOperation(_mediaTracker, 7,  RightOfCurefiles);
+            }
+            #endregion
+
+            #region [[ Balance Letter ]]
+            if (BalanceLtrfiles.Count() >= 1)
+            {
+                PerformFileUploadOperation(_mediaTracker, 8,  BalanceLtrfiles);
+            }
+            #endregion
+
+            #region [[ Notice of Intent ]]
+            if (NoticeOfIntentfiles.Count() >= 1)
+            {
+                PerformFileUploadOperation(_mediaTracker, 9,  NoticeOfIntentfiles);
+            }
+            #endregion
+
+            #region [[ Card Holder Agreement ]]
+            if (CardHolderAgrmtfiles.Count() >= 1)
+            {
+                PerformFileUploadOperation(_mediaTracker, 10,  CardHolderAgrmtfiles);
+            }
+            #endregion
+
+            #region [[ Terms and Conditions ]]
+            if (TermAndCndfiles.Count() >= 1)
+            {
+                PerformFileUploadOperation(_mediaTracker, 11,  TermAndCndfiles);
+            }
+            #endregion
+
+            //IMPORTANT: Do it at the end so TypeConstraints are added for only Statement type media
+            #region [[ Statement ]]
+            if (Statementfiles.Count() >= 1)
+            {
+                if (hdnstatementStDt != "" && hdnstatementEndDt != "")
+                {
+                    _mediaTracker.TypeConstraints = hdnstatementStDt + ":" + hdnstatementEndDt;
+                }
+                PerformFileUploadOperation(_mediaTracker, 5, Statementfiles);
+            }
+            #endregion
+
+            //Exit 
+            return RedirectToAction("Index", "Media");
+        }
+        
         public ActionResult PIMSDataSearch(string nameSearch)
         {
             ViewBag.NameSearch = nameSearch;
@@ -292,19 +455,22 @@ namespace Cascade.Web.Areas.Recourse.Controllers
 
         public ActionResult MediaRequestNotFulfilled()
         {
+            ViewBag.RoleBasedHeaderTitle = (UserRoles.Contains("agency")) ? "Media Request" : "Media Fulfillment";
             return View();
         }
 
         public ActionResult GetMediaRequestNotFulfilled()
         {
-            DataQueries query = new DataQueries();
-            IEnumerable<MediaRequestTypes> data = from mainRecord in query.GetMediaRequestResponses(this.UserAgency)
-                                                  from mediaRequestType in query.GetMediaRequestTypes(UserAgency).Where(record => record.RequestedId == mainRecord.Id)
-                                                  from mediaType in new MSI_MediaTypesRepository().GetAll().Where(record => record.IsActive.Value == true && record.ID == mediaRequestType.TypeId)
-                                                  from mediaStatus in new MSI_MediaRequestStatusRepository().GetAll().Where(record => record.Id == mediaRequestType.RequestStatusId)
-                                                  select new MediaRequestTypes(mediaRequestType, mainRecord) { MediaType = mediaType.Name, MediaStatus = mediaStatus.Name };
+            CascadeBusiness.MediaRequest business = new CascadeBusiness.MediaRequest();
+            IEnumerable<MediaRequestTypes> data = business.GetNotFulfilled(UserAgency);
             return PartialView("_mediaRequestNotFulfilled", data);
-        }   
+        }
+
+        public ActionResult MediaFulfillment(string id)
+        {
+            ViewBag.Account = id;
+            return View();
+        }
 
     }
 }

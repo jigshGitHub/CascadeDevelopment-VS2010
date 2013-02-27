@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cascade.UI.Controls", "Casc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cascade.Web", "Cascade.Web\Cascade.Web.csproj", "{C3B0E5D0-E142-4261-9157-40553033C704}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cascade.ViewModels", "Cascade.ViewModels\Cascade.ViewModels.csproj", "{FA3094E1-2921-44EF-87C7-AC95D69535E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cascade.Business", "Cascade.Business\Cascade.Business.csproj", "{848406C4-7754-4A7E-A641-0ECB884A252F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,14 @@ Global
 		{C3B0E5D0-E142-4261-9157-40553033C704}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3B0E5D0-E142-4261-9157-40553033C704}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3B0E5D0-E142-4261-9157-40553033C704}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA3094E1-2921-44EF-87C7-AC95D69535E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA3094E1-2921-44EF-87C7-AC95D69535E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA3094E1-2921-44EF-87C7-AC95D69535E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA3094E1-2921-44EF-87C7-AC95D69535E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{848406C4-7754-4A7E-A641-0ECB884A252F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{848406C4-7754-4A7E-A641-0ECB884A252F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{848406C4-7754-4A7E-A641-0ECB884A252F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{848406C4-7754-4A7E-A641-0ECB884A252F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

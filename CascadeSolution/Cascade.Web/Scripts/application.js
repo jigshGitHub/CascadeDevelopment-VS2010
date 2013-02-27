@@ -26,3 +26,7 @@ cascade.viewModels.setActiveViewModel = function (viewModel) {
     $(document).data("cascade.viewModels.activeViewmodel", viewModel);
 }
 
+function getFileName(document) {
+    var fileName = document.split('_');
+    return fileName[3];
+}

@@ -107,6 +107,9 @@
     <Compile Include="Models\MSI_MediaRequestTypes.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\MSI_MediaTracker.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\MSI_MediaTypes.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

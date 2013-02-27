@@ -9,6 +9,7 @@ namespace Cascade.Data.Models
     {
         RequestReceived = 1,
         RequestInProgress = 2,
-        PendingResearch = 3
+        PendingResearch = 3,
+        RequestFulfillment = 4
     }
 }

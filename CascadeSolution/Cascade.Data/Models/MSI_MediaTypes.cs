@@ -17,6 +17,7 @@ namespace Cascade.Data.Models
         public MSI_MediaTypes()
         {
             this.MSI_MediaRequestTypes = new HashSet<MSI_MediaRequestTypes>();
+            this.MSI_MediaTracker = new HashSet<MSI_MediaTracker>();
         }
     
         public int ID { get; set; }
@@ -24,5 +25,6 @@ namespace Cascade.Data.Models
         public Nullable<bool> IsActive { get; set; }
     
         public virtual ICollection<MSI_MediaRequestTypes> MSI_MediaRequestTypes { get; set; }
+        public virtual ICollection<MSI_MediaTracker> MSI_MediaTracker { get; set; }
     }
 }

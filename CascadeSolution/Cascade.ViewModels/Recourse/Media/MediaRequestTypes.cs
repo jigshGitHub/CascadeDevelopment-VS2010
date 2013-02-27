@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
 using Cascade.Data.Models;
-
-namespace Cascade.Web.Areas.Recourse.Models
+namespace Cascade.ViewModels.Recourse.Media
 {
     public class MediaRequestTypes
     {
@@ -13,7 +12,8 @@ namespace Cascade.Web.Areas.Recourse.Models
         public string MediaType;
         public string MediaStatus;
 
-        public MediaRequestTypes(MSI_MediaRequestTypes mediaRequestTypes, MSI_MediaRequestResponse requestResponse){
+        public MediaRequestTypes(MSI_MediaRequestTypes mediaRequestTypes, MSI_MediaRequestResponse requestResponse)
+        {
             MSIMediaRequestTypes = mediaRequestTypes;
             MSIMediaRequestResponse = requestResponse;
         }

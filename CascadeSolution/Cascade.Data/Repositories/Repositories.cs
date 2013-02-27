@@ -333,6 +333,17 @@ namespace Cascade.Data.Repositories
         {
         }
     }
+    
+    //Used Media Tracker
+    public class MSIMediaTrackerRepository : RepositoryBase<MSI_MediaTracker>
+    {
+        public MSIMediaTrackerRepository(IDatabaseFactory dbFactory) : base(dbFactory)
+        {
+        }
+        public MSIMediaTrackerRepository() : base(new DBFactory())
+        {
+        }
+    }
 
 
     //For Recall Data - MSI

@@ -86,5 +86,6 @@ namespace Cascade.Data.Models
         public DbSet<MSI_MediaRequestResponse> MSI_MediaRequestResponse { get; set; }
         public DbSet<MSI_MediaRequestStatus> MSI_MediaRequestStatus { get; set; }
         public DbSet<MSI_MediaRequestTypes> MSI_MediaRequestTypes { get; set; }
+        public DbSet<MSI_MediaTracker> MSI_MediaTracker { get; set; }
     }
 }
