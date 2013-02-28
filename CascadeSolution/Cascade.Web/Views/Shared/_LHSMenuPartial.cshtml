@@ -47,7 +47,7 @@
                                 </ul>
                             </li>
 
-                            <li>@Html.CreateLink("Media", "Index", "UnderConstruction", "")
+                            @*<li>@Html.CreateLink("Media", "Index", "UnderConstruction", "")
                                 <ul>
                                     <li>@Html.ActionLink("Media Not Submitted", "Index", "ReportMedia", new { area = "Reports", id = "MediaNotSubmitted" }, null)</li>
                                     <li>@Html.ActionLink("Media Not Confirmed", "Index", "ReportMedia", new { area = "Reports", id = "MediaNotConfirmed" }, null)</li>
@@ -71,7 +71,8 @@
                                     <li>@Html.CreateLink("Media Payable Summary", "Index", "UnderConstruction", "")</li>
                                     <li>@Html.CreateLink("Media Paid by Our Check", "Index", "UnderConstruction", "")</li>
                                 </ul>
-                            </li>
+                            </li>*@
+
                             <li>@Html.CreateLink("DPS", "Index", "UnderConstruction", "")
                                 <ul>
                                     <li>@Html.ActionLink("Find DPS Check", "Index", "Recalls", new { area = "Reports", id = "DPSCheckDetail" }, null)</li>
@@ -132,10 +133,10 @@
                             <ul>
                                 <li>@Html.CreateLink("Work Status Breakdown", "PortfolioWorkStatusBreakDown", "Collections", "Reports")</li>
                                 <li>@Html.CreateLink("Portfolio Owner Breakdown", "PortfolioOwnerBreakDown", "Collections", "Reports")</li>
-                                <li>@Html.ActionLink("Portfolio Cash Flow", "Index", "Home", new { area = "Reports", id = "CashFlow" }, null)</li>
-                                <li>@Html.ActionLink("Portfolio Cash Position", "Index", "Home", new { area = "Reports", id = "CashPosition" }, null)</li>
+                                @*<li>@Html.ActionLink("Portfolio Cash Flow", "Index", "Home", new { area = "Reports", id = "CashFlow" }, null)</li>*@
+                                @*<li>@Html.ActionLink("Portfolio Cash Position", "Index", "Home", new { area = "Reports", id = "CashPosition" }, null)</li>*@
                                 <li>@Html.ActionLink("Portfolio Summary", "Index", "Home", new { area = "Reports", id = "PortfolioSummary" }, null)</li>
-                                <li>@Html.ActionLink("Collections Reconciliation", "Index", "Home", new { area = "Reports", id = "CollectionsRecon" }, null)</li>
+                                @*<li>@Html.ActionLink("Collections Reconciliation", "Index", "Home", new { area = "Reports", id = "CollectionsRecon" }, null)</li>*@
                                 <li>@Html.ActionLink("Portfolio Transactions", "Index", "Home", new { area = "Reports", id = "PortTransactions" }, null)</li>
                                 <li>@Html.ActionLink("Purchases", "Index", "Home", new { area = "Reports", id = "Purchases" }, null)</li>
                                 <li>@Html.ActionLink("Sales", "Index", "Home", new { area = "Reports", id = "Sales" }, null)</li>

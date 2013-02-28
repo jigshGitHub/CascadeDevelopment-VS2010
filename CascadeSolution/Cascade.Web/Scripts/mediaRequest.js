@@ -28,6 +28,8 @@ function mediaType(text, value, enable, checked) {
     self.enable = ko.observable(enable);
     self.checked = ko.observable(checked);
     self.typeConstraints = ko.observable('');
+    self.documents = ko.observable('');
+    self.docUrl = ko.observable('');
 }
 function pageViewModel(userId, userAgency, userRole, id, account) {
     log(userId + ' ' + userAgency + ' ' + userRole);
@@ -216,10 +218,15 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
 
         $.each(data, function (i, item) {
             $.each(self.mediaTypes(), function (i, mediaItem) {
+                log(item);
                 if (mediaItem.value() == item.TypeId) {
                     //log(item.TypeId);
                     mediaItem.enable(false);
                     mediaItem.checked(true);
+                    if (item.RespondedDocuments != null) {
+                        mediaItem.docUrl(baseUrl + '/Recourse/Media/DownloadDoc?fileName=' + item.RespondedDocuments);
+                        mediaItem.documents(getFileName(item.RespondedDocuments));
+                    }
                     self.selectedMediaTypes.push(mediaItem);
                 }
             });

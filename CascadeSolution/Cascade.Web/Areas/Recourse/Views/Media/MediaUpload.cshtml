@@ -1,23 +1,18 @@
 ﻿@{
     ViewBag.Title = "MediaUploadCreate";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
+    Layout = "~/Views/Shared/_Layout.cshtml";}
 @Scripts.Render("~/bundles/jquery")
-<h2>Media : Search for Account</h2>
-@Html.Hidden("userId", (string)(@ViewBag.UserID))
-@Html.Hidden("agencyId", (string)(@ViewBag.AgencyID))
-@Html.Hidden("hdnUserRole", (string)(@ViewBag.UserRole))
-@Html.Hidden("hdnId", (string)(@ViewBag.Id))
-
+<h2>
+    Media : Search for Account</h2>
+@Html.Hidden("userId", (string)(@ViewBag.UserID)) @Html.Hidden("agencyId", (string)(@ViewBag.AgencyID))
+@Html.Hidden("hdnUserRole", (string)(@ViewBag.UserRole)) @Html.Hidden("hdnId", (string)(@ViewBag.Id))
 @*Message Summary*@
 <div id="messageSummary" style="font-size: small">
     <ul>
     </ul>
 </div>
-
 @*PIMS Results set*@
-<div id="pimsResults" style="font-size: small; display:none">
+<div id="pimsResults" style="font-size: small; display: none">
     <table style="text-align: center">
         <tr>
             <th>
@@ -62,10 +57,10 @@
         </tbody>
     </table>
 </div>
-
 @*New Media Process*@
 <div id="newComplaintContainer">
-    <table class="searchtable" style="width: 60%" data-bind="visible:showSearchCriteria" id="tblserchCriteria">
+    <table class="searchtable" style="width: 60%" data-bind="visible:showSearchCriteria"
+        id="tblserchCriteria">
         <tr>
             <td colspan="3">
                 <b>Retrieve Account Information to begin Media Process (use any field to search):</b>
@@ -80,7 +75,8 @@
             </td>
             <td style="width: 69%; text-align: left">
                 <input type="text" id="pimsAccount" data-bind="hasfocus:setFocus,value:pimsAccountNumber" />
-                <span data-bind="text:pimsAccountNumberRequired, visible:pimsAccountNumberRequiredHasError" style="color: Red"></span>
+                <span data-bind="text:pimsAccountNumberRequired, visible:pimsAccountNumberRequiredHasError"
+                    style="color: Red"></span>
             </td>
         </tr>
         <tr>
@@ -122,20 +118,21 @@
             </td>
         </tr>
     </table>
-    <table class="searchtable" style="width: 60%; display:none" data-bind="visible:pimsDataAvailable" id="tblAccountInfo">
+    <table class="searchtable" style="width: 60%; display: none" data-bind="visible:pimsDataAvailable"
+        id="tblAccountInfo">
         <tr>
-            <td  colspan="2" style="width: 100%; background-color: #1f497d; display: none">
+            <td colspan="2" style="width: 100%; background-color: #1f497d; display: none">
                 <a href="#" style="text-decoration: none; font-weight: bold; color: white" data-bind="click:showHidePimsData">
                     PIMS Data:</a>
             </td>
         </tr>
         <tr>
-            <td  colspan="2">
+            <td colspan="2">
                 <b>Verify the Account Information to retrieve the Account:</b>
             </td>
         </tr>
         <tr>
-            <td  colspan="2">
+            <td colspan="2">
                 <table data-bind="visible:showPIMSData">
                     <tr>
                         <td style="text-align: left; width: 30%">
@@ -210,93 +207,176 @@
                 </table>
             </td>
         </tr>
-        <tr><td colspan="2" class="dummyitem">&nbsp;</td></tr>
+        <tr>
+            <td colspan="2" class="dummyitem">
+                &nbsp;
+            </td>
+        </tr>
         <tr>
             <td style="text-align: left">
-                <input type="button" class="editButton" value="&nbsp;Search for Another Account&nbsp;" data-bind="click:searchForAnother" />
+                <input type="button" class="editButton" value="&nbsp;Search for Another Account&nbsp;"
+                    data-bind="click:searchForAnother" />
             </td>
             <td style="text-align: right">
-                <input type="button" class="editButton" value="&nbsp;Initiate Media Upload&nbsp;" data-bind="click:initiateMediaUpload" />
+                <input type="button" class="editButton" value="&nbsp;Initiate Media Upload&nbsp;"
+                    data-bind="click:initiateMediaUpload" />
             </td>
-        
         </tr>
     </table>
-    <table class="dummyitem"></table>
+    <table class="dummyitem">
+    </table>
 </div>
-
-
-<div id="fileUploadContainer" style="display:none;font-size:small">
+<div id="fileUploadContainer" style="display: none; font-size: small">
     @using (Html.BeginForm("UploadAllDocuments", "Media", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
+
         <table class="FollowupDatatable">
-                <tr>
-                    <td colspan="2">PIMS Account Number:</td>
-                    <td colspan="2"><input id="enteredPIMSAccountNumber" type="text" data-bind="value:pimsAccountNumber" readonly="true" /></td>
-                </tr>
-                <tr><td colspan="4"><b>Select/Browser document to upload for each Media Type:</b></td></tr>
-                <tr>
-                    <td colspan="2">Affidavit (Issuer)</td>
-                    <td colspan="2"><input name="AfdvtIssuerfiles" id="mediaAfdvtIssuer" data-bind="value:mediaAfdvtIssuer"  type="file" multiple /></td>
-                </tr>
-                <tr>
-                    <td colspan="2">Affidavit (Seller)</td>
-                    <td colspan="2"><input name="AfdvtSellerfiles" id="mediaAfdvtSeller" data-bind="value:mediaAfdvtSeller"  type="file" multiple /></td>
-                </tr>
-                <tr>
-                    <td colspan="2">Applicaton</td>
-                    <td colspan="2"><input name="Applicationfiles" id="mediaApplication" data-bind="value:mediaApplication" type="file" multiple /></td>
-                </tr>
-                <tr>
-                    <td colspan="2">Contact</td>
-                    <td colspan="2"><input  name="Contactfiles" id="mediaContact" data-bind="value:mediaContact" type="file" multiple /></td>
-                </tr>
-                <tr>
-                    <td colspan="2">Statment</td>
-                    <td colspan="2"><input name="Statementfiles" id="mediaStatement" data-bind="value:mediaStatement" type="file" multiple /></td>
-                </tr>
-                <tr>
-                    <td colspan="4">&nbsp;&nbsp;From:
+            <tr>
+                <td colspan="2">
+                    PIMS Account Number:
+                </td>
+                <td colspan="2">
+                    <input id="enteredPIMSAccountNumber" type="text" data-bind="value:pimsAccountNumber"
+                        readonly="true" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <b>Select/Browser document to upload for each Media Type:</b>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Affidavit (Issuer)
+                </td>
+                <td colspan="2">
+                    <input name="AfdvtIssuerfiles" id="mediaAfdvtIssuer" data-bind="value:mediaAfdvtIssuer"
+                        type="file" multiple />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Affidavit (Seller)
+                </td>
+                <td colspan="2">
+                    <input name="AfdvtSellerfiles" id="mediaAfdvtSeller" data-bind="value:mediaAfdvtSeller"
+                        type="file" multiple />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Applicaton
+                </td>
+                <td colspan="2">
+                    <input name="Applicationfiles" id="mediaApplication" data-bind="value:mediaApplication"
+                        type="file" multiple />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Contact
+                </td>
+                <td colspan="2">
+                    <input name="Contactfiles" id="mediaContact" data-bind="value:mediaContact" type="file"
+                        multiple />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Statment
+                </td>
+                <td colspan="2">
+                    <input name="Statementfiles" id="mediaStatement" data-bind="value:mediaStatement"
+                        type="file" multiple />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    &nbsp;&nbsp;From:
                     <input type="text" id="statementStDt" data-bind="value:statementStDt" />
                     &nbsp;To:&nbsp;
-                    <input type="text" id="statementEndDt" data-bind="value:statementEndDt" /></td>
-                </tr>
-                <tr>
-                    <td colspan="2">Charge Off Statement</td>
-                    <td colspan="2"><input name="ChargeOffStmtfiles" id="mediaChargeOffStmt" data-bind="value:mediaChargeOffStmt" type="file" multiple /></td>
-                </tr>
-                <tr>
-                    <td colspan="2">Right of Cure</td>
-                    <td colspan="2"><input name="RightOfCurefiles" id="mediaRightOfCure" data-bind="value:mediaRightOfCure" type="file" multiple /></td>
-                </tr>
-                <tr>
-                    <td colspan="2">Balance Deficiency Letter</td>
-                    <td colspan="2"><input name="BalanceLtrfiles" id="mediaBalanceLtr" data-bind="value:mediaBalanceLtr" type="file" multiple /></td>
-                </tr>
-                <tr>
-                    <td colspan="2">Notice of Intent to Sell</td>
-                    <td colspan="2"><input name="NoticeOfIntentfiles" id="mediaNoticeIntent" data-bind="value:mediaNoticeIntent" type="file" multiple /></td>
-                </tr>
-                <tr>
-                    <td colspan="2">Card Holder Agreement</td>
-                    <td colspan="2"><input name="CardHolderAgrmtfiles" id="mediaCardHolderAgrmt" data-bind="value:mediaCardHolderAgrmt" type="file" multiple /></td>
-                </tr>
-                <tr>
-                    <td colspan="2">Terms and Conditions</td>
-                    <td colspan="2"><input name="TermAndCndfiles" id="mediaTermsAndCnd" data-bind="value:mediaTermsAndCnd" type="file" multiple /></td>
-                </tr>
-                
+                    <input type="text" id="statementEndDt" data-bind="value:statementEndDt" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Charge Off Statement
+                </td>
+                <td colspan="2">
+                    <input name="ChargeOffStmtfiles" id="mediaChargeOffStmt" data-bind="value:mediaChargeOffStmt"
+                        type="file" multiple />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Right of Cure
+                </td>
+                <td colspan="2">
+                    <input name="RightOfCurefiles" id="mediaRightOfCure" data-bind="value:mediaRightOfCure"
+                        type="file" multiple />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Balance Deficiency Letter
+                </td>
+                <td colspan="2">
+                    <input name="BalanceLtrfiles" id="mediaBalanceLtr" data-bind="value:mediaBalanceLtr"
+                        type="file" multiple />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Notice of Intent to Sell
+                </td>
+                <td colspan="2">
+                    <input name="NoticeOfIntentfiles" id="mediaNoticeIntent" data-bind="value:mediaNoticeIntent"
+                        type="file" multiple />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Card Holder Agreement
+                </td>
+                <td colspan="2">
+                    <input name="CardHolderAgrmtfiles" id="mediaCardHolderAgrmt" data-bind="value:mediaCardHolderAgrmt"
+                        type="file" multiple />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Terms and Conditions
+                </td>
+                <td colspan="2">
+                    <input name="TermAndCndfiles" id="mediaTermsAndCnd" data-bind="value:mediaTermsAndCnd"
+                        type="file" multiple />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" class="editButton" value="&nbsp;Upload&nbsp;& Exit" data-bind="visible:showUpload" />
+                </td>
+                <td>
+                    <input type="submit" id="btnMoreAccountUpload" class="editButton" value="&nbsp;Upload & Search More Accounts" data-bind="visible:showUpload" />
+                </td>
+            </tr>
         </table>
+
         <input type="hidden" name="hdnpimsAccountNumber" data-bind="value:pimsAccountNumber" />
+
         <input type="hidden" name="hdnoriginalAccountNumber" data-bind="value:originalAccountNumber" />
+
         <input type="hidden" name="hdnstatementStDt" data-bind="value:statementStDt" />
+
         <input type="hidden" name="hdnstatementEndDt" data-bind="value:statementEndDt" />
+
+        <input type="hidden" name="hdnRedirectAction" id="hdnRedirectAction" />
         //Btn Click event to upload file
-        <input type="submit" class="editButton" value="&nbsp;Upload&nbsp;& Exit" data-bind="visible:showUpload" />
+
+
     }
 </div>
-
 @Scripts.Render("~/bundles/knockout")
-
 @section scripts{
     <script src="~/Scripts/jquery-ui-1.8.11.js" type="text/javascript"></script>
     <script src="~/Scripts/mediaUpload.js" type="text/javascript"></script>
@@ -318,6 +398,9 @@
             //For From and To Dates
             $('#statementStDt').datepicker({ dateFormat: 'mm/dd/yy' });
             $('#statementEndDt').datepicker({ dateFormat: 'mm/dd/yy' });
+            $('#btnMoreAccountUpload').click(function () {
+                $('#hdnRedirectAction').val('MediaUpload');
+            });
         });
     </script>
 }

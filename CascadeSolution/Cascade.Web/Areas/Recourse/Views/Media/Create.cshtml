@@ -1,14 +1,12 @@
 ﻿@{
     ViewBag.Title = "MediaRequestCreate";
     Layout = "~/Views/Shared/_Layout.cshtml";
-}
+ }
 @Scripts.Render("~/bundles/jquery")
 <h2>
     Media Request</h2>
-@Html.Hidden("userId", (string)(@ViewBag.UserID))
-@Html.Hidden("agencyId", (string)(@ViewBag.AgencyID))
-@Html.Hidden("hdnUserRole", (string)(@ViewBag.UserRole))
-@Html.Hidden("hdnId", (string)(@ViewBag.Id))
+@Html.Hidden("userId", (string)(@ViewBag.UserID)) @Html.Hidden("agencyId", (string)(@ViewBag.AgencyID))
+@Html.Hidden("hdnUserRole", (string)(@ViewBag.UserRole)) @Html.Hidden("hdnId", (string)(@ViewBag.Id))
 @Html.Hidden("hdnAccount", (string)(@ViewBag.Account))
 <div id="messageSummary" style="font-size: small">
     <ul>
@@ -34,9 +32,9 @@
             </th>
             <th>
                 C/O Date
-            </th><th>
             </th>
-            
+            <th>
+            </th>
         </tr>
         <tbody data-bind="foreach:pimsRecords">
             <tr>
@@ -248,20 +246,35 @@
                 Select Media Type and Click "Submit" (Note: Media Shown is Immediately Available)
             </td>
         </tr>
-        <tr><td><input type=checkbox data-bind="checked:selectAll" />Select All</td></tr>
         <tr>
             <td>
-                <ul data-bind="foreach: mediaTypes">
-                    <li>
-                        <input type="checkbox" data-bind="enable:enable,checked:checked,click: $parent.mediaChecked,value:value,attr: {id: 'mediaType' + value}" />&nbsp;<span
-                            data-bind="text: text, attr:{for: 'mediaType'+ value}"></span></li>
-                </ul>
+                <input type="checkbox" data-bind="checked:selectAll" />Select All
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <tbody data-bind="foreach: mediaTypes">
+                        <tr>
+                            <td style="width: 3%">
+                                <input type="checkbox" data-bind="enable:enable,checked:checked,click: $parent.mediaChecked,value:value,attr: {id: 'mediaType' + value}" />
+                            </td>
+                            <td style="width: 27%" data-bind="text: text, attr:{for: 'mediaType'+ value}">
+                            </td>
+                            <td style="width: 70%">
+                                <a data-bind="attr: { href: docUrl }"><span data-bind="text:documents">
+                                </span></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </td>
         </tr>
         <tr>
             <td style="text-align: center">
                 <input type="button" class="editButton" value="&nbsp;Submit&nbsp;& Exit" data-bind="click:submit,visible:showSubmit" />
-                <input type="button" class="editButton" value="&nbsp;Submit&nbsp;& Request More" data-bind="click:submitRequestMore,visible:showSubmit" />
+                <input type="button" class="editButton" value="&nbsp;Submit&nbsp;& Request More"
+                    data-bind="click:submitRequestMore,visible:showSubmit" />
             </td>
         </tr>
     </table>

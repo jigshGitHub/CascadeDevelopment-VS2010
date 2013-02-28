@@ -22,7 +22,7 @@ function mediaReuqestType(id, reqId, typeId, documents, reqDt, reqUser, respDt, 
     this.RequestStatusId = 4;  //RequestFulfillment
 }
 
-function mediaType(id,text, value, visible, fulFilledChecked, documents) {
+function mediaType(id,text, value, visible, fulFilledChecked) {
     var self = this;
     self.id = id;
     self.text = ko.observable(text);
@@ -30,7 +30,8 @@ function mediaType(id,text, value, visible, fulFilledChecked, documents) {
     self.visible = ko.observable(visible);
     self.fulFilledChecked = ko.observable(fulFilledChecked);
     self.typeConstraints = ko.observable('');
-    self.documents = ko.observable(documents);
+    self.documents = ko.observable('');
+    self.docUrl = ko.observable('');
 }
 function pageViewModel(userId, userAgency, userRole, id, account) {
     log(userId + ' ' + userAgency + ' ' + userRole);
@@ -217,10 +218,14 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
             async: false,
             success: function (data) {
                 if (data.length > 0) {
+                    var requestedMedia;
                     $.each(data, function (i, item) {
                         $.each(requestedTypes, function (i, requestedItem) {
                             if (item.Value == requestedItem.TypeId) {
-                                self.mediaTypes.push(new mediaType(requestedItem.Id, item.Text, item.Value, (requestedItem.RespondedDocuments == null) ? false:true, false, (requestedItem.RespondedDocuments == null) ? 'NO MEDIA IN HOUSE' : getFileName(requestedItem.RespondedDocuments)));
+                                requestedMedia = new mediaType(requestedItem.Id, item.Text, item.Value, (requestedItem.RespondedDocuments == null) ? false : true, false);
+                                requestedMedia.docUrl((requestedItem.RespondedDocuments == null) ? '' : baseUrl + '/Recourse/Media/DownloadDoc?fileName=' + requestedItem.RespondedDocuments);
+                                requestedMedia.documents((requestedItem.RespondedDocuments == null) ? 'NO MEDIA IN HOUSE' : getFileName(requestedItem.RespondedDocuments));
+                                self.mediaTypes.push(requestedMedia);
                             }
                         });
                     });
@@ -325,12 +330,12 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
     }
     self.submit = function () {
         self.saveData();
-        //window.open(baseUrl + '/Recourse/Home', '_self', '', '');
+        window.open(baseUrl + '/Recourse/Home', '_self', '', '');
     }
 
     self.submitRequestMore = function () {
         self.submit();
-        window.open(baseUrl + '/Recourse/Media/Create', '_self', '', '');
+        window.open(baseUrl + '/Recourse/Media/MediaRequestNotFulfilled', '_self', '', '');
     }
 }
 

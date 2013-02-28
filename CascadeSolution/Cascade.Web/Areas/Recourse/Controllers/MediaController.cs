@@ -236,6 +236,7 @@ namespace Cascade.Web.Areas.Recourse.Controllers
 
         public FilePathResult DownloadDoc(string fileName)
         {
+
             return File(fileProcessor.GetFilePath(fileName), "text/plain", fileName);
         }
 
@@ -346,6 +347,7 @@ namespace Cascade.Web.Areas.Recourse.Controllers
             string OrigAcctNumber = Request.Form["hdnoriginalAccountNumber"];
             string hdnstatementStDt = Request.Form["hdnstatementStDt"];
             string hdnstatementEndDt = Request.Form["hdnstatementEndDt"];
+            string hdnRedirectAction = Request.Form["hdnRedirectAction"];
             //Get the Object
             MSI_MediaTracker _mediaTracker = new MSI_MediaTracker();
             //Get the necessary Information 
@@ -363,7 +365,7 @@ namespace Cascade.Web.Areas.Recourse.Controllers
             #endregion
 
             #region [[ Affedavit(Seller) ]]
-            if (AfdvtSellerfiles.Count() > 1)
+            if (AfdvtSellerfiles.Count() >= 1)
             {
                 PerformFileUploadOperation(_mediaTracker, 2,  AfdvtSellerfiles);
             }
@@ -438,7 +440,10 @@ namespace Cascade.Web.Areas.Recourse.Controllers
             #endregion
 
             //Exit 
-            return RedirectToAction("Index", "Media");
+            if (string.IsNullOrEmpty(hdnRedirectAction))
+                return RedirectToAction("Index", "Home");
+            else
+                return RedirectToAction(hdnRedirectAction, "Media");
         }
         
         public ActionResult PIMSDataSearch(string nameSearch)
@@ -472,5 +477,21 @@ namespace Cascade.Web.Areas.Recourse.Controllers
             return View();
         }
 
+        public ActionResult MediaRequestReadyDownload()
+        {
+            return View();
+        }
+        public ActionResult GetMediaRequestReadyDownload()
+        {
+            CascadeBusiness.MediaRequest business = new CascadeBusiness.MediaRequest();
+            IEnumerable<MediaRequestTypes> data = business.GetDownloadable(UserAgency);
+            return PartialView("_mediaRequestReadyDownload", data);
+        }
+
+        public void MediaRequestStatusUpdate(string id)
+        {
+            CascadeBusiness.MediaRequest business = new CascadeBusiness.MediaRequest();
+            business.PerformRequestStatusUpdate(id, UserId);
+        }
     }
 }

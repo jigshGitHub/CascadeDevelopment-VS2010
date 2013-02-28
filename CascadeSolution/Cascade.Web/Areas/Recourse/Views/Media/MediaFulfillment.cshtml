@@ -1,7 +1,6 @@
 ﻿@{
     ViewBag.Title = "MediaFulfillment";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+    Layout = "~/Views/Shared/_Layout.cshtml";}
 <h2>
     Media Fulfillment - Request for Media by User</h2>
 @Html.Hidden("userId", (string)(@ViewBag.UserID)) @Html.Hidden("agencyId", (string)(@ViewBag.AgencyID))
@@ -255,13 +254,13 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>
+                            <th style="text-align: left">
                                 Requested
                             </th>
-                            <th>
+                            <th style="text-align: left">
                                 Available
                             </th>
-                            <th>
+                            <th style="text-align: left">
                                 Fulfilled?
                             </th>
                         </tr>
@@ -270,9 +269,16 @@
                         <tr>
                             <td data-bind="text: text, attr:{for: 'mediaType'+ value}">
                             </td>
-                            <td data-bind="text:documents">
+                            <td>
+                                <div data-bind="if: visible">
+                                    <a data-bind="attr: { href: docUrl }"><span data-bind="text:documents"></span></a>
+                                </div>
+                                <div data-bind="ifnot: visible">
+                                    <span data-bind="text:documents"></span>
+                                </div>
                             </td>
-                            <td><input type="checkbox" data-bind="visible:visible,checked:fulFilledChecked,click: $parent.fulFilledChecked,value:value,attr: {id: 'mediaType' + value}" />
+                            <td>
+                                <input type="checkbox" data-bind="visible:visible,checked:fulFilledChecked,click: $parent.fulFilledChecked,value:value,attr: {id: 'mediaType' + value}" />
                             </td>
                         </tr>
                     </tbody>

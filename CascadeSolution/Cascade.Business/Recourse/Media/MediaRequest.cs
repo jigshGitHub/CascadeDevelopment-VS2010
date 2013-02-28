@@ -42,6 +42,24 @@ namespace Cascade.Business
             return data;
         }
 
+        public IEnumerable<MediaRequestTypes> GetDownloadable(string agency)
+        {
+            IEnumerable<MediaRequestTypes> data = null;
+            try
+            {
+                data = from mainRecord in query.GetMediaRequestResponses(agency)
+                       from mediaRequestType in query.GetMediaRequestTypes(agency).Where(record => record.RequestedId == mainRecord.Id && record.RequestStatusId.Value == (int)MediaRequestStatus.RequestFulfillment && record.MediaUploaded.Value == true)
+                       from mediaType in new MSI_MediaTypesRepository().GetAll().Where(record => record.IsActive.Value == true && record.ID == mediaRequestType.TypeId)
+                       from mediaStatus in new MSI_MediaRequestStatusRepository().GetAll().Where(record => record.Id == mediaRequestType.RequestStatusId)
+                       select new MediaRequestTypes(mediaRequestType, mainRecord) { MediaType = mediaType.Name, MediaStatus = mediaStatus.Name };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Exception in Cascade.Business.MediaRequest.GetNotFulfilled:" + ex.Message);
+            }
+            return data;
+        }
+
         public MSI_MediaRequestResponse PerfomPreFulfillmentProcess(string accountNumber)
         {
             IEnumerable<MSI_MediaTracker> mediaAvailable;
@@ -93,6 +111,25 @@ namespace Cascade.Business
             catch (Exception ex)
             {
                 throw new Exception("Exception in Cascade.Business.MediaRequest.PerfomPreFulfillmentProcess:" + ex.Message);
+            }
+        }
+
+        public void PerformRequestStatusUpdate(string id, Guid userId)
+        {
+            MSI_MediaRequestTypes requestedType;
+            try
+            {
+                requestedType = Query.GetMediaRequestdType(id);
+
+                requestedType.ReSubmittedDate = DateTime.Now;
+                requestedType.ReSubmittedBy = userId;
+                requestedType.LastUpdatedBy = userId;
+                requestedType.LastUpdatedDate = DateTime.Now;
+                Query.UpdateMediaRequestdType(requestedType);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Exception in Cascade.Business.MediaRequest.PerformRequestStatusUpdate:" + ex.Message);
             }
         }
 
