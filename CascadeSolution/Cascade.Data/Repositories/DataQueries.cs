@@ -966,14 +966,32 @@ namespace Cascade.Data.Repositories
 
         #region Media Request Response Data
 
-        public IEnumerable<MSI_MediaRequestResponse> GetMediaRequestResponses(string agency)
+        public IEnumerable<MSI_MediaRequestResponse> GetMediaRequestResponses()
+        {
+            IEnumerable<MSI_MediaRequestResponse> data = null;
+            MSI_MediaRequestResponseRepository repository = new MSI_MediaRequestResponseRepository();
+            try
+            {
+                data = from requestResponse in repository.GetAll()
+                       select requestResponse;
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+
+            }
+            return data;
+
+        }
+        public IEnumerable<MSI_MediaRequestResponse> GetMediaRequestResponses(string agency, Guid userId)
         {
             IEnumerable<MSI_MediaRequestResponse> data = null;
             MSI_MediaRequestResponseRepository repository = new MSI_MediaRequestResponseRepository();
             try
             {
                 if (string.IsNullOrEmpty(agency))
-                    data = from requestResponse in repository.GetAll()
+                    data = from requestResponse in repository.GetAll().Where(record => record.RequestedByUserId != userId)//don't bring the request from owner it self. if owner has requested then we don't need to pull them
                            select requestResponse;
                 else
                     data = from requestResponse in repository.GetAll().Where(record => record.AgencyId == agency)
@@ -1007,14 +1025,14 @@ namespace Cascade.Data.Repositories
 
         }
 
-        public MSI_MediaRequestResponse GetMediaRequestResponse(string accountNumber, string agency)
+        public MSI_MediaRequestResponse GetMediaRequestResponse(string accountNumber, string agency, Guid userId)
         {
             MSI_MediaRequestResponse data = null;
             MSI_MediaRequestResponseRepository repository = new MSI_MediaRequestResponseRepository();
             try
             {
                 if (string.IsNullOrEmpty(agency))
-                    data = repository.GetAll().Where(record => (record.ACCOUNT == accountNumber || record.OriginalAccount == accountNumber)).SingleOrDefault();
+                    data = repository.GetAll().Where(record => (record.ACCOUNT == accountNumber || record.OriginalAccount == accountNumber) && record.RequestedByUserId == userId).SingleOrDefault();
                 else
                     data = repository.GetAll().Where(record => (record.ACCOUNT == accountNumber || record.OriginalAccount == accountNumber) && record.AgencyId == agency).SingleOrDefault();
             }
@@ -1155,6 +1173,7 @@ namespace Cascade.Data.Repositories
         }
 
         #endregion
+
         /// <summary>
         /// Return account information from vwAccounts based on either 'pims' account or 'original' account number
         /// </summary>

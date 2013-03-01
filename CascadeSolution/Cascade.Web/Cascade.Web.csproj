@@ -293,6 +293,7 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\application.js" />
     <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -308,7 +309,12 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
+    <Content Include="Scripts\mediaFulfillment.js" />
+    <Content Include="Scripts\mediaRequest.js" />
+    <Content Include="Scripts\mediaUpload.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Scripts\portfolio.js" />
+    <Content Include="Scripts\portfolio_viewedit.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -501,6 +507,8 @@
     <Content Include="Areas\Recourse\Views\Media\_mediaRequestNotFulfilled.cshtml" />
     <Content Include="Areas\Recourse\Views\Media\MediaFulfillment.cshtml" />
     <Content Include="Areas\Recourse\Views\Media\MediaUpload.cshtml" />
+    <Content Include="Areas\Recourse\Views\Media\MediaRequestReadyDownload.cshtml" />
+    <Content Include="Areas\Recourse\Views\Media\_mediaRequestReadyDownload.cshtml" />
     <None Include="Areas\Reports\Views\Cascade0206Deploy.rar" />
     <Content Include="Areas\Reports\Views\Collections\PortfolioOwnerBreakDown.cshtml" />
     <Content Include="Areas\Reports\Views\Collections\PortfolioWorkStatusBreakDown.cshtml" />

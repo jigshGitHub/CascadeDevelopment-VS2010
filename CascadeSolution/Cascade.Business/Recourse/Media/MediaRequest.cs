@@ -24,12 +24,12 @@ namespace Cascade.Business
             }
         }
 
-        public IEnumerable<MediaRequestTypes> GetNotFulfilled(string agency)
+        public IEnumerable<MediaRequestTypes> GetNotFulfilled(string agency,Guid userId)
         {
             IEnumerable<MediaRequestTypes> data = null;
             try
             {
-                data = from mainRecord in query.GetMediaRequestResponses(agency)
+                data = from mainRecord in query.GetMediaRequestResponses(agency,userId)
                        from mediaRequestType in query.GetMediaRequestTypes(agency).Where(record => record.RequestedId == mainRecord.Id && record.RequestStatusId.Value != (int)MediaRequestStatus.RequestFulfillment)
                        from mediaType in new MSI_MediaTypesRepository().GetAll().Where(record => record.IsActive.Value == true && record.ID == mediaRequestType.TypeId)
                        from mediaStatus in new MSI_MediaRequestStatusRepository().GetAll().Where(record => record.Id == mediaRequestType.RequestStatusId)
@@ -42,13 +42,13 @@ namespace Cascade.Business
             return data;
         }
 
-        public IEnumerable<MediaRequestTypes> GetDownloadable(string agency)
+        public IEnumerable<MediaRequestTypes> GetDownloadable(string agency,Guid userId)
         {
             IEnumerable<MediaRequestTypes> data = null;
             try
             {
-                data = from mainRecord in query.GetMediaRequestResponses(agency)
-                       from mediaRequestType in query.GetMediaRequestTypes(agency).Where(record => record.RequestedId == mainRecord.Id && record.RequestStatusId.Value == (int)MediaRequestStatus.RequestFulfillment && record.MediaUploaded.Value == true)
+                data = from mainRecord in query.GetMediaRequestResponses(agency,userId)
+                       from mediaRequestType in query.GetMediaRequestTypes(agency).Where(record => record.RequestedId == mainRecord.Id && record.RequestStatusId.Value == (int)MediaRequestStatus.RequestFulfillment && record.MediaUploaded.Value == true && record.MediaDownloaded != true )
                        from mediaType in new MSI_MediaTypesRepository().GetAll().Where(record => record.IsActive.Value == true && record.ID == mediaRequestType.TypeId)
                        from mediaStatus in new MSI_MediaRequestStatusRepository().GetAll().Where(record => record.Id == mediaRequestType.RequestStatusId)
                        select new MediaRequestTypes(mediaRequestType, mainRecord) { MediaType = mediaType.Name, MediaStatus = mediaStatus.Name };
@@ -60,11 +60,10 @@ namespace Cascade.Business
             return data;
         }
 
-        public MSI_MediaRequestResponse PerfomPreFulfillmentProcess(string accountNumber)
+        public void PerfomPreFulfillmentProcess(string accountNumber, Guid? userId)
         {
             IEnumerable<MSI_MediaTracker> mediaAvailable;
             MSI_MediaRequestTypes requestedType;
-            MSI_MediaRequestResponse data = null;
             try
             {
                 mediaAvailable = Query.GetMediaTrackers(accountNumber);
@@ -72,8 +71,8 @@ namespace Cascade.Business
                 {
                     foreach (MSI_MediaTracker media in mediaAvailable)
                     {
-                        requestedType = (from requestResponse in query.GetMediaRequestResponses("").Where(record => record.ACCOUNT == accountNumber)
-                                        from requestMediaType in query.GetMediaRequestTypes("").Where(record => record.RequestedId == requestResponse.Id && record.TypeId == media.MediaTypeId && record.RequestStatusId != (int)MediaRequestStatus.RequestFulfillment)
+                        requestedType = (from requestResponse in query.GetMediaRequestResponses().Where(record => record.ACCOUNT == accountNumber && record.RequestedByUserId != (userId.HasValue ? userId : Guid.Parse(media.CreatedBy)))
+                                        from requestMediaType in query.GetMediaRequestTypes("").Where(record => record.RequestedId == requestResponse.Id && record.TypeId == media.MediaTypeId && record.RequestStatusId == (int)MediaRequestStatus.RequestReceived)
                                          select requestMediaType).SingleOrDefault();
                         if (requestedType != null)
                         {
@@ -82,15 +81,12 @@ namespace Cascade.Business
                             Query.UpdateMediaRequestdType(requestedType);
                         }
                     }
-                    data = Query.GetMediaRequestResponse(accountNumber, "");
-                    data.MSI_MediaRequestTypes = data.MSI_MediaRequestTypes.Where(record => record.RequestStatusId != (int)MediaRequestStatus.RequestFulfillment).ToList();
                 }
             }
             catch (Exception ex)
             {
                 throw new Exception("Exception in Cascade.Business.MediaRequest.PerfomPreFulfillmentProcess:" + ex.Message);
-            }
-            return data;
+            }            
         }
 
         public void PerfomPostFulfillmentProcess(string id, Guid userId)
@@ -110,7 +106,7 @@ namespace Cascade.Business
             }
             catch (Exception ex)
             {
-                throw new Exception("Exception in Cascade.Business.MediaRequest.PerfomPreFulfillmentProcess:" + ex.Message);
+                throw new Exception("Exception in Cascade.Business.MediaRequest.PerfomPostFulfillmentProcess:" + ex.Message);
             }
         }
 
@@ -123,6 +119,24 @@ namespace Cascade.Business
 
                 requestedType.ReSubmittedDate = DateTime.Now;
                 requestedType.ReSubmittedBy = userId;
+                requestedType.LastUpdatedBy = userId;
+                requestedType.LastUpdatedDate = DateTime.Now;
+                Query.UpdateMediaRequestdType(requestedType);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Exception in Cascade.Business.MediaRequest.PerformRequestStatusUpdate:" + ex.Message);
+            }
+        }
+
+        public void PerformRequestDownloaded(string id, Guid userId)
+        {
+            MSI_MediaRequestTypes requestedType;
+            try
+            {
+                requestedType = Query.GetMediaRequestdType(id);
+
+                requestedType.MediaDownloaded = true;
                 requestedType.LastUpdatedBy = userId;
                 requestedType.LastUpdatedDate = DateTime.Now;
                 Query.UpdateMediaRequestdType(requestedType);

@@ -13,12 +13,12 @@ namespace Cascade.Web.Controllers.API.Media
 {
     public class MediaRequestController : ApiController
     {
-        public IEnumerable<MSI_MediaRequestResponse> Get(string agency)
+        public IEnumerable<MSI_MediaRequestResponse> Get(string agency,Guid userId)
         {
             IEnumerable<MSI_MediaRequestResponse> data = null;
             DataQueries query = new DataQueries();
             try{
-                data = from requestResponse in query.GetMediaRequestResponses(agency).Where(record => record.AgencyId == agency)
+                data = from requestResponse in query.GetMediaRequestResponses(agency,userId).Where(record => record.AgencyId == agency)
                        select requestResponse;
             }
 
@@ -65,21 +65,13 @@ namespace Cascade.Web.Controllers.API.Media
         }
 
         [HttpGet]
-        public MSI_MediaRequestResponse Details(string accountNumber, string agency, string scenario)
+        public MSI_MediaRequestResponse Details(string accountNumber, string agency, Guid userId)
         {
             MSI_MediaRequestResponse data = null;
             DataQueries query = new DataQueries();
-            CascadeBusiness.MediaRequest business;
             try
             {
-                if (!string.IsNullOrEmpty(scenario))
-                {
-                    business = new CascadeBusiness.MediaRequest();
-                    if(scenario == "PerfomPreFulfillmentProcess")
-                        return business.PerfomPreFulfillmentProcess(accountNumber);
-                }
-
-                data = query.GetMediaRequestResponse(accountNumber, agency);
+                data = query.GetMediaRequestResponse(accountNumber, agency, userId);
             }
 
             catch (Exception ex)
@@ -124,8 +116,11 @@ namespace Cascade.Web.Controllers.API.Media
                         }
                     }
                     submittedRequest.RequestedDate = DateHelper.GetDateWithTimings(submittedRequest.RequestedDate);
-                    if(!isMediaRequestTypeUpdateMode)
-                        query.AddMediaRequestResponse(submittedRequest); 
+                    if (!isMediaRequestTypeUpdateMode)
+                    {
+                        query.AddMediaRequestResponse(submittedRequest);
+                        business.PerfomPreFulfillmentProcess(submittedRequest.ACCOUNT, null);
+                    }
 
                 }
                 else
@@ -142,6 +137,8 @@ namespace Cascade.Web.Controllers.API.Media
                             mediaReqType.LastUpdatedDate = DateTime.Now;
                             mediaReqType.LastUpdatedBy = submittedRequest.RequestedByUserId;
                             query.AddMediaRequestdType(mediaReqType);
+
+                            business.PerfomPreFulfillmentProcess(submittedRequest.ACCOUNT, null);
                         }
                         else
                         {

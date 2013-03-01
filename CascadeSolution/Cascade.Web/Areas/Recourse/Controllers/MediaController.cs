@@ -254,7 +254,7 @@ namespace Cascade.Web.Areas.Recourse.Controllers
             DataQueries query = new DataQueries();
             try
             {
-                data = query.GetMediaRequestResponses(UserAgency);
+                data = query.GetMediaRequestResponses(UserAgency,UserId);
             }
             catch (Exception ex)
             {
@@ -439,6 +439,8 @@ namespace Cascade.Web.Areas.Recourse.Controllers
             }
             #endregion
 
+            CascadeBusiness.MediaRequest business = new CascadeBusiness.MediaRequest();
+            business.PerfomPreFulfillmentProcess(PIMSAcctNumber,UserId);
             //Exit 
             if (string.IsNullOrEmpty(hdnRedirectAction))
                 return RedirectToAction("Index", "Home");
@@ -467,13 +469,13 @@ namespace Cascade.Web.Areas.Recourse.Controllers
         public ActionResult GetMediaRequestNotFulfilled()
         {
             CascadeBusiness.MediaRequest business = new CascadeBusiness.MediaRequest();
-            IEnumerable<MediaRequestTypes> data = business.GetNotFulfilled(UserAgency);
+            IEnumerable<MediaRequestTypes> data = business.GetNotFulfilled(UserAgency,UserId);
             return PartialView("_mediaRequestNotFulfilled", data);
         }
 
         public ActionResult MediaFulfillment(string id)
         {
-            ViewBag.Account = id;
+            ViewBag.Id = id;
             return View();
         }
 
@@ -484,7 +486,7 @@ namespace Cascade.Web.Areas.Recourse.Controllers
         public ActionResult GetMediaRequestReadyDownload()
         {
             CascadeBusiness.MediaRequest business = new CascadeBusiness.MediaRequest();
-            IEnumerable<MediaRequestTypes> data = business.GetDownloadable(UserAgency);
+            IEnumerable<MediaRequestTypes> data = business.GetDownloadable(UserAgency,UserId);
             return PartialView("_mediaRequestReadyDownload", data);
         }
 
@@ -492,6 +494,13 @@ namespace Cascade.Web.Areas.Recourse.Controllers
         {
             CascadeBusiness.MediaRequest business = new CascadeBusiness.MediaRequest();
             business.PerformRequestStatusUpdate(id, UserId);
+        }
+
+        public ActionResult MediaDownloaded(string id)
+        {
+            CascadeBusiness.MediaRequest business = new CascadeBusiness.MediaRequest();
+            business.PerformRequestDownloaded(id, UserId);
+            return View("MediaRequestReadyDownload");
         }
     }
 }

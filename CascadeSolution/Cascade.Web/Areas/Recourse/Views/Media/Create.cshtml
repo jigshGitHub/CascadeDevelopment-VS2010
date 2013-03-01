@@ -1,18 +1,30 @@
 ﻿@{
     ViewBag.Title = "MediaRequestCreate";
     Layout = "~/Views/Shared/_Layout.cshtml";
- }
+}
 @Scripts.Render("~/bundles/jquery")
-<h2>
-    Media Request</h2>
-@Html.Hidden("userId", (string)(@ViewBag.UserID)) @Html.Hidden("agencyId", (string)(@ViewBag.AgencyID))
-@Html.Hidden("hdnUserRole", (string)(@ViewBag.UserRole)) @Html.Hidden("hdnId", (string)(@ViewBag.Id))
+
+@*Set title as per user role*@
+@if (ViewBag.UserRole == "user")
+{ 
+    <h2>Media Request: Search for Account</h2>
+}
+else
+{
+    <h2>Media Request</h2> 
+}
+
+@Html.Hidden("userId", (string)(@ViewBag.UserID))
+@Html.Hidden("agencyId", (string)(@ViewBag.AgencyID))
+@Html.Hidden("hdnUserRole", (string)(@ViewBag.UserRole))
+@Html.Hidden("hdnId", (string)(@ViewBag.Id))
 @Html.Hidden("hdnAccount", (string)(@ViewBag.Account))
 <div id="messageSummary" style="font-size: small">
     <ul>
     </ul>
 </div>
-<div id="pimsResults" style="font-size: small">
+
+<div id="pimsResults" style="font-size: small;display:none">
     <table style="text-align: center">
         <tr>
             <th>
@@ -57,7 +69,8 @@
         </tbody>
     </table>
 </div>
-<div id="statementMediaTypeConstraint" style="font-size: small">
+
+<div id="statementMediaTypeConstraint" style="font-size: small; display:none">
     <table style="width: 100%">
         <tr>
             <td colspan="5">
@@ -93,9 +106,10 @@
             </td>
         </tr>
         <tr>
-            <td style="width: 30%; text-align: left">
-                Client Account Number
-            </td>
+            @if (ViewBag.UserRole == "user")
+            {<td style="width: 30%; text-align: left">PIMS Account Number</td> }
+            else
+            {<td style="width: 30%; text-align: left">Client Account Number</td> }
             <td style="width: 1%; text-align: center">
                 :
             </td>
@@ -144,24 +158,26 @@
             </td>
         </tr>
     </table>
-    <table class="searchtable" style="width: 60%" data-bind="visible:pimsDataAvailable">
+    <table class="searchtable" style="width: 60%; display:none" data-bind="visible:pimsDataAvailable">
         <tr>
-            <td style="width: 100%; background-color: #1f497d; display: none">
+            <td colspan="2" style="width: 100%; background-color: #1f497d; display: none">
                 <a href="#" style="text-decoration: none; font-weight: bold; color: white" data-bind="click:showHidePimsData">
                     PIMS Data:</a>
             </td>
         </tr>
         <tr>
-            <td>
-                <b>Verify Client Account Data to View Available Media</b>
-            </td>
+             @if (ViewBag.UserRole == "user")
+             {<td colspan="2"><b>Verify the Account Information to Initiate the Media Request</b></td> }
+             else
+             {<td colspan="2"><b>Verify Client Account Data to View Available Media</b></td> }
+            
         </tr>
         <tr>
-            <td>
+            <td colspan="2">
                 <table data-bind="visible:showPIMSData">
                     <tr>
                         <td style="text-align: left; width: 30%">
-                            Portfolio
+                            Portfolio Number
                         </td>
                         <td style="text-align: center; width: 1%">
                             :
@@ -169,7 +185,9 @@
                         <td data-bind="text:portfolio" style="text-align: left; width: 69%">
                         </td>
                     </tr>
-                    <tr style="display: none">
+                    @if (ViewBag.UserRole == "user")
+                    { 
+                    <tr>
                         <td style="text-align: left; width: 30%">
                             Original Lender / Product
                         </td>
@@ -179,7 +197,7 @@
                         <td data-bind="text:lender" style="text-align: left; width: 69%">
                         </td>
                     </tr>
-                    <tr style="display: none">
+                    <tr>
                         <td style="text-align: left; width: 30%">
                             SSN
                         </td>
@@ -189,6 +207,9 @@
                         <td data-bind="text:ssn" style="text-align: left; width: 69%">
                         </td>
                     </tr>
+                    }
+                    @if (ViewBag.UserRole != "user")
+                    { 
                     <tr>
                         <td style="text-align: left; width: 30%">
                             Account Holder's Name
@@ -199,6 +220,7 @@
                         <td data-bind="text:name" style="text-align: left; width: 69%">
                         </td>
                     </tr>
+                    }
                     <tr>
                         <td style="text-align: left; width: 30%">
                             Open Date
@@ -232,27 +254,44 @@
                 </table>
             </td>
         </tr>
-        <tr>
-            <td style="text-align: right">
-                <input type="button" class="editButton" value="&nbsp;View Media&nbsp;" data-bind="click:viewMedia" />
-            </td>
-        </tr>
+        <tr><td colspan="2" class="dummyitem">&nbsp;</td></tr>
+        @if (ViewBag.UserRole != "user")
+        {
+            <tr>
+                <td colspan="2" style="text-align: right">
+                    <input type="button" class="editButton" value="&nbsp;View Media&nbsp;" data-bind="click:viewMedia" />
+                </td>
+            </tr>
+        }
+        @if (ViewBag.UserRole == "user")
+        { 
+            <tr>
+                <td style="text-align: left">
+                    <input type="button" class="editButton" value="&nbsp;Search for Another Account&nbsp;" data-bind="click:searchForAnother" />
+                </td>
+                <td style="text-align: right">
+                    <input type="button" class="editButton" value="&nbsp;Initiate Media Request&nbsp;" data-bind="click:viewMedia" />
+                </td>
+        
+            </tr>
+        }
     </table>
     <table class="dummyitem">
     </table>
-    <table class="FollowupDatatable" data-bind="visible:showMediaTypeSelection" style="width: 60%">
+    <table class="FollowupDatatable" data-bind="visible:showMediaTypeSelection" style="width: 60%; display:none">
         <tr>
-            <td>
-                Select Media Type and Click "Submit" (Note: Media Shown is Immediately Available)
-            </td>
+             @if (ViewBag.UserRole == "user")
+             {<td colspan="2">Select all Media to request for this Account</td> }
+             else
+             {<td colspan="2">Select Media Type and Click "Submit" (Note: Media Shown is Immediately Available)</td> }
         </tr>
         <tr>
-            <td>
+            <td colspan="2">
                 <input type="checkbox" data-bind="checked:selectAll" />Select All
             </td>
         </tr>
         <tr>
-            <td>
+            <td colspan="2">
                 <table>
                     <tbody data-bind="foreach: mediaTypes">
                         <tr>
@@ -262,8 +301,7 @@
                             <td style="width: 27%" data-bind="text: text, attr:{for: 'mediaType'+ value}">
                             </td>
                             <td style="width: 70%">
-                                <a data-bind="attr: { href: docUrl }"><span data-bind="text:documents">
-                                </span></a>
+                                <span data-bind="text:documents"></span>
                             </td>
                         </tr>
                     </tbody>
@@ -271,11 +309,25 @@
             </td>
         </tr>
         <tr>
-            <td style="text-align: center">
-                <input type="button" class="editButton" value="&nbsp;Submit&nbsp;& Exit" data-bind="click:submit,visible:showSubmit" />
-                <input type="button" class="editButton" value="&nbsp;Submit&nbsp;& Request More"
-                    data-bind="click:submitRequestMore,visible:showSubmit" />
-            </td>
+             @if (ViewBag.UserRole == "user")
+             {
+                 <td style="text-align: left">
+                    <input type="button" class="editButton" value="&nbsp;Submit Request&nbsp;& Exit" data-bind="click:submit,visible:showSubmit" />
+                 </td>
+                 <td style="text-align: right">
+                    <input type="button" class="editButton" value="&nbsp;Submit Request &nbsp;& Search More Accounts" data-bind="click:submitRequestMore,visible:showSubmit" />
+                 </td>
+             }
+             else
+             {
+                 <td style="text-align: left">
+                    <input type="button" class="editButton" value="&nbsp;Submit&nbsp;& Exit" data-bind="click:submit,visible:showSubmit" />
+                 </td> 
+                 <td style="text-align: right">
+                    <input type="button" class="editButton" value="&nbsp;Submit&nbsp;& Request More" data-bind="click:submitRequestMore,visible:showSubmit" />
+                 </td>
+             }
+            
         </tr>
     </table>
 </div>

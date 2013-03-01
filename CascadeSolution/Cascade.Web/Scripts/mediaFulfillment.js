@@ -33,7 +33,7 @@ function mediaType(id,text, value, visible, fulFilledChecked) {
     self.documents = ko.observable('');
     self.docUrl = ko.observable('');
 }
-function pageViewModel(userId, userAgency, userRole, id, account) {
+function pageViewModel(userId, userAgency, userRole, id) {
     log(userId + ' ' + userAgency + ' ' + userRole);
     var self = this;
     self.userId = ko.observable(userId);
@@ -62,17 +62,17 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
     }
     self.showMediaTypeSelection = ko.observable(false);
     self.id = ko.observable(id);
-    self.pimsAccountNumber = ko.observable((account == '') ? pimsAccountFocusString : account);
+    self.pimsAccountNumber = ko.observable('');
     self.pimsAccountNumberRequired = ko.observable('*');
     self.pimsAccountNumberRequiredMsg = ko.observable('');
     self.pimsAccountNumberRequiredHasError = ko.observable(false);
 
-    self.originalAccountNumber = ko.observable(originalAccountFocusString);
+    self.originalAccountNumber = ko.observable('');
     self.originalAccountNumberRequired = ko.observable('*');
     self.originalAccountNumberRequiredMsg = ko.observable('');
     self.originalAccountNumberRequiredHasError = ko.observable(false);
 
-    self.clientName = ko.observable(fOrlNameFocusString);
+    self.clientName = ko.observable('');
 
     self.pimsRecords = ko.observableArray([]);
     self.portfolio = ko.observable('');
@@ -114,99 +114,28 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
         self.getPimsDetails();
     }
 
-    self.search = function () {
-        self.setShowMessagePanel(false, '');
-        if (self.pimsAccountNumber() == pimsAccountFocusString && self.originalAccountNumber() == originalAccountFocusString && self.clientName() == fOrlNameFocusString) {
-            self.setShowMessagePanel(true, pimsAccountFocusString + ' OR ' + originalAccountFocusString + ' OR ' + fOrlNameFocusString + ' is required for searching');
-            self.setFocus(true);
-            return;
-        }
-        self.searchedIdnetity = self.pimsAccountNumber(); //default
-        if (self.originalAccountNumber() != originalAccountFocusString) {
-            self.searchedIdnetity = self.originalAccountNumber();
-            self.searchedType = 'original';
-        }
-        if (self.clientName() != fOrlNameFocusString) {
-            self.searchedIdnetity = self.clientName();
-            self.searchedType = 'name';
-        }
-        $("#loading").html("<img src=\"" + absoluteapp + imagedir + "/ajax-loader.gif\" />");
-        $("#loading").dialog('open');
-        if (self.searchedType == 'name') {
-            window.open(baseUrl + '/Recourse/Media/PIMSDataSearch?nameSearch=' + self.clientName(), '_self', '', '');
-        }
-        else {
-            self.getPimsDetails();
-        }
-
-    };
-
-    self.getPimsDetails = function () {
+    self.loadExisitingRequest = function () {
         $.ajax({
             url: baseUrl + '/api/MediaRequest/Details',
             type: "GET",
-            data: { accountNumber: self.searchedIdnetity, agency: self.agency(), scenario: 'PerfomPreFulfillmentProcess' },
-            dataType: 'json',
-            async: true,
-            success: function (data) {
-                //log(data);                
-                $("#loading").html("&nbsp;");
-                $("#loading").dialog('close');
+            data: { id: self.id() },
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (response) {
                 self.pimsDataAvailable(true);
-                self.setPimsData(data);
+                self.setPimsData(response);
                 self.showMediaTypeSelection(true);
-                self.loadMediaTypes(data.MSI_MediaRequestTypes);
-                //self.setSelectedMediaRequested(data.MSI_MediaRequestTypes);
+                self.loadMediaTypes(response.MSI_MediaRequestTypes);
             },
-            error: function (xhr, status, error) {
-
+            error: function (response, errorText) {
+                log(errorText);
             }
         });
+
     }
     self.viewMedia = function () {
         self.showMediaTypeSelection(true);
     }
-//    self.setSelectedMediaRequested = function (data) {
-
-//        $.each(data, function (i, item) {
-//            $.each(self.mediaTypes(), function (i, mediaItem) {
-//                if (mediaItem.value() == item.TypeId) {
-//                    //log(item.TypeId);
-//                    mediaItem.visible(true);
-//                    mediaItem.documents((item.RespondedDocuments == null) ? 'NO MEDIA IN HOUSE' : getFileName(item.RespondedDocuments));
-//                    self.fulFilledMediaTypes.push(mediaItem);
-//                }
-//            });
-
-//        });
-//        if (self.fulFilledMediaTypes.length == self.mediaTypes.length)
-//            self.fulFilledMediaTypes([]);
-//    }
-
-
-    //    self.loadExisitingRequest = function () {
-    //        //log(self.id());
-    //        self.showSearchCriteria(false);
-
-    //        $.ajax({
-    //            url: baseUrl + '/api/MediaRequest/Details',
-    //            type: "GET",
-    //            data: { id: self.id() },
-    //            contentType: "application/json; charset=utf-8",
-    //            async: false,
-    //            success: function (response) {
-    //                self.pimsDataAvailable(true);
-    //                self.setPimsData(response);
-    //                self.showMediaTypeSelection(true);
-    //                self.loadMediaTypes();
-    //                self.setSelectedMediaRequested(response.MSI_MediaRequestTypes);
-    //            },
-    //            error: function (response, errorText) {
-    //                return false;
-    //            }
-    //        });
-
-    //    }
 
     self.loadMediaTypes = function (requestedTypes) {
         $.ajax({
@@ -221,7 +150,8 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
                     var requestedMedia;
                     $.each(data, function (i, item) {
                         $.each(requestedTypes, function (i, requestedItem) {
-                            if (item.Value == requestedItem.TypeId) {
+                            
+                            if (item.Value == requestedItem.TypeId && requestedItem.RequestStatusId != 4  ) {
                                 requestedMedia = new mediaType(requestedItem.Id, item.Text, item.Value, (requestedItem.RespondedDocuments == null) ? false : true, false);
                                 requestedMedia.docUrl((requestedItem.RespondedDocuments == null) ? '' : baseUrl + '/Recourse/Media/DownloadDoc?fileName=' + requestedItem.RespondedDocuments);
                                 requestedMedia.documents((requestedItem.RespondedDocuments == null) ? 'NO MEDIA IN HOUSE' : getFileName(requestedItem.RespondedDocuments));
@@ -247,9 +177,9 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
         //If it is checked and not in the array, add it
         if (isChecked && self.fulFilledMediaTypes.indexOf(media) < 0) {
             self.fulFilledMediaTypes.push(media);
-            if (media.value() == '5') {
-                $("#statementMediaTypeConstraint").dialog('open');
-            }
+//            if (media.value() == '5') {
+//                $("#statementMediaTypeConstraint").dialog('open');
+//            }
         }
         //If it is in the array and not checked remove it                
         else if (!isChecked && self.fulFilledMediaTypes.indexOf(media) >= 0) {
@@ -263,9 +193,9 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
     checkMediaTypeChecked = function (isChecked, media) {
         if (isChecked && self.fulFilledMediaTypes.indexOf(media) < 0) {
             self.fulFilledMediaTypes.push(media);
-            if (media.value() == '5') {
-                $("#statementMediaTypeConstraint").dialog('open');
-            }
+//            if (media.value() == '5') {
+//                $("#statementMediaTypeConstraint").dialog('open');
+//            }
         }
         //If it is in the array and not checked remove it                
         else if (!isChecked && self.fulFilledMediaTypes.indexOf(media) >= 0) {
@@ -293,9 +223,9 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
         $("#statementMediaTypeConstraint").dialog('close');
         $.each(self.fulFilledMediaTypes(), function (i, item) {
             var media = item;
-            if (media.value() == '5') {
-                media.typeConstraints(self.statementStDt() + ';' + self.statementEndDt());
-            }
+//            if (media.value() == '5') {
+//                media.typeConstraints(self.statementStDt() + ';' + self.statementEndDt());
+//            }
         });
     }
     self.showSubmit = ko.computed(function () { return (self.fulFilledMediaTypes().length > 0); }, self);

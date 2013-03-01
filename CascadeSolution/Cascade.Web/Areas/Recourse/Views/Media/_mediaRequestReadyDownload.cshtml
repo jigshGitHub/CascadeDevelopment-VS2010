@@ -24,11 +24,14 @@
             </th>
             <th>
             </th>
+            <th>
+            </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var pimsRecord in Model)
         {
+
             <tr>
                 <td>@pimsRecord.MSIMediaRequestResponse.ACCOUNT
                 </td>
@@ -44,6 +47,9 @@
                 </td>
                 <td style="">@Html.ActionLink("Download", "DownloadDoc", new { fileName = pimsRecord.MSIMediaRequestTypes.RespondedDocuments })
                 </td>
+                <td style="">
+                    @Html.ActionLink("Remove", "MediaDownloaded", new { id = pimsRecord.MSIMediaRequestTypes.Id }, new { @class = "confirmDownload" })
+                </td>
             </tr> 
             
         }
@@ -54,7 +60,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#mediaRecordsDownloadable').dataTable(
-            {                
+            {
                 "aoColumns": [
                     null,
                     null,
@@ -66,7 +72,29 @@
                         "bSearchable": false,
                         "bSortable": false
                     },
+                    {
+                        "bSearchable": false,
+                        "bSortable": false
+                    }
                  ]
             });
+        $('a.confirmDownload').click(function () {
+            var response = confirm('Are you sure you want to remove this media from the list of ready to download?');
+            //            event.preventDefault();
+            //            if (eval(response)) {
+            //                var url = $(this).attr('href');
+            //                $.ajax({
+            //                    url: url,
+            //                    async: true,
+            //                    success: function (data) {
+            //                        alert('Media has been confirmed as downloaded');
+            //                    },
+            //                    error: function (xhr, status, error) {
+
+            //                    }
+            //                });
+            //            }
+            return eval(response);
+        });
     });
 </script>

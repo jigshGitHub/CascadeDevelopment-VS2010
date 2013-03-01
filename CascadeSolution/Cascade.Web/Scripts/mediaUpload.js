@@ -178,16 +178,17 @@ function pageViewModel(userId, userAgency, userRole, id)
         }
 
     };
-    
+
     self.getPimsDetails = function () {
+        log('Getting from MSI_MediaRequestResponse');
         $.ajax({
             url: baseUrl + '/api/MediaRequest/Details',
             type: "GET",
-            data: { accountNumber: self.searchedIdnetity, agency: self.agency(),scenario :'' },
+            data: { accountNumber: self.searchedIdnetity, agency: self.agency(), userId:self.userId()},
             dataType: 'json',
             async: true,
             success: function (data) {
-                log(data);
+                log('Getting from RAccount');
                 if (data == null) {
                     $.ajax({
                         url: baseUrl + '/api/RAccount/Details/',

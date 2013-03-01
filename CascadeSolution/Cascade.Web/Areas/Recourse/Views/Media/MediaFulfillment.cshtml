@@ -3,9 +3,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";}
 <h2>
     Media Fulfillment - Request for Media by User</h2>
-@Html.Hidden("userId", (string)(@ViewBag.UserID)) @Html.Hidden("agencyId", (string)(@ViewBag.AgencyID))
-@Html.Hidden("hdnUserRole", (string)(@ViewBag.UserRole)) @Html.Hidden("hdnId", (string)(@ViewBag.Id))
-@Html.Hidden("hdnAccount", (string)(@ViewBag.Account))
+@Html.Hidden("userId", (string)(@ViewBag.UserID))
+@Html.Hidden("agencyId", (string)(@ViewBag.AgencyID))
+@Html.Hidden("hdnUserRole", (string)(@ViewBag.UserRole)) 
+@Html.Hidden("hdnId", (string)(@ViewBag.Id))
 <div id="messageSummary" style="font-size: small">
     <ul>
     </ul>
@@ -98,7 +99,7 @@
                 :
             </td>
             <td style="width: 69%; text-align: left">
-                <input type="text" id="pimsAccount" data-bind="hasfocus:setFocus,value:pimsAccountNumber" />
+                <input type="text" id="pimsAccount" data-bind="enable:false,value:pimsAccountNumber" />
                 <span data-bind="text:pimsAccountNumberRequired, visible:pimsAccountNumberRequiredHasError"
                     style="color: Red"></span>
             </td>
@@ -111,7 +112,7 @@
                 :
             </td>
             <td style="width: 69%; text-align: left">
-                <input type="text" id="clientName" data-bind="value:clientName" />
+                <input type="text" id="clientName" data-bind="enable:false,value:clientName" />
             </td>
         </tr>
         <tr>
@@ -122,14 +123,9 @@
                 :
             </td>
             <td style="width: 69%; text-align: left">
-                <input type="text" id="originalAccount" data-bind="value:originalAccountNumber" />
+                <input type="text" id="originalAccount" data-bind="enable:false,value:originalAccountNumber" />
                 <span data-bind="text:originalAccountNumberRequired, visible:originalAccountNumberRequiredHasError"
                     style="color: Red"></span>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3" class="confirmBtnContainer">
-                <input type="button" id="refreshBtn" title="Search" data-bind="visible:false,click:search" />
             </td>
         </tr>
     </table>
@@ -303,13 +299,10 @@
             $('#messageSummary').dialog({ modal: true, title: 'Summary:', autoOpen: false, width: 200, height: 200 });
             $('#pimsResults').dialog({ modal: true, title: 'Select account:', autoOpen: false, width: 800, height: 500 });
             $('#statementMediaTypeConstraint').dialog({ modal: true, title: '', autoOpen: false, width: 500, height: 200 });
-            var pageVM = new pageViewModel($('#userId').val(), $('#agencyId').val(), $('#hdnUserRole').val(), $('#hdnId').val(), $('#hdnAccount').val())
+            var pageVM = new pageViewModel($('#userId').val(), $('#agencyId').val(), $('#hdnUserRole').val(), $('#hdnId').val())
             ko.applyBindings(pageVM);
             if ($('#hdnId').val() != '') {
                 pageVM.loadExisitingRequest();
-            }
-            if ($('#hdnAccount').val() != '') {
-                pageVM.search();
             }
 
             $('#pimsAccount').focus(function () { $(this).val(''); }).blur(function () { if ($(this).val() == '') $(this).val(pimsAccountFocusString); });

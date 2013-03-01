@@ -5,7 +5,12 @@
 /// <reference path="jquery.validate.js" />
 /// <reference path="jquery.validate.unobtrusive.js" />
 /// <reference path="knockout-2.0.0.debug.js" />
-var pimsAccountFocusString = 'Client Account Number';
+if ($('#hdnUserRole').val() == 'user') {
+    var pimsAccountFocusString = 'PIMS Account Number';
+}
+else {
+    var pimsAccountFocusString = 'Client Account Number';
+}
 var originalAccountFocusString = 'Original Account Number';
 var fOrlNameFocusString = 'First Or Last Name';
 
@@ -94,7 +99,13 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
         self.originalAccountNumber(data.OriginalAccount);
         self.portfolio(data.Portfolio);
         self.lender(data.Originator);
-        self.ssn(data.SSN);
+        if (data.SSN.indexOf('-') > 0) {
+            var n = data.SSN.split("-");
+            self.ssn(n[2]);
+        }
+        else {
+            self.ssn(data.SSN);
+        }
         self.name(data.NAME);
         self.clientName(data.NAME);
         self.openDate(getFormatedDate(data.OpenDate));
@@ -132,28 +143,28 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
         $("#loading").dialog('open');
         if (self.searchedType == 'name') {
             window.open(baseUrl + '/Recourse/Media/PIMSDataSearch?nameSearch=' + self.clientName(), '_self', '', '');
-        /*
+            /*
             $.ajax({
-                url: baseUrl + '/api/RAccount/',
-                type: "GET",
-                data: { nameSearch: self.clientName() },
-                dataType: 'json',
-                async: true,
-                success: function (data) {
-                    $("#loading").html("&nbsp;");
-                    $("#loading").dialog('close');
-                    if (data != null) {
-                        $.each(data, function (i, item) {
-                            item.OpenDate = getFormatedDate(item.OpenDate);
-                            item.ChargeOffDate = getFormatedDate(item.ChargeOffDate);
-                            self.pimsRecords.push(item);
-                        });
-                        $("#pimsResults").dialog('open');
-                    }
-                },
-                error: function (xhr, status, error) {
+            url: baseUrl + '/api/RAccount/',
+            type: "GET",
+            data: { nameSearch: self.clientName() },
+            dataType: 'json',
+            async: true,
+            success: function (data) {
+            $("#loading").html("&nbsp;");
+            $("#loading").dialog('close');
+            if (data != null) {
+            $.each(data, function (i, item) {
+            item.OpenDate = getFormatedDate(item.OpenDate);
+            item.ChargeOffDate = getFormatedDate(item.ChargeOffDate);
+            self.pimsRecords.push(item);
+            });
+            $("#pimsResults").dialog('open');
+            }
+            },
+            error: function (xhr, status, error) {
 
-                }
+            }
             });
             */
         }
@@ -164,15 +175,16 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
     };
 
     self.getPimsDetails = function () {
+        log('Getting from MSI_MediaRequestResponse');
         $.ajax({
             url: baseUrl + '/api/MediaRequest/Details',
             type: "GET",
-            data: { accountNumber: self.searchedIdnetity, agency: self.agency(),scenario :'' },
+            data: { accountNumber: self.searchedIdnetity, agency: self.agency(), userId: self.userId() },
             dataType: 'json',
             async: true,
             success: function (data) {
-                log(data);
                 if (data == null) {
+                    log('Getting from RAccount');
                     $.ajax({
                         url: baseUrl + '/api/RAccount/Details/',
                         type: 'GET',
@@ -214,13 +226,16 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
     self.viewMedia = function () {
         self.showMediaTypeSelection(true);
     }
+    //Search for Another Account - Basically reloading the page
+    self.searchForAnother = function () {
+        window.open(baseUrl + '/Recourse/Media/Create', '_self', '', '');
+    }
     self.setSelectedMediaRequested = function (data) {
 
         $.each(data, function (i, item) {
             $.each(self.mediaTypes(), function (i, mediaItem) {
-                log(item);
                 if (mediaItem.value() == item.TypeId) {
-                    //log(item.TypeId);
+                    log('Metching media type ' + mediaItem.text());
                     mediaItem.enable(false);
                     mediaItem.checked(true);
                     if (item.RespondedDocuments != null) {
@@ -307,7 +322,7 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
         return true;
     }
 
-    checkMediaTypeChecked = function (isChecked,media) {
+    checkMediaTypeChecked = function (isChecked, media) {
         if (isChecked && self.selectedMediaTypes.indexOf(media) < 0) {
             self.selectedMediaTypes.push(media);
             if (media.value() == '5') {
@@ -327,7 +342,7 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
             return firstUnchecked == null;
         },
         write: function (value) {
-            
+
             ko.utils.arrayForEach(self.mediaTypes(), function (item) {
                 item.checked(value);
                 checkMediaTypeChecked(value, item);
@@ -395,7 +410,7 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
 
     self.submitRequestMore = function () {
         self.submit();
-        window.open(baseUrl + '/Recourse/Media/Create', '_self', '', ''); 
+        window.open(baseUrl + '/Recourse/Media/Create', '_self', '', '');
     }
 }
 
