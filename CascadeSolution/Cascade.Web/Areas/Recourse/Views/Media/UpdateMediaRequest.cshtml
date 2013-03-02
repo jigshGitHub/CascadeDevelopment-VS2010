@@ -4,117 +4,31 @@
 }
 @Scripts.Render("~/bundles/jquery")
 
-@*Set title as per user role*@
-@if (ViewBag.UserRole == "user")
-{ 
-    <h2>Media Request: Search for Account</h2>
-}
-else
-{
-    <h2>Media Request</h2> 
-}
+<h2>Media Request</h2>
 
 @Html.Hidden("userId", (string)(@ViewBag.UserID))
-@Html.Hidden("agencyId", (string)(@ViewBag.AgencyID))
 @Html.Hidden("hdnUserRole", (string)(@ViewBag.UserRole))
 @Html.Hidden("hdnId", (string)(@ViewBag.Id))
-@Html.Hidden("hdnAccount", (string)(@ViewBag.Account))
 <div id="messageSummary" style="font-size: small">
     <ul>
     </ul>
 </div>
 
-<div id="pimsResults" style="font-size: small;display:none">
-    <table style="text-align: center">
-        <tr>
-            <th>
-                Last name
-            </th>
-            <th>
-                First Name
-            </th>
-            <th>
-                Client Account #
-            </th>
-            <th>
-                Original Account #
-            </th>
-            <th>
-                Opened Date
-            </th>
-            <th>
-                C/O Date
-            </th>
-            <th>
-            </th>
-        </tr>
-        <tbody data-bind="foreach:pimsRecords">
-            <tr>
-                <td data-bind="text:LastName">
-                </td>
-                <td data-bind="text:FirstName">
-                </td>
-                <td data-bind="text:ACCOUNT">
-                </td>
-                <td data-bind="text:OriginalAccount">
-                </td>
-                <td data-bind="text:OpenDate">
-                </td>
-                <td data-bind="text:ChargeOffDate">
-                </td>
-                <td>
-                    <a href="#" data-bind="click:$root.selectedAccount">View Details</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
 
-<div id="statementMediaTypeConstraint" style="font-size: small; display:none">
-    <table style="width: 100%">
-        <tr>
-            <td colspan="5">
-                Statement Date Range
-            </td>
-        </tr>
-        <tr>
-            <td>
-                From
-            </td>
-            <td>
-                <input type="text" id="statementStDt" data-bind="value:statementStDt" />
-            </td>
-            <td>
-                To
-            </td>
-            <td>
-                <input type="text" id="statementEndDt" data-bind="value:statementEndDt" />
-            </td>
-            <td>
-                <input type="button" class="editButton" value="OK" data-bind="click:submitStatementDateRange" />
-            </td>
-        </tr>
-        <tr>
-        </tr>
-    </table>
-</div>
 <div id="newComplaintContainer">
     <table class="searchtable" style="width: 60%" data-bind="visible:showSearchCriteria">
         <tr>
             <td colspan="3">
-                <b>Retrieve Account Information to begin Media Request (use any field to search):</b>
+                <b>General Account Information:</b>
             </td>
         </tr>
         <tr>
-            @if (ViewBag.UserRole == "user")
-            {<td style="width: 30%; text-align: left">PIMS Account Number</td> }
-            else
-            {<td style="width: 30%; text-align: left">Client Account Number</td> }
+            <td style="width: 30%; text-align: left">PIMS Account Number</td>            
             <td style="width: 1%; text-align: center">
                 :
             </td>
             <td style="width: 69%; text-align: left">
-                <input type="text" id="pimsAccount" data-bind="hasfocus:setFocus,value:pimsAccountNumber" />
+                <input type="text" id="pimsAccount" data-bind="enable:false,value:pimsAccountNumber" />
                 <span data-bind="text:pimsAccountNumberRequired, visible:pimsAccountNumberRequiredHasError"
                     style="color: Red"></span>
             </td>
@@ -127,7 +41,7 @@ else
                 :
             </td>
             <td style="width: 69%; text-align: left">
-                <input type="text" id="clientName" data-bind="value:clientName" />
+                <input type="text" id="clientName" data-bind="enable:false,value:clientName" />
             </td>
         </tr>
         <tr>
@@ -138,14 +52,9 @@ else
                 :
             </td>
             <td style="width: 69%; text-align: left">
-                <input type="text" id="originalAccount" data-bind="value:originalAccountNumber" />
+                <input type="text" id="originalAccount" data-bind="enable:false,value:originalAccountNumber" />
                 <span data-bind="text:originalAccountNumberRequired, visible:originalAccountNumberRequiredHasError"
                     style="color: Red"></span>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3" class="confirmBtnContainer">
-                <input type="button" id="refreshBtn" title="Search" data-bind="click:search" />
             </td>
         </tr>
     </table>
@@ -166,10 +75,7 @@ else
             </td>
         </tr>
         <tr>
-             @if (ViewBag.UserRole == "user")
-             {<td colspan="2"><b>Verify the Account Information to Initiate the Media Request</b></td> }
-             else
-             {<td colspan="2"><b>Verify Client Account Data to View Available Media</b></td> }
+             <td colspan="2"><b>Verify the Account Information to update the Media Request</b></td>
             
         </tr>
         <tr>
@@ -184,9 +90,7 @@ else
                         </td>
                         <td data-bind="text:portfolio" style="text-align: left; width: 69%">
                         </td>
-                    </tr>
-                    @if (ViewBag.UserRole == "user")
-                    { 
+                    </tr>                     
                     <tr>
                         <td style="text-align: left; width: 30%">
                             Original Lender / Product
@@ -207,20 +111,6 @@ else
                         <td data-bind="text:ssn" style="text-align: left; width: 69%">
                         </td>
                     </tr>
-                    }
-                    @if (ViewBag.UserRole != "user")
-                    { 
-                    <tr>
-                        <td style="text-align: left; width: 30%">
-                            Account Holder's Name
-                        </td>
-                        <td style="text-align: center; width: 1%">
-                            :
-                        </td>
-                        <td data-bind="text:name" style="text-align: left; width: 69%">
-                        </td>
-                    </tr>
-                    }
                     <tr>
                         <td style="text-align: left; width: 30%">
                             Open Date
@@ -254,27 +144,6 @@ else
                 </table>
             </td>
         </tr>
-        <tr><td colspan="2" class="dummyitem">&nbsp;</td></tr>
-        @if (ViewBag.UserRole != "user")
-        {
-            <tr>
-                <td colspan="2" style="text-align: right">
-                    <input type="button" class="editButton" value="&nbsp;View Media&nbsp;" data-bind="click:viewMedia" />
-                </td>
-            </tr>
-        }
-        @if (ViewBag.UserRole == "user")
-        { 
-            <tr>
-                <td style="text-align: left">
-                    <input type="button" class="editButton" value="&nbsp;Search for Another Account&nbsp;" data-bind="click:searchForAnother" />
-                </td>
-                <td style="text-align: right">
-                    <input type="button" class="editButton" value="&nbsp;Initiate Media Request&nbsp;" data-bind="click:viewMedia" />
-                </td>
-        
-            </tr>
-        }
     </table>
     <table class="dummyitem">
     </table>
@@ -296,13 +165,9 @@ else
                     <tbody data-bind="foreach: mediaTypes">
                         <tr>
                             <td style="width: 3%">
-                                <input type="checkbox" data-bind="enable:enable,checked:checked,click: $parent.mediaChecked,value:value,attr: {id: 'mediaType' + value}" />
+                                <input type="checkbox" data-bind="checked:checked,click: $parent.mediaChecked,value:value,attr: {id: 'mediaType' + value}" />
                             </td>
-                            <td style="width: 27%" data-bind="text: text, attr:{for: 'mediaType'+ value}">
-                            </td>
-                            <td style="width:20%" data-bind="text:typeConstraintsTxt"></td>
-                            <td style="width: 70%">
-                                <span data-bind="text:documents"></span>
+                            <td style="width: 97%" data-bind="text: text, attr:{for: 'mediaType'+ value}">
                             </td>
                         </tr>
                     </tbody>
@@ -335,29 +200,15 @@ else
 @Scripts.Render("~/bundles/knockout")
 @section scripts{
     <script src="~/Scripts/jquery-ui-1.8.11.js" type="text/javascript"></script>
-    <script src="~/Scripts/mediaRequest.js" type="text/javascript"></script>
+    <script src="~/Scripts/updateMediaRequest.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $('#messageSummary').dialog({ modal: true, title: 'Summary:', autoOpen: false, width: 200, height: 200 });
-            $('#pimsResults').dialog({ modal: true, title: 'Select account:', autoOpen: false, width: 800, height: 500 });
-            var pageVM = new pageViewModel($('#userId').val(), $('#agencyId').val(), $('#hdnUserRole').val(), $('#hdnId').val(), $('#hdnAccount').val())
+            var pageVM = new pageViewModel($('#userId').val(), $('#agencyId').val(), $('#hdnUserRole').val(), $('#hdnId').val())
             ko.applyBindings(pageVM);
-            $('#statementMediaTypeConstraint').dialog({ modal: true, title: '', autoOpen: false, width: 500, height: 200 });
-
-
             if ($('#hdnId').val() != '') {
                 pageVM.loadExisitingRequest();
             }
-            if ($('#hdnAccount').val() != '') {
-                pageVM.search();
-            }
-
-            $('#pimsAccount').focus(function () { $(this).val(''); }).blur(function () { if ($(this).val() == '') $(this).val(pimsAccountFocusString); });
-            $('#clientName').focus(function () { $(this).val(''); }).blur(function () { if ($(this).val() == '') $(this).val(fOrlNameFocusString); });
-            $('#originalAccount').focus(function () { $(this).val(''); }).blur(function () { if ($(this).val() == '') $(this).val(originalAccountFocusString); });
-
-            $('#statementStDt').datepicker({ dateFormat: 'mm/dd/yy' });
-            $('#statementEndDt').datepicker({ dateFormat: 'mm/dd/yy' });
         });
     </script>
 }

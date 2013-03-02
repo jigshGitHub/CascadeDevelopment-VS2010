@@ -105,6 +105,11 @@ namespace Cascade.Web.Controllers.API.Media
                                 isMediaRequestTypeUpdateMode = true;
                                 business.PerfomPostFulfillmentProcess(mediaReqType.Id, mediaReqType.RespondedUserID.Value);
                             }
+                            if (mediaReqType.RequestStatusId == (int)MediaRequestStatus.RequestComplete)
+                            {
+                                isMediaRequestTypeUpdateMode = true;
+                                business.PerfomCompleteRequest(mediaReqType.Id, mediaReqType.RespondedUserID.Value);
+                            }
                         }
                         else
                         {

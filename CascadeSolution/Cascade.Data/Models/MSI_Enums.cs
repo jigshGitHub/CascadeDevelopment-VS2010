@@ -10,6 +10,8 @@ namespace Cascade.Data.Models
         RequestReceived = 1,
         RequestInProgress = 2,
         PendingResearch = 3,
-        RequestFulfillment = 4
+        RequestFulfillment = 4,
+        ReSubmit = 5,
+        RequestComplete = 6
     }
 }

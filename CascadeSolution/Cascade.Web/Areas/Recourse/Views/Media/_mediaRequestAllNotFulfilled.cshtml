@@ -1,0 +1,82 @@
+﻿@model IEnumerable<Cascade.ViewModels.Recourse.Media.MediaRequestTypes>
+@using Cascade.Web.Presentation.ExtensionMethods
+<link href="@Url.Content("~/Content/dataTables/demo_table.css")" rel="stylesheet" type="text/css" />
+<script src="~/Scripts/datatable/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/index.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/jquery.dataTables.min.js" type="text/javascript"></script>
+<h2>
+    Media Request - Accounts with Media Not Yet Fulfilled</h2>
+<div id="divpimsMediaRecords">
+    <table id="mediaRecordsNotFulfilled" class="display">
+        <thead>
+            <tr>
+                <th>
+                    PIMS Account #
+                </th>
+                <th>
+                    Requested By
+                </th>
+                <th>
+                    Portfolio #
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Media Type
+                </th>
+                <th>
+                    Date Requested
+                </th>
+                <th>
+                    Fulfillment Status
+                </th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pimsRecord in Model)
+            {
+
+                <tr>
+                    <td>@pimsRecord.MSIMediaRequestResponse.ACCOUNT
+                    </td>
+                    <td>@pimsRecord.MSIMediaRequestResponse.AgencyId
+                    </td>
+                    <td>@pimsRecord.MSIMediaRequestResponse.Portfolio
+                    </td>
+                    <td>@pimsRecord.MSIMediaRequestResponse.NAME
+                    </td>
+                    <td>@pimsRecord.MediaType
+                    </td>
+                    <td>@pimsRecord.MSIMediaRequestTypes.RequestedDate.ConverToDate()
+                    </td>
+                    <td>@pimsRecord.MediaStatus
+                    </td>
+                    <td style="">@Html.ActionLink("View Details", "UpdateMediaRequest", new { id = pimsRecord.MSIMediaRequestResponse.Id })
+                    </td>
+                </tr> 
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('a.statusUpdate').click(function () {
+            event.preventDefault();
+
+            var url = $(this).attr('href');
+            $.ajax({
+                url: url,
+                async: true,
+                success: function (data) {
+                    alert('Request for status update has been submitted');
+                },
+                error: function (xhr, status, error) {
+
+                }
+            });
+        });
+    });
+</script>

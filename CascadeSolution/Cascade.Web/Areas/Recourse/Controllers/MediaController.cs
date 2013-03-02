@@ -281,6 +281,23 @@ namespace Cascade.Web.Areas.Recourse.Controllers
             return View();
         }
 
+        public ActionResult UpdateMediaRequest(string id)
+        {
+
+            if (!string.IsNullOrEmpty(id))
+            {
+                Guid result;
+                if (Guid.TryParse(id, out result))
+                {
+                    ViewBag.Id = result.ToString();
+                }
+                else
+                    ViewBag.Account = id;
+
+            }
+            return View();
+        }
+
         public ActionResult MediaUpload()
         {
             //ViewBag.UserID = UserId.ToString();
@@ -460,17 +477,30 @@ namespace Cascade.Web.Areas.Recourse.Controllers
             return PartialView("_pimsMediaRecords", data);
         }
 
-        public ActionResult MediaRequestNotFulfilled()
+        public ActionResult MediaRequestNotFulfilled(string id)
         {
-            ViewBag.RoleBasedHeaderTitle = (UserRoles.Contains("agency")) ? "Media Request" : "Media Fulfillment";
+            ViewBag.RequestBy = id;
             return View();
         }
 
-        public ActionResult GetMediaRequestNotFulfilled()
+        public ActionResult GetMediaNotFulfilled(string id)
         {
             CascadeBusiness.MediaRequest business = new CascadeBusiness.MediaRequest();
-            IEnumerable<MediaRequestTypes> data = business.GetNotFulfilled(UserAgency,UserId);
-            return PartialView("_mediaRequestNotFulfilled", data);
+            IEnumerable<MediaRequestTypes> data;
+            PartialViewResult returnView = null;
+            if (id == "ByAgency")
+            {
+                ViewBag.RoleBasedHeaderTitle = (UserRoles.Contains("agency")) ? "Media Request" : "Media Fulfillment";
+                data = business.GetNotFulfilled(UserAgency, UserId);
+                returnView = PartialView("_mediaRequestNotFulfilled", data);
+            }
+            else if (id == "All")
+            {
+                ViewBag.RoleBasedHeaderTitle = (UserRoles.Contains("agency")) ? "Media Request" : "Media Fulfillment";
+                data = business.GetNotCimpleted();
+                returnView = PartialView("_mediaRequestAllNotFulfilled", data);
+            }
+            return returnView;
         }
 
         public ActionResult MediaFulfillment(string id)

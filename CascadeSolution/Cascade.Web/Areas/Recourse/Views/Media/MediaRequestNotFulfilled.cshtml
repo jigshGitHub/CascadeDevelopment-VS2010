@@ -3,9 +3,7 @@
     ViewBag.Title = "MediaRequestNotFulfilled";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h2>
-    @ViewBag.RoleBasedHeaderTitle - Accounts with Requested Media Not Yet Fulfilled</h2>
-    
+    @Html.Hidden("hdnRequestBy", (string)(@ViewBag.RequestBy))
 @Scripts.Render("~/bundles/jquery")
 
 <div id="divPimsMediaRecords"></div> 
@@ -16,7 +14,7 @@
         $(document).ready(function () {
             var href = window.location.href.split('/');
             var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
-            $("#divPimsMediaRecords").load(baseUrl + '/Media/GetMediaRequestNotFulfilled/');
+            $("#divPimsMediaRecords").load(baseUrl + '/Media/GetMediaNotFulfilled/' + $('#hdnRequestBy').val());
         });
         
     </script>

@@ -541,6 +541,11 @@
     <Content Include="Areas\Search\Views\Home\_BasicPartial.cshtml" />
     <Content Include="Areas\Search\Views\Web.config" />
     <Content Include="Areas\Search\Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_AdvancedSearchPartial.cshtml" />
+    <Content Include="Views\Shared\_BasicSearchPartial.cshtml" />
+    <Content Include="Views\Shared\_FooterPartial.cshtml" />
+    <Content Include="Views\Shared\_LHSMenuPartial.cshtml" />
+    <Content Include="Views\Shared\_MenuPartial.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

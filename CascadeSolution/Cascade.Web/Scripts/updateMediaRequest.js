@@ -5,14 +5,7 @@
 /// <reference path="jquery.validate.js" />
 /// <reference path="jquery.validate.unobtrusive.js" />
 /// <reference path="knockout-2.0.0.debug.js" />
-if ($('#hdnUserRole').val() == 'user') {
-    var pimsAccountFocusString = 'PIMS Account Number';
-}
-else {
-    var pimsAccountFocusString = 'Client Account Number';
-}
-var originalAccountFocusString = 'Original Account Number';
-var fOrlNameFocusString = 'First Or Last Name';
+
 
 function mediaReuqestType(id, reqId, typeId, documents, reqDt, reqUser, respDt, respUser, typeConstraints) {
     this.Id = id;
@@ -24,20 +17,21 @@ function mediaReuqestType(id, reqId, typeId, documents, reqDt, reqUser, respDt, 
     this.RespondedDate = respDt;
     this.RespondedUserID = respUser;
     this.TypeConstraints = typeConstraints;
+    this.RequestStatusId = 6;  //RequestComplete
 }
 
-function mediaType(text, value, enable, checked) {
+function mediaType(id, text, value, visible, checked) {
     var self = this;
+    self.id = id;
     self.text = ko.observable(text);
     self.value = ko.observable(value);
-    self.enable = ko.observable(enable);
+    self.visible = ko.observable(visible);
     self.checked = ko.observable(checked);
     self.typeConstraints = ko.observable('');
     self.documents = ko.observable('');
     self.docUrl = ko.observable('');
-    self.typeConstraintsTxt = ko.observable('');
 }
-function pageViewModel(userId, userAgency, userRole, id, account) {
+function pageViewModel(userId, userAgency, userRole, id) {
     log(userId + ' ' + userAgency + ' ' + userRole);
     var self = this;
     self.userId = ko.observable(userId);
@@ -66,17 +60,17 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
     }
     self.showMediaTypeSelection = ko.observable(false);
     self.id = ko.observable(id);
-    self.pimsAccountNumber = ko.observable((account == '') ? pimsAccountFocusString : account);
+    self.pimsAccountNumber = ko.observable('');
     self.pimsAccountNumberRequired = ko.observable('*');
     self.pimsAccountNumberRequiredMsg = ko.observable('');
     self.pimsAccountNumberRequiredHasError = ko.observable(false);
 
-    self.originalAccountNumber = ko.observable(originalAccountFocusString);
+    self.originalAccountNumber = ko.observable('');
     self.originalAccountNumberRequired = ko.observable('*');
     self.originalAccountNumberRequiredMsg = ko.observable('');
     self.originalAccountNumberRequiredHasError = ko.observable(false);
 
-    self.clientName = ko.observable(fOrlNameFocusString);
+    self.clientName = ko.observable('');
 
     self.pimsRecords = ko.observableArray([]);
     self.portfolio = ko.observable('');
@@ -116,114 +110,7 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
 
     self.searchedIdnetity = '';
     self.searchedType = 'pims'; //default
-
-    self.selectedAccount = function (record) {
-        $("#pimsResults").dialog('close');
-        self.searchedIdnetity = record.ACCOUNT;
-        self.searchedType = 'pims';
-        self.getPimsDetails();
-    }
-
-    self.search = function () {
-        self.setShowMessagePanel(false, '');
-        if (self.pimsAccountNumber() == pimsAccountFocusString && self.originalAccountNumber() == originalAccountFocusString && self.clientName() == fOrlNameFocusString) {
-            self.setShowMessagePanel(true, pimsAccountFocusString + ' OR ' + originalAccountFocusString + ' OR ' + fOrlNameFocusString + ' is required for searching');
-            self.setFocus(true);
-            return;
-        }
-        self.searchedIdnetity = self.pimsAccountNumber(); //default
-        if (self.originalAccountNumber() != originalAccountFocusString) {
-            self.searchedIdnetity = self.originalAccountNumber();
-            self.searchedType = 'original';
-        }
-        if (self.clientName() != fOrlNameFocusString) {
-            self.searchedIdnetity = self.clientName();
-            self.searchedType = 'name';
-        }
-        $("#loading").html("<img src=\"" + absoluteapp + imagedir + "/ajax-loader.gif\" />");
-        $("#loading").dialog('open');
-        if (self.searchedType == 'name') {
-            window.open(baseUrl + '/Recourse/Media/PIMSDataSearch?nameSearch=' + self.clientName(), '_self', '', '');
-            /*
-            $.ajax({
-            url: baseUrl + '/api/RAccount/',
-            type: "GET",
-            data: { nameSearch: self.clientName() },
-            dataType: 'json',
-            async: true,
-            success: function (data) {
-            $("#loading").html("&nbsp;");
-            $("#loading").dialog('close');
-            if (data != null) {
-            $.each(data, function (i, item) {
-            item.OpenDate = getFormatedDate(item.OpenDate);
-            item.ChargeOffDate = getFormatedDate(item.ChargeOffDate);
-            self.pimsRecords.push(item);
-            });
-            $("#pimsResults").dialog('open');
-            }
-            },
-            error: function (xhr, status, error) {
-
-            }
-            });
-            */
-        }
-        else {
-            self.getPimsDetails();
-        }
-
-    };
-
-    self.getPimsDetails = function () {
-        log('Getting from MSI_MediaRequestResponse');
-        $.ajax({
-            url: baseUrl + '/api/MediaRequest/Details',
-            type: "GET",
-            data: { accountNumber: self.searchedIdnetity, agency: self.agency(), userId: self.userId() },
-            dataType: 'json',
-            async: true,
-            success: function (data) {
-                if (data == null) {
-                    log('Getting from RAccount');
-                    $.ajax({
-                        url: baseUrl + '/api/RAccount/Details/',
-                        type: 'GET',
-                        contentType: 'application/json',
-                        data: { accountNumber: self.searchedIdnetity, searchType: self.searchedType },
-                        dataType: 'json',
-                        async: true,
-                        success: function (data) {
-                            $("#loading").html("&nbsp;");
-                            $("#loading").dialog('close');
-                            //log(data);
-                            self.pimsDataAvailable(true);
-                            self.setPimsData(data);
-                            self.showMediaTypeSelection(false);
-                            self.loadMediaTypes();
-                        },
-                        error: function (xhr, status, error) {
-                            self.setShowMessagePanel(true, xhr.responseText);
-                            $("#loading").html("&nbsp;");
-                            $("#loading").dialog('close');
-                        }
-                    });
-                }
-                else {
-                    $("#loading").html("&nbsp;");
-                    $("#loading").dialog('close');
-                    self.pimsDataAvailable(true);
-                    self.setPimsData(data);
-                    self.showMediaTypeSelection(false);
-                    self.loadMediaTypes();
-                    self.setSelectedMediaRequested(data.MSI_MediaRequestTypes);
-                }
-            },
-            error: function (xhr, status, error) {
-
-            }
-        });
-    }
+        
     self.viewMedia = function () {
         self.showMediaTypeSelection(true);
     }
@@ -255,7 +142,7 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
 
     self.loadExisitingRequest = function () {
         //log(self.id());
-        self.showSearchCriteria(false);
+        self.showSearchCriteria(true);
 
         $.ajax({
             url: baseUrl + '/api/MediaRequest/Details',
@@ -267,8 +154,7 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
                 self.pimsDataAvailable(true);
                 self.setPimsData(response);
                 self.showMediaTypeSelection(true);
-                self.loadMediaTypes();
-                self.setSelectedMediaRequested(response.MSI_MediaRequestTypes);
+                self.loadMediaTypes(response.MSI_MediaRequestTypes);
             },
             error: function (response, errorText) {
                 return false;
@@ -277,7 +163,7 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
 
     }
 
-    self.loadMediaTypes = function () {
+    self.loadMediaTypes = function (requestedTypes) {
         $.ajax({
             url: baseUrl + '/api/Lookup/',
             type: 'GET',
@@ -286,11 +172,15 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
             dataType: 'json',
             async: false,
             success: function (data) {
-                //log(data.length);
                 if (data.length > 0) {
+                    var requestedMedia;
                     $.each(data, function (i, item) {
-                        //log(item.Text);
-                        self.mediaTypes.push(new mediaType(item.Text, item.Value, true, false));
+                        $.each(requestedTypes, function (i, requestedItem) {
+                            if (item.Value == requestedItem.TypeId && requestedItem.RequestStatusId != 6) {
+                                requestedMedia = new mediaType(requestedItem.Id, item.Text, item.Value,true,false);
+                                self.mediaTypes.push(requestedMedia);
+                            }
+                        });
                     });
                     // log(self.mediaTypes());
                 }
@@ -317,34 +207,12 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
         //If it is in the array and not checked remove it                
         else if (!isChecked && self.selectedMediaTypes.indexOf(media) >= 0) {
             self.selectedMediaTypes.remove(media);
-            if (media.value() == '5') {
-                media.typeConstraints('');
-                if (self.mediaTypes().indexOf(media) >= 0) {
-                    var mediaStatement = $.grep(self.mediaTypes(), function (item) { return item.value() == '5'; });
-                    mediaStatement[0].typeConstraintsTxt('');
-                }
-            }
         }
         //Need to return to to allow the Checkbox to process checked/unchecked
         //log(self.selectedMediaTypes());
         return true;
     }
 
-
-    removeStatementSelectedConstraint = function () {
-        $.each(self.selectedMediaTypes(), function (i, item) {
-            var media = item;
-            if (media.value() == '5') {
-                self.selectedMediaTypes.remove(media);
-                media.typeConstraints('');
-                if (self.mediaTypes().indexOf(media) >= 0) {
-                    var mediaStatement = $.grep(self.mediaTypes(), function (item) { return item.value() == '5'; });
-                    mediaStatement[0].typeConstraintsTxt('');
-                    mediaStatement[0].checked(false);
-                }
-            }
-        });
-    }
     checkMediaTypeChecked = function (isChecked, media) {
         if (isChecked && self.selectedMediaTypes.indexOf(media) < 0) {
             self.selectedMediaTypes.push(media);
@@ -355,7 +223,6 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
         //If it is in the array and not checked remove it                
         else if (!isChecked && self.selectedMediaTypes.indexOf(media) >= 0) {
             self.selectedMediaTypes.remove(media);
-            media.typeConstraintsTxt('');
         }
     }
     self.selectAll = ko.computed({
@@ -375,50 +242,18 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
     });
     self.statementStDt = ko.observable();
     self.statementEndDt = ko.observable();
-    self.submitStatementDateRange = function () {
-        $.each(self.selectedMediaTypes(), function (i, item) {
-            var media = item;
-            if (media.value() == '5') {
-                if (self.statementStDt() == undefined || self.statementEndDt() == undefined || self.statementStDt() == '' || self.statementEndDt() == '') {
-                    alert('From and to dates are required');
-                    removeStatementSelectedConstraint();
-                }
-                else {
-                    media.typeConstraints(self.statementStDt() + ';' + self.statementEndDt());
-                    if (self.mediaTypes().indexOf(media) >= 0) {
-                        var mediaStatement = $.grep(self.mediaTypes(), function (item) { return item.value() == '5'; });
-                        mediaStatement[0].typeConstraintsTxt('From ' + self.statementStDt() + ' to ' + self.statementEndDt());
-                    }
-                }
-            }
-        });
-
-        $("#statementMediaTypeConstraint").dialog('close');
-    }
+    
     self.showSubmit = ko.computed(function () { return (self.selectedMediaTypes().length > 0); }, self);
     function getSelectedMediaRequested() {
         var localSelectedMediaTypes = [];
         $.each(self.selectedMediaTypes(), function (i, item) {
-            localSelectedMediaTypes.push(new mediaReuqestType(undefined, undefined, item.value(), undefined, new Date(), self.userId(), undefined, undefined, item.typeConstraints()));
+            localSelectedMediaTypes.push(new mediaReuqestType(item.id, undefined, item.value(), undefined, new Date(), self.userId(), new Date(), self.userId(), undefined));
         });
         return localSelectedMediaTypes;
     }
     self.saveData = function () {
 
         var json = JSON.stringify({
-            Id: self.id(),
-            AgencyId: self.agency(),
-            Account: self.pimsAccountNumber(),
-            OriginalAccount: self.originalAccountNumber(),
-            Portfolio: self.portfolio(),
-            Originator: self.lender(),
-            SSN: self.ssn(),
-            Name: self.name(),
-            OpenDate: self.openDate(),
-            ChargeOffDate: self.coDate(),
-            Seller: self.seller(),
-            RequestedDate: new Date(),
-            RequestedByUserId: self.userId(),
             MSI_MediaRequestTypes: getSelectedMediaRequested()
         });
 

@@ -40,7 +40,15 @@
                         if (subItem.IsActive && subItem.IsVisible)
                         {
                         <li>
-                            @Html.ActionLink(subItem.Text, subItem.Action, subItem.Controller, new { area = menuItem.Area }, null)
+                            @if (subItem.Parameters != null)
+                            {
+                                var paramValue = subItem.ParametersVals[0];
+                                @Html.ActionLink(subItem.Text, subItem.Action, subItem.Controller, new { area = menuItem.Area , id=paramValue}, null)
+                            }
+                            else
+                            {
+                                @Html.ActionLink(subItem.Text, subItem.Action, subItem.Controller, new { area = menuItem.Area }, null)
+                            }
                             @if (Model.MenuItemHasChildren(subItem.Id))
                             {
                                 IEnumerable<Cascade.UI.Controls.CascadeMenu> subItems = Model.GetChildMenuItems(subItem.Id);
@@ -58,7 +66,15 @@
                                         if (subofSubItem.IsActive && subofSubItem.IsVisible)
                                         {
                                         <li>
-                                            @Html.ActionLink(subofSubItem.Text, subofSubItem.Action, subofSubItem.Controller, new { area = subofSubItem.Area }, null)
+                                            @if (subofSubItem.Parameters != null)
+                                            {
+                                                var paramValue = subofSubItem.ParametersVals[0];
+                                                @Html.ActionLink(subofSubItem.Text, subofSubItem.Action, subofSubItem.Controller, new { area = subofSubItem.Area, id = paramValue }, null)
+                                            }
+                                            else
+                                            {
+                                                @Html.ActionLink(subofSubItem.Text, subofSubItem.Action, subofSubItem.Controller, new { area = subofSubItem.Area }, null)
+                                            }
                                         </li>
                                         }
                                     }
