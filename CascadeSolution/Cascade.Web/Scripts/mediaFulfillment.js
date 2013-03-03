@@ -265,7 +265,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
 
     self.submitRequestMore = function () {
         self.submit();
-        window.open(baseUrl + '/Recourse/Media/MediaRequestNotFulfilled', '_self', '', '');
+        window.open(baseUrl + '/Recourse/Media/MediaRequestNotFulfilled/ByAgency', '_self', '', '');
     }
 }
 

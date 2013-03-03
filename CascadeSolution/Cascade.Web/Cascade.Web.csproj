@@ -315,6 +315,7 @@
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\portfolio.js" />
     <Content Include="Scripts\portfolio_viewedit.js" />
+    <Content Include="Scripts\updateMediaRequest.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -509,6 +510,8 @@
     <Content Include="Areas\Recourse\Views\Media\MediaUpload.cshtml" />
     <Content Include="Areas\Recourse\Views\Media\MediaRequestReadyDownload.cshtml" />
     <Content Include="Areas\Recourse\Views\Media\_mediaRequestReadyDownload.cshtml" />
+    <Content Include="Areas\Recourse\Views\Media\_mediaRequestAllNotFulfilled.cshtml" />
+    <Content Include="Areas\Recourse\Views\Media\UpdateMediaRequest.cshtml" />
     <None Include="Areas\Reports\Views\Cascade0206Deploy.rar" />
     <Content Include="Areas\Reports\Views\Collections\PortfolioOwnerBreakDown.cshtml" />
     <Content Include="Areas\Reports\Views\Collections\PortfolioWorkStatusBreakDown.cshtml" />

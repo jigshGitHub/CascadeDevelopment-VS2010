@@ -30,7 +30,7 @@ namespace Cascade.Business
             try
             {
                 data = from mainRecord in query.GetMediaRequestResponses(agency,userId)
-                       from mediaRequestType in query.GetMediaRequestTypes(agency).Where(record => record.RequestedId == mainRecord.Id && record.RequestStatusId.Value != (int)MediaRequestStatus.RequestFulfillment)
+                       from mediaRequestType in query.GetMediaRequestTypes(agency).Where(record => record.RequestedId == mainRecord.Id && record.RequestStatusId.Value != (int)MediaRequestStatus.RequestFulfillment && record.RequestStatusId.Value != (int)MediaRequestStatus.RequestComplete)
                        from mediaType in new MSI_MediaTypesRepository().GetAll().Where(record => record.IsActive.Value == true && record.ID == mediaRequestType.TypeId)
                        from mediaStatus in new MSI_MediaRequestStatusRepository().GetAll().Where(record => record.Id == mediaRequestType.RequestStatusId)
                        select new MediaRequestTypes(mediaRequestType, mainRecord) { MediaType = mediaType.Name, MediaStatus = mediaStatus.Name };

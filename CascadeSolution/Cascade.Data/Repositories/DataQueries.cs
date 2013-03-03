@@ -129,6 +129,41 @@ namespace Cascade.Data.Repositories
             return data.AsEnumerable<PortfolioTransactions>();
         }
 
+
+        public IEnumerable<MSI_MediaTracker> GetExistingUploadMediaDetails(string accountNumber)
+        {
+            DBFactory db;
+            SqlDataReader rdr;
+            List<MSI_MediaTracker> data = null;
+            try
+            {
+                db = new DBFactory();
+                rdr = db.ExecuteReader("MSI_spGetMediaTrackerByAccountNumber", new SqlParameter("@account", accountNumber));
+                data = new List<MSI_MediaTracker>();
+                MSI_MediaTracker record;
+                while (rdr.Read())
+                {
+                    record = new MSI_MediaTracker();
+                    record.Id = Convert.ToInt32(rdr["Id"].ToString());
+                    record.Account = rdr["Account"].ToString();
+                    record.OriginalAccount = rdr["OriginalAccount"].ToString();
+                    record.MediaTypeId = Convert.ToInt32(rdr["MediaTypeId"].ToString());
+                    record.MediaDocuments = rdr["MediaDocuments"].ToString();
+                    record.TypeConstraints = rdr["TypeConstraints"].ToString();
+
+                    data.Add(record);
+                }
+                //Close the datareader
+                rdr.Close();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Exception in DataQueries.GetExistingUploadMediaDetails:" + ex.Message);
+            }
+            return data.AsEnumerable<MSI_MediaTracker>();
+        }
+
+
         public IEnumerable<PortfolioSummary> GetPortfolioSummaryReports(string description)
         {
             DBFactory db;
