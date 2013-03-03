@@ -1,3 +1,4 @@
+--executed in dbpcs 03/02 & 03/03
 INSERT INTO MSI_MediaRequestStatus (Name) VALUES('Re Submit');
 INSERT INTO MSI_MediaRequestStatus (Name) VALUES('Request Complete');
 
