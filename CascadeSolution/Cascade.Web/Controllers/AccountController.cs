@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using Cascade.Web.Models;
-
+using System.Web.Profile;
 namespace Cascade.Web.Controllers
 {
 
@@ -199,5 +199,17 @@ namespace Cascade.Web.Controllers
             }
         }
         #endregion
+
+        //http://stackoverflow.com/questions/2547290/using-asp-net-membership-and-profile-with-mvc-how-can-i-create-a-user-and-set
+        //http://stackoverflow.com/questions/426609/how-to-assign-profile-values
+        public ActionResult GetProfile(Guid? userId)
+        {
+            ProfileBase profile = System.Web.HttpContext.Current.Profile as ProfileBase;
+            profile["FirstName"] = "Jignesh";
+            profile["LastName"] = "Shah";
+            profile["RoleEntityValue"] = "Cascade";
+            profile.Save();
+            return View();
+        }
     }
 }

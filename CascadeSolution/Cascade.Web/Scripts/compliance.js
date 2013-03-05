@@ -1,4 +1,11 @@
-﻿function complianceVM(userId, userAgency) {
+﻿function getFormatedDate(data) {
+    if (data != null && data != '' && data != undefined) {
+        return $.datepicker.formatDate('mm/dd/yy', new Date(data));
+    }
+    else
+        return '';
+}
+function complianceVM(userId, userAgency) {
     var self = this;
     self.account = ko.observable('');
     self.agency = ko.observable(userAgency);
@@ -91,24 +98,24 @@
     }, self);
 
     self.complaintSubmittedToOwner.subscribe(function (value) {
-        if(value == 'true'){
+        if (value == 'true') {
             var todaysDate = new Date();
             todaysDate.setDate(todaysDate.getDate());
-            self.complaintSubmittedDate($.datepicker.formatDate('mm/dd/yy', todaysDate));    
+            self.complaintSubmittedDate($.datepicker.formatDate('mm/dd/yy', todaysDate));
         }
-        else{
-            self.complaintSubmittedDate('');   
+        else {
+            self.complaintSubmittedDate('');
         }
     }, self);
 
     self.moreInfoFromAgency.subscribe(function (value) {
-        if(value == 'true'){
+        if (value == 'true') {
             var todaysDate = new Date();
             todaysDate.setDate(todaysDate.getDate());
-            self.moreInfoFromAgencyRequestedDate($.datepicker.formatDate('mm/dd/yy', todaysDate));    
+            self.moreInfoFromAgencyRequestedDate($.datepicker.formatDate('mm/dd/yy', todaysDate));
         }
-        else{
-            self.moreInfoFromAgencyRequestedDate('');   
+        else {
+            self.moreInfoFromAgencyRequestedDate('');
         }
     }, self);
 

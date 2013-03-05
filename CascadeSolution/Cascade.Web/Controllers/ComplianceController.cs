@@ -186,7 +186,8 @@ namespace Cascade.Web.Controllers
                 complaintToSave.DebtorAgree = complaint.DebtorAgree;
                 complaintToSave.NeedFurtherAction = complaint.NeedFurtherAction;
                 complaintToSave.FinalActionStepId = complaint.FinalActionStepId;
-                complaintToSave.IsViewedByOwner = complaint.IsViewedByOwner;
+                if(complaint.ComplaintSubmittedToOwner.Value)
+                    complaintToSave.IsViewedByOwner = false;
                 complaintToSave.CreatedBy = complaint.CreatedBy;
                 complaintToSave.IsViewedByAgency = complaint.IsViewedByAgency;
 

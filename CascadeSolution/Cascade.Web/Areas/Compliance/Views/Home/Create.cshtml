@@ -699,13 +699,7 @@
     <script src="~/Scripts/jquery.formatCurrency-1.4.0.min.js" type="text/javascript"></script>
     <script type="text/javascript">
         var yesNoOptions = [{ Text: 'No', Value: 'false' }, { Text: 'Yes', Value: 'true'}];
-        function getFormatedDate(data) {
-            if (data != null && data != '' && data != undefined) {
-				return $.datepicker.formatDate('mm/dd/yy', new Date(data));
-            }
-            else
-                return '';
-        }
+
         function pageViewModel(userId, userAgency, userRole) {
             var self = this;
             self.complianceModel = new complianceVM(userId, userAgency);
@@ -769,6 +763,7 @@
             self.getComplaint = function (account) {
                 function setComplaint(data) {
                     self.populateComplainceFromDebtor(data.Account, data.FirstName, data.LastName, data.DOB, data.Address, data.City, data.State, data.Zip, data.LastFourSSN, data.MobilePhone, data.HomePhone, data.WorkPhone, data.DebtCurrentBalance, data.DebtPurchaseBalance, data.CreditorName, data.DebtProductId, data.DebtPurchaseBalance, data.DebtCurrentBalance, data.DisputeDebt, data.DisputeDebtAmount, data.DisputeDebtDueDate, data.ComplaintID, data.ComplaintDate, data.ComplaintReceivedByMethodId, data.ComplaintIssueId, data.ComplaintNotes, data.ComplaintSubmitedToAgency, data.ComplaintSubmitedToAgencyDate, data.moreInfoReqdFromDebtor_YesNo, data.MoreInfoRequestedDate, data.MoreInfoRequested, data.MoreInfoReceivedFromDebtor, data.MoreInfoReceivedDate, data.MoreInfoReceived, data.ComplaintSubmittedToOwner, data.ComplaintSubmittedDate, data.TimeToSubmitDays, data.MoreInfoFromAgency, data.MoreInfoFromAgencyRequestedDate, data.MoreInfoFromAgencyRequested, data.MoreInfoFromAgencyReceived, data.MoreInfoFromAgencyReceivedDate, data.OwnerResponseId, data.OwnerResponseDate, data.OwnerResponseDays, data.AgencyResponseToDebtorDate, data.TotalResponseTimeDays, data.DebtorAgree, data.NeedFurtherAction, data.FinalActionStepId, data.CreatedBy);
+                    self.complianceModel.complaintID(self.createComplaintId());
                 };
                 self.pimsAccountNumber(account);
                 $.ajax({
@@ -1044,7 +1039,7 @@
             self.complianceModel.agency.subscribe(function (agencySelected) {
                 if (self.pimsAccountNumber()) {
                     self.getComplaint(self.pimsAccountNumber());
-                    self.complianceModel.complaintID(self.createComplaintId());
+                    //self.complianceModel.complaintID(self.createComplaintId());
                 }
 
             } .bind(self));
@@ -1115,7 +1110,7 @@
                     self.message('Data saved successfully!');
                     self.complianceModel.save();
 
-                    if (self.complianceModel.complaintinfoDocumentChecked() == true || self.complianceModel.debtOwnerProcessDocumentChecked() == true) {                        
+                    if (self.complianceModel.complaintinfoDocumentChecked() == true || self.complianceModel.debtOwnerProcessDocumentChecked() == true) {
                         $('#fileUploadContainer').dialog('open');
                     }
                 }

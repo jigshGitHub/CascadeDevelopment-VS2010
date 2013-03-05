@@ -71,7 +71,7 @@
                                 :
                             </td>
                             <td style="text-align: left;" colspan="4">
-                                <select data-bind="options:$parent.agencies,optionsValue:'Value', optionsCaption:' ',optionsText: 'Text', value: agency,enable:makeAgencySelectionDisable">
+                                <select data-bind="options:$parent.agencies,optionsValue:'Value', optionsCaption:' ',optionsText: 'Text', value: agency,disable:$parent.agenciesDisable">
                                 </select>*
                             </td>
                         </tr>
@@ -378,7 +378,7 @@
                                 :
                             </td>
                             <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.needMoreInfoDebtorOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoReqdFromDebtor">
+                                <select data-bind="options:$parent.needMoreInfoDebtorOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoReqdFromDebtor_YesNo">
                                 </select>
                             <td style="text-align: right; width: 20%">
                                 Date Requested
@@ -470,7 +470,7 @@
                                 :
                             </td>
                             <td style="text-align: left; width: 20%">
-                                <textarea rows="4" cols="16" data-bind="value:timeToSubmitDays"></textarea>
+                                <input type=text disabled=disabled data-bind="value:timeToSubmitDays" />
                             <td style="text-align: right; width: 20%">
                                 Upload Document
                             </td>
@@ -518,7 +518,7 @@
                                 :
                             </td>
                             <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.moreInfoFromAgencyReceivedOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoFromAgency">
+                                <select data-bind="options:$parent.moreInfoFromAgencyReceivedOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoFromAgencyReceived_YesNo">
                                 </select>
                             </td>
                         </tr>
@@ -576,7 +576,7 @@
                                 :
                             </td>
                             <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:ownerResponseDays" />
+                                <input type="text" disabled="disabled" data-bind="value:ownerResponseDays" />
                             </td>
                         </tr>
                     </table>
@@ -609,7 +609,7 @@
                                 :
                             </td>
                             <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:totalResponseTimeDays" />
+                                <input type="text"  disabled="disabled" data-bind="value:totalResponseTimeDays" />
                             </td>
                         </tr>
                         <tr>
@@ -669,7 +669,7 @@
             var self = this;
 
             self.complianceModel = new complianceVM(userId, userAgency);
-            self.populateComplainceFromDebtor = function (account, firstName, lastName, dob, address, city, state, zip, ssn, phoneCell, phoneHome, phoneWork, debtCurrentBalance, debtorPurchaseBalance, creditorName, debtProductId, debtPurchaseBalance, debtCurrentBalance, disputeDebt, disputeDebtAmount, disputeDebtDueDate, complaintID, complaintDate, complaintMethodId, complaintIssueId, complaintNotes, complaintSubmitedToAgency, complaintSubmitedToAgencyDate, moreInfoReqdFromDebtor, moreInfoRequestedDate, moreInfoRequested, moreInfoReceivedFromDebtor, moreInfoReceivedDate, moreInfoReceived, complaintSubmittedToOwner, complaintSubmittedDate, timeToSubmitDays, moreInfoFromAgency, moreInfoFromAgencyRequestedDate, moreInfoFromAgencyRequested, moreInfoFromAgencyReceived, moreInfoFromAgencyReceivedDate, ownerResponseId, ownerResponseDate, ownerResponseDays, agencyResponseToDebtorDate, totalResponseTimeDays, debtorAgree, needFurtherAction, finalActionStepId, createdBy, complaintDoc, debtOwnerProcessDoc) {
+            self.populateComplainceFromDebtor = function (account, firstName, lastName, dob, address, city, state, zip, ssn, phoneCell, phoneHome, phoneWork, debtCurrentBalance, debtorPurchaseBalance, creditorName, debtProductId, debtPurchaseBalance, debtCurrentBalance, disputeDebt, disputeDebtAmount, disputeDebtDueDate, complaintID, complaintDate, complaintMethodId, complaintIssueId, complaintNotes, complaintSubmitedToAgency, complaintSubmitedToAgencyDate, moreInfoReqdFromDebtor_YesNo, moreInfoRequestedDate, moreInfoRequested, moreInfoReceivedFromDebtor, moreInfoReceivedDate, moreInfoReceived, complaintSubmittedToOwner, complaintSubmittedDate, timeToSubmitDays, moreInfoFromAgency, moreInfoFromAgencyRequestedDate, moreInfoFromAgencyRequested, moreInfoFromAgencyReceived, moreInfoFromAgencyReceivedDate, ownerResponseId, ownerResponseDate, ownerResponseDays, agencyResponseToDebtorDate, totalResponseTimeDays, debtorAgree, needFurtherAction, finalActionStepId, createdBy, complaintDoc, debtOwnerProcessDoc) {
                 self.complianceModel.account(account);
                 self.complianceModel.firstName(firstName);
                 self.complianceModel.lastName(lastName);
@@ -686,41 +686,36 @@
                 self.complianceModel.debtPurchaseBalance(debtorPurchaseBalance);
                 self.complianceModel.creditorName(creditorName);
                 self.complianceModel.debtProductId(debtProductId);
-                self.complianceModel.debtPurchaseBalance(debtPurchaseBalance);
-                self.complianceModel.debtCurrentBalance(debtCurrentBalance);
+                self.complianceModel.debtPurchaseBalance(((debtPurchaseBalance == '') ? '' : formatCurrency(debtPurchaseBalance)));
+                self.complianceModel.debtCurrentBalance(((debtCurrentBalance == '') ? '' : formatCurrency(debtCurrentBalance)));
                 self.complianceModel.disputeDebt(disputeDebt);
                 self.complianceModel.disputeDebtAmount(disputeDebtAmount);
                 self.complianceModel.disputeDebtDueDate(disputeDebtDueDate);
                 self.complianceModel.complaintID(complaintID);
-                var complaintDt = new Date(complaintDate);
-                complaintDt.setDate(complaintDt.getDate() + 1);
-                self.complianceModel.complaintDate($.datepicker.formatDate('mm/dd/yy', complaintDt));
+                self.complianceModel.complaintDate(getFormatedDate(complaintDate));
                 self.complianceModel.complaintReceivedByMethodId(complaintMethodId);
                 self.complianceModel.complaintIssueId(complaintIssueId);
                 self.complianceModel.complaintNotes(complaintNotes);
                 self.complianceModel.complaintSubmitedToAgency(complaintSubmitedToAgency);
-                self.complianceModel.complaintSubmitedToAgencyDate(complaintSubmitedToAgencyDate);
-                self.complianceModel.moreInfoReqdFromDebtor(moreInfoReqdFromDebtor);
-                self.complianceModel.moreInfoRequestedDate(moreInfoRequestedDate);
+                self.complianceModel.complaintSubmitedToAgencyDate(getFormatedDate(complaintSubmitedToAgencyDate));
+                self.complianceModel.moreInfoReqdFromDebtor_YesNo(moreInfoReqdFromDebtor_YesNo);
+                self.complianceModel.moreInfoRequestedDate(getFormatedDate(moreInfoRequestedDate));
                 self.complianceModel.moreInfoRequested(moreInfoRequested);
                 self.complianceModel.moreInfoReceivedFromDebtor(moreInfoReceivedFromDebtor);
-                self.complianceModel.moreInfoReceivedDate(moreInfoReceivedDate);
+                self.complianceModel.moreInfoReceivedDate(getFormatedDate(moreInfoReceivedDate));
                 self.complianceModel.moreInfoReceived(moreInfoReceived);
-                //log(complaintSubmittedToOwner);
-                self.complianceModel.complaintSubmittedToOwner((complaintSubmittedToOwner) ? 'true' : 'false');
-                var complaintSubmittedDt = new Date(complaintSubmittedDate);
-                complaintSubmittedDt.setDate(complaintSubmittedDt.getDate());
-                self.complianceModel.complaintSubmittedDate($.datepicker.formatDate('mm/dd/yy', complaintSubmittedDt));
+                self.complianceModel.complaintSubmittedToOwner();
+                self.complianceModel.complaintSubmittedDate(getFormatedDate(complaintSubmittedDate));
                 self.complianceModel.timeToSubmitDays(timeToSubmitDays);
                 self.complianceModel.moreInfoFromAgency(moreInfoFromAgency);
-                self.complianceModel.moreInfoFromAgencyRequestedDate(moreInfoFromAgencyRequestedDate);
+                self.complianceModel.moreInfoFromAgencyRequestedDate(getFormatedDate(moreInfoFromAgencyRequestedDate));
                 self.complianceModel.moreInfoFromAgencyRequested(moreInfoFromAgencyRequested);
                 self.complianceModel.moreInfoFromAgencyReceived(moreInfoFromAgencyReceived);
-                self.complianceModel.moreInfoFromAgencyReceivedDate(moreInfoFromAgencyReceivedDate);
+                self.complianceModel.moreInfoFromAgencyReceivedDate(getFormatedDate(moreInfoFromAgencyReceivedDate));
                 self.complianceModel.ownerResponseId(ownerResponseId);
-                self.complianceModel.ownerResponseDate(ownerResponseDate);
+                self.complianceModel.ownerResponseDate(getFormatedDate(ownerResponseDate));
                 self.complianceModel.ownerResponseDays(ownerResponseDays);
-                self.complianceModel.agencyResponseToDebtorDate(agencyResponseToDebtorDate);
+                self.complianceModel.agencyResponseToDebtorDate(getFormatedDate(agencyResponseToDebtorDate));
                 self.complianceModel.totalResponseTimeDays(totalResponseTimeDays);
                 self.complianceModel.debtorAgree(debtorAgree);
                 self.complianceModel.needFurtherAction(needFurtherAction);
@@ -739,7 +734,7 @@
             }
             self.pimsAccountNumber = ko.observable(accountNumber);
             self.debtors = ko.observableArray([]);
-            self.userRole = userRole;
+            self.userRole = ko.observable(userRole);
             self.getComplaint = function (account) {
                 //log(debtor.account());
                 function setComplaint(data) {
@@ -765,6 +760,7 @@
                 });
                 //self.saveVisible(true);
             }
+            self.agenciesDisable = ko.computed(function () { return (self.userRole() == 'agency' || self.pimsAccountNumber() == '' || self.pimsAccountNumber() == undefined) ? true : false }, self);
             self.agencies = ko.computed(function () {
                 var localAgencies = [];
                 $.ajax({
@@ -1108,14 +1104,14 @@
             pageVM.getComplaint($('#hdnAccountNumber').val());
 
             //For DatePicker for Complaint section
-            $('#complaiintDate').datepicker();
-            $('#moreInfoRequestedDate').datepicker();
-            $('#moreInfoReceivedDate').datepicker();
+            $('#complaiintDate').datepicker({ dateFormat: 'mm/dd/yy' });
+            $('#moreInfoRequestedDate').datepicker({ dateFormat: 'mm/dd/yy' });
+            $('#moreInfoReceivedDate').datepicker({ dateFormat: 'mm/dd/yy' });
             //Debt Owner
-            $('#complaintSubmittedDate').datepicker();
-            $('#moreInfoFromAgencyRequestedDate').datepicker();
-            $('#moreInfoFromAgencyReceivedDate').datepicker();
-            $('#ownerResponseDate').datepicker();
+            $('#complaintSubmittedDate').datepicker({ dateFormat: 'mm/dd/yy' });
+            $('#moreInfoFromAgencyRequestedDate').datepicker({ dateFormat: 'mm/dd/yy' });
+            $('#moreInfoFromAgencyReceivedDate').datepicker({ dateFormat: 'mm/dd/yy' });
+            $('#ownerResponseDate').datepicker({ dateFormat: 'mm/dd/yy' });
 
             $('#agencyResponseToDebtorDate').datepicker();
         });
