@@ -10,7 +10,7 @@
 <style>
     
 </style>
-<div class="tblCommon" id="fileUploadContainer" data-bind="with:complianceModel">
+<div class="tblCommon" style="display:none" id="fileUploadContainer" data-bind="with:complianceModel">
     @using (Html.BeginForm("UploadDocument", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         <div data-bind="visible:complaintinfoDocumentChecked">
@@ -45,7 +45,7 @@
             </td>
         </tr>
     </table>
-    <div id="debtorResults" style="font-size: small">
+    <div id="debtorResults" style="font-size: small;display:none">
         Click the Account to populate debtor information from the below list:
         <table style="text-align: center">
             <tr>
@@ -394,7 +394,7 @@
                                 :
                             </td>
                             <td style="text-align: left; width: 20%">
-                                <textarea rows="4" cols="16" data-bind="value:complaintNotes"></textarea>
+                                <textarea rows="4" cols="25" data-bind="value:complaintNotes"></textarea>
                             <td style="text-align: right; width: 20%">
                                 Upload Document
                             </td>
@@ -403,6 +403,26 @@
                             </td>
                             <td style="text-align: left; width: 20%">
                                 <input type="checkbox" data-bind="checked: complaintinfoDocumentChecked" />
+                            </td>
+                        </tr>
+                        <tr data-bind="visible:$parent.showComplaintSumittedToAgencyInfo">
+                            <td style="text-align: right; width: 20%">
+                                Submitted Complaint to Agency?
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <select data-bind="options:$parent.yesNoOptions,optionsValue:'Value', optionsText: 'Text', value:complaintSubmitedToAgency_YesNo">
+                                </select>
+                            <td style="text-align: right; width: 20%">
+                                Date Submitted
+                            </td>
+                            <td style="text-align: center; width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 20%">
+                                <input type="text" id="dateSubmittedToAgency" data-bind="value:complaintSubmitedToAgencyDate" />
                             </td>
                         </tr>
                         <tr>
@@ -433,7 +453,7 @@
                                 :
                             </td>
                             <td style="text-align: left; width: 20%">
-                                <textarea rows="4" cols="16" data-bind="value:moreInfoRequested"></textarea>
+                                <textarea rows="4" cols="25" data-bind="value:moreInfoRequested"></textarea>
                             <td style="text-align: right; width: 20%">
                                 More Debtor Info Received?
                             </td>
@@ -461,7 +481,7 @@
                                 :
                             </td>
                             <td style="text-align: left; width: 20%">
-                                <textarea rows="4" cols="16" data-bind="value:moreInfoReceived"></textarea>
+                                <textarea rows="4" cols="25" data-bind="value:moreInfoReceived"></textarea>
                             </td>
                         </tr>
                     </table>
@@ -544,7 +564,7 @@
                                 :
                             </td>
                             <td style="text-align: left; width: 20%">
-                                <textarea rows="4" cols="16" data-bind="value:moreInfoFromAgencyRequested"></textarea>
+                                <textarea rows="4" cols="25" data-bind="value:moreInfoFromAgencyRequested"></textarea>
                             <td style="text-align: right; width: 20%">
                                 More Agency Info Received?
                             </td>
@@ -572,7 +592,7 @@
                                 :
                             </td>
                             <td style="text-align: left; width: 20%">
-                                <textarea rows="4" cols="16" data-bind="value:moreInfoFromAgencyReceived"></textarea>
+                                <textarea rows="4" cols="25" data-bind="value:moreInfoFromAgencyReceived"></textarea>
                             </td>
                         </tr>
                         <tr>
@@ -730,7 +750,7 @@
                 self.complianceModel.complaintReceivedByMethodId(complaintMethodId);
                 self.complianceModel.complaintIssueId(complaintIssueId);
                 self.complianceModel.complaintNotes(complaintNotes);
-                self.complianceModel.complaintSubmitedToAgency(complaintSubmitedToAgency);
+                self.complianceModel.complaintSubmitedToAgency_YesNo(complaintSubmitedToAgency);
                 self.complianceModel.complaintSubmitedToAgencyDate(getFormatedDate(complaintSubmitedToAgencyDate));
                 self.complianceModel.moreInfoReqdFromDebtor_YesNo(moreInfoReqdFromDebtor_YesNo);
                 self.complianceModel.moreInfoRequestedDate(getFormatedDate(moreInfoRequestedDate));
@@ -977,6 +997,7 @@
             }, self);
             self.needMoreInfoDebtorOptions = ko.observableArray(yesNoOptions);
             self.moreInfoRecvdDebtorOptions = ko.observableArray(yesNoOptions);
+            self.yesNoOptions = ko.observableArray(yesNoOptions);
 
             //Debt Owner
             self.complaintSubmittedToOwnerOptions = ko.observableArray(yesNoOptions);
@@ -1127,6 +1148,11 @@
 
 
             /* Show/Hide Options */
+            self.showComplaintSumittedToAgencyInfo = ko.computed(function () {
+                if (self.userRole() != 'agency')
+                    return true;
+                return false;
+            }).bind(self);
             self.showDebtInformation = ko.observable(true);
             self.showComplaintInformation = ko.observable(true);
             self.showDebtOwnerProcess = ko.observable(true);
@@ -1172,6 +1198,7 @@
             $('#complaiintDate').datepicker({ dateFormat: 'mm/dd/yy' });
             $('#moreInfoRequestedDate').datepicker({ dateFormat: 'mm/dd/yy' });
             $('#moreInfoReceivedDate').datepicker({ dateFormat: 'mm/dd/yy' });
+            $('#dateSubmittedToAgency').datepicker({ dateFormat: 'mm/dd/yy' });
             //Debt Owner
             $('#complaintSubmittedDate').datepicker({ dateFormat: 'mm/dd/yy' });
             $('#moreInfoFromAgencyRequestedDate').datepicker({ dateFormat: 'mm/dd/yy' });

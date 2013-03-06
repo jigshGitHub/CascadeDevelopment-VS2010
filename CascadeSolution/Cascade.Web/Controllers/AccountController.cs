@@ -36,6 +36,9 @@ namespace Cascade.Web.Controllers
                 if (Membership.ValidateUser(model.UserName, model.Password))
                 {
                     FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
+                    MembershipUser loggedInUser = Membership.GetUser(model.UserName);
+                    if (loggedInUser.CreationDate == loggedInUser.LastPasswordChangedDate)
+                        return RedirectToAction("ChangePassword","account");
                     if (Url.IsLocalUrl(returnUrl))
                     {
                         return Redirect(returnUrl);
@@ -106,6 +109,7 @@ namespace Cascade.Web.Controllers
         //
         // GET: /Account/ChangePassword
 
+        [AllowAnonymous]
         public ActionResult ChangePassword()
         {
             return View();
@@ -135,7 +139,8 @@ namespace Cascade.Web.Controllers
 
                 if (changePasswordSucceeded)
                 {
-                    return RedirectToAction("ChangePasswordSuccess");
+                    //  return RedirectToAction("ChangePasswordSuccess");
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
@@ -199,17 +204,6 @@ namespace Cascade.Web.Controllers
             }
         }
         #endregion
-
-        //http://stackoverflow.com/questions/2547290/using-asp-net-membership-and-profile-with-mvc-how-can-i-create-a-user-and-set
-        //http://stackoverflow.com/questions/426609/how-to-assign-profile-values
-        public ActionResult GetProfile(Guid? userId)
-        {
-            ProfileBase profile = System.Web.HttpContext.Current.Profile as ProfileBase;
-            profile["FirstName"] = "Jignesh";
-            profile["LastName"] = "Shah";
-            profile["RoleEntityValue"] = "Cascade";
-            profile.Save();
-            return View();
-        }
+        
     }
 }

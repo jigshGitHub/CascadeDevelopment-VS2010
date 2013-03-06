@@ -39,7 +39,7 @@ function complianceVM(userId, userAgency) {
     self.complaintIssueId = ko.observable('');
     self.complaintNotes = ko.observable('');
     self.complaintUploadDocument = ko.observable('');
-    self.complaintSubmitedToAgency = ko.observable('');
+    self.complaintSubmitedToAgency_YesNo = ko.observable('');
     self.complaintSubmitedToAgencyDate = ko.observable('');
     self.moreInfoReqdFromDebtor_YesNo = ko.observable('');
     self.moreInfoRequestedDate = ko.observable('');
@@ -75,6 +75,16 @@ function complianceVM(userId, userAgency) {
     self.debtOwnerProcessDocument = ko.observable('');
     self.debtOwnerProcessDocUrl = ko.observable('');
 
+    self.complaintSubmitedToAgency_YesNo.subscribe(function (value) {
+        if (value == 'true') {
+            var todaysDate = new Date();
+            todaysDate.setDate(todaysDate.getDate());
+            self.complaintSubmitedToAgencyDate($.datepicker.formatDate('mm/dd/yy', todaysDate));
+        }
+        else {
+            self.moreInfoRequestedDate('');
+        }
+    }, self);
     self.moreInfoReqdFromDebtor_YesNo.subscribe(function (value) {
         if (value == 'true') {
             var todaysDate = new Date();
@@ -159,7 +169,7 @@ function complianceVM(userId, userAgency) {
             ComplaintReceivedByMethodId: self.complaintReceivedByMethodId(),
             ComplaintIssueId: self.complaintIssueId(),
             ComplaintNotes: self.complaintNotes(),
-            ComplaintSubmitedToAgency: self.complaintSubmitedToAgency(),
+            ComplaintSubmitedToAgency: self.complaintSubmitedToAgency_YesNo(),
             ComplaintSubmitedToAgencyDate: self.complaintSubmitedToAgencyDate(),
             MoreInfoReqdFromDebtor: self.moreInfoReqdFromDebtor_YesNo(),
             MoreInfoRequestedDate: self.moreInfoRequestedDate(),
@@ -233,7 +243,7 @@ function complianceVM(userId, userAgency) {
         self.complaintReceivedByMethodId(complaintMethodId);
         self.complaintIssueId(complaintIssueId);
         self.complaintNotes(complaintNotes);
-        self.complaintSubmitedToAgency(complaintSubmitedToAgency);
+        self.complaintSubmitedToAgency_YesNo(complaintSubmitedToAgency);
         self.complaintSubmitedToAgencyDate(getFormatedDate(complaintSubmitedToAgencyDate));
         self.moreInfoReqdFromDebtor_YesNo(moreInfoReqdFromDebtor_YesNo);
         self.moreInfoRequestedDate(getFormatedDate(moreInfoRequestedDate));

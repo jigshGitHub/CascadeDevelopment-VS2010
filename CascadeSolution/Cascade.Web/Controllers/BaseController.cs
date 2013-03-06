@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Cascade.UI.Controls;
 using Cascade.Web.ApplicationIntegration;
 using System.Web.Security;
+using Cascade.Web.Models;
 namespace Cascade.Web.Controllers
 {
     public class BaseController : Controller
@@ -17,10 +18,11 @@ namespace Cascade.Web.Controllers
         {
             get
             {
-                if (UserRoles.Contains("user"))
-                    return "";
-                else
-                    return System.Configuration.ConfigurationManager.AppSettings["defaultAgencyId"];
+                //if (UserRoles.Contains("user"))
+                //    return "";
+                //else
+                return new AccountProfile(UserName).RoleEntityValue;
+                    //return System.Configuration.ConfigurationManager.AppSettings["defaultAgencyId"];
 
             }
         }

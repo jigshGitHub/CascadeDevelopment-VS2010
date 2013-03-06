@@ -1,28 +1,31 @@
 ﻿@{
     ViewBag.Title = "ViewEdit";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+    Layout = "~/Views/Shared/_Layout.cshtml";}
 <h2>
     ViewEdit</h2>
-@Html.Hidden("hdnUserId", (string)(@ViewBag.UserID))
-@Html.Hidden("hdnAgencyId", (string)(@ViewBag.AgencyID))
-@Html.Hidden("hdnAccountNumber", (string)(@ViewBag.Account))
-@Html.Hidden("hdnUserRole", (string)(@ViewBag.UserRole))
+@Html.Hidden("hdnUserId", (string)(@ViewBag.UserID)) @Html.Hidden("hdnAgencyId", (string)(@ViewBag.AgencyID))
+@Html.Hidden("hdnAccountNumber", (string)(@ViewBag.Account)) @Html.Hidden("hdnUserRole", (string)(@ViewBag.UserRole))
 <style>
     
 </style>
-<div id="fileUploadContainer" data-bind="with:complianceModel">
-    @using (Html.BeginForm("UploadDocument","Home", FormMethod.Post,new { enctype="multipart/form-data"})){
+<div id="fileUploadContainer" style="display:none" data-bind="with:complianceModel">
+    @using (Html.BeginForm("UploadDocument", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
     
-    <div data-bind="visible:complaintinfoDocumentChecked">
-        Select document for complaint information:<input name="complaintDocument" type="file" />
-    </div>
-    <div data-bind="visible:debtOwnerProcessDocumentChecked">
-        Select document for debt owner process:<input name="debtOwnerProcessDocument" type="file" />
-    </div>
-    <input type="hidden" name="hdnAccount" data-bind="value:account" />
-    <input type="hidden" name="hdnAgency" data-bind="value:agency" />
-    <input type="submit" value="Submit" />
+
+        <div data-bind="visible:complaintinfoDocumentChecked">
+            Select document for complaint information:<input name="complaintDocument" type="file" />
+        </div>
+
+        <div data-bind="visible:debtOwnerProcessDocumentChecked">
+            Select document for debt owner process:<input name="debtOwnerProcessDocument" type="file" />
+        </div>
+
+        <input type="hidden" name="hdnAccount" data-bind="value:account" />
+
+        <input type="hidden" name="hdnAgency" data-bind="value:agency" />
+
+        <input type="submit" value="Submit" />
     
     }
 </div>
@@ -49,611 +52,636 @@
             </td>
         </tr>
         <tr>
-            <td style="width: 100%; background-color: #1f497d">
-                <a href="#" style="text-decoration: none; font-weight: bold; color: white" data-bind="click:showHideDebtInformation">
-                    Debtor & Debt Information</a>
-            </td>
-        </tr>
-        <tr>
             <td>
-                <div id="debtInformation" data-bind="with:complianceModel,visible:showDebtInformation">
-                    <table class="debtorInfo">
-                        <tr>
-                            <td colspan="6" style="text-align: right">
-                                * = Required fields
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Agency Name
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left;" colspan="4">
-                                <select data-bind="options:$parent.agencies,optionsValue:'Value', optionsCaption:' ',optionsText: 'Text', value: agency,disable:$parent.agenciesDisable">
-                                </select>*
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Consumer Account #
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:account" />*
-                            </td>
-                            <td style="text-align: right; width: 20%">
-                                Last 4 of SSN
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:lastFourSSN" />*
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Last Name
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:lastName" />*
-                            </td>
-                            <td style="text-align: right; width: 20%">
-                                Verified Debtor Identity?
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.debtorIdentities,optionsValue:'Value', optionsText: 'Text', value: debtorIdentityVerified">
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                First Name
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:firstName" />
-                            *
-                            <td style="text-align: right; width: 20%">
-                                Best Contact Method
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.contactMethods,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: contactMethodId">
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Address
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:address" />
-                            <td style="text-align: right; width: 20%">
-                                Best Contact Time
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.contactTimeOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: contactTimeId">
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                City
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:city" />
-                            <td style="text-align: right; width: 20%">
-                                Creditor Name
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:creditorName" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                State
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.stateOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: state">
-                                </select>
-                            <td style="text-align: right; width: 20%">
-                                Debt Product
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.debtProductOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: debtProductId">
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Zip
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:zip" />
-                            <td style="text-align: right; width: 20%">
-                                Debt Balance at Purchase
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:debtPurchaseBalance" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Home Phone
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:homePhone" />
-                            <td style="text-align: right; width: 20%">
-                                Debt Balance (Current)
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:debtCurrentBalance" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Work Phone
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:workPhone" />
-                            <td style="text-align: right; width: 20%">
-                                Dispute Debt?
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.disputeDebtOptions,optionsValue:'Value', optionsText: 'Text', value: disputeDebt">
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Mobile Phone
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:mobilePhone" />
-                            <td style="text-align: right; width: 20%">
-                                Dispute Debt Amount?
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.disputeDebtAmtOptions,optionsValue:'Value', optionsText: 'Text', value: disputeDebtAmount">
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                &nbsp;
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                &nbsp;
-                            <td style="text-align: right; width: 20%">
-                                Dispute Debt Due Date?
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.disputeDebtDueDateOptions,optionsValue:'Value', optionsText: 'Text', value: disputeDebtDueDate">
-                                </select>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 100%; background-color: #1f497d">
-                <a href="#" style="text-decoration: none; font-weight: bold; color: white" data-bind="click:showHideComplaintInformation">
-                    Complaint Information</a>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div id="complaintInformation" data-bind="with:complianceModel,visible:showComplaintInformation">
-                    <table class="complaintInfo">
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Complaint ID #
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" data-bind="value:complaintID,enable:false" />
-                            *
-                            <td style="text-align: right; width: 20%">
-                                Complaint Date
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" id="complaiintDate" data-bind="value:complaintDate" />
-                            *
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Complaint Received By
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.complaintRecvdByOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: complaintReceivedByMethodId">
-                                </select>
-                            <td style="text-align: right; width: 20%">
-                                Complaint Issue
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.complaintIssueOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: complaintIssueId">
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Complaint Notes
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <textarea rows="4" cols="16" data-bind="value:complaintNotes"></textarea>
-                            <td style="text-align: right; width: 20%">
-                                Upload Document
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="checkbox" data-bind="checked: complaintinfoDocumentChecked" />&nbsp;<a
-                                    data-bind="attr: { href: complaintDocUrl }"> <span data-bind="text:complaintDocument">
-                                    </span></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Need More Info from Debtor?
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.needMoreInfoDebtorOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoReqdFromDebtor_YesNo">
-                                </select>
-                            <td style="text-align: right; width: 20%">
-                                Date Requested
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" id="moreInfoRequestedDate" data-bind="value:moreInfoRequestedDate" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                More Info Requested
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <textarea rows="4" cols="16" data-bind="value:moreInfoRequested"></textarea>
-                            <td style="text-align: right; width: 20%">
-                                More Debtor Info Received?
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.moreInfoRecvdDebtorOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoReceivedFromDebtor">
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Date Received
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" id="moreInfoReceivedDate" data-bind="value:moreInfoReceivedDate" />
-                            <td style="text-align: right; width: 20%">
-                                More Info Received
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <textarea rows="4" cols="16" data-bind="value:moreInfoReceived"></textarea>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 100%; background-color: #1f497d">
-                <a href="#" style="text-decoration: none; font-weight: bold; color: white" data-bind="click:showHideDebtOwnerProcess">
-                    Debt Owner Process</a>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div id="debtOwnerProcess" data-bind="with:complianceModel,visible:showDebtOwnerProcess">
-                    <table class="debtOwnerInfo">
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Submitted Complaint to Owner?
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.complaintSubmittedToOwnerOptions,optionsValue:'Value', optionsText: 'Text', value:complaintSubmittedToOwner">
-                                </select>
-                            <td style="text-align: right; width: 20%">
-                                Date Submitted
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" id="complaintSubmittedDate" data-bind="value:complaintSubmittedDate" />
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Time to Submit (Days)
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type=text disabled=disabled data-bind="value:timeToSubmitDays" />
-                            <td style="text-align: right; width: 20%">
-                                Upload Document
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="checkbox" data-bind="checked: debtOwnerProcessDocumentChecked" />&nbsp;<a
-                                    data-bind="attr: { href: debtOwnerProcessDocUrl }"><span data-bind="text:debtOwnerProcessDocument"></span></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Need More Info from Agency?
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.moreInfoFromAgencyOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoFromAgency">
-                                </select>
-                            <td style="text-align: right; width: 20%">
-                                Date Requested
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" id="moreInfoFromAgencyRequestedDate" data-bind="value:moreInfoFromAgencyRequestedDate" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                More Info Requested
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <textarea rows="4" cols="16" data-bind="value:moreInfoFromAgencyRequested"></textarea>
-                            <td style="text-align: right; width: 20%">
-                                More Agency Info Received?
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.moreInfoFromAgencyReceivedOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoFromAgencyReceived_YesNo">
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Date Received
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" id="moreInfoFromAgencyReceivedDate" data-bind="value:moreInfoFromAgencyReceivedDate" />
-                            <td style="text-align: right; width: 20%">
-                                More Info Received
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <textarea rows="4" cols="16" data-bind="value:moreInfoFromAgencyReceived"></textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Owner Response
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.ownerResponseOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption:' ',value:ownerResponseId">
-                                </select>
-                            <td style="text-align: right; width: 20%">
-                                &nbsp;
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                &nbsp;
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Owner Response to Agency Date
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" id="ownerResponseDate" data-bind="value:ownerResponseDate" />
-                            <td style="text-align: right; width: 20%">
-                                Owner Response (Days)
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" disabled="disabled" data-bind="value:ownerResponseDays" />
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 100%; background-color: #1f497d">
-                <a href="#" style="text-decoration: none; font-weight: bold; color: white" data-bind="click:showHideComplaintClosure">
-                    Complaint Closure</a>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div id="complaintClosure" data-bind="with:complianceModel,visible:showComplaintClosure">
-                    <table class="complaintClosureInfo">
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Agency Response to Debtor Date
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text" id="agencyResponseToDebtorDate" data-bind="value:agencyResponseToDebtorDate" />
-                            <td style="text-align: right; width: 20%">
-                                Total Response Time (Days)
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <input type="text"  disabled="disabled" data-bind="value:totalResponseTimeDays" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Debtor Agree?
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.debtorAgreeOptions,optionsValue:'Value', optionsText: 'Text', value:debtorAgree">
-                                </select>
-                            <td style="text-align: right; width: 20%">
-                                Need further Action?
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.needFurtherActionOptions,optionsValue:'Value', optionsText: 'Text', value:needFurtherAction">
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: right; width: 20%">
-                                Final Action Steps
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                                :
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                <select data-bind="options:$parent.finalActionStepOptions,optionsValue:'Value',optionsCaption: ' ', optionsText: 'Text', value:finalActionStepId">
-                                </select>
-                            <td style="text-align: right; width: 20%">
-                                &nbsp;
-                            </td>
-                            <td style="text-align: center; width: 1%">
-                            </td>
-                            <td style="text-align: left; width: 20%">
-                                &nbsp;
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                <table class="PIMSDatatable" style="width: 100%;">
+                    <tr>
+                        <td style="width: 100%; background-color: #1f497d">
+                            <a href="#" style="text-decoration: none; font-weight: bold; color: white" data-bind="click:showHideDebtInformation">
+                                Debtor & Debt Information</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="debtInformation" data-bind="with:complianceModel,visible:showDebtInformation">
+                                <table class="debtorInfo">
+                                    <tr>
+                                        <td colspan="6" style="text-align: right">
+                                            * = Required fields
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Agency Name
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left;" colspan="4">
+                                            <select data-bind="options:$parent.agencies,optionsValue:'Value', optionsCaption:' ',optionsText: 'Text', value: agency,disable:$parent.agenciesDisable">
+                                            </select>*
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Consumer Account #
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <input type="text" data-bind="value:account" />*
+                                        </td>
+                                        <td style="text-align: right; width: 20%">
+                                            Last 4 of SSN
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <input type="text" data-bind="value:lastFourSSN" />*
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Last Name
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <input type="text" data-bind="value:lastName" />*
+                                        </td>
+                                        <td style="text-align: right; width: 20%">
+                                            Verified Debtor Identity?
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <select data-bind="options:$parent.debtorIdentities,optionsValue:'Value', optionsText: 'Text', value: debtorIdentityVerified">
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            First Name
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <input type="text" data-bind="value:firstName" />
+                                            *
+                                            <td style="text-align: right; width: 20%">
+                                                Best Contact Method
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <select data-bind="options:$parent.contactMethods,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: contactMethodId">
+                                                </select>
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Address
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <input type="text" data-bind="value:address" />
+                                            <td style="text-align: right; width: 20%">
+                                                Best Contact Time
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <select data-bind="options:$parent.contactTimeOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: contactTimeId">
+                                                </select>
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            City
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <input type="text" data-bind="value:city" />
+                                            <td style="text-align: right; width: 20%">
+                                                Creditor Name
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <input type="text" data-bind="value:creditorName" />
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            State
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <select data-bind="options:$parent.stateOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: state">
+                                            </select>
+                                            <td style="text-align: right; width: 20%">
+                                                Debt Product
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <select data-bind="options:$parent.debtProductOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: debtProductId">
+                                                </select>
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Zip
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <input type="text" data-bind="value:zip" />
+                                            <td style="text-align: right; width: 20%">
+                                                Debt Balance at Purchase
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <input type="text" data-bind="value:debtPurchaseBalance" />
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Home Phone
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <input type="text" data-bind="value:homePhone" />
+                                            <td style="text-align: right; width: 20%">
+                                                Debt Balance (Current)
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <input type="text" data-bind="value:debtCurrentBalance" />
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Work Phone
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <input type="text" data-bind="value:workPhone" />
+                                            <td style="text-align: right; width: 20%">
+                                                Dispute Debt?
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <select data-bind="options:$parent.disputeDebtOptions,optionsValue:'Value', optionsText: 'Text', value: disputeDebt">
+                                                </select>
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Mobile Phone
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <input type="text" data-bind="value:mobilePhone" />
+                                            <td style="text-align: right; width: 20%">
+                                                Dispute Debt Amount?
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <select data-bind="options:$parent.disputeDebtAmtOptions,optionsValue:'Value', optionsText: 'Text', value: disputeDebtAmount">
+                                                </select>
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            &nbsp;
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            &nbsp;
+                                            <td style="text-align: right; width: 20%">
+                                                Dispute Debt Due Date?
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <select data-bind="options:$parent.disputeDebtDueDateOptions,optionsValue:'Value', optionsText: 'Text', value: disputeDebtDueDate">
+                                                </select>
+                                            </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100%; background-color: #1f497d">
+                            <a href="#" style="text-decoration: none; font-weight: bold; color: white" data-bind="click:showHideComplaintInformation">
+                                Complaint Information</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="complaintInformation" data-bind="with:complianceModel,visible:showComplaintInformation">
+                                <table class="complaintInfo">
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Complaint ID #
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <input type="text" data-bind="value:complaintID,enable:false" />
+                                            *
+                                            <td style="text-align: right; width: 20%">
+                                                Complaint Date
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <input type="text" id="complaiintDate" data-bind="value:complaintDate" />
+                                        *
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Complaint Received By
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <select data-bind="options:$parent.complaintRecvdByOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: complaintReceivedByMethodId">
+                                            </select>
+                                            <td style="text-align: right; width: 20%">
+                                                Complaint Issue
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <select data-bind="options:$parent.complaintIssueOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption: ' ', value: complaintIssueId">
+                                                </select>
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Complaint Notes
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <textarea rows="4" cols="25" data-bind="value:complaintNotes"></textarea>
+                                            <td style="text-align: right; width: 20%">
+                                                Upload Document
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <input type="checkbox" data-bind="checked: complaintinfoDocumentChecked" />&nbsp;<a
+                                                    data-bind="attr: { href: complaintDocUrl }"><span data-bind="text:complaintDocument"></span></a>
+                                            </td>
+                                    </tr>
+                                    <tr data-bind="visible:$parent.showComplaintSumittedToAgencyInfo">
+                                        <td style="text-align: right; width: 20%">
+                                            Submitted Complaint to Agency?
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <select data-bind="options:$parent.yesNoOptions,optionsValue:'Value', optionsText: 'Text', value:complaintSubmitedToAgency_YesNo">
+                                            </select>
+                                            <td style="text-align: right; width: 20%">
+                                                Date Submitted
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <input type="text" id="dateSubmittedToAgency" data-bind="value:complaintSubmitedToAgencyDate" />
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Need More Info from Debtor?
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <select data-bind="options:$parent.needMoreInfoDebtorOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoReqdFromDebtor_YesNo">
+                                            </select>
+                                            <td style="text-align: right; width: 20%">
+                                                Date Requested
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <input type="text" id="moreInfoRequestedDate" data-bind="value:moreInfoRequestedDate" />
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            More Info Requested
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <textarea rows="4" cols="25" data-bind="value:moreInfoRequested"></textarea>
+                                            <td style="text-align: right; width: 20%">
+                                                More Debtor Info Received?
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <select data-bind="options:$parent.moreInfoRecvdDebtorOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoReceivedFromDebtor">
+                                                </select>
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Date Received
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <input type="text" id="moreInfoReceivedDate" data-bind="value:moreInfoReceivedDate" />
+                                            <td style="text-align: right; width: 20%">
+                                                More Info Received
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <textarea rows="4" cols="25" data-bind="value:moreInfoReceived"></textarea>
+                                            </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100%; background-color: #1f497d">
+                            <a href="#" style="text-decoration: none; font-weight: bold; color: white" data-bind="click:showHideDebtOwnerProcess">
+                                Debt Owner Process</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="debtOwnerProcess" data-bind="with:complianceModel,visible:showDebtOwnerProcess">
+                                <table class="debtOwnerInfo">
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Submitted Complaint to Owner?
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <select data-bind="options:$parent.complaintSubmittedToOwnerOptions,optionsValue:'Value', optionsText: 'Text', value:complaintSubmittedToOwner">
+                                            </select>
+                                            <td style="text-align: right; width: 20%">
+                                                Date Submitted
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <input type="text" id="complaintSubmittedDate" data-bind="value:complaintSubmittedDate" />
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Time to Submit (Days)
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <input type="text" disabled="disabled" data-bind="value:timeToSubmitDays" />
+                                            <td style="text-align: right; width: 20%">
+                                                Upload Document
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <input type="checkbox" data-bind="checked: debtOwnerProcessDocumentChecked" />&nbsp;<a
+                                                    data-bind="attr: { href: debtOwnerProcessDocUrl }"><span data-bind="text:debtOwnerProcessDocument"></span></a>
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Need More Info from Agency?
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <select data-bind="options:$parent.moreInfoFromAgencyOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoFromAgency">
+                                            </select>
+                                            <td style="text-align: right; width: 20%">
+                                                Date Requested
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <input type="text" id="moreInfoFromAgencyRequestedDate" data-bind="value:moreInfoFromAgencyRequestedDate" />
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            More Info Requested
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <textarea rows="4" cols="25" data-bind="value:moreInfoFromAgencyRequested"></textarea>
+                                            <td style="text-align: right; width: 20%">
+                                                More Agency Info Received?
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <select data-bind="options:$parent.moreInfoFromAgencyReceivedOptions,optionsValue:'Value', optionsText: 'Text', value:moreInfoFromAgencyReceived_YesNo">
+                                                </select>
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Date Received
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <input type="text" id="moreInfoFromAgencyReceivedDate" data-bind="value:moreInfoFromAgencyReceivedDate" />
+                                            <td style="text-align: right; width: 20%">
+                                                More Info Received
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <textarea rows="4" cols="25" data-bind="value:moreInfoFromAgencyReceived"></textarea>
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Owner Response
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <select data-bind="options:$parent.ownerResponseOptions,optionsValue:'Value', optionsText: 'Text', optionsCaption:' ',value:ownerResponseId">
+                                            </select>
+                                            <td style="text-align: right; width: 20%">
+                                                &nbsp;
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                &nbsp;
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Owner Response to Agency Date
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <input type="text" id="ownerResponseDate" data-bind="value:ownerResponseDate" />
+                                            <td style="text-align: right; width: 20%">
+                                                Owner Response (Days)
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <input type="text" disabled="disabled" data-bind="value:ownerResponseDays" />
+                                            </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 100%; background-color: #1f497d">
+                            <a href="#" style="text-decoration: none; font-weight: bold; color: white" data-bind="click:showHideComplaintClosure">
+                                Complaint Closure</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div id="complaintClosure" data-bind="with:complianceModel,visible:showComplaintClosure">
+                                <table class="complaintClosureInfo">
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Agency Response to Debtor Date
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <input type="text" id="agencyResponseToDebtorDate" data-bind="value:agencyResponseToDebtorDate" />
+                                            <td style="text-align: right; width: 20%">
+                                                Total Response Time (Days)
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <input type="text" disabled="disabled" data-bind="value:totalResponseTimeDays" />
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Debtor Agree?
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <select data-bind="options:$parent.debtorAgreeOptions,optionsValue:'Value', optionsText: 'Text', value:debtorAgree">
+                                            </select>
+                                            <td style="text-align: right; width: 20%">
+                                                Need further Action?
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                                :
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                <select data-bind="options:$parent.needFurtherActionOptions,optionsValue:'Value', optionsText: 'Text', value:needFurtherAction">
+                                                </select>
+                                            </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; width: 20%">
+                                            Final Action Steps
+                                        </td>
+                                        <td style="text-align: center; width: 1%">
+                                            :
+                                        </td>
+                                        <td style="text-align: left; width: 20%">
+                                            <select data-bind="options:$parent.finalActionStepOptions,optionsValue:'Value',optionsCaption: ' ', optionsText: 'Text', value:finalActionStepId">
+                                            </select>
+                                            <td style="text-align: right; width: 20%">
+                                                &nbsp;
+                                            </td>
+                                            <td style="text-align: center; width: 1%">
+                                            </td>
+                                            <td style="text-align: left; width: 20%">
+                                                &nbsp;
+                                            </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </td>
         </tr>
     </table>
@@ -696,9 +724,9 @@
                 self.complianceModel.complaintReceivedByMethodId(complaintMethodId);
                 self.complianceModel.complaintIssueId(complaintIssueId);
                 self.complianceModel.complaintNotes(complaintNotes);
-                self.complianceModel.complaintSubmitedToAgency(complaintSubmitedToAgency);
+                self.complianceModel.complaintSubmitedToAgency_YesNo((complaintSubmitedToAgency) ? 'true':'false');
                 self.complianceModel.complaintSubmitedToAgencyDate(getFormatedDate(complaintSubmitedToAgencyDate));
-                self.complianceModel.moreInfoReqdFromDebtor_YesNo(moreInfoReqdFromDebtor_YesNo);
+                self.complianceModel.moreInfoReqdFromDebtor_YesNo((moreInfoReqdFromDebtor_YesNo) ? 'true' : 'false');
                 self.complianceModel.moreInfoRequestedDate(getFormatedDate(moreInfoRequestedDate));
                 self.complianceModel.moreInfoRequested(moreInfoRequested);
                 self.complianceModel.moreInfoReceivedFromDebtor(moreInfoReceivedFromDebtor);
@@ -755,6 +783,7 @@
                         //self.populateComplainceFromDebtor(data[0].Account, data[0].FirstName, data[0].LastName, data[0].DOB, data[0].Address1, data[0].Address2, data[0].City, data[0].State, data[0].Zip, data[0].LastFourSSN, data[0].MobilePhone, data[0].HomePhone, data[0].WorkPhone, ((data[0].DebtCurrentBalance == undefined) ? '' : formatCurrency(data[0].DebtCurrentBalance)), ((data[0].DebtPurchaseBalance == undefined) ? '' : formatCurrency(data[0].DebtPurchaseBalance)), data[0].CreditorName);
                     },
                     error: function (response, errorText) {
+                        log(errorText);
                         return false;
                     }
                 });
@@ -939,6 +968,7 @@
             }, self);
             self.needMoreInfoDebtorOptions = ko.observableArray(yesNoOptions);
             self.moreInfoRecvdDebtorOptions = ko.observableArray(yesNoOptions);
+            self.yesNoOptions = ko.observableArray(yesNoOptions);
 
             //Debt Owner
             self.complaintSubmittedToOwnerOptions = ko.observableArray(yesNoOptions);
@@ -1065,6 +1095,11 @@
             }, self);
 
             /* Show/Hide Options */
+            self.showComplaintSumittedToAgencyInfo = ko.computed(function () {
+                if (self.userRole() != 'agency')
+                    return true;
+                return false;
+            }).bind(self);
             self.showDebtInformation = ko.observable(true);
             self.showComplaintInformation = ko.observable(true);
             self.showDebtOwnerProcess = ko.observable(true);
@@ -1107,6 +1142,7 @@
             $('#complaiintDate').datepicker({ dateFormat: 'mm/dd/yy' });
             $('#moreInfoRequestedDate').datepicker({ dateFormat: 'mm/dd/yy' });
             $('#moreInfoReceivedDate').datepicker({ dateFormat: 'mm/dd/yy' });
+            $('#dateSubmittedToAgency').datepicker({ dateFormat: 'mm/dd/yy' });
             //Debt Owner
             $('#complaintSubmittedDate').datepicker({ dateFormat: 'mm/dd/yy' });
             $('#moreInfoFromAgencyRequestedDate').datepicker({ dateFormat: 'mm/dd/yy' });

@@ -166,6 +166,7 @@
     <Compile Include="ApplicationIntegration\Menu.cs" />
     <Compile Include="ApplicationIntegration\MenuFactory.cs" />
     <Compile Include="ApplicationIntegration\QueryExtention.cs" />
+    <Compile Include="ApplicationIntegration\UserEntitiesDataFactory.cs" />
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -211,7 +212,9 @@
     <Compile Include="Areas\Search\Controllers\HomeController.cs" />
     <Compile Include="Areas\Search\SearchAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\API\Media\MediaRequestController.cs" />
+    <Compile Include="Controllers\API\UserAccount\ProfileController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ChartController.cs" />
     <Compile Include="Controllers\ComplianceController.cs" />
@@ -294,6 +297,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\application.js" />
+    <Content Include="Scripts\compliance.js" />
     <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -549,6 +553,11 @@
     <Content Include="Views\Shared\_FooterPartial.cshtml" />
     <Content Include="Views\Shared\_LHSMenuPartial.cshtml" />
     <Content Include="Views\Shared\_MenuPartial.cshtml" />
+    <None Include="ClassDiagram1.cd" />
+    <Content Include="Views\Admin\ManageUsers.cshtml" />
+    <Content Include="Views\Admin\_users.cshtml" />
+    <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

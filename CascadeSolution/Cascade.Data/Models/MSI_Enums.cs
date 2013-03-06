@@ -14,4 +14,11 @@ namespace Cascade.Data.Models
         ReSubmit = 5,
         RequestComplete = 6
     }
+
+    public enum CascadeRoles
+    {
+        agency,
+        user,
+        buyer
+    }
 }

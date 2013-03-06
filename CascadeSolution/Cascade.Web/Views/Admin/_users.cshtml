@@ -1,0 +1,292 @@
+﻿@using System.Web.Security;
+@using Cascade.Web.Presentation.ExtensionMethods
+<link href="@Url.Content("~/Content/dataTables/demo_table.css")" rel="stylesheet" type="text/css" />
+<table style="width: 100%">
+    <tr>
+        <td style="width: 60%; background-color: white; color: #1f497d">
+            <b>Exisitng Users</b>
+        </td>
+        <td style="width: 40%; background-color: white; color: #1f497d">
+            <b>New Or Update User</b>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 60%">
+            <table id="cascadeUsers" class="display">
+                <thead>
+                    <tr>
+                        <th>
+                            Username
+                        </th>
+                        <th>
+                            Email
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (MembershipUser user in Membership.GetAllUsers())
+                    {
+                        <tr>
+                            <td style="width: 25%">@user.UserName
+                            </td>
+                            <td style="width: 50%">@user.Email
+                            </td>
+                            <td style="width: 25%">
+                                @Html.ActionLink("View Details", "GetUser", new { id = user.ProviderUserKey }, new { @class = "getDetails" })
+                            </td>
+                        </tr> 
+            
+                    }
+                </tbody>
+            </table>
+        </td>
+        <td style="width: 40%">
+            <div id="editContainer" data-bind='visible:showEditContainer'>
+                <table style="width: 100%">
+                    <tr>
+                        <td style="width: 25%">
+                            Username
+                        </td>
+                        <td style="width: 1%">
+                            :
+                        </td>
+                        <td style="width: 74%">
+                            <input type="text" data-bind="enable:false,value:userName" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 25%">
+                            First Name
+                        </td>
+                        <td style="width: 1%">
+                            :
+                        </td>
+                        <td style="width: 74%">
+                            <input type="text" data-bind="value:firstName" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Last Name
+                        </td>
+                        <td>
+                            :
+                        </td>
+                        <td>
+                            <input type="text" data-bind="value:lastName" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Email
+                        </td>
+                        <td>
+                            :
+                        </td>
+                        <td>
+                            <input type="text" data-bind="value:email" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Role
+                        </td>
+                        <td>
+                            :
+                        </td>
+                        <td>
+                            <select data-bind="options:roles,optionsValue:'Value', optionsCaption:' ',optionsText: 'Text', value: role">
+                            </select>
+                        </td>
+                    </tr>
+                    <tr data-bind="visible:roleKeyValVisible">
+                        <td data-bind="text:roleKeyTitle">
+                        </td>
+                        <td>
+                            :
+                        </td>
+                        <td>
+                            <input type="text" data-bind="value:roleKeyValue" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="text-align: center">
+                            <input type="button" class="editButton" value="Create New" data-bind="visible:createNewVisible,click:save" />
+                            <input type="button" class="editButton" value="Update" data-bind="visible:saveVisible,click:save" />
+                            <input type="button" class="editButton" value="Cancel" data-bind="visible:saveVisible,click:saveCancel" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="text-align: center">
+                            <div data-bind="fadeVisible:showMessage" style="background-color: #1f497d; color: #fff">
+                                <span data-bind="text:message"></span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
+</table>
+<script src="~/Scripts/datatable/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script src="~/Scripts/datatable/jquery.dataTables.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+    function userViewModel(userId, userAgency, accountNumber, userRole) {
+        var self = this;
+        self.userId = userId;
+        self.userName = ko.observable('')
+        self.firstName = ko.observable('');
+        self.lastName = ko.observable('');
+        self.email = ko.observable('');
+        self.role = ko.observable('');
+        self.roleKeyValue = ko.observable('');
+        self.roleKeyTitle = ko.observable('');
+
+        self.fill = function (id,name,fname,lname,email,role,roleKeyVal) {
+            self.userId = id;
+            self.userName(name)
+            self.firstName(fname);
+            self.lastName(lname);
+            self.email(email);
+            self.role(role);
+            self.roleKeyValue(roleKeyVal);
+        }
+
+        self.showMessage = ko.observable(false);
+        self.message = ko.observable('');
+
+        self.saveVisible = ko.observable(false);
+        self.createNewVisible = ko.observable(true);
+        self.roleKeyValVisible = ko.observable(false);
+
+        self.roles = ko.computed(function () {
+            var localRoles = [];
+            log('Getting roles');
+            $.ajax({
+                url: baseUrl + '/Admin/GetApplicationRoles/',
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                async: false,
+                success: function (data) {
+                    //log(data);
+                    if (data.length > 0) {
+                        $.each(data, function (i, item) {
+                            //log(item);
+                            localRoles.push({ Text: item, Value: item });
+                        });
+                    }
+                },
+                error: function (response, errorText) {
+                    log(errorText);
+                }
+            });
+            return localRoles;
+        }, self);
+        self.showEditContainer = ko.observable(false);
+        self.role.subscribe(function (roleSelected) {
+            if(roleSelected == 'agency')
+            {
+                self.roleKeyTitle('Agency');
+                self.roleKeyValVisible(true);
+            }
+            else{
+                self.roleKeyTitle('');
+                self.roleKeyValVisible(false);
+            }
+        } .bind(self));
+        self.save = function () {
+            if (self.firstName() == '' || self.firstName() == undefined || self.lastName() == '' || self.lastName() == undefined || self.email() == '' || self.email() == undefined) {
+                alert('First Name, Last Name and Email is required');
+                return false;
+            }
+            if (self.role() == 'agency' && self.roleKeyValue() == '') {
+                alert('Agency value is required');
+                return false;
+            }
+            var json = JSON.stringify({
+                userId: self.userId, firstName: self.firstName(), lastName: self.lastName(), email: self.email(), role: self.role(), roleEntityValue: self.roleKeyValue()
+            });
+            $.ajax({
+                url: baseUrl + '/Admin/UpdateUser/',
+                type: "POST",
+                data: json,
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                success: function (response) {
+                    log(response);
+                    if (self.userId == '') {
+                        window.open(baseUrl + '/Admin/ManageUsers', '_self', '', '');
+                    }
+                    self.showMessage(true);
+                    self.message('User account data has been added or updated');
+                },
+                error: function (response, errorText) {
+                    log(errorText);
+                }
+            });
+        }
+        self.clear = function () {
+            self.fill('', '', '', '', '', undefined, '');
+            self.roleKeyValVisible(false);
+            self.roleKeyTitle('');
+        }
+        self.saveCancel = function () {
+            self.clear();
+            self.saveVisible(false);
+            self.createNewVisible(true);
+        }
+    }
+
+    ko.bindingHandlers.fadeVisible = {
+        init: function (element, valueAccessor) {
+            var value = valueAccessor();
+        },
+        update: function (element, valueAccessor) {
+            var value = valueAccessor();
+            ko.utils.unwrapObservable(value) ? $(element).fadeIn(3000, function () {
+                $(element).fadeOut(5000);
+                value(false)
+            }) : $(element).fadeOut();
+        }
+    };
+
+    $(document).ready(function () {
+        $('#cascadeUsers').dataTable(
+            {
+                "aoColumns": [
+                    null,
+                    null
+                 ]
+            });
+
+        var uvm = new userViewModel('', '', '', '');
+        ko.applyBindings(uvm);
+        uvm.showEditContainer(true);
+
+        $('a.getDetails').click(function () {
+            event.preventDefault();
+            uvm.message('');
+            uvm.showMessage(false);
+            uvm.clear();
+            var url = $(this).attr('href');
+            log('Getting user data');
+            $.ajax({
+                url: url,
+                async: true,
+                success: function (data) {
+                    log(data);
+                    uvm.fill(data.UserId, data.UserName, data.FirstName, data.LastName, data.Email, data.Role, data.RoleKeyValue);
+                    uvm.saveVisible(true);
+                    uvm.createNewVisible(false);
+                },
+                error: function (xhr, status, error) {
+                    log(error);
+                }
+            });
+        });
+    });
+</script>

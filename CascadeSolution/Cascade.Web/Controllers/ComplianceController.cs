@@ -203,8 +203,8 @@ namespace Cascade.Web.Controllers
                 }
                 else
                 {
-                    complaintToSave.ComplaintSubmitedToAgency = true;
-                    complaintToSave.ComplaintSubmitedToAgencyDate = DateTime.Now;
+                    //complaintToSave.ComplaintSubmitedToAgency = true;
+                    //complaintToSave.ComplaintSubmitedToAgencyDate = DateTime.Now;
                     repository.Add(complaintToSave);
                 }
                 

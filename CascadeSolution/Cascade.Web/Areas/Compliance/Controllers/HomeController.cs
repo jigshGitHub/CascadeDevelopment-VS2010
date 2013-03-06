@@ -13,7 +13,6 @@ namespace Cascade.Web.Areas.Compliance.Controllers
     public class HomeController : BaseController
     {
         private IFileProcessor fileProcessor = new FileProcessor();
-        public string loggedInUser = "";
         //
         // GET: /Compliance/Home/
 
@@ -66,7 +65,7 @@ namespace Cascade.Web.Areas.Compliance.Controllers
             var dataQueries = new DataQueries();
             IEnumerable<ComplianceViewResult> results;
             //For Report based on Report Type selection
-            results = dataQueries.GetComplianceReportRecords(loggedInUser, ReportType);
+            results = dataQueries.GetComplianceReportRecords(UserAgency, ReportType);
             ViewBag.ReportType = ReportType;
             return PartialView("_compliance"+ReportType, results);
           
@@ -80,7 +79,7 @@ namespace Cascade.Web.Areas.Compliance.Controllers
             IEnumerable<ComplianceViewResult> results;
             ViewBag.ReportType = ReportType;
 
-            results = dataQueries.GetComplianceReportRecordsExport(loggedInUser, ReportType);
+            results = dataQueries.GetComplianceReportRecordsExport(UserAgency, ReportType);
 
             return PartialView("Export", results);            
 
