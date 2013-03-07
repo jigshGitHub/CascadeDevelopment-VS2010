@@ -8,11 +8,13 @@ using Cascade.Data.Repositories;
 using Cascade.Data.Models;
 using Cascade.Web.Presentation.ViewModels.DPS;
 using Cascade.Web.Areas.Recourse.Models;
+using Cascade.Web.ApplicationIntegration;
 
 namespace Cascade.Web.Areas.Recourse.Controllers
 {
     public class DPSController : BaseController
     {
+        private IFileProcessor fileProcessor = new FileProcessor();
         //
         // GET: /Recourse/DPS/
 
@@ -26,6 +28,7 @@ namespace Cascade.Web.Areas.Recourse.Controllers
         [HttpPost]
         public JsonResult Add(MSI_DPSForm _dpsform)
         {
+            _dpsform.IsActive = true;
             MSIDPSFormDataRepository repository;
             try
             {
@@ -45,6 +48,98 @@ namespace Cascade.Web.Areas.Recourse.Controllers
             }
             //return _dpsform;
             return Json(_dpsform, JsonRequestBehavior.AllowGet);
+        }
+
+        public FilePathResult DownloadDoc(string fileName)
+        {
+
+            return File(fileProcessor.GetFilePath(fileName), "text/plain", fileName);
+        }
+
+        [HttpPost]
+        public ActionResult UploadAllDocuments(IEnumerable<HttpPostedFileBase> checkDocuments)
+        {
+            //Let us get Id of newly created reocrd
+            string _addedDPSRecordID = Request.Form["hdnDPSRecordID"];
+            //If ID is not null then go ahaead
+            if (_addedDPSRecordID != null)
+            {
+                int _recordID = 0;
+                //Gather the Info
+                _recordID = Convert.ToInt32(_addedDPSRecordID);
+                //Get the Info from the Repository
+                Cascade.Data.Repositories.MSIDPSFormDataRepository repository = new MSIDPSFormDataRepository();
+                Cascade.Data.Models.MSI_DPSForm _dpsForm = (from existingForm in repository.GetAll().Where(record => record.ID == _recordID)
+                                                            select existingForm).First();
+                _dpsForm.UploadedOn = DateTime.Now;
+                _dpsForm.IsActive = true;
+                _dpsForm.UploadedBy = UserId.ToString(); 
+                #region [[ Check Images ]]
+                if (checkDocuments != null)
+                {
+                    if (checkDocuments.Count() >= 1)
+                    {
+                        PerformFileUploadOperation(_dpsForm, checkDocuments);
+                    }
+                }
+                #endregion
+                //Redirect to View Edit Form
+                return RedirectToAction("Details", "DPS", new { id = _dpsForm.ID });
+            }
+            else
+            {
+                //Something is wrong so go to main page
+                return RedirectToAction("Index", "DPS");
+            }
+
+        }
+
+        public bool PerformFileUploadOperation(MSI_DPSForm  _dpsForm, IEnumerable<HttpPostedFileBase> FilesCollection)
+        {
+            Cascade.Data.Repositories.MSIDPSFormDataRepository repository = new MSIDPSFormDataRepository();
+            string _allMediaDocuments = "";
+            //set document name if we already have one and already uploaded in the past
+            _allMediaDocuments = (_dpsForm.CheckDocuments == null) ? "" : _dpsForm.CheckDocuments;
+            //get GUID
+            string _additionalIdentifier = Guid.NewGuid().ToString();
+            //Get all fileNames together so store in the Database
+            foreach (var file in FilesCollection)
+            {
+                if (file != null)
+                {
+                    if (_allMediaDocuments.Length > 0)
+                    {
+                        _allMediaDocuments = _allMediaDocuments + "|" + _additionalIdentifier + "_" + file.FileName;
+                    }
+                    else
+                    {
+                        _allMediaDocuments = _additionalIdentifier + "_" + file.FileName;
+                    }
+                }
+
+            }
+            //Now Upload and set the properties
+            foreach (var file in FilesCollection)
+            {
+                if (file != null)
+                {
+                    if (file.ContentLength > 0)
+                    {
+                        //Upload the file
+                        fileProcessor.SaveUploadedFileWithIdentifier(file, _additionalIdentifier);
+                    }
+                }
+
+            }
+            if (_allMediaDocuments != "")
+            {
+                //Perform Save Operation
+                _dpsForm.CheckDocuments = _allMediaDocuments;
+                repository.Update(_dpsForm);
+            }
+            //response
+            return true;
+
         }
 
         [HttpPost]

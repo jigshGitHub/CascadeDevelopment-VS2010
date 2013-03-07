@@ -1050,35 +1050,36 @@
           <Property Name="WorkPhone" Type="varchar" MaxLength="50" />
           <Property Name="MobilePhone" Type="varchar" MaxLength="50" />
           <Property Name="LastFourSSN" Type="varchar" Nullable="false" MaxLength="4" />
-          <Property Name="DebtorIdentityVerified" Type="bit" />
+          <Property Name="DebtorIdentityVerifiedYN" Type="bit" />
           <Property Name="ContactMethodId" Type="int" />
           <Property Name="ContactTimeId" Type="int" />
           <Property Name="CreditorName" Type="varchar" MaxLength="500" />
           <Property Name="DebtProductId" Type="int" />
           <Property Name="DebtPurchaseBalance" Type="varchar" MaxLength="50" />
           <Property Name="DebtCurrentBalance" Type="varchar" MaxLength="50" />
-          <Property Name="DisputeDebt" Type="bit" />
-          <Property Name="DisputeDebtAmount" Type="bit" />
-          <Property Name="DisputeDebtDueDate" Type="bit" />
+          <Property Name="DisputeDebtYN" Type="bit" />
+          <Property Name="DisputeDebtAmountYN" Type="bit" />
+          <Property Name="DisputeDebtDueDateYN" Type="bit" />
           <Property Name="ComplaintID" Type="varchar" MaxLength="50" />
           <Property Name="ComplaintDate" Type="datetime" Nullable="false" />
           <Property Name="ComplaintReceivedByMethodId" Type="int" />
           <Property Name="ComplaintIssueId" Type="int" Nullable="false" />
           <Property Name="ComplaintNotes" Type="varchar" MaxLength="1000" />
-          <Property Name="ComplaintSubmitedToAgency" Type="bit" />
+          <Property Name="ComplaintSubmitedToAgencyYN" Type="bit" />
           <Property Name="ComplaintSubmitedToAgencyDate" Type="datetime" />
-          <Property Name="MoreInfoReqdFromDebtor" Type="bit" />
+          <Property Name="MoreInfoReqdFromDebtorYN" Type="bit" />
           <Property Name="MoreInfoRequestedDate" Type="datetime" />
           <Property Name="MoreInfoRequested" Type="varchar" MaxLength="1000" />
-          <Property Name="MoreInfoReceivedFromDebtor" Type="bit" />
+          <Property Name="MoreInfoReceivedFromDebtorYN" Type="bit" />
           <Property Name="MoreInfoReceivedDate" Type="datetime" />
           <Property Name="MoreInfoReceived" Type="varchar" MaxLength="1000" />
-          <Property Name="ComplaintSubmittedToOwner" Type="bit" />
+          <Property Name="ComplaintSubmittedToOwnerYN" Type="bit" />
           <Property Name="ComplaintSubmittedDate" Type="datetime" />
           <Property Name="TimeToSubmitDays" Type="int" />
-          <Property Name="MoreInfoFromAgency" Type="bit" />
+          <Property Name="MoreInfoFromAgencyYN" Type="bit" />
           <Property Name="MoreInfoFromAgencyRequestedDate" Type="datetime" />
           <Property Name="MoreInfoFromAgencyRequested" Type="varchar" MaxLength="1000" />
+          <Property Name="MoreInfoFromAgencyReceivedYN" Type="bit" />
           <Property Name="MoreInfoFromAgencyReceived" Type="varchar" MaxLength="1000" />
           <Property Name="MoreInfoFromAgencyReceivedDate" Type="datetime" />
           <Property Name="OwnerResponseId" Type="int" />
@@ -1086,8 +1087,8 @@
           <Property Name="OwnerResponseDays" Type="int" />
           <Property Name="AgencyResponseToDebtorDate" Type="datetime" />
           <Property Name="TotalResponseTimeDays" Type="int" />
-          <Property Name="DebtorAgree" Type="bit" />
-          <Property Name="NeedFurtherAction" Type="bit" />
+          <Property Name="DebtorAgreeYN" Type="bit" />
+          <Property Name="NeedFurtherActionYN" Type="bit" />
           <Property Name="FinalActionStepId" Type="int" />
           <Property Name="IsViewedByOwner" Type="bit" />
           <Property Name="CreatedBy" Type="uniqueidentifier" />
@@ -1144,6 +1145,10 @@
           <Property Name="OurCheckNumber" Type="varchar" MaxLength="50" />
           <Property Name="Uploaded" Type="bit" />
           <Property Name="GUID" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="CheckDocuments" Type="varchar(max)" />
+          <Property Name="UploadedOn" Type="datetime" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="UploadedBy" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="MSI_FinalActionsteps">
           <Key>
@@ -3518,12 +3523,10 @@
       <Schema Namespace="CascadeDBModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
         <EntityContainer Name="CascadeDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="MSI_ComplaintIssues" EntityType="CascadeDBModel.MSI_ComplaintIssues" />
-          <EntitySet Name="MSI_ComplaintMain" EntityType="CascadeDBModel.MSI_ComplaintMain" />
           <EntitySet Name="MSI_ComplaintReceviedBy" EntityType="CascadeDBModel.MSI_ComplaintReceviedBy" />
           <EntitySet Name="MSI_DebtorContactMethods" EntityType="CascadeDBModel.MSI_DebtorContactMethods" />
           <EntitySet Name="MSI_DebtorContactTime" EntityType="CascadeDBModel.MSI_DebtorContactTime" />
           <EntitySet Name="MSI_DebtorProducts" EntityType="CascadeDBModel.MSI_DebtorProducts" />
-          <EntitySet Name="MSI_DPSForm" EntityType="CascadeDBModel.MSI_DPSForm" />
           <EntitySet Name="MSI_FinalActionsteps" EntityType="CascadeDBModel.MSI_FinalActionsteps" />
           <EntitySet Name="MSI_MediaTypes" EntityType="CascadeDBModel.MSI_MediaTypes" />
           <EntitySet Name="MSI_OwnerResponses" EntityType="CascadeDBModel.MSI_OwnerResponses" />
@@ -3619,6 +3622,8 @@
             <End Role="MSI_MediaTypes" EntitySet="MSI_MediaTypes" />
             <End Role="MSI_MediaTracker" EntitySet="MSI_MediaTracker" />
           </AssociationSet>
+          <EntitySet Name="MSI_ComplaintMain" EntityType="CascadeDBModel.MSI_ComplaintMain" />
+          <EntitySet Name="MSI_DPSForm" EntityType="CascadeDBModel.MSI_DPSForm" />
           </EntityContainer>
         <EntityType Name="MSI_ComplaintIssues">
           <Key>
@@ -3626,67 +3631,6 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
-        </EntityType>
-        <EntityType Name="MSI_ComplaintMain">
-          <Key>
-            <PropertyRef Name="Account" />
-          </Key>
-          <Property Name="AgencyId" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
-          <Property Name="Account" Type="String" Nullable="false" MaxLength="20" Unicode="false" FixedLength="false" />
-          <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="Address" Type="String" MaxLength="500" Unicode="false" FixedLength="false" />
-          <Property Name="City" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="State" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="Zip" Type="String" MaxLength="10" Unicode="false" FixedLength="false" />
-          <Property Name="HomePhone" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="WorkPhone" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="MobilePhone" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="LastFourSSN" Type="String" Nullable="false" MaxLength="4" Unicode="false" FixedLength="false" />
-          <Property Name="DebtorIdentityVerified" Type="Boolean" />
-          <Property Name="ContactMethodId" Type="Int32" />
-          <Property Name="ContactTimeId" Type="Int32" />
-          <Property Name="CreditorName" Type="String" MaxLength="500" Unicode="false" FixedLength="false" />
-          <Property Name="DebtProductId" Type="Int32" />
-          <Property Name="DebtPurchaseBalance" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="DebtCurrentBalance" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="DisputeDebt" Type="Boolean" />
-          <Property Name="DisputeDebtAmount" Type="Boolean" />
-          <Property Name="DisputeDebtDueDate" Type="Boolean" />
-          <Property Name="ComplaintID" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="ComplaintDate" Type="DateTime" Nullable="false" />
-          <Property Name="ComplaintReceivedByMethodId" Type="Int32" />
-          <Property Name="ComplaintIssueId" Type="Int32" Nullable="false" />
-          <Property Name="ComplaintNotes" Type="String" MaxLength="1000" Unicode="false" FixedLength="false" />
-          <Property Name="ComplaintSubmitedToAgency" Type="Boolean" />
-          <Property Name="ComplaintSubmitedToAgencyDate" Type="DateTime" />
-          <Property Name="MoreInfoReqdFromDebtor" Type="Boolean" />
-          <Property Name="MoreInfoRequestedDate" Type="DateTime" />
-          <Property Name="MoreInfoRequested" Type="String" MaxLength="1000" Unicode="false" FixedLength="false" />
-          <Property Name="MoreInfoReceivedFromDebtor" Type="Boolean" />
-          <Property Name="MoreInfoReceivedDate" Type="DateTime" />
-          <Property Name="MoreInfoReceived" Type="String" MaxLength="1000" Unicode="false" FixedLength="false" />
-          <Property Name="ComplaintSubmittedToOwner" Type="Boolean" />
-          <Property Name="ComplaintSubmittedDate" Type="DateTime" />
-          <Property Name="TimeToSubmitDays" Type="Int32" />
-          <Property Name="MoreInfoFromAgency" Type="Boolean" />
-          <Property Name="MoreInfoFromAgencyRequestedDate" Type="DateTime" />
-          <Property Name="MoreInfoFromAgencyRequested" Type="String" MaxLength="1000" Unicode="false" FixedLength="false" />
-          <Property Name="MoreInfoFromAgencyReceived" Type="String" MaxLength="1000" Unicode="false" FixedLength="false" />
-          <Property Name="MoreInfoFromAgencyReceivedDate" Type="DateTime" />
-          <Property Name="OwnerResponseId" Type="Int32" />
-          <Property Name="OwnerResponseDate" Type="DateTime" />
-          <Property Name="OwnerResponseDays" Type="Int32" />
-          <Property Name="AgencyResponseToDebtorDate" Type="DateTime" />
-          <Property Name="TotalResponseTimeDays" Type="Int32" />
-          <Property Name="DebtorAgree" Type="Boolean" />
-          <Property Name="NeedFurtherAction" Type="Boolean" />
-          <Property Name="FinalActionStepId" Type="Int32" />
-          <Property Name="IsViewedByOwner" Type="Boolean" />
-          <Property Name="CreatedBy" Type="Guid" />
-          <Property Name="IsViewedByAgency" Type="Boolean" />
-          <Property Name="ComplaintDocument" Type="String" MaxLength="500" Unicode="false" FixedLength="false" />
-          <Property Name="DebtOwnerProcessDocument" Type="String" MaxLength="500" Unicode="false" FixedLength="false" />
         </EntityType>
         <EntityType Name="MSI_ComplaintReceviedBy">
           <Key>
@@ -3715,28 +3659,6 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Product" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
-        </EntityType>
-        <EntityType Name="MSI_DPSForm">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PIMSAcct" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="Amount" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="NetPayment" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="TransCode" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="TransDate" Type="DateTime" />
-          <Property Name="CheckNumber" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="PmtType" Type="Int32" />
-          <Property Name="TransSource" Type="Int32" />
-          <Property Name="Portfolio" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="AcctName" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="DateRec" Type="DateTime" />
-          <Property Name="CurrentResp" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="OriginalAcct" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="OurCheckNumber" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="Uploaded" Type="Boolean" />
-          <Property Name="GUID" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
         </EntityType>
         <EntityType Name="MSI_FinalActionsteps">
           <Key>
@@ -6086,6 +6008,94 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="MSI_ComplaintMain">
+          <Key>
+            <PropertyRef Name="Account" />
+          </Key>
+          <Property Type="String" Name="AgencyId" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Account" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="LastName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="FirstName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Address" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="City" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="State" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Zip" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="HomePhone" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="WorkPhone" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="MobilePhone" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="LastFourSSN" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="DebtorIdentityVerifiedYN" />
+          <Property Type="Int32" Name="ContactMethodId" />
+          <Property Type="Int32" Name="ContactTimeId" />
+          <Property Type="String" Name="CreditorName" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="DebtProductId" />
+          <Property Type="String" Name="DebtPurchaseBalance" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="DebtCurrentBalance" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="DisputeDebtYN" />
+          <Property Type="Boolean" Name="DisputeDebtAmountYN" />
+          <Property Type="Boolean" Name="DisputeDebtDueDateYN" />
+          <Property Type="String" Name="ComplaintID" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="ComplaintDate" Nullable="false" />
+          <Property Type="Int32" Name="ComplaintReceivedByMethodId" />
+          <Property Type="Int32" Name="ComplaintIssueId" Nullable="false" />
+          <Property Type="String" Name="ComplaintNotes" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="ComplaintSubmitedToAgencyYN" />
+          <Property Type="DateTime" Name="ComplaintSubmitedToAgencyDate" />
+          <Property Type="Boolean" Name="MoreInfoReqdFromDebtorYN" />
+          <Property Type="DateTime" Name="MoreInfoRequestedDate" />
+          <Property Type="String" Name="MoreInfoRequested" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="MoreInfoReceivedFromDebtorYN" />
+          <Property Type="DateTime" Name="MoreInfoReceivedDate" />
+          <Property Type="String" Name="MoreInfoReceived" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="ComplaintSubmittedToOwnerYN" />
+          <Property Type="DateTime" Name="ComplaintSubmittedDate" />
+          <Property Type="Int32" Name="TimeToSubmitDays" />
+          <Property Type="Boolean" Name="MoreInfoFromAgencyYN" />
+          <Property Type="DateTime" Name="MoreInfoFromAgencyRequestedDate" />
+          <Property Type="String" Name="MoreInfoFromAgencyRequested" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="MoreInfoFromAgencyReceivedYN" />
+          <Property Type="String" Name="MoreInfoFromAgencyReceived" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="MoreInfoFromAgencyReceivedDate" />
+          <Property Type="Int32" Name="OwnerResponseId" />
+          <Property Type="DateTime" Name="OwnerResponseDate" />
+          <Property Type="Int32" Name="OwnerResponseDays" />
+          <Property Type="DateTime" Name="AgencyResponseToDebtorDate" />
+          <Property Type="Int32" Name="TotalResponseTimeDays" />
+          <Property Type="Boolean" Name="DebtorAgreeYN" />
+          <Property Type="Boolean" Name="NeedFurtherActionYN" />
+          <Property Type="Int32" Name="FinalActionStepId" />
+          <Property Type="Boolean" Name="IsViewedByOwner" />
+          <Property Type="Guid" Name="CreatedBy" />
+          <Property Type="Boolean" Name="IsViewedByAgency" />
+          <Property Type="String" Name="ComplaintDocument" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="DebtOwnerProcessDocument" MaxLength="500" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="MSI_DPSForm">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="PIMSAcct" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="Decimal" Name="Amount" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="NetPayment" Precision="19" Scale="4" />
+          <Property Type="String" Name="TransCode" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="TransDate" />
+          <Property Type="String" Name="CheckNumber" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="PmtType" />
+          <Property Type="Int32" Name="TransSource" />
+          <Property Type="String" Name="Portfolio" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="AcctName" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="DateRec" />
+          <Property Type="String" Name="CurrentResp" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="OriginalAcct" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="OurCheckNumber" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="Uploaded" />
+          <Property Type="String" Name="GUID" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="CheckDocuments" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="UploadedOn" />
+          <Property Type="Boolean" Name="IsActive" />
+          <Property Type="String" Name="UploadedBy" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -6095,64 +6105,6 @@
           <EntitySetMapping Name="MSI_ComplaintIssues"><EntityTypeMapping TypeName="CascadeDBModel.MSI_ComplaintIssues"><MappingFragment StoreEntitySet="MSI_ComplaintIssues">
             <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="Name" ColumnName="Name" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="MSI_ComplaintMain"><EntityTypeMapping TypeName="CascadeDBModel.MSI_ComplaintMain"><MappingFragment StoreEntitySet="MSI_ComplaintMain">
-            <ScalarProperty Name="AgencyId" ColumnName="AgencyId" />
-            <ScalarProperty Name="Account" ColumnName="Account" />
-            <ScalarProperty Name="LastName" ColumnName="LastName" />
-            <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-            <ScalarProperty Name="Address" ColumnName="Address" />
-            <ScalarProperty Name="City" ColumnName="City" />
-            <ScalarProperty Name="State" ColumnName="State" />
-            <ScalarProperty Name="Zip" ColumnName="Zip" />
-            <ScalarProperty Name="HomePhone" ColumnName="HomePhone" />
-            <ScalarProperty Name="WorkPhone" ColumnName="WorkPhone" />
-            <ScalarProperty Name="MobilePhone" ColumnName="MobilePhone" />
-            <ScalarProperty Name="LastFourSSN" ColumnName="LastFourSSN" />
-            <ScalarProperty Name="DebtorIdentityVerified" ColumnName="DebtorIdentityVerified" />
-            <ScalarProperty Name="ContactMethodId" ColumnName="ContactMethodId" />
-            <ScalarProperty Name="ContactTimeId" ColumnName="ContactTimeId" />
-            <ScalarProperty Name="CreditorName" ColumnName="CreditorName" />
-            <ScalarProperty Name="DebtProductId" ColumnName="DebtProductId" />
-            <ScalarProperty Name="DebtPurchaseBalance" ColumnName="DebtPurchaseBalance" />
-            <ScalarProperty Name="DebtCurrentBalance" ColumnName="DebtCurrentBalance" />
-            <ScalarProperty Name="DisputeDebt" ColumnName="DisputeDebt" />
-            <ScalarProperty Name="DisputeDebtAmount" ColumnName="DisputeDebtAmount" />
-            <ScalarProperty Name="DisputeDebtDueDate" ColumnName="DisputeDebtDueDate" />
-            <ScalarProperty Name="ComplaintID" ColumnName="ComplaintID" />
-            <ScalarProperty Name="ComplaintDate" ColumnName="ComplaintDate" />
-            <ScalarProperty Name="ComplaintReceivedByMethodId" ColumnName="ComplaintReceivedByMethodId" />
-            <ScalarProperty Name="ComplaintIssueId" ColumnName="ComplaintIssueId" />
-            <ScalarProperty Name="ComplaintNotes" ColumnName="ComplaintNotes" />
-            <ScalarProperty Name="ComplaintSubmitedToAgency" ColumnName="ComplaintSubmitedToAgency" />
-            <ScalarProperty Name="ComplaintSubmitedToAgencyDate" ColumnName="ComplaintSubmitedToAgencyDate" />
-            <ScalarProperty Name="MoreInfoReqdFromDebtor" ColumnName="MoreInfoReqdFromDebtor" />
-            <ScalarProperty Name="MoreInfoRequestedDate" ColumnName="MoreInfoRequestedDate" />
-            <ScalarProperty Name="MoreInfoRequested" ColumnName="MoreInfoRequested" />
-            <ScalarProperty Name="MoreInfoReceivedFromDebtor" ColumnName="MoreInfoReceivedFromDebtor" />
-            <ScalarProperty Name="MoreInfoReceivedDate" ColumnName="MoreInfoReceivedDate" />
-            <ScalarProperty Name="MoreInfoReceived" ColumnName="MoreInfoReceived" />
-            <ScalarProperty Name="ComplaintSubmittedToOwner" ColumnName="ComplaintSubmittedToOwner" />
-            <ScalarProperty Name="ComplaintSubmittedDate" ColumnName="ComplaintSubmittedDate" />
-            <ScalarProperty Name="TimeToSubmitDays" ColumnName="TimeToSubmitDays" />
-            <ScalarProperty Name="MoreInfoFromAgency" ColumnName="MoreInfoFromAgency" />
-            <ScalarProperty Name="MoreInfoFromAgencyRequestedDate" ColumnName="MoreInfoFromAgencyRequestedDate" />
-            <ScalarProperty Name="MoreInfoFromAgencyRequested" ColumnName="MoreInfoFromAgencyRequested" />
-            <ScalarProperty Name="MoreInfoFromAgencyReceived" ColumnName="MoreInfoFromAgencyReceived" />
-            <ScalarProperty Name="MoreInfoFromAgencyReceivedDate" ColumnName="MoreInfoFromAgencyReceivedDate" />
-            <ScalarProperty Name="OwnerResponseId" ColumnName="OwnerResponseId" />
-            <ScalarProperty Name="OwnerResponseDate" ColumnName="OwnerResponseDate" />
-            <ScalarProperty Name="OwnerResponseDays" ColumnName="OwnerResponseDays" />
-            <ScalarProperty Name="AgencyResponseToDebtorDate" ColumnName="AgencyResponseToDebtorDate" />
-            <ScalarProperty Name="TotalResponseTimeDays" ColumnName="TotalResponseTimeDays" />
-            <ScalarProperty Name="DebtorAgree" ColumnName="DebtorAgree" />
-            <ScalarProperty Name="NeedFurtherAction" ColumnName="NeedFurtherAction" />
-            <ScalarProperty Name="FinalActionStepId" ColumnName="FinalActionStepId" />
-            <ScalarProperty Name="IsViewedByOwner" ColumnName="IsViewedByOwner" />
-            <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-            <ScalarProperty Name="IsViewedByAgency" ColumnName="IsViewedByAgency" />
-            <ScalarProperty Name="ComplaintDocument" ColumnName="ComplaintDocument" />
-            <ScalarProperty Name="DebtOwnerProcessDocument" ColumnName="DebtOwnerProcessDocument" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="MSI_ComplaintReceviedBy"><EntityTypeMapping TypeName="CascadeDBModel.MSI_ComplaintReceviedBy"><MappingFragment StoreEntitySet="MSI_ComplaintReceviedBy">
             <ScalarProperty Name="Id" ColumnName="Id" />
@@ -6169,25 +6121,6 @@
           <EntitySetMapping Name="MSI_DebtorProducts"><EntityTypeMapping TypeName="CascadeDBModel.MSI_DebtorProducts"><MappingFragment StoreEntitySet="MSI_DebtorProducts">
             <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="Product" ColumnName="Product" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="MSI_DPSForm"><EntityTypeMapping TypeName="CascadeDBModel.MSI_DPSForm"><MappingFragment StoreEntitySet="MSI_DPSForm">
-            <ScalarProperty Name="ID" ColumnName="ID" />
-            <ScalarProperty Name="PIMSAcct" ColumnName="PIMSAcct" />
-            <ScalarProperty Name="Amount" ColumnName="Amount" />
-            <ScalarProperty Name="NetPayment" ColumnName="NetPayment" />
-            <ScalarProperty Name="TransCode" ColumnName="TransCode" />
-            <ScalarProperty Name="TransDate" ColumnName="TransDate" />
-            <ScalarProperty Name="CheckNumber" ColumnName="CheckNumber" />
-            <ScalarProperty Name="PmtType" ColumnName="PmtType" />
-            <ScalarProperty Name="TransSource" ColumnName="TransSource" />
-            <ScalarProperty Name="Portfolio" ColumnName="Portfolio" />
-            <ScalarProperty Name="AcctName" ColumnName="AcctName" />
-            <ScalarProperty Name="DateRec" ColumnName="DateRec" />
-            <ScalarProperty Name="CurrentResp" ColumnName="CurrentResp" />
-            <ScalarProperty Name="OriginalAcct" ColumnName="OriginalAcct" />
-            <ScalarProperty Name="OurCheckNumber" ColumnName="OurCheckNumber" />
-            <ScalarProperty Name="Uploaded" ColumnName="Uploaded" />
-            <ScalarProperty Name="GUID" ColumnName="GUID" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="MSI_FinalActionsteps"><EntityTypeMapping TypeName="CascadeDBModel.MSI_FinalActionsteps"><MappingFragment StoreEntitySet="MSI_FinalActionsteps">
             <ScalarProperty Name="Id" ColumnName="Id" />
@@ -8207,6 +8140,96 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="MSI_ComplaintMain">
+            <EntityTypeMapping TypeName="CascadeDBModel.MSI_ComplaintMain">
+              <MappingFragment StoreEntitySet="MSI_ComplaintMain">
+                <ScalarProperty Name="DebtOwnerProcessDocument" ColumnName="DebtOwnerProcessDocument" />
+                <ScalarProperty Name="ComplaintDocument" ColumnName="ComplaintDocument" />
+                <ScalarProperty Name="IsViewedByAgency" ColumnName="IsViewedByAgency" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsViewedByOwner" ColumnName="IsViewedByOwner" />
+                <ScalarProperty Name="FinalActionStepId" ColumnName="FinalActionStepId" />
+                <ScalarProperty Name="NeedFurtherActionYN" ColumnName="NeedFurtherActionYN" />
+                <ScalarProperty Name="DebtorAgreeYN" ColumnName="DebtorAgreeYN" />
+                <ScalarProperty Name="TotalResponseTimeDays" ColumnName="TotalResponseTimeDays" />
+                <ScalarProperty Name="AgencyResponseToDebtorDate" ColumnName="AgencyResponseToDebtorDate" />
+                <ScalarProperty Name="OwnerResponseDays" ColumnName="OwnerResponseDays" />
+                <ScalarProperty Name="OwnerResponseDate" ColumnName="OwnerResponseDate" />
+                <ScalarProperty Name="OwnerResponseId" ColumnName="OwnerResponseId" />
+                <ScalarProperty Name="MoreInfoFromAgencyReceivedDate" ColumnName="MoreInfoFromAgencyReceivedDate" />
+                <ScalarProperty Name="MoreInfoFromAgencyReceived" ColumnName="MoreInfoFromAgencyReceived" />
+                <ScalarProperty Name="MoreInfoFromAgencyReceivedYN" ColumnName="MoreInfoFromAgencyReceivedYN" />
+                <ScalarProperty Name="MoreInfoFromAgencyRequested" ColumnName="MoreInfoFromAgencyRequested" />
+                <ScalarProperty Name="MoreInfoFromAgencyRequestedDate" ColumnName="MoreInfoFromAgencyRequestedDate" />
+                <ScalarProperty Name="MoreInfoFromAgencyYN" ColumnName="MoreInfoFromAgencyYN" />
+                <ScalarProperty Name="TimeToSubmitDays" ColumnName="TimeToSubmitDays" />
+                <ScalarProperty Name="ComplaintSubmittedDate" ColumnName="ComplaintSubmittedDate" />
+                <ScalarProperty Name="ComplaintSubmittedToOwnerYN" ColumnName="ComplaintSubmittedToOwnerYN" />
+                <ScalarProperty Name="MoreInfoReceived" ColumnName="MoreInfoReceived" />
+                <ScalarProperty Name="MoreInfoReceivedDate" ColumnName="MoreInfoReceivedDate" />
+                <ScalarProperty Name="MoreInfoReceivedFromDebtorYN" ColumnName="MoreInfoReceivedFromDebtorYN" />
+                <ScalarProperty Name="MoreInfoRequested" ColumnName="MoreInfoRequested" />
+                <ScalarProperty Name="MoreInfoRequestedDate" ColumnName="MoreInfoRequestedDate" />
+                <ScalarProperty Name="MoreInfoReqdFromDebtorYN" ColumnName="MoreInfoReqdFromDebtorYN" />
+                <ScalarProperty Name="ComplaintSubmitedToAgencyDate" ColumnName="ComplaintSubmitedToAgencyDate" />
+                <ScalarProperty Name="ComplaintSubmitedToAgencyYN" ColumnName="ComplaintSubmitedToAgencyYN" />
+                <ScalarProperty Name="ComplaintNotes" ColumnName="ComplaintNotes" />
+                <ScalarProperty Name="ComplaintIssueId" ColumnName="ComplaintIssueId" />
+                <ScalarProperty Name="ComplaintReceivedByMethodId" ColumnName="ComplaintReceivedByMethodId" />
+                <ScalarProperty Name="ComplaintDate" ColumnName="ComplaintDate" />
+                <ScalarProperty Name="ComplaintID" ColumnName="ComplaintID" />
+                <ScalarProperty Name="DisputeDebtDueDateYN" ColumnName="DisputeDebtDueDateYN" />
+                <ScalarProperty Name="DisputeDebtAmountYN" ColumnName="DisputeDebtAmountYN" />
+                <ScalarProperty Name="DisputeDebtYN" ColumnName="DisputeDebtYN" />
+                <ScalarProperty Name="DebtCurrentBalance" ColumnName="DebtCurrentBalance" />
+                <ScalarProperty Name="DebtPurchaseBalance" ColumnName="DebtPurchaseBalance" />
+                <ScalarProperty Name="DebtProductId" ColumnName="DebtProductId" />
+                <ScalarProperty Name="CreditorName" ColumnName="CreditorName" />
+                <ScalarProperty Name="ContactTimeId" ColumnName="ContactTimeId" />
+                <ScalarProperty Name="ContactMethodId" ColumnName="ContactMethodId" />
+                <ScalarProperty Name="DebtorIdentityVerifiedYN" ColumnName="DebtorIdentityVerifiedYN" />
+                <ScalarProperty Name="LastFourSSN" ColumnName="LastFourSSN" />
+                <ScalarProperty Name="MobilePhone" ColumnName="MobilePhone" />
+                <ScalarProperty Name="WorkPhone" ColumnName="WorkPhone" />
+                <ScalarProperty Name="HomePhone" ColumnName="HomePhone" />
+                <ScalarProperty Name="Zip" ColumnName="Zip" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Account" ColumnName="Account" />
+                <ScalarProperty Name="AgencyId" ColumnName="AgencyId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MSI_DPSForm">
+            <EntityTypeMapping TypeName="CascadeDBModel.MSI_DPSForm">
+              <MappingFragment StoreEntitySet="MSI_DPSForm">
+                <ScalarProperty Name="UploadedBy" ColumnName="UploadedBy" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UploadedOn" ColumnName="UploadedOn" />
+                <ScalarProperty Name="CheckDocuments" ColumnName="CheckDocuments" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+                <ScalarProperty Name="Uploaded" ColumnName="Uploaded" />
+                <ScalarProperty Name="OurCheckNumber" ColumnName="OurCheckNumber" />
+                <ScalarProperty Name="OriginalAcct" ColumnName="OriginalAcct" />
+                <ScalarProperty Name="CurrentResp" ColumnName="CurrentResp" />
+                <ScalarProperty Name="DateRec" ColumnName="DateRec" />
+                <ScalarProperty Name="AcctName" ColumnName="AcctName" />
+                <ScalarProperty Name="Portfolio" ColumnName="Portfolio" />
+                <ScalarProperty Name="TransSource" ColumnName="TransSource" />
+                <ScalarProperty Name="PmtType" ColumnName="PmtType" />
+                <ScalarProperty Name="CheckNumber" ColumnName="CheckNumber" />
+                <ScalarProperty Name="TransDate" ColumnName="TransDate" />
+                <ScalarProperty Name="TransCode" ColumnName="TransCode" />
+                <ScalarProperty Name="NetPayment" ColumnName="NetPayment" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="PIMSAcct" ColumnName="PIMSAcct" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -8230,12 +8253,10 @@
     <Diagrams>
       <Diagram Name="CascadeEDM">
         <EntityTypeShape EntityType="CascadeDBModel.MSI_ComplaintIssues" Width="1.5" PointX="0.75" PointY="0.75" Height="1.2636116536458335" IsExpanded="true" />
-        <EntityTypeShape EntityType="CascadeDBModel.MSI_ComplaintMain" Width="1.5" PointX="7.75" PointY="0.75" Height="10.138367513020832" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_ComplaintReceviedBy" Width="1.5" PointX="2.75" PointY="0.75" Height="1.2636116536458335" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_DebtorContactMethods" Width="1.5" PointX="0.75" PointY="3.75" Height="1.2636116536458317" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_DebtorContactTime" Width="1.5" PointX="4.75" PointY="0.75" Height="1.2636116536458317" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_DebtorProducts" Width="1.5" PointX="9.75" PointY="0.75" Height="1.2636116536458326" IsExpanded="true" />
-        <EntityTypeShape EntityType="CascadeDBModel.MSI_DPSForm" Width="1.5" PointX="9.75" PointY="3.75" Height="3.7288216145833317" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_FinalActionsteps" Width="1.5" PointX="9.75" PointY="8.75" Height="1.2636116536458317" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaTypes" Width="1.5" PointX="11.75" PointY="9.75" Height="1.4279589843750031" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_OwnerResponses" Width="1.5" PointX="9.75" PointY="12.75" Height="1.2636116536458388" IsExpanded="true" />
@@ -8313,29 +8334,21 @@
         <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaForm" Width="1.5" PointX="14.375" PointY="27.75" Height="8.3262337239583246" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaRequestResponse" Width="1.5" PointX="11.75" PointY="33.125" Height="4.0956022135416674" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaRequestStatus" Width="1.5" PointX="11.75" PointY="38" Height="1.5956835937499818" />
-        <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaRequestTypes" Width="1.5" PointX="14" PointY="0.75" Height="4.6725065104166674" />
+        <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaRequestTypes" Width="1.5" PointX="7.625" PointY="1.375" Height="4.6725065104166674" />
         <AssociationConnector Association="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaRequestResponse" >
-          <ConnectorPoint PointX="12.5" PointY="33.125" />
-          <ConnectorPoint PointX="12.5" PointY="26.480205078125003" />
-          <ConnectorPoint PointX="13.291666666666666" PointY="26.480205078125003" />
-          <ConnectorPoint PointX="13.458333333333334" PointY="26.480205078125003" />
-          <ConnectorPoint PointX="13.5" PointY="26.480205078125003" />
-          <ConnectorPoint PointX="13.5" PointY="4.6054996744791659" />
-          <ConnectorPoint PointX="14" PointY="4.6054996744791659" />
+          <ConnectorPoint PointX="11.75" PointY="35.172801106770834" />
+          <ConnectorPoint PointX="7.65625" PointY="35.172801106770834" />
+          <ConnectorPoint PointX="7.65625" PointY="6.0475065104166674" />
         </AssociationConnector>
         <AssociationConnector Association="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaRequestStatus" >
-          <ConnectorPoint PointX="12.5" PointY="38" />
-          <ConnectorPoint PointX="12.5" PointY="37.470602213541667" />
-          <ConnectorPoint PointX="13.291666666666666" PointY="37.470602213541667" />
-          <ConnectorPoint PointX="13.458333333333334" PointY="37.470602213541667" />
-          <ConnectorPoint PointX="13.625" PointY="37.470602213541667" />
-          <ConnectorPoint PointX="13.625" PointY="4.6367521744791595" />
-          <ConnectorPoint PointX="14" PointY="4.6367521744791595" />
+          <ConnectorPoint PointX="11.75" PointY="38.797841796874991" />
+          <ConnectorPoint PointX="7.671875" PointY="38.797841796874991" />
+          <ConnectorPoint PointX="7.671875" PointY="6.0475065104166674" />
         </AssociationConnector>
         <AssociationConnector Association="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaTypes" >
           <ConnectorPoint PointX="12.5" PointY="9.75" />
-          <ConnectorPoint PointX="12.5" PointY="4.5742471744791722" />
-          <ConnectorPoint PointX="14" PointY="4.5742471744791722" />
+          <ConnectorPoint PointX="12.5" PointY="4.1316943359375005" />
+          <ConnectorPoint PointX="9.125" PointY="4.1316943359375005" />
         </AssociationConnector>
         <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaTracker" Width="1.5" PointX="14" PointY="37.125" Height="3.3263964843749818" />
         <AssociationConnector Association="CascadeDBModel.FK_MSI_MediaTracker_MSI_MediaTypes" >
@@ -8345,6 +8358,8 @@
           <ConnectorPoint PointX="13.375" PointY="38.960998848958326" />
           <ConnectorPoint PointX="14" PointY="38.960998848958326" />
         </AssociationConnector>
+        <EntityTypeShape EntityType="CascadeDBModel.MSI_ComplaintMain" Width="1.5" PointX="16.375" PointY="27.75" Height="11.979960937499982" />
+        <EntityTypeShape EntityType="CascadeDBModel.MSI_DPSForm" Width="1.5" PointX="28.375" PointY="0.75" Height="5.0571093749999818" />
         </Diagram>
     </Diagrams>
   </Designer>

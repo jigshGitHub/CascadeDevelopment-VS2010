@@ -7,7 +7,7 @@
 
 <h2>View/Edit DPS:</h2>
  
-    <div id="divViewEditDPS">
+<div id="divViewEditDPS">
                 
         <table class="PIMSDatatable">
         <tr>
@@ -152,15 +152,14 @@
             </td>
         </tr>
         <tr>
-            <td>Uploaded (Y/N):
+            <td>Check Uploaded (Y/N)?:
             </td>
             <td>
                 <input type="checkbox" data-bind="checked: newUploaded" />
-             </td>
+                &nbsp;&nbsp;<input type="button" class="editButton" value="&nbsp;Manage Check Images&nbsp;" data-bind="click:manageCheckImages" />
+            </td>
         </tr>
-        <tr class="dummyitem">
-            <td colspan="2"></td>
-        </tr>
+        <tr class="dummyitem"><td colspan="2"></td></tr>
         <tr>
             <td>Unique Identification #</td>
             <td>
@@ -185,6 +184,48 @@
     </table>
     
     </div>
+
+
+    
+<div id="fileUploadContainer" style="display:none;font-size:small">
+    @using (Html.BeginForm("UploadAllDocuments", "DPS", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+         <table class="FileUploadTable">
+             
+              <tr>
+                 <td colspan="2">Check Images</td>
+                 <td colspan="2">
+                     <input name="checkDocuments" id="checkDocuments" data-bind="value:checkDocuments"  type="file"  multiple/>
+                 </td>
+              </tr>
+              <tr><td colspan="4" class="dummyitem">&nbsp;</td></tr>
+              <tr>
+                    <td colspan="4">
+                        <input type="submit" class="editButton" value="&nbsp;Upload&nbsp;& Exit" data-bind="visible:showUpload"/>
+                    </td>
+              </tr>
+             
+             <tr data-bind="if: visible">
+                <td colspan="4">
+                    <table>
+                        <tr><td><b>Existing uploaded Images:</b></td></tr>
+                        <tbody data-bind="foreach: checkImageDocuments">
+                            <tr>
+                                <td>
+                                  <a data-bind="attr: { href: checkDocUrl }"><span data-bind="text:checkFileName"></span></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+              </tr>
+             
+         </table>
+         @Html.Hidden("hdnDPSRecordID", (string)(@ViewBag.Id))
+        
+    }
+</div>
+
 
 @Scripts.Render("~/bundles/knockout")
 
@@ -230,9 +271,55 @@
             self.newOurCheck = ko.observable('');
             self.newUploaded = ko.observable('');
             self.newGUID = ko.observable('');
+
+            //For file upload
+            self.checkDocumentsFullName = ko.observable(''); //This will store filename seperated by | 
+            self.visible = ko.observable(false);//This controls if Existing Uploaded Images will be shown or not
+
+            self.checkImageDocuments = ko.observableArray([]);//This is array created from FullName obtained from Database
+            //This is Object which holds FileName and URL for the Check Image
+            function checkImage(checkFileName, checkDocUrl) {
+                var self = this;
+                self.checkFileName = ko.observable('');
+                self.checkDocUrl = ko.observable('');
+            }
+
+            self.checkDocuments = ko.observableArray([]);//This is used for fileupload control - same as in Index.cshtml page
+            //Only show Upload button if files are selected for the upload
+            self.showUpload = ko.computed(function () {
+                return (self.checkDocuments().length > 0);
+            }, self);
+
+
+            function getFileName(document) {
+                var fileName = document.split('_');
+                return fileName[1];
+            }
+
+            //Initiate the Media Upload Process
+            self.manageCheckImages = function () {
+                //alert(self.checkDocuments());
+                self.showExistingImageDetails(self.checkDocumentsFullName());
+                $('#fileUploadContainer').show();
+                $('#fileUploadContainer').dialog('open');
+            }
+
+            self.showExistingImageDetails = function (existingImages) {
+
+                //Now let us split files seperate by | to know how many records we have
+                var n = existingImages.split("|");
+                //alert(n.length);
+                self.visible(true);
+                for (var i = 0; i < n.length; i++) {
+                    var checkMedia;
+                    checkMedia = new checkImage();
+                    checkMedia.checkDocUrl(baseUrl + '/DPS/DownloadDoc?fileName=' + n[i]);
+                    checkMedia.checkFileName(getFileName(n[i]));
+                    self.checkImageDocuments.push(checkMedia);
+                }
+            };
             
             //Lookup Table Section
-
             //For TransCode
             $.ajax({
                 url: apiUrl,
@@ -321,8 +408,7 @@
                     return ''
                 }
             }
-
-
+            
             //For Page Data
             $.ajax({
                 url: baseUrl + '/DPS/GetDPSData/',
@@ -348,7 +434,7 @@
                     self.newOriginalAccount(data.OriginalAcct);
                     self.newOurCheck(data.OurCheckNumber);
                     self.newGUID(data.GUID);
-
+                    self.checkDocumentsFullName(data.CheckDocuments);
                 },
                 error: function (xhr, status, somthing) {
                     log(status);
@@ -407,7 +493,10 @@
 
         $(document).ready(function () {
             //Knockout Bindings
-            ko.applyBindings(new dpsViewEditVM(), $('#divViewEditDPS')[0]);
+            //ko.applyBindings(new dpsViewEditVM(), $('#divViewEditDPS')[0]);
+            ko.applyBindings(new dpsViewEditVM());
+            //For file upload Div
+            $('#fileUploadContainer').dialog({ modal: true, title: 'Upload Check Images:', autoOpen: false, width: 500, height: 400 });
             //For Date Picker
             $('#newDateRec').datepicker();
             $('#newTranDate').datepicker();

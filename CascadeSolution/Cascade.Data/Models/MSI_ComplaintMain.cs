@@ -26,35 +26,36 @@ namespace Cascade.Data.Models
         public string WorkPhone { get; set; }
         public string MobilePhone { get; set; }
         public string LastFourSSN { get; set; }
-        public Nullable<bool> DebtorIdentityVerified { get; set; }
+        public Nullable<bool> DebtorIdentityVerifiedYN { get; set; }
         public Nullable<int> ContactMethodId { get; set; }
         public Nullable<int> ContactTimeId { get; set; }
         public string CreditorName { get; set; }
         public Nullable<int> DebtProductId { get; set; }
         public string DebtPurchaseBalance { get; set; }
         public string DebtCurrentBalance { get; set; }
-        public Nullable<bool> DisputeDebt { get; set; }
-        public Nullable<bool> DisputeDebtAmount { get; set; }
-        public Nullable<bool> DisputeDebtDueDate { get; set; }
+        public Nullable<bool> DisputeDebtYN { get; set; }
+        public Nullable<bool> DisputeDebtAmountYN { get; set; }
+        public Nullable<bool> DisputeDebtDueDateYN { get; set; }
         public string ComplaintID { get; set; }
         public System.DateTime ComplaintDate { get; set; }
         public Nullable<int> ComplaintReceivedByMethodId { get; set; }
         public int ComplaintIssueId { get; set; }
         public string ComplaintNotes { get; set; }
-        public Nullable<bool> ComplaintSubmitedToAgency { get; set; }
+        public Nullable<bool> ComplaintSubmitedToAgencyYN { get; set; }
         public Nullable<System.DateTime> ComplaintSubmitedToAgencyDate { get; set; }
-        public Nullable<bool> MoreInfoReqdFromDebtor { get; set; }
+        public Nullable<bool> MoreInfoReqdFromDebtorYN { get; set; }
         public Nullable<System.DateTime> MoreInfoRequestedDate { get; set; }
         public string MoreInfoRequested { get; set; }
-        public Nullable<bool> MoreInfoReceivedFromDebtor { get; set; }
+        public Nullable<bool> MoreInfoReceivedFromDebtorYN { get; set; }
         public Nullable<System.DateTime> MoreInfoReceivedDate { get; set; }
         public string MoreInfoReceived { get; set; }
-        public Nullable<bool> ComplaintSubmittedToOwner { get; set; }
+        public Nullable<bool> ComplaintSubmittedToOwnerYN { get; set; }
         public Nullable<System.DateTime> ComplaintSubmittedDate { get; set; }
         public Nullable<int> TimeToSubmitDays { get; set; }
-        public Nullable<bool> MoreInfoFromAgency { get; set; }
+        public Nullable<bool> MoreInfoFromAgencyYN { get; set; }
         public Nullable<System.DateTime> MoreInfoFromAgencyRequestedDate { get; set; }
         public string MoreInfoFromAgencyRequested { get; set; }
+        public Nullable<bool> MoreInfoFromAgencyReceivedYN { get; set; }
         public string MoreInfoFromAgencyReceived { get; set; }
         public Nullable<System.DateTime> MoreInfoFromAgencyReceivedDate { get; set; }
         public Nullable<int> OwnerResponseId { get; set; }
@@ -62,8 +63,8 @@ namespace Cascade.Data.Models
         public Nullable<int> OwnerResponseDays { get; set; }
         public Nullable<System.DateTime> AgencyResponseToDebtorDate { get; set; }
         public Nullable<int> TotalResponseTimeDays { get; set; }
-        public Nullable<bool> DebtorAgree { get; set; }
-        public Nullable<bool> NeedFurtherAction { get; set; }
+        public Nullable<bool> DebtorAgreeYN { get; set; }
+        public Nullable<bool> NeedFurtherActionYN { get; set; }
         public Nullable<int> FinalActionStepId { get; set; }
         public Nullable<bool> IsViewedByOwner { get; set; }
         public Nullable<System.Guid> CreatedBy { get; set; }

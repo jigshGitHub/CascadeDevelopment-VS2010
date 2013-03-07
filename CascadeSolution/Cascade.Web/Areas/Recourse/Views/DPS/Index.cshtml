@@ -4,8 +4,42 @@
 
 @Scripts.Render("~/bundles/jquery")
 
-
 <h2>DPS(Direct Payments) - Add New Record</h2>
+
+<div id="fileUploadContainer" style="display:none">
+    @using (Html.BeginForm("UploadAllDocuments", "DPS", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <table class="FileUploadTable">
+                
+               <thead style="color:Blue">
+                        <tr>
+                            <th colspan="2" style="text-align: left">
+                                Media Type
+                            </th>
+                            <th colspan="2"style="text-align: left">
+                                Browse/Upload
+                            </th>
+                            
+                        </tr>
+               </thead>
+               <tr><td colspan="4" class="dummyitem">&nbsp;</td></tr>
+               <tr>
+                    <td colspan="2">Check Images</td>
+                    <td colspan="2">
+                        <input name="checkDocuments" id="checkDocuments" data-bind="value:checkDocuments"  type="file"  multiple/>
+                    </td>
+                    
+                </tr>
+                <tr><td colspan="4" class="dummyitem">&nbsp;</td></tr>
+                <tr>
+                    <td colspan="4">
+                        <input type="submit" class="editButton" value="&nbsp;Upload&nbsp;& Exit" data-bind="visible:showUpload"/>
+                    </td>
+                </tr>
+        </table>
+        @Html.Hidden("hdnDPSRecordID", "")
+    }
+</div>
 
 <div id="divDataformNew">
 
@@ -171,8 +205,7 @@
             </td>
         </tr>
         <tr>
-            
-            <td>Uploaded (Y/N):</td>
+            <td>Check Upload (Y/N)?:</td>
             <td>
                 <input type="checkbox" data-bind="checked: newUploaded" />
             </td>
@@ -256,6 +289,9 @@
             self.newUploaded = ko.observable('');
             self.newGUID = ko.observable('');
             
+            //For Media types
+            self.checkDocuments = ko.observableArray([]);
+
             //For validation Messages - if system does not find any matching record
             self.dataNotFound = ko.observable('');
             self.dataNotFoundHasError = ko.observable(false);
@@ -263,6 +299,11 @@
             self.validationErrors = ko.observableArray([]);
             self.validationErrorsData = ko.observableArray([]);
 
+            //Only show Upload button if files are selected for the upload
+            self.showUpload = ko.computed(function () {
+                return (self.checkDocuments().length > 0);
+            }, self);
+           
             //For TransCode
             $.ajax({
                 //url: baseUrl + '/api/Lookup/',
@@ -463,6 +504,15 @@
                             //log(response.ID);
                             $('#resultSummaryData ul').append('<li>New DPS Record created successfully.</li>');
                             $('#saveNewBtn').hide();
+                            //Now display the File Upload Div if user wants to upload
+                            if (self.newUploaded() == true )
+                            {
+                                //log(self.uploadChecked());
+                                alert(response.ID);
+                                hdnDPSRecordID.value = response.ID;
+                                $('#fileUploadContainer').show();
+                                $('#fileUploadContainer').dialog('open');
+                            }
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             alert(errorThrown);
@@ -483,12 +533,12 @@
               
         $(document).ready(function () {
             //Knockout Bindings
-            ko.applyBindings(new dpsformVM(), $('#divDataformNew')[0]);
+            ko.applyBindings(new dpsformVM());
+            $('#fileUploadContainer').dialog({ modal: true, title: 'Upload Check Images:', autoOpen: false, width: 500, height: 400 });
             //For Date Picker
             $('#newDateRec').datepicker();
             $('#newTranDate').datepicker();
-                        
-         });
+        });
         
     </script>
 }

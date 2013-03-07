@@ -134,16 +134,16 @@ namespace Cascade.Web.Controllers
                 complaintToSave.WorkPhone = complaint.WorkPhone;
                 complaintToSave.MobilePhone = complaint.MobilePhone;
                 complaintToSave.LastFourSSN = complaint.LastFourSSN;
-                complaintToSave.DebtorIdentityVerified = complaint.DebtorIdentityVerified;
+                complaintToSave.DebtorIdentityVerifiedYN = complaint.DebtorIdentityVerifiedYN;
                 complaintToSave.ContactMethodId = complaint.ContactMethodId;
                 complaintToSave.ContactTimeId = complaint.ContactTimeId;
                 complaintToSave.CreditorName = complaint.CreditorName;
                 complaintToSave.DebtProductId = complaint.DebtProductId;
                 complaintToSave.DebtPurchaseBalance = complaint.DebtPurchaseBalance;
                 complaintToSave.DebtCurrentBalance = complaint.DebtCurrentBalance;
-                complaintToSave.DisputeDebt = complaint.DisputeDebt;
-                complaintToSave.DisputeDebtAmount = complaint.DisputeDebtAmount;
-                complaintToSave.DisputeDebtDueDate = complaint.DisputeDebtDueDate;
+                complaintToSave.DisputeDebtYN = complaint.DisputeDebtYN;
+                complaintToSave.DisputeDebtAmountYN = complaint.DisputeDebtAmountYN;
+                complaintToSave.DisputeDebtDueDateYN = complaint.DisputeDebtDueDateYN;
                 complaintToSave.ComplaintID = complaint.ComplaintID;
                 //complaintToSave.ComplaintDate = complaint.ComplaintDate;
                 //complaintToSave.ComplaintDate = complaintToSave.ComplaintDate.AddHours(DateTime.Now.Hour);
@@ -154,26 +154,27 @@ namespace Cascade.Web.Controllers
                 complaintToSave.ComplaintReceivedByMethodId = complaint.ComplaintReceivedByMethodId;
                 complaintToSave.ComplaintIssueId = complaint.ComplaintIssueId;
                 complaintToSave.ComplaintNotes = complaint.ComplaintNotes;
-                complaintToSave.ComplaintSubmitedToAgency = complaint.ComplaintSubmitedToAgency;
+                complaintToSave.ComplaintSubmitedToAgencyYN = complaint.ComplaintSubmitedToAgencyYN;
                 if(complaint.ComplaintSubmitedToAgencyDate.HasValue)
                     complaintToSave.ComplaintSubmitedToAgencyDate = DateHelper.GetDateWithTimings(complaint.ComplaintSubmitedToAgencyDate.Value);
-                complaintToSave.MoreInfoReqdFromDebtor = complaint.MoreInfoReqdFromDebtor;
+                complaintToSave.MoreInfoReqdFromDebtorYN = complaint.MoreInfoReqdFromDebtorYN;
                 if (complaint.MoreInfoRequestedDate.HasValue)
                     complaintToSave.MoreInfoRequestedDate = DateHelper.GetDateWithTimings(complaint.MoreInfoRequestedDate.Value);
                 complaintToSave.MoreInfoRequested = complaint.MoreInfoRequested;
-                complaintToSave.MoreInfoReceivedFromDebtor = complaint.MoreInfoReceivedFromDebtor;
+                complaintToSave.MoreInfoReceivedFromDebtorYN = complaint.MoreInfoReceivedFromDebtorYN;
                 if( complaint.MoreInfoReceivedDate.HasValue)
                     complaintToSave.MoreInfoReceivedDate = DateHelper.GetDateWithTimings(complaint.MoreInfoReceivedDate.Value);
                 complaintToSave.MoreInfoReceived = complaint.MoreInfoReceived;
-                complaintToSave.ComplaintSubmittedToOwner = complaint.ComplaintSubmittedToOwner;
+                complaintToSave.ComplaintSubmittedToOwnerYN = complaint.ComplaintSubmittedToOwnerYN;
                 if (complaint.ComplaintSubmittedDate.HasValue)
                     complaintToSave.ComplaintSubmittedDate = DateHelper.GetDateWithTimings(complaint.ComplaintSubmittedDate.Value);
                 complaintToSave.TimeToSubmitDays = complaint.TimeToSubmitDays;
-                complaintToSave.MoreInfoFromAgency = complaint.MoreInfoFromAgency;
+                complaintToSave.MoreInfoFromAgencyYN = complaint.MoreInfoFromAgencyYN;
                 if (complaint.MoreInfoFromAgencyRequestedDate.HasValue)
                     complaintToSave.MoreInfoFromAgencyRequestedDate = DateHelper.GetDateWithTimings(complaint.MoreInfoFromAgencyRequestedDate.Value);
                 complaintToSave.MoreInfoFromAgencyRequested = complaint.MoreInfoFromAgencyRequested;
                 complaintToSave.MoreInfoFromAgencyReceived = complaint.MoreInfoFromAgencyReceived;
+                complaintToSave.MoreInfoFromAgencyReceivedYN = complaint.MoreInfoFromAgencyReceivedYN;
                 if (complaint.MoreInfoFromAgencyReceivedDate.HasValue)
                     complaintToSave.MoreInfoFromAgencyReceivedDate = DateHelper.GetDateWithTimings(complaint.MoreInfoFromAgencyReceivedDate.Value);
                 complaintToSave.OwnerResponseId = complaint.OwnerResponseId;
@@ -183,10 +184,10 @@ namespace Cascade.Web.Controllers
                 if (complaint.AgencyResponseToDebtorDate.HasValue)
                     complaintToSave.AgencyResponseToDebtorDate = DateHelper.GetDateWithTimings(complaint.AgencyResponseToDebtorDate.Value);
                 complaintToSave.TotalResponseTimeDays = complaint.TotalResponseTimeDays;
-                complaintToSave.DebtorAgree = complaint.DebtorAgree;
-                complaintToSave.NeedFurtherAction = complaint.NeedFurtherAction;
+                complaintToSave.DebtorAgreeYN = complaint.DebtorAgreeYN;
+                complaintToSave.NeedFurtherActionYN = complaint.NeedFurtherActionYN;
                 complaintToSave.FinalActionStepId = complaint.FinalActionStepId;
-                if(complaint.ComplaintSubmittedToOwner.Value)
+                if (complaint.ComplaintSubmittedToOwnerYN.Value)
                     complaintToSave.IsViewedByOwner = false;
                 complaintToSave.CreatedBy = complaint.CreatedBy;
                 complaintToSave.IsViewedByAgency = complaint.IsViewedByAgency;

@@ -26,12 +26,10 @@ namespace Cascade.Data.Models
         }
     
         public DbSet<MSI_ComplaintIssues> MSI_ComplaintIssues { get; set; }
-        public DbSet<MSI_ComplaintMain> MSI_ComplaintMain { get; set; }
         public DbSet<MSI_ComplaintReceviedBy> MSI_ComplaintReceviedBy { get; set; }
         public DbSet<MSI_DebtorContactMethods> MSI_DebtorContactMethods { get; set; }
         public DbSet<MSI_DebtorContactTime> MSI_DebtorContactTime { get; set; }
         public DbSet<MSI_DebtorProducts> MSI_DebtorProducts { get; set; }
-        public DbSet<MSI_DPSForm> MSI_DPSForm { get; set; }
         public DbSet<MSI_FinalActionsteps> MSI_FinalActionsteps { get; set; }
         public DbSet<MSI_MediaTypes> MSI_MediaTypes { get; set; }
         public DbSet<MSI_OwnerResponses> MSI_OwnerResponses { get; set; }
@@ -87,5 +85,7 @@ namespace Cascade.Data.Models
         public DbSet<MSI_MediaRequestStatus> MSI_MediaRequestStatus { get; set; }
         public DbSet<MSI_MediaRequestTypes> MSI_MediaRequestTypes { get; set; }
         public DbSet<MSI_MediaTracker> MSI_MediaTracker { get; set; }
+        public DbSet<MSI_ComplaintMain> MSI_ComplaintMain { get; set; }
+        public DbSet<MSI_DPSForm> MSI_DPSForm { get; set; }
     }
 }
