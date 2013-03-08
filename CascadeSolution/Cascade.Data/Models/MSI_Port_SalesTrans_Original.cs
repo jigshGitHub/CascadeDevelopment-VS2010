@@ -27,5 +27,9 @@ namespace Cascade.Data.Models
         public Nullable<double> PutbackTerm_days_ { get; set; }
         public Nullable<System.DateTime> PutbackDeadline { get; set; }
         public string Notes { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<System.DateTime> UpdatedDate { get; set; }
     }
 }

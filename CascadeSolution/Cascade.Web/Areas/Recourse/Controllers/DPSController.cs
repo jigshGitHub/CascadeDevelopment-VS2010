@@ -73,6 +73,7 @@ namespace Cascade.Web.Areas.Recourse.Controllers
                                                             select existingForm).First();
                 _dpsForm.UploadedOn = DateTime.Now;
                 _dpsForm.IsActive = true;
+                _dpsForm.Uploaded = true;
                 _dpsForm.UploadedBy = UserId.ToString(); 
                 #region [[ Check Images ]]
                 if (checkDocuments != null)

@@ -4,440 +4,6 @@
 //var myhost = window.location.protocol + "//" + window.location.host
 //var absoluteapp = myhost + applicationname;
 //var imagedir = "/Content/Images";
-function allCommentedCode() {
-    //function interestRecord(id, portfolioNumber, agencyName, checkNumber, closingDt, salesPrice, transType) {
-    //    this.id = id;
-    //    this.portfolioNumber = ko.observable(portfolioNumber);
-    //    this.agencyName = ko.observable(agencyName);
-    //    this.checkNumber = ko.observable(checkNumber);
-    //    this.closingDt = ko.observable(closingDt);
-    //    this.salesPrice = ko.observable(salesPrice);
-    //    this.interestTransType = ko.observable(transType);
-    //};
-
-    //function interestTransVM() {
-    //    var self = this;
-    //    self.portfolioNumber = ko.observable();
-    //    self.editMode = ko.observable(false);
-    //    self.interestRecords = ko.computed(function () {
-    //        var interestRecords = [];
-    //        if (self.portfolioNumber() != '') {
-    //            $.ajax({
-    //                url: baseUrl + '/api/PortfolioTransactions/',
-    //                type: 'GET',
-    //                contentType: 'application/json',
-    //                data: { portfolioNumber: self.portfolioNumber(), transType: 'Interest' },
-    //                dataType: 'json',
-    //                async: false,
-    //                success: function (data) {
-    //                    if (data.length > 0) {
-    //                        $.each(data, function (i, item) {
-    //                            interestRecords.push(new interestRecord(item.ID, item.Portfolio_,
-    //                                item.Inv_AgencyName,item.Check_,
-    //                                dateFormat(Date.parse(item.ClosingDate), 'mm/dd/yyyy'),
-    //                                formatCurrency(item.SalesPrice),
-    //                                item.TransType));
-    //                        });
-    //                    }
-    //                    else {
-    //                        interestRecords.push(new interestRecord('', '', '', '', '', '',''));
-    //                    }
-    //                },
-    //                error: function (xhr, status, somthing) {
-    //                    log(status);
-    //                }
-    //            });
-    //        }
-    //        return interestRecords;
-    //    }, self);
-    //    self.currentRecordIndex = ko.observable(0);
-    //    self.selectedRecordIndexChanged = function (item) {
-    //        self.currentInterestRecord(item);
-    //        $.each(self.agencies(), function (i, agencyRecord) {
-    //            if(agencyRecord.Text === item.agencyName())
-    //                self.selectedAgency(agencyRecord.Value);
-    //        });
-    //    };
-    //    self.selectedAgency = ko.observable();
-    //    self.currentInterestRecord = ko.observable();
-    //    self.agencies = ko.observableArray([]);
-    //    self.interestTransTypes = [{ Text: 'Sale', Value: 'Sale' }, { Text: 'Collection', Value: 'Collection' }, { Text: 'Distribution', Value: 'Distribution' }, { Text: 'Interest', Value: 'Interest' }, { Text: 'Investment', Value: 'Investment' }];
-    //    self.totalInterest = ko.computed(function () {
-    //        var salesTotal = 0;
-    //        var val;
-    //        $.each(self.interestRecords(), function (i, item) {
-    //            val = item.salesPrice().replace(/[^0-9.]/ig, '');
-    //            salesTotal += parseFloat(val) || 0;
-    //        });
-    //        return formatCurrency(salesTotal);
-    //    }, self);
-    //    $.each(portfolioViewModels.agencies(), function (i, item) {
-    //        self.agencies.push(item);
-    //    });
-
-    //    self.saveRecord = function () {
-    //        //log(self.currentInterestRecord().faceValue());
-    //        //log(self.currentInterestRecord().netColls());
-    //        //log(self.currentInterestRecord().closingDt());
-    //        //log(self.currentInterestRecord().interestAgencyName());
-    //        //log(self.currentInterestRecord().id);
-    //        //log(self.selectedAgency());
-    //        var agency = '';
-    //        $.each(self.agencies(), function (i, agencyRecord) {
-    //            if (agencyRecord.Value === self.selectedAgency())
-    //                agency = agencyRecord.Text;
-    //        });
-    //        log(agency);
-    //        var json = JSON.stringify({
-    //            SalesPrice: self.currentInterestRecord().salesPrice().replace(/[^0-9.]/ig, ''),
-    //            ClosingDate: self.currentInterestRecord().closingDt(),
-    //            Inv_AgencyName: agency,
-    //            Check_:self.currentInterestRecord().checkNumber(),
-    //            ID: self.currentInterestRecord().id,
-    //            TransType: 'Interest'
-    //        });
-
-    //        $.ajax({
-    //            url: baseUrl + '/api/PortfolioTransactions/',
-    //            type: "POST",
-    //            data: json,
-    //            dataType: "json",
-    //            contentType: "application/json; charset=utf-8",
-    //            success: function (response) {
-    //                log(response);
-    //            },
-    //            error: function (response, errorText) {
-    //            }
-    //        });
-    //    }
-
-    //};
-
-    //function distributionRecord(id,portfolioNumber,investor,checkNumber,closingDt,distributionTransType,distribution,notes) {
-    //    this.id = id,
-    //    this.portfolioNumber = ko.observable(portfolioNumber);
-    //    this.investor = ko.observable(investor);
-    //    this.checkNumber = ko.observable(checkNumber);
-    //    this.closingDt = ko.observable(closingDt);
-    //    this.distributionTransType = ko.observable(distributionTransType);
-    //    this.distribution = ko.observable(distribution);
-    //    this.notes = ko.observable(notes);
-    //}
-    //function distributionsTransVM(portfolioNumber) {
-    //    var self = this;
-    //    self.portfolioNumber = ko.observable(portfolioNumber);
-    //    self.totalDistributions = ko.observable('');
-    //    self.distributionRecords = ko.computed(function () {
-    //        var distributionRecords = [];
-    //        var totalDistributions = 0;
-    //        if (self.portfolioNumber() != '') {
-    //            $.ajax({
-    //                url: baseUrl + '/api/PortfolioTransactions/',
-    //                type: 'GET',
-    //                contentType: 'application/json',
-    //                data: { portfolioNumber: self.portfolioNumber(), transType: 'Distribution' },
-    //                dataType: 'json',
-    //                async: false,
-    //                success: function (data) {
-    //                    if (data.length > 0) {
-    //                        self.currentRecordIndex(0);
-    //                        $.each(data, function (i, item) {
-    //                            totalDistributions += item.SalesPrice;
-    //                            distributionRecords.push(new distributionRecord(item.ID,self.portfolioNumber(),item.Inv_AgencyName,item.Check_,item.ClosingDate,item.TransType,formatCurrency(item.SalesPrice),item.Notes));
-    //                        });
-    //                    }
-    //                },
-    //                error: function (xhr, status, somthing) {
-    //                    log(status);
-    //                }
-    //            });
-    //        }
-    //        self.totalDistributions(formatCurrency(totalDistributions));
-    //        return distributionRecords;
-    //    }, self);
-    //    self.currentRecordIndex = ko.observable(0);
-    //    self.currentDistributionRecord = ko.computed(function () {
-    //        if (self.distributionRecords().length > 0)
-    //            return self.distributionRecords()[self.currentRecordIndex()];
-    //        else
-    //            return new distributionRecord('', '', '', '', '', '', '','');
-    //    }, self);
-    //    self.investorName = ko.observable('');
-    //    self.investors = ko.observableArray([]);
-    //    $.each(portfolioViewModels.investors(), function (i, item) {
-    //        self.investors.push(item);
-    //    });
-    //    self.distributionTransTypes = [{ Text: 'Sale', Value: 'Sale' }, { Text: 'Collection', Value: 'Collection' }, { Text: 'Distribution', Value: 'Distribution' }, { Text: 'Interest', Value: 'Interest' }, { Text: 'Investment', Value: 'Investment' }];
-    //    self.visibleNext = ko.computed(function () {
-    //        if (self.currentRecordIndex() + 1 != self.distributionRecords().length && self.distributionRecords().length > 1)
-    //            return true;
-    //        else
-    //            return false;
-    //    }, self);
-    //    self.visiblePrevious = ko.computed(function () {
-    //        if (self.currentRecordIndex() + 1 > 1 && self.distributionRecords().length > 1)
-    //            return true;
-    //        else
-    //            return false;
-    //    }, self);
-
-    //    self.recordCounts = ko.computed(function () {
-    //        return 'Records ' + (self.currentRecordIndex() + 1) + ' of ' + self.distributionRecords().length;
-    //    }, self);
-
-    //    self.nextRecord = function () {
-    //        self.currentRecordIndex(self.currentRecordIndex() + 1);
-    //    }
-    //    self.previousRecord = function () {
-    //        self.currentRecordIndex(self.currentRecordIndex() - 1);
-    //    }
-    //    self.saveRecord = function () {
-    //        //log(self.currentdistributionRecord().contribution() + ',' + self.currentdistributionRecord().investor());
-    //        var json = JSON.stringify({
-    //            Check_:self.currentDistributionRecord().checkNumber(),
-    //            SalesPrice: self.currentDistributionRecord().distribution().replace(/[^0-9.]/ig, ''),
-    //            Notes: self.currentDistributionRecord().notes(),
-    //            ID: self.currentDistributionRecord().id,
-    //            Inv_AgencyName: self.currentDistributionRecord().investor(),
-    //            ClosingDate:self.currentDistributionRecord().closingDt(),
-    //            TransType: 'Distribution'
-    //        });
-
-    //        $.ajax({
-    //            url: baseUrl + '/api/PortfolioTransactions/',
-    //            type: "POST",
-    //            data: json,
-    //            dataType: "json",
-    //            contentType: "application/json; charset=utf-8",
-    //            success: function (response) {
-    //                log(response);
-    //            },
-    //            error: function (response, errorText) {
-    //            }
-    //        });
-    //    }
-    //};
-
-    //function investmentRecord(id, portfolioNumber, investor, prftShareBfr, prftShareAftr, contribution, interestRate, investmentTransType, notes) {
-    //    this.id = id;
-    //    this.portfolioNumber = ko.observable(portfolioNumber);
-    //    this.investor = ko.observable(investor);
-    //    this.prftShareBfr = ko.observable(prftShareBfr);
-    //    this.prftShareAftr = ko.observable(prftShareAftr);
-    //    this.contribution = ko.observable(contribution);
-    //    this.interestRate = ko.observable(interestRate);
-    //    this.investmentTransType = ko.observable(investmentTransType);
-    //    this.notes = ko.observable(notes);
-    //}
-
-    //function investmentsTransVM(portfolioNumber) {
-    //    var self = this;
-    //    self.portfolioNumber = ko.observable('');
-    //    self.totalContributions = ko.observable('');
-    //    self.investmentRecords = ko.computed(function () {
-    //        var investmentRecords = [];
-    //        var totalContributions = 0;
-    //        if (self.portfolioNumber() != '') {
-    //            $.ajax({
-    //                url: baseUrl + '/api/PortfolioTransactions/',
-    //                type: 'GET',
-    //                contentType: 'application/json',
-    //                data: { portfolioNumber: self.portfolioNumber(), transType: 'Investment' },
-    //                dataType: 'json',
-    //                async: false,
-    //                success: function (data) {
-    //                    //log(data);
-    //                    if (data.length > 0) {
-    //                        self.currentRecordIndex(0);
-    //                        $.each(data, function (i, item) {
-    //                            totalContributions += item.SalesPrice;
-    //                            investmentRecords.push(new investmentRecord(item.ID, self.portfolioNumber(), item.Inv_AgencyName, item.ProfitShare_before, item.ProfitShare_after,formatCurrency(item.SalesPrice), item.C_Interest, item.TransType,item.Notes));
-    //                        });
-    //                    }
-    //                },
-    //                error: function (xhr, status, somthing) {
-    //                    log(status);
-    //                }
-    //            });
-    //        }
-    //        self.totalContributions(formatCurrency(totalContributions));
-    //        return investmentRecords;
-    //    }, self);
-    //    self.currentRecordIndex = ko.observable(0);
-    //    self.currentInvestmentRecord = ko.computed(function () {
-    //        if (self.investmentRecords.length > 0)
-    //            return self.investmentRecords()[self.currentRecordIndex()];
-    //        else
-    //            return new investmentRecord('', '', '', '','','', '', '','');
-    //    }, self);
-
-    //    self.investors = ko.observableArray([]);
-    //    $.each(portfolioViewModels.investors(), function (i, item) {
-    //        self.investors.push(item);
-    //    });
-    //    self.investmentTransTypes = [{ Text: 'Sale', Value: 'Sale' }, { Text: 'Collection', Value: 'Collection' }, { Text: 'Distribution', Value: 'Distribution' }, { Text: 'Interest', Value: 'Interest' }, { Text: 'Investment', Value: 'Investment' }];
-    //    self.visibleNext = ko.computed(function () {
-    //        if (self.currentRecordIndex() + 1 != self.investmentRecords().length && self.investmentRecords().length > 1)
-    //            return true;
-    //        else
-    //            return false;
-    //    }, self);
-    //    self.visiblePrevious = ko.computed(function () {
-    //        if (self.currentRecordIndex() + 1 > 1 && self.investmentRecords().length > 1)
-    //            return true;
-    //        else
-    //            return false;
-    //    }, self);
-
-    //    self.recordCounts = ko.computed(function () {
-    //        return 'Records ' + (self.currentRecordIndex() + 1) + ' of ' + self.investmentRecords().length;
-    //    }, self);
-
-    //    self.nextRecord = function () {
-    //        self.currentRecordIndex(self.currentRecordIndex() + 1);
-    //    }
-    //    self.previousRecord = function () {
-    //        self.currentRecordIndex(self.currentRecordIndex() - 1);
-    //    }
-    //    self.saveRecord = function () {
-    //        //log(self.currentInvestmentRecord().contribution() + ',' + self.currentInvestmentRecord().investor());
-    //        var json = JSON.stringify({
-    //            ProfitShare_after: self.currentInvestmentRecord().prftShareAftr(),
-    //            ProfitShare_before: self.currentInvestmentRecord().prftShareBfr(),
-    //            SalesPrice: self.currentInvestmentRecord().contribution().replace(/[^0-9.]/ig, ''),
-    //            InterestRate: self.currentInvestmentRecord().interestRate(),
-    //            Notes: self.currentInvestmentRecord().notes(),
-    //            ID: self.currentInvestmentRecord().id,
-    //            Inv_AgencyName: self.currentInvestmentRecord().investor(),
-    //            TransType: 'Investment'
-    //        });
-
-    //        $.ajax({
-    //            url: baseUrl + '/api/PortfolioTransactions/',
-    //            type: "POST",
-    //            data: json,
-    //            dataType: "json",
-    //            contentType: "application/json; charset=utf-8",
-    //            success: function (response) {
-    //                log(response);
-    //            },
-    //            error: function (response, errorText) {
-    //            }
-    //        });
-    //    }
-    //};
-
-    //function collectionRecord(id, portfolioNumber, agency, closingDt, faceValue, netColls, collectionsTransType) {
-    //    this.id = id;
-    //    this.portfolioNumber = ko.observable(portfolioNumber);
-    //    this.collectionAgencyName = ko.observable(agency);
-    //    //this.agencies = ko.observableArray([]);
-    //    this.closingDt = ko.observable(closingDt)
-    //    this.faceValue = ko.observable(faceValue)
-    //    this.netColls = ko.observable(netColls)
-    //    this.collectionsTransType = ko.observable(collectionsTransType);
-    //}
-
-    //function collectionsTransVM() {
-    //    var self = this;
-    //    self.portfolioNumber = ko.observable();
-    //    self.editMode = ko.observable(false);
-    //    self.collectionRecords = ko.computed(function () {
-    //        var collectionRecords = [];
-    //        if (self.portfolioNumber() != '') {
-    //                $.ajax({
-    //                    url: baseUrl + '/api/PortfolioTransactions/',
-    //                    type: 'GET',
-    //                    contentType: 'application/json',
-    //                    data: { portfolioNumber: self.portfolioNumber(), transType: 'Collection' },
-    //                    dataType: 'json',
-    //                    async: false,
-    //                    success: function (data) {
-    //                        if (data.length > 0) {
-    //                            $.each(data, function (i, item) {
-    //                                collectionRecords.push(new collectionRecord(item.ID,item.Portfolio_,
-    //                                    item.Inv_AgencyName,
-    //                                    dateFormat(Date.parse(item.ClosingDate), 'mm/dd/yyyy'),
-    //                                    (item.FaceValue == undefined) ? '' : formatCurrency(item.FaceValue),
-    //                                    (item.SalesPrice == undefined) ? '' : formatCurrency(item.SalesPrice),
-    //                                    item.TransType));
-    //                            });
-    //                        }
-    //                        else {
-    //                            collectionRecords.push(new collectionRecord('','','','','',''));
-    //                        }
-    //                    },
-    //                    error: function (xhr, status, somthing) {
-    //                        log(status);
-    //                    }
-    //                });
-    //        }
-    //        return collectionRecords;
-    //    }, self);
-    //    self.currentRecordIndex = ko.observable(0);
-    //    self.selectedRecordIndexChanged = function (item) {
-    //        self.currentCollectionRecord(item);
-    //        self.selectedAgency(item.collectionAgencyName());
-    //    };
-    //    self.selectedAgency = ko.observable();
-    //    self.currentCollectionRecord = ko.observable();
-    //    self.agencies = ko.observableArray([]);
-    //    self.collectionsTransTypes = [{ Text: 'Sale', Value: 'Sale' }, { Text: 'Collection', Value: 'Collection' }, { Text: 'Distribution', Value: 'Distribution' }, { Text: 'Interest', Value: 'Interest' }, { Text: 'Investment', Value: 'Investment' }];
-    //    self.totalCollections = ko.computed(function () {
-    //        var salesTotal = 0;
-    //        var val;
-    //        $.each(self.collectionRecords(), function (i, item) {
-    //            val = item.netColls().replace(/[^0-9.]/ig, '');
-    //            salesTotal += parseFloat(val) || 0;
-    //        });
-    //        return formatCurrency(salesTotal);
-    //    }, self);
-    //    $.each(portfolioViewModels.agencies(), function (i, item) {
-    //        self.agencies.push(item);
-    //    });
-
-    //    self.showMessage = ko.observable(false);
-    //    self.message = ko.observable('');
-    //    self.saveRecord = function () {
-    //        //log(self.currentCollectionRecord().faceValue());
-    //        //log(self.currentCollectionRecord().netColls());
-    //        //log(self.currentCollectionRecord().closingDt());
-    //        //log(self.currentCollectionRecord().collectionAgencyName());
-    //        //log(self.currentCollectionRecord().id);
-    //        var json = JSON.stringify({
-    //            FaceValue: self.currentCollectionRecord().faceValue(),
-    //            SalesPrice: self.currentCollectionRecord().netColls(),
-    //            ClosingDate: self.currentCollectionRecord().closingDt(),
-    //            Inv_AgencyName:self.selectedAgency(),
-    //            ID: self.currentCollectionRecord().id,
-    //            TransType: 'Collection'
-    //        });
-
-    //        $.ajax({
-    //            url: baseUrl + '/api/PortfolioTransactions/',
-    //            type: "POST",
-    //            data: json,
-    //            dataType: "json",
-    //            contentType: "application/json; charset=utf-8",
-    //            success: function (response) {
-    //                log(response);
-    //            },
-    //            error: function (response, errorText) {
-    //            }
-    //        });
-
-    //        self.showMessage(true);
-    //        self.message('Data saved successfully!');
-    //    }
-
-    //};
-    //portfolioViewModels.interestVM = function () { return $(document).data('interestVM') };
-    //portfolioViewModels.distributionsTransVM = function () { return $(document).data('distributionsTransVM') };
-    //portfolioViewModels.investmentsTransVM = function () { return $(document).data('investmentsTransVM') };
-    //portfolioViewModels.collectionsTransVM = function () { return $(document).data('collectionsTransVM') };
-
-
-}
 
 function salesRecord(id, portfolioNumber, lender, buyer, cutoffDt, closingDt, putbackTerms, putbackDeadline, salesBasis, salesPrice, faceValue, accounts,salesBatch,notes) {
 
@@ -469,8 +35,9 @@ function salesRecord(id, portfolioNumber, lender, buyer, cutoffDt, closingDt, pu
     }.bind(self));
 }
 
-function salesTransVM() {
+function salesTransVM(userId) {
     var self = this;
+    self.userId = userId;
     self.portfolioNumber = ko.observable('');
     self.salesRecords = ko.computed(function () {
         var salesRecords = [];
@@ -482,7 +49,7 @@ function salesTransVM() {
                 url: baseUrl + '/api/MSIPortfolioSalesTransactionsOriginal/',
                 type: 'GET',
                 contentType: 'application/json',
-                data: { portfolioNumber: self.portfolioNumber() },
+                data: { portfolioNumber: self.portfolioNumber(), userId :self.userId },
                 dataType: 'json',
                 async: false,
                 success: function (data) {
@@ -586,7 +153,9 @@ function salesTransVM() {
             ClosingDate: self.currentSalesRecord().closingDt(),
             Cut_OffDate: self.currentSalesRecord().cutoffDt(),
             ID: self.currentSalesRecord().Id,
-            Notes: self.currentSalesRecord().notes()
+            Notes: self.currentSalesRecord().notes(),
+            CreatedBy: self.userId,
+            UpdatedBy: self.userId
         });
 
         $.ajax({
@@ -626,8 +195,9 @@ function salesTransVM() {
     }
 };
 
-function purchaseSummaryVM() {
+function purchaseSummaryVM(userId) {
     var self = this;
+    self.userId = userId;
     self.portfolioNumber = ko.observable('');
     self.company = ko.observable('');
     self.resaleRestrictions = ko.observableArray([]);
@@ -701,7 +271,9 @@ function purchaseSummaryVM() {
             CostBasis: self.costBasis(),
             Portfolio_: self.portfolioNumber(),
             ResaleRestrictionId: self.resaleRestriction(),
-            Notes: self.notes()
+            Notes: self.notes(),
+            CreatedBy: self.userId,
+            UpdatedBy: self.userId
         });
         //log(json);
         $.ajax({
@@ -740,7 +312,7 @@ function purchaseSummaryVM() {
     }
 };
 
-function portfolioVM() {
+function portfolioVM(userId) {
     var self = this;
     self.portfolios = ko.observableArray([]);
 
@@ -817,8 +389,8 @@ function portfolioVM() {
 
     }.bind(self));
 
-    self.purchaseSummarySectionVM = new purchaseSummaryVM();
-    self.salesTabVM = new salesTransVM();
+    self.purchaseSummarySectionVM = new purchaseSummaryVM(userId);
+    self.salesTabVM = new salesTransVM(userId);
     //self.collectionsTabVM = new collectionsTransVM();
     //self.investmentsTabVM = new investmentsTransVM();
     //self.distributionsTabVM = new distributionsTransVM();

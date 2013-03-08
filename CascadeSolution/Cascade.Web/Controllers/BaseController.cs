@@ -42,6 +42,7 @@ namespace Cascade.Web.Controllers
             ViewBag.UserID = UserId.ToString();
             ViewBag.AgencyID = UserAgency;
             ViewBag.UserRole = UserRoles.First().ToLower();
+            ViewBag.UserName = UserName;
             base.OnActionExecuting(filterContext);
         }
 

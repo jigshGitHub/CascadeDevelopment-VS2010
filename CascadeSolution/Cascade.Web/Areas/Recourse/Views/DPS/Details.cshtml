@@ -192,19 +192,18 @@
     {
          <table class="FileUploadTable">
              
-              <tr>
+             <tr>
                  <td colspan="2">Check Images</td>
                  <td colspan="2">
                      <input name="checkDocuments" id="checkDocuments" data-bind="value:checkDocuments"  type="file"  multiple/>
                  </td>
-              </tr>
-              <tr><td colspan="4" class="dummyitem">&nbsp;</td></tr>
-              <tr>
+             </tr>
+             <tr><td colspan="4" class="dummyitem">&nbsp;</td></tr>
+             <tr>
                     <td colspan="4">
                         <input type="submit" class="editButton" value="&nbsp;Upload&nbsp;& Exit" data-bind="visible:showUpload"/>
                     </td>
-              </tr>
-             
+             </tr>
              <tr data-bind="if: visible">
                 <td colspan="4">
                     <table>
@@ -214,8 +213,16 @@
                                 <td>
                                   <a data-bind="attr: { href: checkDocUrl }"><span data-bind="text:checkFileName"></span></a>
                                 </td>
+                               
                             </tr>
                         </tbody>
+                    </table>
+                </td>
+              </tr>
+              <tr data-bind="ifnot: visible">
+                <td colspan="4">
+                    <table>
+                        <tr><td><b>Existing uploaded Images:</b>&nbsp;Not Uploaded Yet</td></tr>
                     </table>
                 </td>
               </tr>
@@ -282,6 +289,7 @@
                 var self = this;
                 self.checkFileName = ko.observable('');
                 self.checkDocUrl = ko.observable('');
+                
             }
 
             self.checkDocuments = ko.observableArray([]);//This is used for fileupload control - same as in Index.cshtml page
@@ -298,7 +306,7 @@
 
             //Initiate the Media Upload Process
             self.manageCheckImages = function () {
-                //alert(self.checkDocuments());
+                //alert(self.checkDocumentsFullName());
                 self.showExistingImageDetails(self.checkDocumentsFullName());
                 $('#fileUploadContainer').show();
                 $('#fileUploadContainer').dialog('open');
@@ -306,17 +314,23 @@
 
             self.showExistingImageDetails = function (existingImages) {
 
-                //Now let us split files seperate by | to know how many records we have
-                var n = existingImages.split("|");
-                //alert(n.length);
-                self.visible(true);
-                for (var i = 0; i < n.length; i++) {
-                    var checkMedia;
-                    checkMedia = new checkImage();
-                    checkMedia.checkDocUrl(baseUrl + '/DPS/DownloadDoc?fileName=' + n[i]);
-                    checkMedia.checkFileName(getFileName(n[i]));
-                    self.checkImageDocuments.push(checkMedia);
+                //Clear the collection first - this is useful when you come second time 
+                self.checkImageDocuments([]);
+                //alert("Opening the dialog box");
+                if (existingImages != null) {
+                    self.visible(true);
+                    //Now let us split files seperate by | to know how many records we have
+                    var n = existingImages.split("|");
+                    //alert(n.length);
+                    for (var i = 0; i < n.length; i++) {
+                        var checkMedia;
+                        checkMedia = new checkImage();
+                        checkMedia.checkDocUrl(baseUrl + '/DPS/DownloadDoc?fileName=' + n[i]);
+                        checkMedia.checkFileName(getFileName(n[i]));
+                        self.checkImageDocuments.push(checkMedia);
+                    }
                 }
+
             };
             
             //Lookup Table Section

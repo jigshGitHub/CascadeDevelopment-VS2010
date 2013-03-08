@@ -56,6 +56,10 @@ namespace Cascade.Web.Controllers
                 portfolioToSave.PurchasePrice = inPortfolio.PurchasePrice;
                 portfolioToSave.ResaleRestrictionId = inPortfolio.ResaleRestrictionId;
                 portfolioToSave.Notes = inPortfolio.Notes;
+                portfolioToSave.CreatedBy = inPortfolio.CreatedBy;
+                portfolioToSave.UpdatedBy = inPortfolio.UpdatedBy;
+                portfolioToSave.CreatedDate = DateTime.Now;
+                portfolioToSave.UpdatedDate = DateTime.Now;
                 if (editingRequired)
                     repository.Update(portfolioToSave);
                 else
@@ -80,14 +84,14 @@ namespace Cascade.Web.Controllers
 
     public class MSIPortfolioSalesTransactionsOriginalController : ApiController
     {
-        public IEnumerable<MSI_Port_SalesTrans_Original> Get(string portfolioNumber)
+        public IEnumerable<MSI_Port_SalesTrans_Original> Get(string portfolioNumber, string userId = "")
         {
             IEnumerable<MSI_Port_SalesTrans_Original> transactions = null;
 
             try
             {
                 DataQueries query = new DataQueries();
-                transactions = query.GetPortfolioSalesSummary(portfolioNumber);
+                transactions = query.GetPortfolioSalesSummary(portfolioNumber, userId);
             }
             catch (Exception ex)
             {
@@ -138,6 +142,10 @@ namespace Cascade.Web.Controllers
                 transactionToSave.Notes = inTransaction.Notes;
                 transactionToSave.Portfolio_ = inTransaction.Portfolio_;
                 transactionToSave.C_ofAccts = inTransaction.C_ofAccts;
+                transactionToSave.CreatedBy = inTransaction.CreatedBy;
+                transactionToSave.CreatedDate = DateTime.Now;
+                transactionToSave.UpdatedBy = inTransaction.UpdatedBy;
+                transactionToSave.UpdatedDate = DateTime.Now;
 
                 repository.Update(transactionToSave);
 

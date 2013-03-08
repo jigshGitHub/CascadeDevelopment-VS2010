@@ -33,10 +33,6 @@ namespace Cascade.Data.Models
         public DbSet<MSI_FinalActionsteps> MSI_FinalActionsteps { get; set; }
         public DbSet<MSI_MediaTypes> MSI_MediaTypes { get; set; }
         public DbSet<MSI_OwnerResponses> MSI_OwnerResponses { get; set; }
-        public DbSet<MSI_Port_Acq_Edited> MSI_Port_Acq_Edited { get; set; }
-        public DbSet<MSI_Port_Acq_Original> MSI_Port_Acq_Original { get; set; }
-        public DbSet<MSI_Port_SalesTrans_Edited> MSI_Port_SalesTrans_Edited { get; set; }
-        public DbSet<MSI_Port_SalesTrans_Original> MSI_Port_SalesTrans_Original { get; set; }
         public DbSet<MSI_RecallForm> MSI_RecallForm { get; set; }
         public DbSet<MSI_ResaleRestriction> MSI_ResaleRestriction { get; set; }
         public DbSet<MSI_USStates> MSI_USStates { get; set; }
@@ -87,5 +83,9 @@ namespace Cascade.Data.Models
         public DbSet<MSI_MediaTracker> MSI_MediaTracker { get; set; }
         public DbSet<MSI_ComplaintMain> MSI_ComplaintMain { get; set; }
         public DbSet<MSI_DPSForm> MSI_DPSForm { get; set; }
+        public DbSet<MSI_Port_Acq_Edited> MSI_Port_Acq_Edited { get; set; }
+        public DbSet<MSI_Port_Acq_Original> MSI_Port_Acq_Original { get; set; }
+        public DbSet<MSI_Port_SalesTrans_Edited> MSI_Port_SalesTrans_Edited { get; set; }
+        public DbSet<MSI_Port_SalesTrans_Original> MSI_Port_SalesTrans_Original { get; set; }
     }
 }

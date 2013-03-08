@@ -1298,6 +1298,10 @@
           <Property Name="Notes" Type="nvarchar(max)" />
           <Property Name="ResaleRestrictionId" Type="int" />
           <Property Name="Company" Type="nvarchar" MaxLength="255" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="256" />
+          <Property Name="UpdatedBy" Type="nvarchar" MaxLength="256" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="UpdatedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="MSI_Port_Acq_Original">
           <Key>
@@ -1317,6 +1321,10 @@
           <Property Name="Notes" Type="nvarchar(max)" />
           <Property Name="ResaleRestrictionId" Type="int" />
           <Property Name="Company" Type="nvarchar" MaxLength="255" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="256" />
+          <Property Name="UpdatedBy" Type="nvarchar" MaxLength="256" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="UpdatedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="MSI_Port_SalesTrans_Edited">
           <Key>
@@ -1335,6 +1343,10 @@
           <Property Name="PutbackTerm(days)" Type="float" />
           <Property Name="PutbackDeadline" Type="datetime" />
           <Property Name="Notes" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="256" />
+          <Property Name="UpdatedBy" Type="nvarchar" MaxLength="256" />
         </EntityType>
         <EntityType Name="MSI_Port_SalesTrans_Original">
           <Key>
@@ -1353,6 +1365,10 @@
           <Property Name="PutbackTerm(days)" Type="float" />
           <Property Name="PutbackDeadline" Type="datetime" />
           <Property Name="Notes" Type="nvarchar(max)" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="256" />
+          <Property Name="UpdatedBy" Type="nvarchar" MaxLength="256" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="UpdatedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="MSI_RecallForm">
           <Key>
@@ -3530,10 +3546,6 @@
           <EntitySet Name="MSI_FinalActionsteps" EntityType="CascadeDBModel.MSI_FinalActionsteps" />
           <EntitySet Name="MSI_MediaTypes" EntityType="CascadeDBModel.MSI_MediaTypes" />
           <EntitySet Name="MSI_OwnerResponses" EntityType="CascadeDBModel.MSI_OwnerResponses" />
-          <EntitySet Name="MSI_Port_Acq_Edited" EntityType="CascadeDBModel.MSI_Port_Acq_Edited" />
-          <EntitySet Name="MSI_Port_Acq_Original" EntityType="CascadeDBModel.MSI_Port_Acq_Original" />
-          <EntitySet Name="MSI_Port_SalesTrans_Edited" EntityType="CascadeDBModel.MSI_Port_SalesTrans_Edited" />
-          <EntitySet Name="MSI_Port_SalesTrans_Original" EntityType="CascadeDBModel.MSI_Port_SalesTrans_Original" />
           <EntitySet Name="MSI_RecallForm" EntityType="CascadeDBModel.MSI_RecallForm" />
           <EntitySet Name="MSI_ResaleRestriction" EntityType="CascadeDBModel.MSI_ResaleRestriction" />
           <EntitySet Name="MSI_USStates" EntityType="CascadeDBModel.MSI_USStates" />
@@ -3624,6 +3636,10 @@
           </AssociationSet>
           <EntitySet Name="MSI_ComplaintMain" EntityType="CascadeDBModel.MSI_ComplaintMain" />
           <EntitySet Name="MSI_DPSForm" EntityType="CascadeDBModel.MSI_DPSForm" />
+          <EntitySet Name="MSI_Port_Acq_Edited" EntityType="CascadeDBModel.MSI_Port_Acq_Edited" />
+          <EntitySet Name="MSI_Port_Acq_Original" EntityType="CascadeDBModel.MSI_Port_Acq_Original" />
+          <EntitySet Name="MSI_Port_SalesTrans_Edited" EntityType="CascadeDBModel.MSI_Port_SalesTrans_Edited" />
+          <EntitySet Name="MSI_Port_SalesTrans_Original" EntityType="CascadeDBModel.MSI_Port_SalesTrans_Original" />
           </EntityContainer>
         <EntityType Name="MSI_ComplaintIssues">
           <Key>
@@ -3683,80 +3699,6 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Response" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
-        </EntityType>
-        <EntityType Name="MSI_Port_Acq_Edited">
-          <Key>
-            <PropertyRef Name="Portfolio_" />
-          </Key>
-          <Property Name="Portfolio_" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="Cut_OffDate" Type="DateTime" />
-          <Property Name="ClosingDate" Type="DateTime" />
-          <Property Name="Lender_FileDescription" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="Seller" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="CostBasis" Type="Double" />
-          <Property Name="Face" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="PurchasePrice" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="C_ofAccts" Type="Double" />
-          <Property Name="PutbackTerm__days_" Type="Int32" />
-          <Property Name="PutbackDeadline" Type="DateTime" />
-          <Property Name="Notes" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="ResaleRestrictionId" Type="Int32" />
-          <Property Name="Company" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-        </EntityType>
-        <EntityType Name="MSI_Port_Acq_Original">
-          <Key>
-            <PropertyRef Name="Portfolio_" />
-          </Key>
-          <Property Name="Portfolio_" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="Cut_OffDate" Type="DateTime" />
-          <Property Name="ClosingDate" Type="DateTime" />
-          <Property Name="Lender_FileDescription" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="Seller" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="CostBasis" Type="Double" />
-          <Property Name="Face" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="PurchasePrice" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="C_ofAccts" Type="Double" />
-          <Property Name="PutbackTerm__days_" Type="Int32" />
-          <Property Name="PutbackDeadline" Type="DateTime" />
-          <Property Name="Notes" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="ResaleRestrictionId" Type="Int32" />
-          <Property Name="Company" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-        </EntityType>
-        <EntityType Name="MSI_Port_SalesTrans_Edited">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Portfolio_" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="Cut_OffDate" Type="DateTime" />
-          <Property Name="ClosingDate" Type="DateTime" />
-          <Property Name="Lender" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="Buyer" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="SalesPrice" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="SalesBasis" Type="Double" />
-          <Property Name="FaceValue" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="C_ofAccts" Type="Double" />
-          <Property Name="PutbackTerm_days_" Type="Double" />
-          <Property Name="PutbackDeadline" Type="DateTime" />
-          <Property Name="Notes" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-        </EntityType>
-        <EntityType Name="MSI_Port_SalesTrans_Original">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Portfolio_" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="Cut_OffDate" Type="DateTime" />
-          <Property Name="ClosingDate" Type="DateTime" />
-          <Property Name="Lender" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="Buyer" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="SalesPrice" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="SalesBasis" Type="Double" />
-          <Property Name="FaceValue" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="C_ofAccts" Type="Double" />
-          <Property Name="PutbackTerm_days_" Type="Double" />
-          <Property Name="PutbackDeadline" Type="DateTime" />
-          <Property Name="Notes" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
         </EntityType>
         <EntityType Name="MSI_RecallForm">
           <Key>
@@ -6096,6 +6038,96 @@
           <Property Type="Boolean" Name="IsActive" />
           <Property Type="String" Name="UploadedBy" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="MSI_Port_Acq_Edited">
+          <Key>
+            <PropertyRef Name="Portfolio_" />
+          </Key>
+          <Property Type="String" Name="Portfolio_" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="Cut_OffDate" />
+          <Property Type="DateTime" Name="ClosingDate" />
+          <Property Type="String" Name="Lender_FileDescription" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Seller" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Double" Name="CostBasis" />
+          <Property Type="Decimal" Name="Face" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="PurchasePrice" Precision="19" Scale="4" />
+          <Property Type="Double" Name="C_ofAccts" />
+          <Property Type="Int32" Name="PutbackTerm__days_" />
+          <Property Type="DateTime" Name="PutbackDeadline" />
+          <Property Type="String" Name="Notes" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="ResaleRestrictionId" />
+          <Property Type="String" Name="Company" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CreatedBy" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="UpdatedBy" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="CreatedDate" />
+          <Property Type="DateTime" Name="UpdatedDate" />
+        </EntityType>
+        <EntityType Name="MSI_Port_Acq_Original">
+          <Key>
+            <PropertyRef Name="Portfolio_" />
+          </Key>
+          <Property Type="String" Name="Portfolio_" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="Cut_OffDate" />
+          <Property Type="DateTime" Name="ClosingDate" />
+          <Property Type="String" Name="Lender_FileDescription" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Seller" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Double" Name="CostBasis" />
+          <Property Type="Decimal" Name="Face" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="PurchasePrice" Precision="19" Scale="4" />
+          <Property Type="Double" Name="C_ofAccts" />
+          <Property Type="Int32" Name="PutbackTerm__days_" />
+          <Property Type="DateTime" Name="PutbackDeadline" />
+          <Property Type="String" Name="Notes" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="ResaleRestrictionId" />
+          <Property Type="String" Name="Company" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CreatedBy" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="UpdatedBy" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="CreatedDate" />
+          <Property Type="DateTime" Name="UpdatedDate" />
+        </EntityType>
+        <EntityType Name="MSI_Port_SalesTrans_Edited">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Portfolio_" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="Cut_OffDate" />
+          <Property Type="DateTime" Name="ClosingDate" />
+          <Property Type="String" Name="Lender" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Buyer" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Decimal" Name="SalesPrice" Precision="19" Scale="4" />
+          <Property Type="Double" Name="SalesBasis" />
+          <Property Type="Decimal" Name="FaceValue" Precision="19" Scale="4" />
+          <Property Type="Double" Name="C_ofAccts" />
+          <Property Type="Double" Name="PutbackTerm_days_" />
+          <Property Type="DateTime" Name="PutbackDeadline" />
+          <Property Type="String" Name="Notes" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="CreatedDate" />
+          <Property Type="DateTime" Name="UpdatedDate" />
+          <Property Type="String" Name="CreatedBy" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="UpdatedBy" MaxLength="256" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="MSI_Port_SalesTrans_Original">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Portfolio_" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="Cut_OffDate" />
+          <Property Type="DateTime" Name="ClosingDate" />
+          <Property Type="String" Name="Lender" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Buyer" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Decimal" Name="SalesPrice" Precision="19" Scale="4" />
+          <Property Type="Double" Name="SalesBasis" />
+          <Property Type="Decimal" Name="FaceValue" Precision="19" Scale="4" />
+          <Property Type="Double" Name="C_ofAccts" />
+          <Property Type="Double" Name="PutbackTerm_days_" />
+          <Property Type="DateTime" Name="PutbackDeadline" />
+          <Property Type="String" Name="Notes" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CreatedBy" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="UpdatedBy" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="CreatedDate" />
+          <Property Type="DateTime" Name="UpdatedDate" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -6134,68 +6166,6 @@
           <EntitySetMapping Name="MSI_OwnerResponses"><EntityTypeMapping TypeName="CascadeDBModel.MSI_OwnerResponses"><MappingFragment StoreEntitySet="MSI_OwnerResponses">
             <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="Response" ColumnName="Response" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="MSI_Port_Acq_Edited"><EntityTypeMapping TypeName="CascadeDBModel.MSI_Port_Acq_Edited"><MappingFragment StoreEntitySet="MSI_Port_Acq_Edited">
-            <ScalarProperty Name="Portfolio_" ColumnName="Portfolio#" />
-            <ScalarProperty Name="Cut_OffDate" ColumnName="Cut-OffDate" />
-            <ScalarProperty Name="ClosingDate" ColumnName="ClosingDate" />
-            <ScalarProperty Name="Lender_FileDescription" ColumnName="Lender/FileDescription" />
-            <ScalarProperty Name="Seller" ColumnName="Seller" />
-            <ScalarProperty Name="CostBasis" ColumnName="CostBasis" />
-            <ScalarProperty Name="Face" ColumnName="Face" />
-            <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
-            <ScalarProperty Name="C_ofAccts" ColumnName="#ofAccts" />
-            <ScalarProperty Name="PutbackTerm__days_" ColumnName="PutbackTerm (days)" />
-            <ScalarProperty Name="PutbackDeadline" ColumnName="PutbackDeadline" />
-            <ScalarProperty Name="Notes" ColumnName="Notes" />
-            <ScalarProperty Name="ResaleRestrictionId" ColumnName="ResaleRestrictionId" />
-            <ScalarProperty Name="Company" ColumnName="Company" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="MSI_Port_Acq_Original"><EntityTypeMapping TypeName="CascadeDBModel.MSI_Port_Acq_Original"><MappingFragment StoreEntitySet="MSI_Port_Acq_Original">
-            <ScalarProperty Name="Portfolio_" ColumnName="Portfolio#" />
-            <ScalarProperty Name="Cut_OffDate" ColumnName="Cut-OffDate" />
-            <ScalarProperty Name="ClosingDate" ColumnName="ClosingDate" />
-            <ScalarProperty Name="Lender_FileDescription" ColumnName="Lender/FileDescription" />
-            <ScalarProperty Name="Seller" ColumnName="Seller" />
-            <ScalarProperty Name="CostBasis" ColumnName="CostBasis" />
-            <ScalarProperty Name="Face" ColumnName="Face" />
-            <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
-            <ScalarProperty Name="C_ofAccts" ColumnName="#ofAccts" />
-            <ScalarProperty Name="PutbackTerm__days_" ColumnName="PutbackTerm (days)" />
-            <ScalarProperty Name="PutbackDeadline" ColumnName="PutbackDeadline" />
-            <ScalarProperty Name="Notes" ColumnName="Notes" />
-            <ScalarProperty Name="ResaleRestrictionId" ColumnName="ResaleRestrictionId" />
-            <ScalarProperty Name="Company" ColumnName="Company" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="MSI_Port_SalesTrans_Edited"><EntityTypeMapping TypeName="CascadeDBModel.MSI_Port_SalesTrans_Edited"><MappingFragment StoreEntitySet="MSI_Port_SalesTrans_Edited">
-            <ScalarProperty Name="ID" ColumnName="ID" />
-            <ScalarProperty Name="Portfolio_" ColumnName="Portfolio#" />
-            <ScalarProperty Name="Cut_OffDate" ColumnName="Cut-OffDate" />
-            <ScalarProperty Name="ClosingDate" ColumnName="ClosingDate" />
-            <ScalarProperty Name="Lender" ColumnName="Lender" />
-            <ScalarProperty Name="Buyer" ColumnName="Buyer" />
-            <ScalarProperty Name="SalesPrice" ColumnName="SalesPrice" />
-            <ScalarProperty Name="SalesBasis" ColumnName="SalesBasis" />
-            <ScalarProperty Name="FaceValue" ColumnName="FaceValue" />
-            <ScalarProperty Name="C_ofAccts" ColumnName="#ofAccts" />
-            <ScalarProperty Name="PutbackTerm_days_" ColumnName="PutbackTerm(days)" />
-            <ScalarProperty Name="PutbackDeadline" ColumnName="PutbackDeadline" />
-            <ScalarProperty Name="Notes" ColumnName="Notes" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="MSI_Port_SalesTrans_Original"><EntityTypeMapping TypeName="CascadeDBModel.MSI_Port_SalesTrans_Original"><MappingFragment StoreEntitySet="MSI_Port_SalesTrans_Original">
-            <ScalarProperty Name="ID" ColumnName="ID" />
-            <ScalarProperty Name="Portfolio_" ColumnName="Portfolio#" />
-            <ScalarProperty Name="Cut_OffDate" ColumnName="Cut-OffDate" />
-            <ScalarProperty Name="ClosingDate" ColumnName="ClosingDate" />
-            <ScalarProperty Name="Lender" ColumnName="Lender" />
-            <ScalarProperty Name="Buyer" ColumnName="Buyer" />
-            <ScalarProperty Name="SalesPrice" ColumnName="SalesPrice" />
-            <ScalarProperty Name="SalesBasis" ColumnName="SalesBasis" />
-            <ScalarProperty Name="FaceValue" ColumnName="FaceValue" />
-            <ScalarProperty Name="C_ofAccts" ColumnName="#ofAccts" />
-            <ScalarProperty Name="PutbackTerm_days_" ColumnName="PutbackTerm(days)" />
-            <ScalarProperty Name="PutbackDeadline" ColumnName="PutbackDeadline" />
-            <ScalarProperty Name="Notes" ColumnName="Notes" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="MSI_RecallForm"><EntityTypeMapping TypeName="CascadeDBModel.MSI_RecallForm"><MappingFragment StoreEntitySet="MSI_RecallForm">
             <ScalarProperty Name="ID" ColumnName="ID" />
@@ -8230,6 +8200,100 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="MSI_Port_Acq_Edited">
+            <EntityTypeMapping TypeName="CascadeDBModel.MSI_Port_Acq_Edited">
+              <MappingFragment StoreEntitySet="MSI_Port_Acq_Edited">
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Company" ColumnName="Company" />
+                <ScalarProperty Name="ResaleRestrictionId" ColumnName="ResaleRestrictionId" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="PutbackDeadline" ColumnName="PutbackDeadline" />
+                <ScalarProperty Name="PutbackTerm__days_" ColumnName="PutbackTerm (days)" />
+                <ScalarProperty Name="C_ofAccts" ColumnName="#ofAccts" />
+                <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
+                <ScalarProperty Name="Face" ColumnName="Face" />
+                <ScalarProperty Name="CostBasis" ColumnName="CostBasis" />
+                <ScalarProperty Name="Seller" ColumnName="Seller" />
+                <ScalarProperty Name="Lender_FileDescription" ColumnName="Lender/FileDescription" />
+                <ScalarProperty Name="ClosingDate" ColumnName="ClosingDate" />
+                <ScalarProperty Name="Cut_OffDate" ColumnName="Cut-OffDate" />
+                <ScalarProperty Name="Portfolio_" ColumnName="Portfolio#" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MSI_Port_Acq_Original">
+            <EntityTypeMapping TypeName="CascadeDBModel.MSI_Port_Acq_Original">
+              <MappingFragment StoreEntitySet="MSI_Port_Acq_Original">
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Company" ColumnName="Company" />
+                <ScalarProperty Name="ResaleRestrictionId" ColumnName="ResaleRestrictionId" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="PutbackDeadline" ColumnName="PutbackDeadline" />
+                <ScalarProperty Name="PutbackTerm__days_" ColumnName="PutbackTerm (days)" />
+                <ScalarProperty Name="C_ofAccts" ColumnName="#ofAccts" />
+                <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
+                <ScalarProperty Name="Face" ColumnName="Face" />
+                <ScalarProperty Name="CostBasis" ColumnName="CostBasis" />
+                <ScalarProperty Name="Seller" ColumnName="Seller" />
+                <ScalarProperty Name="Lender_FileDescription" ColumnName="Lender/FileDescription" />
+                <ScalarProperty Name="ClosingDate" ColumnName="ClosingDate" />
+                <ScalarProperty Name="Cut_OffDate" ColumnName="Cut-OffDate" />
+                <ScalarProperty Name="Portfolio_" ColumnName="Portfolio#" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MSI_Port_SalesTrans_Edited">
+            <EntityTypeMapping TypeName="CascadeDBModel.MSI_Port_SalesTrans_Edited">
+              <MappingFragment StoreEntitySet="MSI_Port_SalesTrans_Edited">
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="PutbackDeadline" ColumnName="PutbackDeadline" />
+                <ScalarProperty Name="PutbackTerm_days_" ColumnName="PutbackTerm(days)" />
+                <ScalarProperty Name="C_ofAccts" ColumnName="#ofAccts" />
+                <ScalarProperty Name="FaceValue" ColumnName="FaceValue" />
+                <ScalarProperty Name="SalesBasis" ColumnName="SalesBasis" />
+                <ScalarProperty Name="SalesPrice" ColumnName="SalesPrice" />
+                <ScalarProperty Name="Buyer" ColumnName="Buyer" />
+                <ScalarProperty Name="Lender" ColumnName="Lender" />
+                <ScalarProperty Name="ClosingDate" ColumnName="ClosingDate" />
+                <ScalarProperty Name="Cut_OffDate" ColumnName="Cut-OffDate" />
+                <ScalarProperty Name="Portfolio_" ColumnName="Portfolio#" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MSI_Port_SalesTrans_Original">
+            <EntityTypeMapping TypeName="CascadeDBModel.MSI_Port_SalesTrans_Original">
+              <MappingFragment StoreEntitySet="MSI_Port_SalesTrans_Original">
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="PutbackDeadline" ColumnName="PutbackDeadline" />
+                <ScalarProperty Name="PutbackTerm_days_" ColumnName="PutbackTerm(days)" />
+                <ScalarProperty Name="C_ofAccts" ColumnName="#ofAccts" />
+                <ScalarProperty Name="FaceValue" ColumnName="FaceValue" />
+                <ScalarProperty Name="SalesBasis" ColumnName="SalesBasis" />
+                <ScalarProperty Name="SalesPrice" ColumnName="SalesPrice" />
+                <ScalarProperty Name="Buyer" ColumnName="Buyer" />
+                <ScalarProperty Name="Lender" ColumnName="Lender" />
+                <ScalarProperty Name="ClosingDate" ColumnName="ClosingDate" />
+                <ScalarProperty Name="Cut_OffDate" ColumnName="Cut-OffDate" />
+                <ScalarProperty Name="Portfolio_" ColumnName="Portfolio#" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -8260,10 +8324,6 @@
         <EntityTypeShape EntityType="CascadeDBModel.MSI_FinalActionsteps" Width="1.5" PointX="9.75" PointY="8.75" Height="1.2636116536458317" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaTypes" Width="1.5" PointX="11.75" PointY="9.75" Height="1.4279589843750031" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_OwnerResponses" Width="1.5" PointX="9.75" PointY="12.75" Height="1.2636116536458388" IsExpanded="true" />
-        <EntityTypeShape EntityType="CascadeDBModel.MSI_Port_Acq_Edited" Width="1.5" PointX="11.75" PointY="12.75" Height="3.2357796223958388" IsExpanded="true" />
-        <EntityTypeShape EntityType="CascadeDBModel.MSI_Port_Acq_Original" Width="1.5" PointX="13.75" PointY="0.75" Height="3.2357796223958388" IsExpanded="true" />
-        <EntityTypeShape EntityType="CascadeDBModel.MSI_Port_SalesTrans_Edited" Width="1.5" PointX="13.75" PointY="4.75" Height="3.0714322916666674" IsExpanded="true" />
-        <EntityTypeShape EntityType="CascadeDBModel.MSI_Port_SalesTrans_Original" Width="1.5" PointX="13.75" PointY="8.75" Height="3.0714322916666674" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_RecallForm" Width="1.5" PointX="13.75" PointY="12.75" Height="5.0436002604166674" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_ResaleRestriction" Width="1.5" PointX="15.75" PointY="0.75" Height="1.4279589843750031" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_USStates" Width="1.5" PointX="15.75" PointY="3.75" Height="1.4279589843750031" IsExpanded="true" />
@@ -8337,29 +8397,47 @@
         <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaRequestTypes" Width="1.5" PointX="7.625" PointY="1.375" Height="4.6725065104166674" />
         <AssociationConnector Association="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaRequestResponse" >
           <ConnectorPoint PointX="11.75" PointY="35.172801106770834" />
-          <ConnectorPoint PointX="7.65625" PointY="35.172801106770834" />
-          <ConnectorPoint PointX="7.65625" PointY="6.0475065104166674" />
+          <ConnectorPoint PointX="9.4583333333333339" PointY="35.172801106770834" />
+          <ConnectorPoint PointX="9.2916666666666661" PointY="35.172801106770834" />
+          <ConnectorPoint PointX="9.125" PointY="35.172801106770834" />
+          <ConnectorPoint PointX="9.125" PointY="27.557190755208339" />
+          <ConnectorPoint PointX="7.5" PointY="27.557190755208339" />
+          <ConnectorPoint PointX="7.5" PointY="6.4225065104166674" />
+          <ConnectorPoint PointX="8.375" PointY="6.4225065104166674" />
+          <ConnectorPoint PointX="8.375" PointY="6.0475065104166674" />
         </AssociationConnector>
         <AssociationConnector Association="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaRequestStatus" >
           <ConnectorPoint PointX="11.75" PointY="38.797841796874991" />
-          <ConnectorPoint PointX="7.671875" PointY="38.797841796874991" />
-          <ConnectorPoint PointX="7.671875" PointY="6.0475065104166674" />
+          <ConnectorPoint PointX="9.375" PointY="38.797841796874991" />
+          <ConnectorPoint PointX="9.375" PointY="27.807190755208339" />
+          <ConnectorPoint PointX="9.2083333333333339" PointY="27.807190755208339" />
+          <ConnectorPoint PointX="9.0416666666666661" PointY="27.807190755208339" />
+          <ConnectorPoint PointX="7.375" PointY="27.807190755208339" />
+          <ConnectorPoint PointX="7.375" PointY="6.5475065104166674" />
+          <ConnectorPoint PointX="7.416666666666667" PointY="6.5475065104166665" />
+          <ConnectorPoint PointX="7.583333333333333" PointY="6.5475065104166674" />
+          <ConnectorPoint PointX="8.781252" PointY="6.5475065104166674" />
+          <ConnectorPoint PointX="8.781252" PointY="6.0475065104166674" />
         </AssociationConnector>
         <AssociationConnector Association="CascadeDBModel.FK_MSI_MediaRequestTypes_MSI_MediaTypes" >
-          <ConnectorPoint PointX="12.5" PointY="9.75" />
-          <ConnectorPoint PointX="12.5" PointY="4.1316943359375005" />
-          <ConnectorPoint PointX="9.125" PointY="4.1316943359375005" />
+          <ConnectorPoint PointX="12.03125" PointY="9.75" />
+          <ConnectorPoint PointX="12.03125" PointY="5.6701057942708246" />
+          <ConnectorPoint PointX="9.125" PointY="5.6701057942708246" />
         </AssociationConnector>
         <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaTracker" Width="1.5" PointX="14" PointY="37.125" Height="3.3263964843749818" />
         <AssociationConnector Association="CascadeDBModel.FK_MSI_MediaTracker_MSI_MediaTypes" >
           <ConnectorPoint PointX="12.5" PointY="11.730286458333334" />
-          <ConnectorPoint PointX="12.5" PointY="12.5" />
-          <ConnectorPoint PointX="13.375" PointY="12.5" />
-          <ConnectorPoint PointX="13.375" PointY="38.960998848958326" />
-          <ConnectorPoint PointX="14" PointY="38.960998848958326" />
+          <ConnectorPoint PointX="12.5" PointY="18.5" />
+          <ConnectorPoint PointX="13.5" PointY="18.5" />
+          <ConnectorPoint PointX="13.5" PointY="38.788198242187491" />
+          <ConnectorPoint PointX="14" PointY="38.788198242187491" />
         </AssociationConnector>
         <EntityTypeShape EntityType="CascadeDBModel.MSI_ComplaintMain" Width="1.5" PointX="16.375" PointY="27.75" Height="11.979960937499982" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_DPSForm" Width="1.5" PointX="28.375" PointY="0.75" Height="5.0571093749999818" />
+        <EntityTypeShape EntityType="CascadeDBModel.MSI_Port_Acq_Edited" Width="1.5" PointX="12.375" PointY="0.75" Height="4.4802050781249818" />
+        <EntityTypeShape EntityType="CascadeDBModel.MSI_Port_Acq_Original" Width="1.5" PointX="10.375" PointY="27.75" Height="4.4802050781249818" />
+        <EntityTypeShape EntityType="CascadeDBModel.MSI_Port_SalesTrans_Edited" Width="1.5" PointX="28.375" PointY="6.75" Height="4.287903645833353" />
+        <EntityTypeShape EntityType="CascadeDBModel.MSI_Port_SalesTrans_Original" Width="1.5" PointX="7.375" PointY="28.75" Height="4.287903645833353" />
         </Diagram>
     </Diagrams>
   </Designer>

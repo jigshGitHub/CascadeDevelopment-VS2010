@@ -604,7 +604,10 @@ namespace Cascade.Data.Repositories
                 int resaleId;
                 if (int.TryParse(dr["ResaleRestrictionId"].ToString(), out resaleId))
                     portfolio.ResaleRestrictionId = resaleId;
-
+                portfolio.CreatedBy = dr["CreatedBy"].ToString();
+                portfolio.CreatedDate = DateTime.Parse(dr["CreatedDate"].ToString());
+                portfolio.UpdatedBy = dr["UpdatedBy"].ToString();
+                portfolio.UpdatedDate = DateTime.Parse(dr["UpdatedDate"].ToString());
             }
             catch (Exception ex)
             {
@@ -612,7 +615,7 @@ namespace Cascade.Data.Repositories
             return portfolio;
         }
 
-        public IEnumerable<MSI_Port_SalesTrans_Original> GetPortfolioSalesSummary(string productCode)
+        public IEnumerable<MSI_Port_SalesTrans_Original> GetPortfolioSalesSummary(string productCode, string userId)
         {
             MSI_Port_SalesTrans_Original salesTransaction = null;
             DBFactory db;
@@ -621,7 +624,7 @@ namespace Cascade.Data.Repositories
             try
             {
                 db = new DBFactory();
-                ds = db.ExecuteDataset("MSI_sp_GetPortfolioSalesSummary", "PurchaseSalesSummary", new SqlParameter("@productCode", productCode));
+                ds = db.ExecuteDataset("MSI_sp_GetPortfolioSalesSummary", "PurchaseSalesSummary", new SqlParameter("@productCode", productCode), new SqlParameter("@userId", userId));
 
                 if (ds.Tables["PurchaseSalesSummary"].Rows.Count > 0)
                 {
@@ -653,6 +656,10 @@ namespace Cascade.Data.Repositories
                         if (DateTime.TryParse(dr["PutbackDeadLine"].ToString(), out putbackDeadLine))
                             salesTransaction.PutbackDeadline = putbackDeadLine;
                         salesTransaction.Notes = dr["Notes"].ToString();
+                        salesTransaction.CreatedBy = dr["CreatedBy"].ToString();
+                        salesTransaction.CreatedDate = DateTime.Parse(dr["CreatedDate"].ToString());
+                        salesTransaction.UpdatedBy = dr["UpdatedBy"].ToString();
+                        salesTransaction.UpdatedDate = DateTime.Parse(dr["UpdatedDate"].ToString());
                         salesTransactions.Add(salesTransaction);
                     }
                 }

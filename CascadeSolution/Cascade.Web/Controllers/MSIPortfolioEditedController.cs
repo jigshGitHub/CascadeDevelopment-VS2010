@@ -38,6 +38,10 @@ namespace Cascade.Web.Controllers
                     portfolio.PutbackTerm__days_ = originalPortfolio.PutbackTerm__days_;
                     portfolio.ResaleRestrictionId = originalPortfolio.ResaleRestrictionId;
                     portfolio.Seller = originalPortfolio.Seller;
+                    portfolio.UpdatedBy = originalPortfolio.UpdatedBy;
+                    portfolio.UpdatedDate = originalPortfolio.UpdatedDate;
+                    portfolio.CreatedBy = originalPortfolio.CreatedBy;
+                    portfolio.CreatedDate = originalPortfolio.CreatedDate;
                 }
             }
             catch (Exception ex)
@@ -76,6 +80,11 @@ namespace Cascade.Web.Controllers
                 portfolioToSave.PurchasePrice = inPortfolio.PurchasePrice;
                 portfolioToSave.ResaleRestrictionId = inPortfolio.ResaleRestrictionId;
                 portfolioToSave.Notes = inPortfolio.Notes;
+                portfolioToSave.CreatedBy = inPortfolio.CreatedBy;
+                portfolioToSave.UpdatedBy = inPortfolio.UpdatedBy;
+                portfolioToSave.CreatedDate = DateTime.Now;
+                portfolioToSave.UpdatedDate = DateTime.Now;
+
                 if (editingRequired)
                     repository.Update(portfolioToSave);
                 else
@@ -126,6 +135,10 @@ namespace Cascade.Web.Controllers
                     transaction.Portfolio_ = originalTransaction.Portfolio_;
                     transaction.Buyer = originalTransaction.Buyer;
                     transaction.SalesBasis = originalTransaction.SalesBasis;
+                    transaction.UpdatedBy = originalTransaction.UpdatedBy;
+                    transaction.UpdatedDate = originalTransaction.UpdatedDate;
+                    transaction.CreatedBy = originalTransaction.CreatedBy;
+                    transaction.CreatedDate = originalTransaction.CreatedDate;
                 }
             }
             catch (Exception ex)
@@ -165,6 +178,10 @@ namespace Cascade.Web.Controllers
                 transactionToSave.Portfolio_ = inTransaction.Portfolio_;
                 transactionToSave.C_ofAccts = inTransaction.C_ofAccts;
                 transactionToSave.ID = inTransaction.ID;
+                transactionToSave.CreatedBy = inTransaction.CreatedBy;
+                transactionToSave.UpdatedBy = inTransaction.UpdatedBy;
+                transactionToSave.CreatedDate = DateTime.Now;
+                transactionToSave.UpdatedDate = DateTime.Now;
                 if (editingRequired)
                     repository.Update(transactionToSave);
                 else

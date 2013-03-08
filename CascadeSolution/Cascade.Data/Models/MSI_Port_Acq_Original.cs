@@ -28,5 +28,9 @@ namespace Cascade.Data.Models
         public string Notes { get; set; }
         public Nullable<int> ResaleRestrictionId { get; set; }
         public string Company { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<System.DateTime> UpdatedDate { get; set; }
     }
 }
