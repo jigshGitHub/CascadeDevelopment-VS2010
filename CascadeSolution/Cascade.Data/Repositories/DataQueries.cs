@@ -656,10 +656,14 @@ namespace Cascade.Data.Repositories
                         if (DateTime.TryParse(dr["PutbackDeadLine"].ToString(), out putbackDeadLine))
                             salesTransaction.PutbackDeadline = putbackDeadLine;
                         salesTransaction.Notes = dr["Notes"].ToString();
-                        salesTransaction.CreatedBy = dr["CreatedBy"].ToString();
-                        salesTransaction.CreatedDate = DateTime.Parse(dr["CreatedDate"].ToString());
+                        DateTime notNullDt;
+                        if (DateTime.TryParse(dr["CreatedDate"].ToString(), out notNullDt))
+                            salesTransaction.CreatedDate = notNullDt;
+
+                        if (DateTime.TryParse(dr["UpdatedDate"].ToString(), out notNullDt))
+                            salesTransaction.UpdatedDate = notNullDt;
+                        salesTransaction.CreatedBy = dr["CreatedBy"].ToString();                        
                         salesTransaction.UpdatedBy = dr["UpdatedBy"].ToString();
-                        salesTransaction.UpdatedDate = DateTime.Parse(dr["UpdatedDate"].ToString());
                         salesTransactions.Add(salesTransaction);
                     }
                 }
@@ -667,6 +671,7 @@ namespace Cascade.Data.Repositories
             }
             catch (Exception ex)
             {
+                throw ex;
             }
             return salesTransactions.AsEnumerable<MSI_Port_SalesTrans_Original>();
         }

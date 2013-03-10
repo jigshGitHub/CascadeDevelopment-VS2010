@@ -5,7 +5,7 @@
 //var absoluteapp = myhost + applicationname;
 //var imagedir = "/Content/Images";
 
-function salesRecord(id, portfolioNumber, lender, buyer, cutoffDt, closingDt, putbackTerms, putbackDeadline, salesBasis, salesPrice, faceValue, accounts,salesBatch,notes) {
+function salesRecord(id, portfolioNumber, lender, buyer, cutoffDt, closingDt, putbackTerms, putbackDeadline, salesBasis, salesPrice, faceValue, accounts, salesBatch, notes) {
 
     var self = this;
     self.Id = id;
@@ -25,14 +25,17 @@ function salesRecord(id, portfolioNumber, lender, buyer, cutoffDt, closingDt, pu
 
     self.putbackTerm.subscribe(function (termValue) {
         if (termValue != undefined) {
-            var putbackDeadline = new Date(self.cutoffDt());
-            putbackDeadline.setDate(putbackDeadline.getDate() + Number(termValue));
-            self.putbackDeadline($.datepicker.formatDate('mm/dd/yy', putbackDeadline));
+            log(self.cutoffDt());
+            if (self.cutoffDt() != undefined && self.cutoffDt() != '') {
+                var putbackDeadline = new Date(self.cutoffDt());
+                putbackDeadline.setDate(putbackDeadline.getDate() + Number(termValue));
+                self.putbackDeadline($.datepicker.formatDate('mm/dd/yy', putbackDeadline));
+            }
         }
         else {
             self.putbackDeadline('');
         }
-    }.bind(self));
+    } .bind(self));
 }
 
 function salesTransVM(userId) {
@@ -49,7 +52,7 @@ function salesTransVM(userId) {
                 url: baseUrl + '/api/MSIPortfolioSalesTransactionsOriginal/',
                 type: 'GET',
                 contentType: 'application/json',
-                data: { portfolioNumber: self.portfolioNumber(), userId :self.userId },
+                data: { portfolioNumber: self.portfolioNumber(), userId: self.userId },
                 dataType: 'json',
                 async: false,
                 success: function (data) {
@@ -84,7 +87,7 @@ function salesTransVM(userId) {
             var index = value.substr(startIndex + 1, totalChars);
             self.currentRecordIndex(index - 1);
         }
-    }.bind(self));
+    } .bind(self));
     self.getsalesBatchSelected = function (index) {
         //log(index);
         return self.portfolioNumber() + '-' + index;
@@ -94,10 +97,10 @@ function salesTransVM(userId) {
         if (self.portfolioNumber() != '')
             return self.salesRecords()[self.currentRecordIndex()];
         else
-            return new salesRecord('', '', '', '', '', '', '', '', '', '', '', '','','');
+            return new salesRecord('', '', '', '', '', '', '', '', '', '', '', '', '', '');
     }, self);
     self.buyers = ko.observableArray([]);
-    
+
     $.each(portfolioViewModels.buyers(), function (i, item) {
         self.buyers.push(item);
     });
@@ -120,7 +123,7 @@ function salesTransVM(userId) {
 
     self.nextRecord = function () {
         self.currentRecordIndex(self.currentRecordIndex() + 1);
-        self.salesBatchSelected(self.getsalesBatchSelected(self.currentRecordIndex()+1));
+        self.salesBatchSelected(self.getsalesBatchSelected(self.currentRecordIndex() + 1));
     }
     self.previousRecord = function () {
         var setIndex = self.currentRecordIndex();
@@ -141,7 +144,7 @@ function salesTransVM(userId) {
         //log(self.currentSalesRecord().putbackDeadline());
         //log(self.currentSalesRecord().salesPrice());
         var json = JSON.stringify({
-            Portfolio_:self.portfolioNumber(),
+            Portfolio_: self.portfolioNumber(),
             PutbackDeadline: self.currentSalesRecord().putbackDeadline(),
             PutbackTerm_days_: self.currentSalesRecord().putbackTerm(),
             C_ofAccts: self.currentSalesRecord().accounts(),
@@ -191,7 +194,7 @@ function salesTransVM(userId) {
         self.currentSalesRecord().salesBatch('');
         self.currentSalesRecord().notes('');
         self.currentRecordIndex(0);
-        self.salesBatchSelected(undefined);        
+        self.salesBatchSelected(undefined);
     }
 };
 
@@ -240,7 +243,7 @@ function purchaseSummaryVM(userId) {
         else {
             self.putbackDeadline('');
         }
-    }.bind(self));
+    } .bind(self));
     self.face = ko.observable('');
     self.accounts = ko.observable('');
     self.purchasePrice = ko.observable('');
@@ -365,7 +368,7 @@ function portfolioVM(userId) {
                     //self.costBasisputbackTermsputbackDeadlineface(data.Face);
                     self.purchaseSummarySectionVM.accounts(data.C_ofAccts);
                     if (data.PurchasePrice != undefined)
-                        self.purchaseSummarySectionVM.purchasePrice(formatCurrency(data.PurchasePrice));//formatCurrency({ colorize: true, negativeFormat: '(%s%n)' });
+                        self.purchaseSummarySectionVM.purchasePrice(formatCurrency(data.PurchasePrice)); //formatCurrency({ colorize: true, negativeFormat: '(%s%n)' });
                     self.purchaseSummarySectionVM.resaleRestriction(data.ResaleRestrictionId);
                     self.purchaseSummarySectionVM.notes(data.Notes);
                     self.purchaseSummarySectionVM.saveVisible(true);
@@ -387,7 +390,7 @@ function portfolioVM(userId) {
             self.salesTabVM.saveVisible(false);
         }
 
-    }.bind(self));
+    } .bind(self));
 
     self.purchaseSummarySectionVM = new purchaseSummaryVM(userId);
     self.salesTabVM = new salesTransVM(userId);

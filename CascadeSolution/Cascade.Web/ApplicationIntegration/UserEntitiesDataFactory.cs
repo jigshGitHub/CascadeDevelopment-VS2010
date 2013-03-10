@@ -33,9 +33,21 @@ namespace Cascade.Web.ApplicationIntegration
             return (Membership.GetUser(userName) != null);
         }
 
-        public static int UsersCount(string userName)
-        {
-            return Membership.FindUsersByName(userName).Count;
+        public static string GetUsername(string userName){
+        
+            string checkUserName = userName;
+            for (int count = 0; count < Membership.GetAllUsers().Count; )
+            {
+                if (Membership.FindUsersByName(checkUserName).Count == 0){
+                    return checkUserName;
+                }
+                else
+                {
+                    count++;
+                    checkUserName = userName + count.ToString();
+                }
+            }
+            return userName;
         }
 
         public static MembershipUser GetUser(Guid userId)

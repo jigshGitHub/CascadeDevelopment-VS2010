@@ -145,7 +145,7 @@
         self.roleKeyValue = ko.observable('');
         self.roleKeyTitle = ko.observable('');
 
-        self.fill = function (id,name,fname,lname,email,role,roleKeyVal) {
+        self.fill = function (id, name, fname, lname, email, role, roleKeyVal) {
             self.userId = id;
             self.userName(name)
             self.firstName(fname);
@@ -187,12 +187,11 @@
         }, self);
         self.showEditContainer = ko.observable(false);
         self.role.subscribe(function (roleSelected) {
-            if(roleSelected == 'agency')
-            {
+            if (roleSelected == 'agency') {
                 self.roleKeyTitle('Agency');
                 self.roleKeyValVisible(true);
             }
-            else{
+            else {
                 self.roleKeyTitle('');
                 self.roleKeyValVisible(false);
             }
@@ -219,7 +218,7 @@
                 success: function (response) {
                     log(response);
                     if (self.userId == '') {
-                        window.open(baseUrl + '/Admin/ManageUsers', '_self', '', '');
+                        location.reload();
                     }
                     self.showMessage(true);
                     self.message('User account data has been added or updated');

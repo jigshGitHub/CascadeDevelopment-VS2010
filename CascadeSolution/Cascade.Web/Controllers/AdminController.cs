@@ -47,7 +47,7 @@ namespace Cascade.Web.Controllers
             {
                 if (UserEntitiesDataFactory.IsUserExits(userName))
                 {
-                    userName = userName + UserEntitiesDataFactory.UsersCount(userName).ToString();
+                    userName = UserEntitiesDataFactory.GetUsername(userName);
                 }
 
                 userId = UserEntitiesDataFactory.CreateUserWithRoles(userName, email, role).ToString();

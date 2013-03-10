@@ -95,6 +95,7 @@ namespace Cascade.Web.Controllers
             }
             catch (Exception ex)
             {
+                throw ex;
             }
             return transactions;
 
