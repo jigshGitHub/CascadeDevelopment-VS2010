@@ -1399,6 +1399,12 @@
           <Property Name="AmtPayable" Type="money" />
           <Property Name="Seller" Type="varchar" MaxLength="150" />
           <Property Name="GUID" Type="varchar" Nullable="false" MaxLength="255" />
+          <Property Name="CheckDocuments" Type="varchar(max)" />
+          <Property Name="UploadedOn" Type="datetime" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="UploadedBy" Type="varchar" MaxLength="50" />
+          <Property Name="RecallInitiatedBy" Type="varchar" MaxLength="50" />
+          <Property Name="ClientName" Type="varchar" MaxLength="150" />
         </EntityType>
         <EntityType Name="MSI_ResaleRestriction">
           <Key>
@@ -3546,7 +3552,6 @@
           <EntitySet Name="MSI_FinalActionsteps" EntityType="CascadeDBModel.MSI_FinalActionsteps" />
           <EntitySet Name="MSI_MediaTypes" EntityType="CascadeDBModel.MSI_MediaTypes" />
           <EntitySet Name="MSI_OwnerResponses" EntityType="CascadeDBModel.MSI_OwnerResponses" />
-          <EntitySet Name="MSI_RecallForm" EntityType="CascadeDBModel.MSI_RecallForm" />
           <EntitySet Name="MSI_ResaleRestriction" EntityType="CascadeDBModel.MSI_ResaleRestriction" />
           <EntitySet Name="MSI_USStates" EntityType="CascadeDBModel.MSI_USStates" />
           <EntitySet Name="Port_Acq" EntityType="CascadeDBModel.Port_Acq" />
@@ -3640,6 +3645,7 @@
           <EntitySet Name="MSI_Port_Acq_Original" EntityType="CascadeDBModel.MSI_Port_Acq_Original" />
           <EntitySet Name="MSI_Port_SalesTrans_Edited" EntityType="CascadeDBModel.MSI_Port_SalesTrans_Edited" />
           <EntitySet Name="MSI_Port_SalesTrans_Original" EntityType="CascadeDBModel.MSI_Port_SalesTrans_Original" />
+          <EntitySet Name="MSI_RecallForm" EntityType="CascadeDBModel.MSI_RecallForm" />
           </EntityContainer>
         <EntityType Name="MSI_ComplaintIssues">
           <Key>
@@ -3699,36 +3705,6 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Response" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
-        </EntityType>
-        <EntityType Name="MSI_RecallForm">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Date" Type="DateTime" />
-          <Property Name="OrigAcct" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="AcctName" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="Portfolio" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="CurrentResp" Type="String" MaxLength="150" Unicode="false" FixedLength="false" />
-          <Property Name="RecallReason" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="DateNoteSent" Type="DateTime" />
-          <Property Name="PIMSAcct" Type="String" Nullable="false" MaxLength="150" Unicode="false" FixedLength="false" />
-          <Property Name="NewStatus" Type="String" MaxLength="150" Unicode="false" FixedLength="false" />
-          <Property Name="NewResp" Type="String" MaxLength="150" Unicode="false" FixedLength="false" />
-          <Property Name="UploadedDate" Type="DateTime" />
-          <Property Name="CheckNumber" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="Invoice" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="Explanation" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
-          <Property Name="FaceValueofAcct" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="CostBasis" Type="Decimal" Precision="8" Scale="6" />
-          <Property Name="SalesBasis" Type="Decimal" Precision="8" Scale="6" />
-          <Property Name="SellerCheck" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="Putback" Type="Boolean" />
-          <Property Name="DateAcctClosed" Type="DateTime" />
-          <Property Name="AmtReceivable" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="AmtPayable" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="Seller" Type="String" MaxLength="150" Unicode="false" FixedLength="false" />
-          <Property Name="GUID" Type="String" Nullable="false" MaxLength="255" Unicode="false" FixedLength="false" />
         </EntityType>
         <EntityType Name="MSI_ResaleRestriction">
           <Key>
@@ -6128,6 +6104,42 @@
           <Property Type="DateTime" Name="CreatedDate" />
           <Property Type="DateTime" Name="UpdatedDate" />
         </EntityType>
+        <EntityType Name="MSI_RecallForm">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="DateTime" Name="Date" />
+          <Property Type="String" Name="OrigAcct" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="AcctName" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Portfolio" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="CurrentResp" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="RecallReason" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="DateNoteSent" />
+          <Property Type="String" Name="PIMSAcct" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="NewStatus" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="NewResp" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="UploadedDate" />
+          <Property Type="String" Name="CheckNumber" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Invoice" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Explanation" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="Decimal" Name="FaceValueofAcct" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="CostBasis" Precision="8" Scale="6" />
+          <Property Type="Decimal" Name="SalesBasis" Precision="8" Scale="6" />
+          <Property Type="String" Name="SellerCheck" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="Putback" />
+          <Property Type="DateTime" Name="DateAcctClosed" />
+          <Property Type="Decimal" Name="AmtReceivable" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="AmtPayable" Precision="19" Scale="4" />
+          <Property Type="String" Name="Seller" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="GUID" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="CheckDocuments" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="UploadedOn" />
+          <Property Type="Boolean" Name="IsActive" />
+          <Property Type="String" Name="UploadedBy" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="RecallInitiatedBy" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="ClientName" MaxLength="150" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -6166,33 +6178,6 @@
           <EntitySetMapping Name="MSI_OwnerResponses"><EntityTypeMapping TypeName="CascadeDBModel.MSI_OwnerResponses"><MappingFragment StoreEntitySet="MSI_OwnerResponses">
             <ScalarProperty Name="Id" ColumnName="Id" />
             <ScalarProperty Name="Response" ColumnName="Response" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="MSI_RecallForm"><EntityTypeMapping TypeName="CascadeDBModel.MSI_RecallForm"><MappingFragment StoreEntitySet="MSI_RecallForm">
-            <ScalarProperty Name="ID" ColumnName="ID" />
-            <ScalarProperty Name="Date" ColumnName="Date" />
-            <ScalarProperty Name="OrigAcct" ColumnName="OrigAcct" />
-            <ScalarProperty Name="AcctName" ColumnName="AcctName" />
-            <ScalarProperty Name="Portfolio" ColumnName="Portfolio" />
-            <ScalarProperty Name="CurrentResp" ColumnName="CurrentResp" />
-            <ScalarProperty Name="RecallReason" ColumnName="RecallReason" />
-            <ScalarProperty Name="DateNoteSent" ColumnName="DateNoteSent" />
-            <ScalarProperty Name="PIMSAcct" ColumnName="PIMSAcct" />
-            <ScalarProperty Name="NewStatus" ColumnName="NewStatus" />
-            <ScalarProperty Name="NewResp" ColumnName="NewResp" />
-            <ScalarProperty Name="UploadedDate" ColumnName="UploadedDate" />
-            <ScalarProperty Name="CheckNumber" ColumnName="CheckNumber" />
-            <ScalarProperty Name="Invoice" ColumnName="Invoice" />
-            <ScalarProperty Name="Explanation" ColumnName="Explanation" />
-            <ScalarProperty Name="FaceValueofAcct" ColumnName="FaceValueofAcct" />
-            <ScalarProperty Name="CostBasis" ColumnName="CostBasis" />
-            <ScalarProperty Name="SalesBasis" ColumnName="SalesBasis" />
-            <ScalarProperty Name="SellerCheck" ColumnName="SellerCheck" />
-            <ScalarProperty Name="Putback" ColumnName="Putback" />
-            <ScalarProperty Name="DateAcctClosed" ColumnName="DateAcctClosed" />
-            <ScalarProperty Name="AmtReceivable" ColumnName="AmtReceivable" />
-            <ScalarProperty Name="AmtPayable" ColumnName="AmtPayable" />
-            <ScalarProperty Name="Seller" ColumnName="Seller" />
-            <ScalarProperty Name="GUID" ColumnName="GUID" />
           </MappingFragment></EntityTypeMapping></EntitySetMapping>
           <EntitySetMapping Name="MSI_ResaleRestriction"><EntityTypeMapping TypeName="CascadeDBModel.MSI_ResaleRestriction"><MappingFragment StoreEntitySet="MSI_ResaleRestriction">
             <ScalarProperty Name="ID" ColumnName="ID" />
@@ -8294,6 +8279,43 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="MSI_RecallForm">
+            <EntityTypeMapping TypeName="CascadeDBModel.MSI_RecallForm">
+              <MappingFragment StoreEntitySet="MSI_RecallForm">
+                <ScalarProperty Name="ClientName" ColumnName="ClientName" />
+                <ScalarProperty Name="RecallInitiatedBy" ColumnName="RecallInitiatedBy" />
+                <ScalarProperty Name="UploadedBy" ColumnName="UploadedBy" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="UploadedOn" ColumnName="UploadedOn" />
+                <ScalarProperty Name="CheckDocuments" ColumnName="CheckDocuments" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+                <ScalarProperty Name="Seller" ColumnName="Seller" />
+                <ScalarProperty Name="AmtPayable" ColumnName="AmtPayable" />
+                <ScalarProperty Name="AmtReceivable" ColumnName="AmtReceivable" />
+                <ScalarProperty Name="DateAcctClosed" ColumnName="DateAcctClosed" />
+                <ScalarProperty Name="Putback" ColumnName="Putback" />
+                <ScalarProperty Name="SellerCheck" ColumnName="SellerCheck" />
+                <ScalarProperty Name="SalesBasis" ColumnName="SalesBasis" />
+                <ScalarProperty Name="CostBasis" ColumnName="CostBasis" />
+                <ScalarProperty Name="FaceValueofAcct" ColumnName="FaceValueofAcct" />
+                <ScalarProperty Name="Explanation" ColumnName="Explanation" />
+                <ScalarProperty Name="Invoice" ColumnName="Invoice" />
+                <ScalarProperty Name="CheckNumber" ColumnName="CheckNumber" />
+                <ScalarProperty Name="UploadedDate" ColumnName="UploadedDate" />
+                <ScalarProperty Name="NewResp" ColumnName="NewResp" />
+                <ScalarProperty Name="NewStatus" ColumnName="NewStatus" />
+                <ScalarProperty Name="PIMSAcct" ColumnName="PIMSAcct" />
+                <ScalarProperty Name="DateNoteSent" ColumnName="DateNoteSent" />
+                <ScalarProperty Name="RecallReason" ColumnName="RecallReason" />
+                <ScalarProperty Name="CurrentResp" ColumnName="CurrentResp" />
+                <ScalarProperty Name="Portfolio" ColumnName="Portfolio" />
+                <ScalarProperty Name="AcctName" ColumnName="AcctName" />
+                <ScalarProperty Name="OrigAcct" ColumnName="OrigAcct" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -8324,7 +8346,6 @@
         <EntityTypeShape EntityType="CascadeDBModel.MSI_FinalActionsteps" Width="1.5" PointX="9.75" PointY="8.75" Height="1.2636116536458317" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaTypes" Width="1.5" PointX="11.75" PointY="9.75" Height="1.4279589843750031" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_OwnerResponses" Width="1.5" PointX="9.75" PointY="12.75" Height="1.2636116536458388" IsExpanded="true" />
-        <EntityTypeShape EntityType="CascadeDBModel.MSI_RecallForm" Width="1.5" PointX="13.75" PointY="12.75" Height="5.0436002604166674" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_ResaleRestriction" Width="1.5" PointX="15.75" PointY="0.75" Height="1.4279589843750031" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_USStates" Width="1.5" PointX="15.75" PointY="3.75" Height="1.4279589843750031" IsExpanded="true" />
         <EntityTypeShape EntityType="CascadeDBModel.Port_Acq" Width="1.5" PointX="15.75" PointY="6.75" Height="3.0714322916666674" IsExpanded="true" />
@@ -8438,6 +8459,7 @@
         <EntityTypeShape EntityType="CascadeDBModel.MSI_Port_Acq_Original" Width="1.5" PointX="10.375" PointY="27.75" Height="4.4802050781249818" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_Port_SalesTrans_Edited" Width="1.5" PointX="28.375" PointY="6.75" Height="4.287903645833353" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_Port_SalesTrans_Original" Width="1.5" PointX="7.375" PointY="28.75" Height="4.287903645833353" />
+        <EntityTypeShape EntityType="CascadeDBModel.MSI_RecallForm" Width="1.5" PointX="28.375" PointY="12.75" Height="6.9801236979166674" />
         </Diagram>
     </Diagrams>
   </Designer>

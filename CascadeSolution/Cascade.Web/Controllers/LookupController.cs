@@ -224,7 +224,12 @@ namespace Cascade.Web.Controllers
 
                     //lookupData = data.AsEnumerable<LookUp>();
                     break;
-
+                case "RecallInitiatedBy":
+                    data = new List<LookUp>();
+                    data.Add(new LookUp("Cascade", "Cascade"));
+                    data.Add(new LookUp("Seller", "Seller"));
+                    lookupData = data.AsEnumerable<LookUp>();
+                    break;
                 default:
                     break;
             }

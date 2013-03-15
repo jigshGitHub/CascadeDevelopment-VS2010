@@ -1,596 +1,442 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "RecallAddView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @Scripts.Render("~/bundles/jquery")
+<h2>Recall : Add</h2>
+@Html.Hidden("userId", (string)(@ViewBag.UserID))
+@Html.Hidden("agencyId", (string)(@ViewBag.AgencyID))
+@Html.Hidden("hdnUserRole", (string)(@ViewBag.UserRole))
+@Html.Hidden("hdnId", (string)(@ViewBag.Id))
 
-<h2>Recall Form</h2>
+@*Message Summary*@
+<div id="messageSummary" style="font-size: small">
+    <ul>
+    </ul>
+</div>
 
-
-<div id="divDataformNew">
-
-    <table class="searchtable">
+@*PIMS Results set*@
+<div id="pimsResults" style="font-size: small; display:none">
+    <table style="text-align: center">
         <tr>
-            <td colspan="2">
-                <b>Search Recall Data:</b>
+            <th>
+            </th>
+            <th>
+                Last name
+            </th>
+            <th>
+                First Name
+            </th>
+            <th>
+                PIMS Account #
+            </th>
+            <th>
+                Original Account #
+            </th>
+            <th>
+                Opened Date
+            </th>
+            <th>
+                C/O Date
+            </th>
+        </tr>
+        <tbody data-bind="foreach:pimsRecords">
+            <tr>
+                <td>
+                    <a href="#" data-bind="click:$root.selectedAccount">Select</a>
+                </td>
+                <td data-bind="text:LastName">
+                </td>
+                <td data-bind="text:FirstName">
+                </td>
+                <td data-bind="text:ACCOUNT">
+                </td>
+                <td data-bind="text:OriginalAccount">
+                </td>
+                <td data-bind="text:OpenDate">
+                </td>
+                <td data-bind="text:ChargeOffDate">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+@*New Recall*@
+<div id="RecallRecordContainer">
+    <table class="searchtable" style="width: 80%" data-bind="visible:showSearchCriteria" id="tblserchCriteria">
+        <tr>
+            <td colspan="3">
+                <b>Identify Recall Initiation and Search Recall Data::</b>
             </td>
         </tr>
         <tr>
-            <td>PIMS Account Number:
+            <td style="width: 30%; text-align: left">
+                Recall being initiated by
             </td>
-            <td>
-                <input type="text" id="newPIMSAccount" data-bind="value:newPIMSAccount" />
-                <span data-bind="text:newPIMSAccountRequired, visible:newPIMSAccountRequiredHasError" style="color: Red"></span>
+            <td style="width: 1%; text-align: center">
+                :
             </td>
-        </tr>
-        <tr>
-            <td>Original Account:
-            </td>
-            <td>
-                <input type="text" id="newOriginalAccount" data-bind="value:newOriginalAccount" />
-                <span data-bind="text:newOriginalAccountRequired, visible:newOriginalAccountRequiredHasError" style="color: Red"></span>
+            <td style="width: 69%; text-align: left">
+                <select id="newRecallBy" class="ddlwidth" data-bind="options:recallByOptions,optionsValue:'Value', optionsText: 'Text', value: recallByOption"></select>
             </td>
         </tr>
         <tr>
-            <td colspan="2" class="confirmBtnContainer">
-                <input type="button" id="refreshBtn" title="Add" data-bind="click:search"/>
-                <span data-bind="text:dataNotFound, visible:dataNotFoundHasError" style="color: Red"></span>
+            <td style="width: 30%; text-align: left">
+                PIMS Account Number
+            </td>
+            <td style="width: 1%; text-align: center">
+                :
+            </td>
+            <td style="width: 69%; text-align: left">
+                <input type="text" id="pimsAccount" data-bind="hasfocus:setFocus,value:pimsAccountNumber" />
+                <span data-bind="text:pimsAccountNumberRequired, visible:pimsAccountNumberRequiredHasError" style="color: Red"></span>
             </td>
         </tr>
         <tr>
-            <td colspan="2">
-                <div id="resultSummary" style="color: Red">
-                    <ul>
-                    </ul>
+            <td style="width: 30%; text-align: left">
+                Consumer Name
+            </td>
+            <td style="width: 1%; text-align: center">
+                :
+            </td>
+            <td style="width: 69%; text-align: left">
+                <input type="text" id="clientName" data-bind="value:clientName" />
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 30%; text-align: left">
+                Original Account Number
+            </td>
+            <td style="width: 1%; text-align: center">
+                :
+            </td>
+            <td style="width: 69%; text-align: left">
+                <input type="text" id="originalAccount" data-bind="value:originalAccountNumber" />
+                <span data-bind="text:originalAccountNumberRequired, visible:originalAccountNumberRequiredHasError"
+                    style="color: Red"></span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" class="confirmBtnContainer">
+                <input type="button" id="refreshBtn" title="Search" data-bind="click:search" />
+            </td>
+        </tr>
+    </table>
+    <table class="dummyitem" style="width: 80%">
+        <tr>
+            <td style="text-align: center">
+                <div data-bind="fadeVisible:showMessage" style="background-color: #1f497d; color: #fff;">
+                    <span data-bind="text:message"></span>
                 </div>
             </td>
         </tr>
-     </table>
-
-    <table class="dummyitem"></table>
-
-    
-    <table class="PIMSDatatable" style="display:none" id="tblPIMSDataTable">
-        <tr>
-            <td colspan="2">
-                <b>PIMS Data</b>
-            </td>
-        </tr>
-        <tr class="dummyitem">
-            <td colspan="2"></td>
-        </tr>
-        <tr>
-            <td>Name:
-            </td>
-            <td>
-                <input id="newName" type="text" data-bind="value:newName" readonly="true" />
-            </td>
-        </tr>
-        <tr>
-            <td>Portfolio#:
-            </td>
-            <td>
-                <input id="newPortfolio" type="text" data-bind="value:newPortfolio" readonly="true" />
-            </td>
-        </tr>
-        <tr>
-            <td>Seller:
-            </td>
-            <td>
-                <input id="newSeller" type="text" data-bind="value:newSeller" class="txtwidth" readonly="true"/>
-                
-            </td>
-        </tr>
-        <tr>
-            <td>Current Responsibility:
-            </td>
-            <td>
-                <input id="newResponsibility" type="text" data-bind="value:newResponsibility" readonly="true" />
-                
-            </td>
-        </tr>
-        <tr>
-            <td>FaceValueOfAcct:
-            </td>
-            <td>
-                <input id="newFaceValueOfAcct" type="text" data-bind="value:newFaceValueOfAcct" readonly="true"/>
-            </td>
-        </tr>
-        
     </table>
-
-    <table class="dummyitem"></table>
-
-    <table class="originaltable" style="display:none" id="tbloriginaltable">
-        <tr>
-            <td colspan="2">
-                <b>Original Request Data</b>
-            </td>
-        </tr>
-        <tr class="dummyitem">
-            <td colspan="2"></td>
-        </tr>
-        <tr>
-            <td>Date:
-            </td>
-            <td>
-                <input type="text" id="newDateRec" data-bind="value:newDateRec" />
-                <input type="checkbox"  data-bind="checked: newPutBack" /> Putback
-            </td>
-        </tr>
-        <tr>
-            <td>Reason for Recall:
-            </td>
-            <td>
-                <select id="newReasonForRecallList" class="ddlwidth" data-bind="options:recallreasons,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: recallreason"></select>
-            </td>
-        </tr>
-        <tr>
-            <td>New Status:
-            </td>
-            <td>
-                <select id="newStatusList" class="ddlwidth" data-bind="options:statuses,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: status"></select>
-            </td>
-        </tr>
-        <tr>
-            <td>New Responsibility:
-            </td>
-            <td>
-                <select id="newResponsibilitiesList" class="ddlwidth" data-bind="options:responsibilities,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: responsibility"></select>
-            </td>
-        </tr>
-    </table>
-
-    <table class="dummyitem"></table>
-    
-    <table class="FollowupDatatable" style="display:none" id="tblFollowupDatatable">
-        <tr>
-            <td><b>Follow-up Data</b></td>
-            <td><b>Dates/Notes</b></td>
-        </tr>
-        <tr class="dummyitem">
-            <td colspan="2"></td>
-        </tr>
+    <table class="PIMSDatatable" style="width: 80%; display:none" data-bind="visible:pimsDataAvailable">
+        <tr> <td colspan="3"><b>PIMS Data:</b></td></tr>
+        <tr class="dummyitem"> <td colspan="3"></td>   </tr>
+                    <tr>
+                        <td style="text-align: left; width: 30%">
+                            Name
+                        </td>
+                        <td style="text-align: center; width: 1%">
+                            :
+                        </td>
+                        <td data-bind="text:name" style="text-align: left; width: 69%">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; width: 30%">
+                            Portfolio
+                        </td>
+                        <td style="text-align: center; width: 1%">
+                            :
+                        </td>
+                        <td data-bind="text:portfolio" style="text-align: left; width: 69%">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; width: 30%">
+                            Seller
+                        </td>
+                        <td style="text-align: center; width: 1%">
+                            :
+                        </td>
+                        <td data-bind="text:seller" style="width: 69%">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; width: 30%">
+                            Current Responsibility
+                        </td>
+                        <td style="text-align: center; width: 1%">
+                            :
+                        </td>
+                        <td data-bind="text:CurrentResponsibility" style="text-align: left; width: 69%">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; width: 30%">
+                            Face Value of Account
+                        </td>
+                        <td style="text-align: center; width: 1%">
+                            :
+                        </td>
+                        <td data-bind="text:FaceValueOfAcct" style="text-align: left; width: 69%">
+                        </td>
+                    </tr>
+            </table>
+            <table class="dummyitem" style="width: 80%"></table>
+            <table class="originaltable" style="width: 80%; display:none" data-bind="visible:pimsDataAvailable">
+                <tr>
+                    <td colspan="3">
+                        <b>Original Request Data:</b>
+                    </td>
+                </tr>
+                <tr class="dummyitem">
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: left; width: 30%">Date</td>
+                    <td style="text-align: center; width: 1%">:</td>
+                    <td style="width: 69%; text-align: left">
+                        <input type="text" id="newDateRec" data-bind="value:newDateRec" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: left; width: 30%">Reason for Recall
+                    </td>
+                    <td style="text-align: center; width: 1%">:</td>
+                    <td style="width: 69%; text-align: left">
+                        <select id="newReasonForRecallList" class="ddlwidth" data-bind="options:recallreasons,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: recallreason"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: left; width: 30%">New Status</td>
+                    <td style="text-align: center; width: 1%">:</td>
+                    <td style="width: 69%; text-align: left">
+                        <select id="newStatusList" class="ddlwidth" data-bind="options:statuses,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: status"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: left; width: 30%">New Responsibility</td>
+                    <td style="text-align: center; width: 1%">:</td>
+                    <td style="width: 69%; text-align: left">
+                        <select id="newResponsibilitiesList" class="ddlwidth" data-bind="options:responsibilities,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: responsibility"></select>
+                    </td>
+                </tr>
+            </table>
+            <table class="dummyitem" style="width: 80%"></table>
+            <table class="FollowupDatatable" style="width: 80%; display:none"  data-bind="visible:pimsDataAvailable">
+                    <tr>
+                        <td style="text-align: left; width: 30%"><b>Follow-up Data</b></td>
+                        <td style="text-align: right; width: 1%"></td>
+                        <td style="width: 69%; text-align: left"><b>Dates/Notes</b></td>
+                    </tr>
+                    <tr class="dummyitem">
+                        <td colspan="3"></td>
+                    </tr>
         
-         <tr>
-            <td>Explanation:
-            </td>
-            <td>
-                <input id="newExplanation" type="text" class="txtwidth" data-bind="value:newExplanation"/>
+                     <tr>
+                        <td style="text-align: left; width: 30%">Explanation</td>
+                        <td style="text-align: right; width: 1%">:</td>
+                        <td style="width: 69%; text-align: left">
+                            <input id="newExplanation" type="text" class="txtwidth" data-bind="value:newExplanation"/>
                 
-            </td>
-        </tr>
-        <tr>
-            <td>Date Notification Sent:
-            </td>
-            <td>
-                <input type="text" id="newDateNotificationSent" data-bind="value:newDateNotificationSent" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; width: 30%">Date Notification Sent</td>
+                        <td style="text-align: right; width: 1%">:</td>
+                        <td style="width: 69%; text-align: left">
+                            <input type="text" id="newDateNotificationSent" data-bind="value:newDateNotificationSent" />
                                 
-            </td>
-        </tr>
-        <tr>
-            <td>Date Acct Close:
-            </td>
-            <td>
-                <input type="text" id="newDateAcctClosed"  data-bind="value:newDateAcctClosed" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; width: 30%">Date Account Closed</td>
+                        <td style="text-align: right; width: 1%">:</td>
+                        <td style="width: 69%; text-align: left">
+                            <input type="text" id="newDateAcctClosed"  data-bind="value:newDateAcctClosed" />
                 
                 
-            </td>
-        </tr>
-        <tr>
-            <td>Uploaded Date:
-            </td>
-            <td>
-                <input id="newUploadedDate" type="text" data-bind="value:newUploadedDate" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; width: 30%">Uploaded Date</td>
+                        <td style="text-align: right; width: 1%">:</td>
+                        <td style="width: 69%; text-align: left">
+                            <input id="newUploadedDate" type="text" data-bind="value:newUploadedDate" />
                 
-            </td>
-        </tr>
+                        </td>
+                    </tr>
         
-        <tr>
-            <td>
-                <table>
-                    <tr><td colspan="2"><b>Receivable</b></td></tr>
                     <tr>
-                        <td>CostBasis:</td><td>
-                            <input id="newCostBasis" type="text" data-bind="value:newCostBasis" readonly="true"/>
+                        <td style="text-align: left; width: 40%">
+                            <table>
+                                <tr><td colspan="3"><b>Receivable</b></td></tr>
+                                <tr>
+                                    <td style="text-align: left; width: 30%">Cost Basis</td>
+                                    <td style="text-align: center; width: 1%">:</td>
+                                    <td style="width: 69%; text-align: left">
+                                        <input id="newCostBasis" type="text" data-bind="value:newCostBasis" readonly="true"/>
                 
-            </td>
-                    </tr>
-                    <tr>
-                        <td>AmtReceivable:</td><td>
-                            <input id="newAmtReceivable" type="text"  readonly="true"  data-bind='value: amtReceivableComputed'  />
+                        </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left; width: 30%">Receivable Amount</td>
+                                    <td style="text-align: center; width: 1%">:</td>
+                                    <td style="width: 69%; text-align: left">
+                                        <input id="newAmtReceivable" type="text"  readonly="true"  data-bind='value: amtReceivableComputed'  />
                 
-            </td>
-                    </tr>
-                    <tr>
-                        <td>Invoice:</td><td>
-                            <input id="newInvoice" type="text" data-bind="value:newInvoice" />
+                                     </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left; width: 30%">Invoice</td>
+                                    <td style="text-align: center; width: 1%">:</td>
+                                    <td style="width: 69%; text-align: left">
+                                        <input id="newInvoice" type="text" data-bind="value:newInvoice" readonly="true"/>
                 
-            </td>
-                    </tr>
-                    <tr>
-                        <td>Seller Check#:</td><td>
-                        <input id="newSellerCheck" type="text" data-bind="value:newSellerCheck" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left; width: 30%">Seller Check#</td>
+                                    <td style="text-align: center; width: 1%">:</td>
+                                    <td style="width: 69%; text-align: left">
+                                    <input id="newSellerCheck" type="text" data-bind="value:newSellerCheck" readonly="true" />
                 
-            </td>
+                                     </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left; width: 60%">Check Upload (Y/N)?</td>
+                                    <td style="text-align: center; width: 1%">:</td>
+                                    <td style="width: 39%; text-align: left">
+                                        <input type="checkbox" data-bind="checked: newUploaded" />
+                                    </td>
+                                </tr>
+
+
+                            </table>
+                        </td>
+                        <td style="text-align: right; width: 1%">&nbsp;</td>
+                        <td style="text-align: left; width: 59%">
+                            <table>
+                                <tr><td colspan="3"><b>Payable</b></td></tr>
+                                <tr>
+                                    <td style="text-align: left; width: 30%">Sales Basis</td>
+                                    <td style="text-align: center; width: 1%">:</td>
+                                    <td style="width: 69%; text-align: left">
+                            <input id="newSalesBasis" type="text" data-bind="value:newSalesBasis" readonly="true"/>
+                
+                             </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left; width: 30%">Payable Amount</td>
+                                    <td style="text-align: center; width: 1%">:</td>
+                                    <td style="width: 69%; text-align: left">
+                            <input id="newAmtPayable" type="text"  readonly="true" data-bind='value: amtPayableComputed' />
+                
+                        </td>
+                                </tr>
+                                <tr>
+                            <td style="text-align: left; width: 30%">Check No</td>
+                            <td style="text-align: center; width: 1%">:</td>
+                            <td style="width: 69%; text-align: left">
+                            <input id="newCheckNo" type="text" data-bind="value:newCheckNo" />
+                
+                        </td>
+                                </tr>
+                                <tr>
+                                <td style="text-align: left; width: 30%">Unique Id #</td>
+                                <td style="text-align: center; width: 1%">:</td>
+                                <td style="width: 69%; text-align: left">
+                                        <input id="newGUID" type="text" data-bind="value:newGUID"  class="guidwidth" readonly="true" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
 
-                </table>
-            </td>
-
-            <td>
-                <table>
-                    <tr><td colspan="2"><b>Payable</b></td></tr>
                     <tr>
-                        <td>SalesBasis:</td><td>
-                <input id="newSalesBasis" type="text" data-bind="value:newSalesBasis" readonly="true"/>
-                @*<input type="button" id="findBtn" title="Find" />*@
-            </td>
+                        <td colspan="3" class="confirmBtnContainer">
+                            <input type="button" id="saveNewBtn" title="Add" data-bind="click:save"/>
+                         </td>
                     </tr>
                     <tr>
-                        <td>AmtPayable:</td><td>
-                <input id="newAmtPayable" type="text"  readonly="true" data-bind='value: amtPayableComputed' />
-                
-            </td>
-                    </tr>
-                    <tr>
-                <td>Check No:</td><td>
-                <input id="newCheckNo" type="text" data-bind="value:newCheckNo" />
-                
-            </td>
-                    </tr>
-                    <tr>
-                    <td>Unique Identification #</td>
-                        <td>
-                            <input id="newGUID" type="text" data-bind="value:newGUID"  class="guidwidth" readonly="true" />
+                        <td colspan="3">
+                            <div id="resultSummaryData" style="color: Red">
+                                <ul>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                 </table>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" class="confirmBtnContainer">
-                <input type="button" id="saveNewBtn" title="Add" data-bind="click:save"/>
-                
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <div id="resultSummaryData" style="color: Red">
-                    <ul>
-                    </ul>
-                </div>
-            </td>
-        </tr>
-    </table>
+
+
 
 </div>
 
+<div id="fileUploadContainer" style="display:none">
+    @using (Html.BeginForm("UploadAllDocuments", "Recall", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <table class="FileUploadTable">
+                
+               <thead style="color:Blue">
+                        <tr>
+                            <th colspan="2" style="text-align: left">
+                                Media Type
+                            </th>
+                            <th colspan="2"style="text-align: left">
+                                Browse/Upload
+                            </th>
+                            
+                        </tr>
+               </thead>
+               <tr><td colspan="4" class="dummyitem">&nbsp;</td></tr>
+               <tr>
+                    <td colspan="2">Check Images</td>
+                    <td colspan="2">
+                        <input name="checkDocuments" id="checkDocuments" data-bind="value:checkDocuments"  type="file"  multiple/>
+                    </td>
+                    
+                </tr>
+                <tr><td colspan="4" class="dummyitem">&nbsp;</td></tr>
+                <tr>
+                    <td colspan="4">
+                        <input type="submit" class="editButton" value="&nbsp;Upload&nbsp;& Exit" data-bind="visible:showUpload"/>
+                    </td>
+                </tr>
+        </table>
+        @Html.Hidden("hdnRecallRecordID", "")
+    }
+</div>
 
 @Scripts.Render("~/bundles/knockout")
 
 @section scripts{
     <script src="~/Scripts/jquery-ui-1.8.11.js" type="text/javascript"></script>
+    <script src="~/Scripts/recallAddView.js" type="text/javascript"></script>
     <script type="text/javascript">
-
-        //Client side View Model
-        function recallformVM() {
-
-            var href = window.location.href.split('/');
-            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
-            //var baseUrl = href[0] + '//' + href[2] + '/' + href[3] + '/' + href[4];
-            //alert(baseUrl);
-
-            var apiUrl = '/api/Lookup/';
-            
-            var self = this;
-            
-            self.newOriginalAccount = ko.observable('');
-            //For Validation
-            self.newOriginalAccountRequired = ko.observable('*');
-            self.newOriginalAccountRequiredMsg = ko.observable('');
-            self.newOriginalAccountRequiredHasError = ko.observable(false);
-
-            self.newPIMSAccount = ko.observable('');
-            //For Validation
-            self.newPIMSAccountRequired = ko.observable('*');
-            self.newPIMSAccountRequiredMsg = ko.observable('');
-            self.newPIMSAccountRequiredHasError = ko.observable(false);
-
-            self.newName = ko.observable('');
-            self.newPortfolio = ko.observable('');
-            self.newResponsibility = ko.observable('');
-            self.newSeller = ko.observable('');
-            self.newFaceValueOfAcct = ko.observable('');
-            //For Date
-            self.newDateRec = ko.computed(function () {
-                return dateFormat(Date.parse(new Date()), 'mm/dd/yyyy');
-            });
-            //Reason For Recall
-            self.recallreason = ko.observable('');
-            self.recallreasons = ko.observableArray([]);
-            //New Status
-            self.status = ko.observable('');
-            self.statuses = ko.observableArray([]);
-            //For New Responsibility
-            self.responsibility = ko.observable('');
-            self.responsibilities = ko.observableArray([]);
-            //For Putback
-            self.newPutBack = ko.observable(false);
-
-            //Follow-up Data
-            self.newExplanation = ko.observable('');
-            self.newDateNotificationSent = ko.observable('');
-            self.newDateAcctClosed = ko.observable('');
-            self.newUploadedDate = ko.observable('');
-            self.newInvoice = ko.observable('');
-            self.newSellerCheck = ko.observable('');
-            self.newSalesBasis = ko.observable('');
-            self.newCheckNo = ko.observable('');
-            self.amtPayableComputed = ko.observable('');
-            self.amtReceivableComputed = ko.observable('');
-            self.newCostBasis = ko.observable('');
-            self.newGUID = ko.observable('');
-            
-            //For validation Messages - if system does not find any matching record
-            self.dataNotFound = ko.observable('');
-            self.dataNotFoundHasError = ko.observable(false);
-            //For validation Messages
-            self.validationErrors = ko.observableArray([]);
-            self.validationErrorsData = ko.observableArray([]);
-
-            //Lookup Table Section
-
-            //For Recall Reasons
-            $.ajax({
-                url: apiUrl,
-                type: 'GET',
-                contentType: 'application/json',
-                data: { id: 'Reason' },
-                success: function (data) {
-                    $.each(data, function (i, item) {
-                        self.recallreasons.push(item);
-                    });
-                },
-                error: function (xhr, status, somthing) {
-                    log(status);
-                }
-            });
-
-            //For New Responsibility
-            $.ajax({
-                url: apiUrl,
-                type: 'GET',
-                contentType: 'application/json',
-                data: { id: 'Responsibility' },
-                success: function (data) {
-                    $.each(data, function (i, item) {
-                        self.responsibilities.push(item);
-                    });
-                },
-                error: function (xhr, status, somthing) {
-                    log(status);
-                }
-            });
-            //For Status
-            $.ajax({
-                url: apiUrl,
-                type: 'GET',
-                contentType: 'application/json',
-                data: { id: 'Status' },
-                success: function (data) {
-                    $.each(data, function (i, item) {
-                        self.statuses.push(item);
-                    });
-                },
-                error: function (xhr, status, somthing) {
-                    log(status);
-                }
-            });
-
-            //For Search and get data
-            self.search = function () {
-                self.validationErrors([]);
-
-                self.newOriginalAccountRequiredHasError(false);
-                self.newPIMSAccountRequiredHasError(false);
-                self.dataNotFoundHasError = ko.observable(false);
-
-                //Original Account or PIMS Account Number
-                if (self.newOriginalAccount() == '' && self.newPIMSAccount() == '') {
-                    self.newOriginalAccountRequiredHasError(true);
-                    self.newOriginalAccountRequiredMsg('PIMS Account Number or Original Account Number is required.');
-                    self.validationErrors.push(self.newOriginalAccountRequiredMsg());
-                }
-
-                if (self.validationErrors() == '') {
-                    //let us show loading image
-                    var applicationname = "";
-                    var myhost = window.location.protocol + "//" + window.location.host
-                    var absoluteapp = myhost + applicationname;
-                    var imagedir = "/Content/Images";
-                    $("#loading").dialog('open');
-                    $("#loading").html("<img src=\"" + absoluteapp + imagedir + "/ajax-loader.gif\" />");
-                    //Done for loading image while data is being pulled
-
-                    //Create json and perform Search
-                    var json = JSON.stringify({
-                        OrigAcct: self.newOriginalAccount(),
-                        PIMSAcct: self.newPIMSAccount(),
-                    });
-
-                    $.ajax({
-                        url: baseUrl + "/Recall/Search/",
-                        type: "POST",
-                        data: json,
-                        dataType: "json",
-                        contentType: "application/json; charset=utf-8",
-                        success: function (response) {
-
-                            //Hide the loading image
-                            $("#loading").html("&nbsp;");
-                            $("#loading").dialog('close');
-                            //alert(response.AcctName);
-                            //alert(response.Portfolio);
-                            //alert(response.CurrentResp);
-                            if (response.AcctName == null || response.Portfolio == null
-                                || response.CurrentResp == null || response.FaceValueofAcct == null) {
-                                //Without Data
-                                $('#tblPIMSDataTable').hide();
-                                $('#tblFollowupDatatable').hide();
-                                $('#tbloriginaltable').hide();
-                                $('#resultSummary ul').html("");
-                                self.dataNotFound('System could not find matching record. Please try again.');
-                                self.validationErrors.push(self.dataNotFound());
-                                //show the validation message on the screen
-                                $.each(self.validationErrors(), function (i, item) {
-                                    log(item);
-                                    $('#resultSummary ul').append('<li>' + item + '</li>');
-                                });
-                            }
-                            else {
-                                //With Data
-                                $('#resultSummary ul').html("");
-                                $('#tblPIMSDataTable').show();
-                                $('#tblFollowupDatatable').show();
-                                $('#tbloriginaltable').show();
-                                $('#resultSummaryData ul').html("");
-                                //Now push the data received from the server
-                                self.newName(response.AcctName);
-                                self.newPortfolio(response.Portfolio);
-                                self.newResponsibility(response.CurrentResp);
-                                self.newOriginalAccount(response.OrigAcct);
-                                self.newPIMSAccount(response.PIMSAcct);
-                                self.newFaceValueOfAcct(response.FaceValueofAcct);
-                                self.newSeller(response.Seller);
-                                self.newSalesBasis(response.SalesBasis);
-                                self.newCostBasis(response.CostBasis);
-                                self.amtPayableComputed(response.AmtPayable);
-                                self.amtReceivableComputed(response.AmtReceivable);
-                                self.newGUID(response.GUID);
-                                
-                            }
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            //Hide the loading image
-                            $("#loading").html("&nbsp;");
-                            $("#loading").dialog('close');
-                            console.log(textStatus, errorThrown);
-                            $('#resultSummary ul').append('<li>We have some issue processing your request. Please try again later.</li>');
-                        }
-                    });
-                }
-                else {
-                    //First clear the error message previousely shown
-                    $('#resultSummary ul').html("");
-                    $.each(self.validationErrors(), function (i, item) {
-                        log(item);
-                        $('#resultSummary ul').append('<li>' + item + '</li>');
-                    });
-                }
-            };
-
-            //Save or Add button click event
-            self.save = function () {
-
-                self.validationErrorsData([]);
-                self.newOriginalAccountRequiredHasError(false);
-                self.newPIMSAccountRequiredHasError(false);
-
-                //alert("ready for validation checks");
-
-                $('#resultSummaryData ul').empty();
-
-                
-                //Original Account
-                if (self.newOriginalAccount() == '') {
-                    self.newOriginalAccountRequiredHasError(true);
-                    self.newOriginalAccountRequiredMsg('Original Account Number is required.');
-                    self.validationErrorsData.push(self.newOriginalAccountRequiredMsg());
-                }
-                //PIMS Acccount
-                if (self.newPIMSAccount() == '') {
-                    self.newPIMSAccountRequiredHasError(true);
-                    self.newPIMSAccountRequiredMsg('PIMS Account Number is required.');
-                    self.validationErrorsData.push(self.newPIMSAccountRequiredMsg());
-                }
-                                
-                if (self.validationErrorsData() == '') {
-
-                    //alert("we are here");
-                    //alert(self.newCostBasis());
-                    //alert(self.newSalesBasis());
-                    //alert(self.newSellerCheck());
-                    //alert(self.newSellerCheck());
-
-                    var json = JSON.stringify({
-                        Date: self.newDateRec(),
-                        OrigAcct: self.newOriginalAccount(),
-                        PIMSAcct: self.newPIMSAccount(),
-                        RecallReason: self.recallreason(),
-                        NewStatus: self.status(),
-                        NewResp: self.responsibility(),
-                        FaceValueOfAcct: self.newFaceValueOfAcct(),
-                        AcctName: self.newName(),
-                        Seller: self.newSeller(),
-                        CurrentResp: self.newResponsibility(),
-                        Portfolio: self.newPortfolio(),
-                        UploadedDate: self.newUploadedDate(),
-                        Explanation: self.newExplanation(),
-                        DateNoteSent: self.newDateNotificationSent(),
-                        DateAcctClosed: self.newDateAcctClosed(),
-                        CostBasis: self.newCostBasis(),
-                        SalesBasis: self.newSalesBasis(),
-                        Invoice: self.newInvoice(),
-                        SellerCheck: self.newSellerCheck(),
-                        CheckNumber: self.newCheckNo(),
-                        PutBack: self.newPutBack(),
-                        AmtPayable: self.amtPayableComputed(),
-                        AmtReceivable: self.amtReceivableComputed(),
-                        GUID: self.newGUID()
-
-                    });
-
-                    $.ajax({
-                        url: baseUrl + "/Recall/Add/",
-                        type: "POST",
-                        data: json,
-                        dataType: "json",
-                        contentType: "application/json; charset=utf-8",
-                        success: function (response) {
-                            //log(response.ID);
-                            //$('#resultSummary ul').append('<li>Coach with username ' + response.UserName + ' has been created.</li>');
-                            $('#resultSummaryData ul').append('<li>Recall Record created successfully.</li>');
-                            $('#saveNewBtn').hide();
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            alert(errorThrown);
-                            console.log(textStatus, errorThrown);
-                            $('#resultSummaryData ul').append('<li>We have some issue processing your request. Please try again later.</li>');
-                        }
-
-                    });
-                }
-                else {
-                    $.each(self.validationErrorsData(), function (i, item) {
-                        log(item);
-                        $('#resultSummaryData ul').append('<li>' + item + '</li>');
-                    });
-                }
-            };
-            
-         };
-              
         $(document).ready(function () {
+            $('#messageSummary').dialog({ modal: true, title: 'Summary:', autoOpen: false, width: 200, height: 200 });
+            $('#pimsResults').dialog({ modal: true, title: 'Select account:', autoOpen: false, width: 800, height: 500 });
+            //For file upload Div
+            $('#fileUploadContainer').dialog({ modal: true, title: 'Upload Check Images:', autoOpen: false, width: 500, height: 400 });
+            //Page view model
+            var pageVM = new pageViewModel($('#userId').val(), $('#agencyId').val(), $('#hdnUserRole').val(), $('#hdnId').val());
             //Knockout Bindings
-            ko.applyBindings(new recallformVM(), $('#divDataformNew')[0]);
-            //For Date Picker
+            ko.applyBindings(pageVM);
+            //Initial settings
+            $('#pimsAccount').focus(function () { $(this).val(''); }).blur(function () { if ($(this).val() == '') $(this).val(pimsAccountFocusString); });
+            $('#clientName').focus(function () { $(this).val(''); }).blur(function () { if ($(this).val() == '') $(this).val(fOrlNameFocusString); });
+            $('#originalAccount').focus(function () { $(this).val(''); }).blur(function () { if ($(this).val() == '') $(this).val(originalAccountFocusString); });
+            //For date Picker controls
             $('#newDateRec').datepicker();
             $('#newDateNotificationSent').datepicker();
             $('#newDateAcctClosed').datepicker();
             $('#newUploadedDate').datepicker();
-            
-         });
-        
+
+        });
     </script>
 }

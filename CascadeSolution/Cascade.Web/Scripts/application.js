@@ -1,6 +1,7 @@
 ﻿var applicationname = "";
 var myhost = window.location.protocol + "//" + window.location.host
 var absoluteapp = myhost + applicationname;
+var baseUrl = myhost + applicationname;
 var imagedir = "/Content/Images";
 function namespace(namespaceString) {
     var parts = namespaceString.split('.'),

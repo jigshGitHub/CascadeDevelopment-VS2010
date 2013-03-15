@@ -451,6 +451,11 @@ namespace Cascade.Data.Models
 
     }
 
+    public partial class vwAccount
+    {
+        public string GUID;
+    }
+
     #region Recalls
 
     public class RecallViewEditResult

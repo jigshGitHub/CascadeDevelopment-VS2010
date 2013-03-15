@@ -31,8 +31,8 @@ namespace Cascade.Data.Models
         public Nullable<System.Guid> ReSubmittedBy { get; set; }
         public string TypeConstraints { get; set; }
     
-        public virtual MSI_MediaRequestResponse MSI_MediaRequestResponse { get; set; }
-        public virtual MSI_MediaRequestStatus MSI_MediaRequestStatus { get; set; }
-        public virtual MSI_MediaTypes MSI_MediaTypes { get; set; }
+        public virtual MSI_MediaRequestResponse MSI_MediaRequestResponse {internal get; set; }
+        public virtual MSI_MediaRequestStatus MSI_MediaRequestStatus {internal get; set; }
+        public virtual MSI_MediaTypes MSI_MediaTypes {internal get; set; }
     }
 }

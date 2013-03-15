@@ -38,7 +38,7 @@ namespace Cascade.Web.Controllers
                     FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
                     MembershipUser loggedInUser = Membership.GetUser(model.UserName);
                     if (loggedInUser.CreationDate == loggedInUser.LastPasswordChangedDate)
-                        return RedirectToAction("ChangePassword","account");
+                        return RedirectToAction("ChangePassword", "account", new { isIntialPasswordChange = true });
                     if (Url.IsLocalUrl(returnUrl))
                     {
                         return Redirect(returnUrl);
@@ -110,8 +110,12 @@ namespace Cascade.Web.Controllers
         // GET: /Account/ChangePassword
 
         [AllowAnonymous]
-        public ActionResult ChangePassword()
+        public ActionResult ChangePassword(bool? isIntialPasswordChange)
         {
+            if (isIntialPasswordChange.HasValue)
+                ViewBag.IsIntialPasswordChange = isIntialPasswordChange;
+            else
+                ViewBag.IsIntialPasswordChange = false;
             return View();
         }
 
@@ -121,31 +125,35 @@ namespace Cascade.Web.Controllers
         [HttpPost]
         public ActionResult ChangePassword(ChangePasswordModel model)
         {
+            ViewBag.IsIntialPasswordChange = false;
             if (ModelState.IsValid)
             {
+                if (Membership.ValidateUser(User.Identity.Name, model.OldPassword))
+                {
 
-                // ChangePassword will throw an exception rather
-                // than return false in certain failure scenarios.
-                bool changePasswordSucceeded;
-                try
-                {
-                    MembershipUser currentUser = Membership.GetUser(User.Identity.Name, userIsOnline: true);
-                    changePasswordSucceeded = currentUser.ChangePassword(model.OldPassword, model.NewPassword);
-                }
-                catch (Exception)
-                {
-                    changePasswordSucceeded = false;
-                }
+                    // ChangePassword will throw an exception rather
+                    // than return false in certain failure scenarios.
+                    bool changePasswordSucceeded;
+                    try
+                    {
+                        MembershipUser currentUser = Membership.GetUser(User.Identity.Name, userIsOnline: true);
+                        changePasswordSucceeded = currentUser.ChangePassword(model.OldPassword, model.NewPassword);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (ex.Message.Contains("Non alpha numeric characters in 'newPassword' needs to be greater than or equal to '1'."))
+                            ModelState.AddModelError("", string.Format("The New Password does not meet the security requirements of {0} characters including {1} “special character”. Please correct and try again.",Membership.MinRequiredPasswordLength, Membership.MinRequiredNonAlphanumericCharacters));
+                        changePasswordSucceeded = false;
+                    }
+                    if(changePasswordSucceeded)
+                        return RedirectToAction("Index", "Home");
 
-                if (changePasswordSucceeded)
-                {
-                    //  return RedirectToAction("ChangePasswordSuccess");
-                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
+                    ModelState.AddModelError("", "The Old Password entered is incorrect. Please re-enter the old password and try again.");
                 }
+
             }
 
             // If we got this far, something failed, redisplay form
@@ -204,6 +212,6 @@ namespace Cascade.Web.Controllers
             }
         }
         #endregion
-        
+
     }
 }

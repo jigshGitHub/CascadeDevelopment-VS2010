@@ -319,6 +319,8 @@
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\portfolio.js" />
     <Content Include="Scripts\portfolio_viewedit.js" />
+    <Content Include="Scripts\recallAddView.js" />
+    <Content Include="Scripts\recallUpdateView.js" />
     <Content Include="Scripts\updateMediaRequest.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

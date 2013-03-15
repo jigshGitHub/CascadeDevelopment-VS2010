@@ -39,5 +39,11 @@ namespace Cascade.Data.Models
         public Nullable<decimal> AmtPayable { get; set; }
         public string Seller { get; set; }
         public string GUID { get; set; }
+        public string CheckDocuments { get; set; }
+        public Nullable<System.DateTime> UploadedOn { get; set; }
+        public Nullable<bool> IsActive { get; set; }
+        public string UploadedBy { get; set; }
+        public string RecallInitiatedBy { get; set; }
+        public string ClientName { get; set; }
     }
 }

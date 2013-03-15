@@ -23,7 +23,7 @@ namespace Cascade.Web.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]
-        [System.Web.Mvc.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [System.Web.Mvc.Compare("NewPassword", ErrorMessage = "The New Password entered is not-consistent.  Please ensure the “New Password” and “Confirm New Password” match, and try again.")]
         public string ConfirmPassword { get; set; }
     }
 
