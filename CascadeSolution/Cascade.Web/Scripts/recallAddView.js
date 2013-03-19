@@ -58,12 +58,29 @@ function pageViewModel(userId, userAgency, userRole, id) {
     self.coDate = ko.observable('');
     self.seller = ko.observable('');
 
+    
+
     self.CurrentResponsibility = ko.observable('');
     self.FaceValueOfAcct = ko.observable('');
 
     //Recall Initiated By
     self.recallByOption = ko.observable('');
     self.recallByOptions = ko.observableArray([]);
+
+    //Property to control Invoice and Seller check fields
+    self.isenable = ko.observable(false);
+    self.recallByOption.subscribe(function (Selected) {
+        if (Selected == 'Cascade') {
+            self.newInvoice('');
+            self.newSellerCheck('');
+            self.isenable(false);
+        }
+        else {
+            self.newInvoice('');
+            self.newSellerCheck('');
+            self.isenable(true);
+        }
+    } .bind(self));
 
     //Reason For Recall
     self.recallreason = ko.observable('');
@@ -97,56 +114,8 @@ function pageViewModel(userId, userAgency, userRole, id) {
     self.newUploaded = ko.observable('');
 
     //For Media types
-    self.visible1 = ko.observable(false);
-    self.docUrl1 = ko.observable('');
-    self.documents1 = ko.observable('NOT UPLOADED YET');
-
-    self.visible2 = ko.observable(false);
-    self.docUrl2 = ko.observable('');
-    self.documents2 = ko.observable('NOT UPLOADED YET');
-
-    self.visible3 = ko.observable(false);
-    self.docUrl3 = ko.observable('');
-    self.documents3 = ko.observable('NOT UPLOADED YET');
-
-    self.visible4 = ko.observable(false);
-    self.docUrl4 = ko.observable('');
-    self.documents4 = ko.observable('NOT UPLOADED YET');
-
-    self.visible5 = ko.observable(false);
-    self.docUrl5 = ko.observable('');
-    self.stmtdateRanges = ko.observable('');
-    self.documents5 = ko.observable('NOT UPLOADED YET');
-
-    self.visible6 = ko.observable(false);
-    self.docUrl6 = ko.observable('');
-    self.documents6 = ko.observable('NOT UPLOADED YET');
-
-    self.visible7 = ko.observable(false);
-    self.docUrl7 = ko.observable('');
-    self.documents7 = ko.observable('NOT UPLOADED YET');
-
-    self.visible8 = ko.observable(false);
-    self.docUrl8 = ko.observable('');
-    self.documents8 = ko.observable('NOT UPLOADED YET');
-
-    self.visible9 = ko.observable(false);
-    self.docUrl9 = ko.observable('');
-    self.documents9 = ko.observable('NOT UPLOADED YET');
-
-    self.visible10 = ko.observable(false);
-    self.docUrl10 = ko.observable('');
-    self.documents10 = ko.observable('NOT UPLOADED YET');
-
-    self.visible11 = ko.observable(false);
-    self.docUrl11 = ko.observable('');
-    self.documents11 = ko.observable('NOT UPLOADED YET');
-
-    
-    //For Media types
     self.checkDocuments = ko.observableArray([]);
-
-
+    
     //For Recall Initiated By - Lookup Table 
     $.ajax({
         url: apiUrl,
@@ -281,9 +250,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
         $("#loading").html("<img src=\"" + absoluteapp + imagedir + "/ajax-loader.gif\" />");
         $("#loading").dialog('open');
 
-        //alert(self.searchedType);
-        //alert(baseUrl);
-
+        
         if (self.searchedType == 'name') {
             $.ajax({
                 url: baseUrl + '/api/RAccount/',

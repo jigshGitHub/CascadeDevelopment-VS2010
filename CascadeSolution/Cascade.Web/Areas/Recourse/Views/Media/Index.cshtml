@@ -419,13 +419,7 @@
         //Client side View Model
         function mediaformVM() {
 
-            var href = window.location.href.split('/');
-            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
-            //var baseUrl = href[0] + '//' + href[2] + '/' + href[3] + '/' + href[4];
-            //alert(baseUrl);
-
-            //var apiUrl = '/api/Lookup/';
-            
+                       
             var self = this;
 
             self.newOriginalAccount = ko.observable('');
@@ -603,7 +597,7 @@
                     });
 
                     $.ajax({
-                        url: baseUrl + "/Media/Search/",
+                        url: baseUrl + "/Recourse/Media/Search/",
                         type: "POST",
                         data: json,
                         dataType: "json",
@@ -746,7 +740,7 @@
                     });
 
                     $.ajax({
-                        url: baseUrl + "/Media/Add/",
+                        url: baseUrl + "/Recourse/Media/Add/",
                         type: "POST",
                         data: json,
                         dataType: "json",

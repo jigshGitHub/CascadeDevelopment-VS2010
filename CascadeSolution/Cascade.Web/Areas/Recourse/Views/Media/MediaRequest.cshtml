@@ -18,9 +18,7 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            var href = window.location.href.split('/');
-            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
-            $("#divRequestedMediaRecords").load(baseUrl + '/Media/GetMediaRequests/');
+            $("#divRequestedMediaRecords").load(baseUrl + '/Recourse/Media/GetMediaRequests/');
         });
         
     </script>

@@ -17,11 +17,9 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            //know the Url parameters
-            var href = window.location.href.split('/');
-            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
+            
             //Load the Report Grid Here
-            $("#divReportResults").load(baseUrl + '/Home/GetReportData?ReportType=' + $('#reportType').val());
+            $("#divReportResults").load(baseUrl + '/Compliance/Home/GetReportData?ReportType=' + $('#reportType').val());
 
         });
         

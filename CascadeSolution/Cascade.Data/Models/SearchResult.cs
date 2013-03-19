@@ -486,12 +486,46 @@ namespace Cascade.Data.Models
         public string GUID;
         public int ID;
         public Decimal? TotalAmount;
+        public string InitiatedBy;
+        public string CheckDocuments;
         public RecallViewEditResult()
         {
         }
     }
 
-    
+    public class PutBackViewEditResult
+    {
+        public string Portfolio;
+        public string AcctName;
+        public Decimal? FaceValueofAcct;
+        public DateTime? DateNoteSent;
+        public DateTime? DateAcctClosed;
+        public DateTime? Date;
+        public DateTime? UploadedDate;
+        public string CurrentResp;
+        public string PutBackReason;
+        public string NewStatus;
+        public string NewResp;
+        public string CheckNumber;
+        public string Invoice;
+        public string Explanation;
+        public Decimal? CostBasis;
+        public Decimal? SalesBasis;
+        public string SellerCheck;
+        public Decimal? AmtReceivable;
+        public Decimal? AmtPayable;
+        public string Seller;
+        public string PIMSAcct;
+        public string OrigAcct;
+        public string GUID;
+        public int ID;
+        public Decimal? TotalAmount;
+        public string InitiatedBy;
+        public string CheckDocuments;
+        public PutBackViewEditResult()
+        {
+        }
+    }
 
     #endregion
 

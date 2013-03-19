@@ -38,6 +38,7 @@ namespace Cascade.Web.Controllers
             try
             {
                 account = query.GetAccount(accountNumber, searchType);
+                account.GUID = System.Guid.NewGuid().ToString();
             }
             catch (Exception ex)
             {

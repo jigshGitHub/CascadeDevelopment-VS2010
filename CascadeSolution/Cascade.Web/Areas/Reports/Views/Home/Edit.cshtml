@@ -188,11 +188,7 @@
         //Client side View Model
         function dpsAddCheckVM() {
 
-            var href = window.location.href.split('/');
-            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
-            //alert(baseUrl);
-
-            var apiUrl = '/api/Lookup/';
+            var apiUrl = baseUrl + '/api/Lookup/';
 
             var self = this;
             //DPS(Direct Payments) Form
@@ -420,7 +416,7 @@
 
             //For Page Data
             $.ajax({
-                url: baseUrl + '/Home/GetDPSData/',
+                url: baseUrl + '/Reports/Home/GetDPSData/',
                 type: 'GET',
                 contentType: 'application/json',
                 data: { recordid: $('#recordid').val() },
@@ -581,7 +577,7 @@
                     });
 
                     $.ajax({
-                        url: baseUrl + "/Home/EditDPSData/",
+                        url: baseUrl + "/Reports/Home/EditDPSData/",
                         type: "POST",
                         data: json,
                         dataType: "json",

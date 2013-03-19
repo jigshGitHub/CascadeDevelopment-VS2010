@@ -69,6 +69,9 @@ function pageViewModel(userId, userAgency, userRole, id) {
     self.responsibility = ko.observable('');
     self.responsibilities = ko.observableArray([]);
 
+    //Property to control Invoice and Seller check fields
+    self.isenable = ko.observable(false);
+
     //For Date
     self.newDateRec = ko.observable('');
 
@@ -137,7 +140,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
             for (var i = 0; i < n.length; i++) {
                 var checkMedia;
                 checkMedia = new checkImage();
-                checkMedia.checkDocUrl(baseUrl + '/DPS/DownloadDoc?fileName=' + n[i]);
+                checkMedia.checkDocUrl(baseUrl + '/Recall/DownloadDoc?fileName=' + n[i]);
                 checkMedia.checkFileName(getFileName(n[i]));
                 self.checkImageDocuments.push(checkMedia);
             }
@@ -230,7 +233,6 @@ function pageViewModel(userId, userAgency, userRole, id) {
             self.pimsAccountNumber(response.PIMSAcct);
             self.FaceValueOfAcct(response.FaceValueofAcct);
             self.seller(response.Seller);
-            self.responsibility(response.NewResp);
             self.clientName(response.AcctName);
             self.recallByOption(response.RecallInitiatedBy);
             self.newSalesBasis(response.SalesBasis);
@@ -254,6 +256,9 @@ function pageViewModel(userId, userAgency, userRole, id) {
             self.UploadedBy(response.UploadedBy);
             if (response.CheckDocuments != "" && response.CheckDocuments != null) {
                 self.newUploaded(true);
+            }
+            if (response.RecallInitiatedBy != 'Cascade') {
+                self.isenable(true);
             }
 
         },

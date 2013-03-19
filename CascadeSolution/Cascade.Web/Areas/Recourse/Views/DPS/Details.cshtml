@@ -243,12 +243,8 @@
         //Client side View Model
         function dpsViewEditVM() {
 
-            var href = window.location.href.split('/');
-            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
-            //var baseUrl = href[0] + '//' + href[2] + '/' + href[3] + '/' + href[4];
-            //alert(baseUrl);
-
-            var apiUrl = '/api/Lookup/';
+            
+            var apiUrl = baseUrl + '/api/Lookup/';
 
             var self = this;
             //DPS(Direct Payments) Form
@@ -278,6 +274,8 @@
             self.newOurCheck = ko.observable('');
             self.newUploaded = ko.observable('');
             self.newGUID = ko.observable('');
+            self.UploadedOn = ko.observable('');
+            self.UploadedBy = ko.observable('');
 
             //For file upload
             self.checkDocumentsFullName = ko.observable(''); //This will store filename seperated by | 
@@ -325,7 +323,7 @@
                     for (var i = 0; i < n.length; i++) {
                         var checkMedia;
                         checkMedia = new checkImage();
-                        checkMedia.checkDocUrl(baseUrl + '/DPS/DownloadDoc?fileName=' + n[i]);
+                        checkMedia.checkDocUrl(baseUrl + '/Recourse/DPS/DownloadDoc?fileName=' + n[i]);
                         checkMedia.checkFileName(getFileName(n[i]));
                         self.checkImageDocuments.push(checkMedia);
                     }
@@ -425,7 +423,7 @@
             
             //For Page Data
             $.ajax({
-                url: baseUrl + '/DPS/GetDPSData/',
+                url: baseUrl + '/Recourse/DPS/GetDPSData/',
                 type: 'GET',
                 contentType: 'application/json',
                 data: { id: $('#Id').val() },
@@ -449,6 +447,8 @@
                     self.newOurCheck(data.OurCheckNumber);
                     self.newGUID(data.GUID);
                     self.checkDocumentsFullName(data.CheckDocuments);
+                    self.UploadedOn(data.UploadedOn);
+                    self.UploadedBy(data.UploadedBy);
                 },
                 error: function (xhr, status, somthing) {
                     log(status);
@@ -477,11 +477,14 @@
                         CurrentResp: self.newResponsibility(),
                         OurCheckNumber: self.newOurCheck(),
                         Uploaded: self.newUploaded(),
-                        GUID: self.newGUID()
+                        GUID: self.newGUID(),
+                        UploadedBy: self.UploadedBy(),
+                        UploadedOn: self.UploadedOn(),
+                        CheckDocuments: self.checkDocumentsFullName()
                     });
 
                     $.ajax({
-                        url: baseUrl + "/DPS/Add/",
+                        url: baseUrl + "/Recourse/DPS/Add/",
                         type: "POST",
                         data: json,
                         dataType: "json",

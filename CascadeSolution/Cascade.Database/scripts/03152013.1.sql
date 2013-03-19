@@ -1,3 +1,4 @@
+--Executed in DBPCS 03/15
 Alter table MSI_RecallForm Add [CheckDocuments] [varchar](max) NULL;
 Alter table MSI_RecallForm Add [UploadedOn] [datetime] NULL;
 Alter table MSI_RecallForm Add [IsActive] [bit] NULL;

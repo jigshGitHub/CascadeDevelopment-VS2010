@@ -397,13 +397,7 @@
         //Client side View Model
         function mediaViewEditVM() {
 
-            var href = window.location.href.split('/');
-            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
-            //var baseUrl = href[0] + '//' + href[2] + '/' + href[3] + '/' + href[4];
-            //alert(baseUrl);
-
-            //var apiUrl = '/api/Lookup/';
-
+            
             var self = this;
             //DPS(Direct Payments) Form
             self.newOriginalAccount = ko.observable('');
@@ -497,7 +491,7 @@
 
             //For Page Data
             $.ajax({
-                url: baseUrl + '/Media/GetMediaData/',
+                url: baseUrl + '/Recourse/Media/GetMediaData/',
                 type: 'GET',
                 contentType: 'application/json',
                 data: { id: $('#Id').val() },
@@ -553,7 +547,7 @@
                         //Set the Checkbox and the URL
                         var element = response.FileName.split("_");
                         self.FileName(element[1]);
-                        self.mediaDocUrl(baseUrl + '/Media/DownloadDoc?fileName=' + response.FileName);
+                        self.mediaDocUrl(baseUrl + '/Recourse/Media/DownloadDoc?fileName=' + response.FileName);
                     }
 
                 },
@@ -607,7 +601,7 @@
                     });
 
                     $.ajax({
-                        url: baseUrl + "/Media/Add/",
+                        url: baseUrl + "/Recourse/Media/Add/",
                         type: "POST",
                         data: json,
                         dataType: "json",

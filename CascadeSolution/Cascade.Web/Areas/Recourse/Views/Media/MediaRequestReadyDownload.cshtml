@@ -10,9 +10,7 @@
 @section scripts{
     <script type="text/javascript">
         $(document).ready(function () {
-            var href = window.location.href.split('/');
-            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
-            $("#downloadableMedias").load(baseUrl + '/Media/GetMediaRequestReadyDownload/');
+            $("#downloadableMedias").load(baseUrl + '/Recourse/Media/GetMediaRequestReadyDownload/');
         });
     </script>
 }

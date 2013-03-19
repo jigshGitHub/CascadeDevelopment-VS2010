@@ -357,6 +357,17 @@ namespace Cascade.Data.Repositories
         }
     }
 
+    //For Putback Form
+    public class MSIPutBackFormRepository : RepositoryBase<MSI_PutBackForm>
+    {
+        public MSIPutBackFormRepository(IDatabaseFactory dbFactory) : base(dbFactory)
+        {
+        }
+        public MSIPutBackFormRepository() : base(new DBFactory())
+        {
+        }
+    }
+
     //For DPS Data - MSI
     public class MSIDPSFormDataRepository : RepositoryBase<MSI_DPSForm>
     {

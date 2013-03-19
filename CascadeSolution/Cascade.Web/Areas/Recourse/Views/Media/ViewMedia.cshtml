@@ -86,11 +86,8 @@
         //Client side View Model
         function reportCriteriaVM() {
 
-            var href = window.location.href.split('/');
-            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
-            //alert(baseUrl);
-
-            var apiUrl = '/api/Lookup/';
+            
+            var apiUrl = baseUrl + '/api/Lookup/';
 
             var self = this;
 
@@ -170,7 +167,7 @@
                 if (self.validationErrors() == '') {
 
                     //Get the data and Load in the div
-                    $("#divMediaResults").load(baseUrl + '/Media/GetAllMediaRecords?StartDate=' + self.StartDate() + '&EndDate=' + self.EndDate() + '&Portfolio=' + self.company() + '&Responsibility=' + self.responsibility() + '&Account=' + self.newPIMSAccount() + '&GUID=' + self.newGUID());
+                    $("#divMediaResults").load(baseUrl + '/Recourse/Media/GetAllMediaRecords?StartDate=' + self.StartDate() + '&EndDate=' + self.EndDate() + '&Portfolio=' + self.company() + '&Responsibility=' + self.responsibility() + '&Account=' + self.newPIMSAccount() + '&GUID=' + self.newGUID());
 
                 }
                 else {

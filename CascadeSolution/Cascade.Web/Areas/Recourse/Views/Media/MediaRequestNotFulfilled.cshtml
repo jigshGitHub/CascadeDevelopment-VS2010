@@ -12,9 +12,7 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            var href = window.location.href.split('/');
-            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
-            $("#divPimsMediaRecords").load(baseUrl + '/Media/GetMediaNotFulfilled/' + $('#hdnRequestBy').val());
+            $("#divPimsMediaRecords").load(baseUrl + '/Recourse/Media/GetMediaNotFulfilled/' + $('#hdnRequestBy').val());
         });
         
     </script>

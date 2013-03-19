@@ -144,30 +144,6 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
         $("#loading").dialog('open');
         if (self.searchedType == 'name') {
             window.open(baseUrl + '/Recourse/Media/PIMSDataSearch?nameSearch=' + self.clientName(), '_self', '', '');
-            /*
-            $.ajax({
-            url: baseUrl + '/api/RAccount/',
-            type: "GET",
-            data: { nameSearch: self.clientName() },
-            dataType: 'json',
-            async: true,
-            success: function (data) {
-            $("#loading").html("&nbsp;");
-            $("#loading").dialog('close');
-            if (data != null) {
-            $.each(data, function (i, item) {
-            item.OpenDate = getFormatedDate(item.OpenDate);
-            item.ChargeOffDate = getFormatedDate(item.ChargeOffDate);
-            self.pimsRecords.push(item);
-            });
-            $("#pimsResults").dialog('open');
-            }
-            },
-            error: function (xhr, status, error) {
-
-            }
-            });
-            */
         }
         else {
             self.getPimsDetails();

@@ -5,7 +5,6 @@ imagedir
 -- i.e. on Windows XP, this default corresponds to http://localhost/MvcContribJQuery/Content/Images
 -- LEADING slash only
 *****/
-var imagedir = "/Content/Images";
 /****
 applicationname
 -- set this to your application subdirectory
@@ -84,24 +83,19 @@ function UpdateAdvanceSearchResults(griddiv, controller, gridview, col, page, ac
     // persist grid variables
     advanceGrids[griddiv] = mvcgridvals;
     // correcting for trailing slash -- no VirtualPathUtility here.
-    var myhost = window.location.protocol + "//" + window.location.host
-    var absoluteapp = myhost + applicationname;
     $("#loading").dialog('open');
-    $("#loading").html("<img src=\"" + absoluteapp + imagedir + "/ajax-loader.gif\" />");
-
+    $("#loading").html("<img src=\"" + baseUrl + imagedir + "/ajax-loader.gif\" />");
+    log('Search' + baseUrl);
     $.ajax({
         type: "POST",
-        url: absoluteapp + controller,
-        //data: ({ ColumnName: mvcgridvals["sortcolumn"], PageNum: mvcgridvals["currentpage"], Controller: controller, Griddiv: griddiv, GridView: gridview, Direction: mvcgridvals["direction"] }),
+        url: baseUrl + controller,
         data: ({ account:mvcgridvals['account'], originator:mvcgridvals['originator'], seller:mvcgridvals['seller'], investor:mvcgridvals['investor'], page: mvcgridvals["currentpage"], columnToSort: mvcgridvals["sortcolumn"], sortDirection: mvcgridvals["direction"] }),
         success: function (msg) {
             $(griddiv).html(msg);
             $(griddiv).advanceSearch(controller, gridview, mvcgridvals['account'], mvcgridvals['originator'],mvcgridvals['seller'], mvcgridvals['investor'], { databinding: true });
             fixGrids(griddiv);
-            // $("#" + mvcgridvals["sortcolumn"] + "_Sort").html("&nbsp;&nbsp;<img src='" + absoluteapp + imagedir + "/" + mvcgridvals["direction"] + ".png' />");
             $("#loading").html("&nbsp;");
             $("#loading").dialog('close');
-            //
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             alert("Data Failed to Sort: " + XMLHttpRequest.statusText);
@@ -147,22 +141,18 @@ function UpdateBasicSearchResults(griddiv, controller, gridview, col, page, basi
     // persist grid variables
     basicGrids[griddiv] = mvcgridvals;
     // correcting for trailing slash -- no VirtualPathUtility here.
-    var myhost = window.location.protocol + "//" + window.location.host
-    var absoluteapp = myhost + applicationname;
     $("#loading").dialog('open');
-    $("#loading").html("<img src=\"" + absoluteapp + imagedir + "/ajax-loader.gif\" />");
+    $("#loading").html("<img src=\"" + baseUrl + imagedir + "/ajax-loader.gif\" />");
 
     log('here ' + basicSearchVal);
     $.ajax({
         type: "POST",
-        url: absoluteapp + controller,
-        //data: ({ ColumnName: mvcgridvals["sortcolumn"], PageNum: mvcgridvals["currentpage"], Controller: controller, Griddiv: griddiv, GridView: gridview, Direction: mvcgridvals["direction"] }),
+        url: baseUrl + controller,
         data: ({ basicSearchVal: mvcgridvals['basicSearchVal'], page: mvcgridvals["currentpage"], columnToSort: mvcgridvals["sortcolumn"], sortDirection: mvcgridvals["direction"] }),
         success: function (msg) {
             $(griddiv).html(msg);
             $(griddiv).basicSearch(controller, gridview, mvcgridvals['basicSearchVal'], { databinding: true });
             fixGrids(griddiv);
-            // $("#" + mvcgridvals["sortcolumn"] + "_Sort").html("&nbsp;&nbsp;<img src='" + absoluteapp + imagedir + "/" + mvcgridvals["direction"] + ".png' />");
             $("#loading").html("&nbsp;");
             $("#loading").dialog('close');
         },

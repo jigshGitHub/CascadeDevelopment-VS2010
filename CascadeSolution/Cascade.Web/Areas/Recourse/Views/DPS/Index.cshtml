@@ -246,12 +246,8 @@
         //Client side View Model
         function dpsformVM() {
 
-            var href = window.location.href.split('/');
-            var baseUrl = href[0] + '//' + href[2] + '/' + href[3];
-            //var baseUrl = href[0] + '//' + href[2] + '/' + href[3] + '/' + href[4];
-            //alert(baseUrl);
-
-            var apiUrl = '/api/Lookup/';
+            
+            var apiUrl = baseUrl + '/api/Lookup/';
             
             var self = this;
             //DPS(Direct Payments) Form
@@ -385,7 +381,7 @@
                     });
 
                     $.ajax({
-                        url: baseUrl + "/DPS/Search/",
+                        url: baseUrl + "/Recourse/DPS/Search/",
                         type: "POST",
                         data: json,
                         dataType: "json",
@@ -495,7 +491,7 @@
                     });
 
                     $.ajax({
-                        url: baseUrl + "/DPS/Add/",
+                        url: baseUrl + "/Recourse/DPS/Add/",
                         type: "POST",
                         data: json,
                         dataType: "json",
@@ -508,7 +504,7 @@
                             if (self.newUploaded() == true )
                             {
                                 //log(self.uploadChecked());
-                                alert(response.ID);
+                                //alert(response.ID);
                                 hdnDPSRecordID.value = response.ID;
                                 $('#fileUploadContainer').show();
                                 $('#fileUploadContainer').dialog('open');

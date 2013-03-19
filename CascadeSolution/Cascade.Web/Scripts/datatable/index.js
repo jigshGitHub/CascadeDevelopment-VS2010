@@ -741,7 +741,30 @@ $(document).ready(function () {
         $('#enddatetr').hide();
     }
 
+    if ($("#recallsPaidByOurCheck").length != 0) {
+        $('#recallsPaidByOurCheck').dataTable(
+            {
+                "bFilter": false,
+                "aoColumns": [
+                    {
+                        "bSearchable": false,
+                        "bSortable": false
 
+                    },
+                    null,
+                    null,
+                    null,
+                    null,
+                     null,
+                      { "sType": "currency" },
+                       null,
+                         { "sType": "currency" },
+                         null,
+                         null,
+
+                ]
+            });
+    }
     /*globals $  Used for Sorting*/
     if ($.fn.dataTableExt !== undefined) {
         $.fn.dataTableExt.oSort['currency-asc'] = function (a, b) {

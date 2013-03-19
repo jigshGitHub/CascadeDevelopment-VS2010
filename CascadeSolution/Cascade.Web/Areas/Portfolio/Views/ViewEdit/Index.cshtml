@@ -135,7 +135,7 @@
                             <textarea id="purchaseNotes" cols="70" rows="3" data-bind="value:notes,enable:makeFieldsEditable"></textarea>&nbsp;<input type="radio" value="notesEdited" data-bind="enable:false,visible:radiosVisible,checked:notesEditedValue" /></td>
                     </tr>                    
                     <tr>
-                        <td colspan="6" style="text-align: right;" data-bind="text:recordUpdatedBy"></td>
+                        <td colspan="6" style="text-align: right;" data-bind="visible:updatedData">Changes made by:<span data-bind="text:recordUpdatedBy"></span></td>
                     </tr>
                     <tr>
                         <td colspan="6" style="text-align: center">
@@ -245,7 +245,7 @@
                         <td style="text-align: left;" colspan="4">
                             <textarea id="salesNotes" cols="70" rows="3" data-bind="enable:makeFieldsEditable,value:currentSalesRecord().notes"></textarea>&nbsp;<input type="radio" value="notesEdited" data-bind="enable:false,visible:radiosVisible,checked:notesEditedValue" /></td>
                     </tr>
-                    <td colspan="6" style="text-align: right;" data-bind="text:currentSalesRecord().recordUpdatedBy"></td>
+                    <td colspan="6" style="text-align: right;" data-bind="visible:updatedData">Changes made by:<span data-bind="text:currentSalesRecord().recordUpdatedBy"></span></td>
                     <tr>
                         <td colspan="6" style="text-align: center">
                             <img src="~/Content/images/back_enabled.jpg" data-bind="click:previousRecord,visible:visiblePrevious" />&nbsp;<span data-bind="text:recordCounts"></span> &nbsp;

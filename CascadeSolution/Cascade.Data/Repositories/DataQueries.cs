@@ -456,6 +456,8 @@ namespace Cascade.Data.Repositories
                     record.DateAcctClosed = Convert.ToDateTime(rdr["DateAcctClosed"]);
                     record.DateNoteSent = Convert.ToDateTime(rdr["DateNoteSent"]);
                     record.GUID = rdr["GUID"].ToString();
+                    record.InitiatedBy = rdr["RecallInitiatedBy"].ToString();
+                    record.CheckDocuments = rdr["CheckDocuments"].ToString();
                     record.Portfolio = rdr["Portfolio"].ToString();
                     record.ID = Convert.ToInt32(rdr["ID"].ToString());
                     record.FaceValueofAcct = rdr["FaceValueofAcct"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["FaceValueofAcct"]);
@@ -481,6 +483,57 @@ namespace Cascade.Data.Repositories
                 throw new Exception("Exception in DataQueries.GetRecallViewEditRecords:" + ex.Message);
             }
             return data.AsEnumerable<RecallViewEditResult>();
+        }
+
+        public IEnumerable<PutBackViewEditResult> GetPutBackViewEditRecords(DateTime? StartDate, DateTime? EndDate, string PortfolioOwner, string Responsibility, string Account, string GUID)
+        {
+            DBFactory db;
+            SqlDataReader rdr;
+            List<PutBackViewEditResult> data = null;
+            try
+            {
+                db = new DBFactory();
+                rdr = db.ExecuteReader("MSI_spGetPutBackViewEditRecords", new SqlParameter("@StartDate", StartDate),
+                    new SqlParameter("@EndDate", EndDate), new SqlParameter("@PortfolioOwner", PortfolioOwner),
+                    new SqlParameter("@Responsibility", Responsibility), new SqlParameter("@Account", Account), new SqlParameter("@GUID", GUID));
+                data = new List<PutBackViewEditResult>();
+                PutBackViewEditResult record;
+                while (rdr.Read())
+                {
+                    record = new PutBackViewEditResult();
+                    record.AcctName = rdr["AcctName"].ToString();
+                    record.PIMSAcct = rdr["PIMSAcct"].ToString();
+                    record.OrigAcct = rdr["OrigAcct"].ToString();
+                    record.DateAcctClosed = Convert.ToDateTime(rdr["DateAcctClosed"]);
+                    record.DateNoteSent = Convert.ToDateTime(rdr["DateNoteSent"]);
+                    record.GUID = rdr["GUID"].ToString();
+                    record.InitiatedBy = rdr["PutBackInitiatedBy"].ToString();
+                    record.CheckDocuments = rdr["CheckDocuments"].ToString();
+                    record.Portfolio = rdr["Portfolio"].ToString();
+                    record.ID = Convert.ToInt32(rdr["ID"].ToString());
+                    record.FaceValueofAcct = rdr["FaceValueofAcct"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["FaceValueofAcct"]);
+                    if (record.FaceValueofAcct == Convert.ToDecimal(0.0))
+                    {
+                        record.FaceValueofAcct = null;
+                    }
+                    if (record.DateAcctClosed.ToString() == "1/1/1900 12:00:00 AM")
+                    {
+                        record.DateAcctClosed = null;
+                    }
+                    if (record.DateNoteSent.ToString() == "1/1/1900 12:00:00 AM")
+                    {
+                        record.DateNoteSent = null;
+                    }
+                    data.Add(record);
+                }
+                //Close the datareader
+                rdr.Close();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Exception in DataQueries.GetPutBackViewEditRecords:" + ex.Message);
+            }
+            return data.AsEnumerable<PutBackViewEditResult>();
         }
 
         public IEnumerable<PeopleViewEditResult> GetPeopleViewEditRecords(string FirstName, string LastName)
@@ -1560,6 +1613,8 @@ namespace Cascade.Data.Repositories
                     record.SellerCheck = rdr["SellerCheck"].ToString();
                     record.AcctName = rdr["AcctName"].ToString();
                     record.Putback = rdr["Putback"].ToString();
+                    record.InitiatedBy = rdr["RecallInitiatedBy"].ToString();
+                    record.CheckDocuments = rdr["CheckDocuments"].ToString();
 
                     record.CostBasis = rdr["CostBasis"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["CostBasis"]);
                     record.SalesBasis = rdr["SalesBasis"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["SalesBasis"]);
@@ -1627,6 +1682,103 @@ namespace Cascade.Data.Repositories
                 throw new Exception("Exception in DataQueries.GetRecallViewEditRecordsExport:" + ex.Message);
             }
             return data.AsEnumerable<RecallViewEditResult>();
+        }
+
+        public IEnumerable<PutBackViewEditResult> GetPutBackViewEditRecordsExport(DateTime? StartDate, DateTime? EndDate, string PortfolioOwner, string Responsibility, string Account, string GUID)
+        {
+            DBFactory db;
+            SqlDataReader rdr;
+            List<PutBackViewEditResult> data = null;
+            try
+            {
+                db = new DBFactory();
+                rdr = db.ExecuteReader("MSI_spGetPutBackViewEditRecordsExport", new SqlParameter("@StartDate", StartDate),
+                    new SqlParameter("@EndDate", EndDate), new SqlParameter("@PortfolioOwner", PortfolioOwner),
+                    new SqlParameter("@Responsibility", Responsibility), new SqlParameter("@Account", Account), new SqlParameter("@GUID", GUID));
+                data = new List<PutBackViewEditResult>();
+                PutBackViewEditResult record;
+                while (rdr.Read())
+                {
+                    record = new PutBackViewEditResult();
+                    record.AcctName = rdr["AcctName"].ToString();
+                    record.PIMSAcct = rdr["PIMSAcct"].ToString();
+                    record.OrigAcct = rdr["OrigAcct"].ToString();
+                    record.DateAcctClosed = Convert.ToDateTime(rdr["DateAcctClosed"]);
+                    record.DateNoteSent = Convert.ToDateTime(rdr["DateNoteSent"]);
+
+                    record.Date = Convert.ToDateTime(rdr["Date"]);
+                    record.UploadedDate = Convert.ToDateTime(rdr["UploadedDate"]);
+
+                    record.CurrentResp = rdr["CurrentResp"].ToString();
+                    record.PutBackReason = rdr["PutBackReason"].ToString();
+                    record.NewStatus = rdr["NewStatus"].ToString();
+                    record.NewResp = rdr["NewResp"].ToString();
+                    record.CheckNumber = rdr["CheckNumber"].ToString();
+                    record.Explanation = rdr["Explanation"].ToString();
+                    record.Seller = rdr["Seller"].ToString();
+                    record.SellerCheck = rdr["SellerCheck"].ToString();
+                    record.AcctName = rdr["AcctName"].ToString();
+                    
+                    record.InitiatedBy = rdr["PutBackInitiatedBy"].ToString();
+                    record.CheckDocuments = rdr["CheckDocuments"].ToString();
+
+                    record.CostBasis = rdr["CostBasis"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["CostBasis"]);
+                    record.SalesBasis = rdr["SalesBasis"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["SalesBasis"]);
+                    record.AmtReceivable = rdr["AmtReceivable"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["AmtReceivable"]);
+                    record.AmtPayable = rdr["AmtPayable"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["AmtPayable"]);
+
+                    record.GUID = rdr["GUID"].ToString();
+                    record.Portfolio = rdr["Portfolio"].ToString();
+                    record.ID = Convert.ToInt32(rdr["ID"].ToString());
+                    record.FaceValueofAcct = rdr["FaceValueofAcct"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["FaceValueofAcct"]);
+                    if (record.FaceValueofAcct == Convert.ToDecimal(0.0))
+                    {
+                        record.FaceValueofAcct = null;
+                    }
+                                        
+                    if (record.CostBasis == Convert.ToDecimal(0.0))
+                    {
+                        record.CostBasis = null;
+                    }
+                    if (record.SalesBasis == Convert.ToDecimal(0.0))
+                    {
+                        record.SalesBasis = null;
+                    }
+                    if (record.AmtReceivable == Convert.ToDecimal(0.0))
+                    {
+                        record.AmtReceivable = null;
+                    }
+                    if (record.AmtPayable == Convert.ToDecimal(0.0))
+                    {
+                        record.AmtPayable = null;
+                    }
+
+                    if (record.DateAcctClosed.ToString() == "1/1/1900 12:00:00 AM")
+                    {
+                        record.DateAcctClosed = null;
+                    }
+                    if (record.DateNoteSent.ToString() == "1/1/1900 12:00:00 AM")
+                    {
+                        record.DateNoteSent = null;
+                    }
+                    if (record.Date.ToString() == "1/1/1900 12:00:00 AM")
+                    {
+                        record.Date = null;
+                    }
+                    if (record.UploadedDate.ToString() == "1/1/1900 12:00:00 AM")
+                    {
+                        record.UploadedDate = null;
+                    }
+                    data.Add(record);
+                }
+                //Close the datareader
+                rdr.Close();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Exception in DataQueries.GetPutBackViewEditRecordsExport:" + ex.Message);
+            }
+            return data.AsEnumerable<PutBackViewEditResult>();
         }
         #endregion
 

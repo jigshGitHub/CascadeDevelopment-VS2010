@@ -298,6 +298,7 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\application.js" />
     <Content Include="Scripts\compliance.js" />
+    <Content Include="Scripts\datatable\index.js" />
     <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -518,6 +519,11 @@
     <Content Include="Areas\Recourse\Views\Media\_mediaRequestReadyDownload.cshtml" />
     <Content Include="Areas\Recourse\Views\Media\_mediaRequestAllNotFulfilled.cshtml" />
     <Content Include="Areas\Recourse\Views\Media\UpdateMediaRequest.cshtml" />
+    <Content Include="Areas\Recourse\Views\Recall\DetailsPutback.cshtml" />
+    <Content Include="Areas\Recourse\Views\Recall\ExportPutBack.cshtml" />
+    <Content Include="Areas\Recourse\Views\Recall\PutBackIndex.cshtml" />
+    <Content Include="Areas\Recourse\Views\Recall\ViewPutback.cshtml" />
+    <Content Include="Areas\Recourse\Views\Recall\_putbackRecords.cshtml" />
     <None Include="Areas\Reports\Views\Cascade0206Deploy.rar" />
     <Content Include="Areas\Reports\Views\Collections\PortfolioOwnerBreakDown.cshtml" />
     <Content Include="Areas\Reports\Views\Collections\PortfolioWorkStatusBreakDown.cshtml" />

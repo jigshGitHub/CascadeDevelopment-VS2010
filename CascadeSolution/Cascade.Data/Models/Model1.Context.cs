@@ -87,5 +87,6 @@ namespace Cascade.Data.Models
         public DbSet<MSI_Port_Acq_Original> MSI_Port_Acq_Original { get; set; }
         public DbSet<MSI_Port_SalesTrans_Edited> MSI_Port_SalesTrans_Edited { get; set; }
         public DbSet<MSI_Port_SalesTrans_Original> MSI_Port_SalesTrans_Original { get; set; }
+        public DbSet<MSI_PutBackForm> MSI_PutBackForm { get; set; }
     }
 }
