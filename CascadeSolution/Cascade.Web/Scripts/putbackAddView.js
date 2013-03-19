@@ -65,21 +65,6 @@ function pageViewModel(userId, userAgency, userRole, id) {
     self.recallByOption = ko.observable('');
     self.recallByOptions = ko.observableArray([]);
 
-    //Property to control Invoice and Seller check fields
-    self.isenable = ko.observable(false);
-    self.recallByOption.subscribe(function (Selected) {
-        if (Selected == 'Cascade') {
-            self.newInvoice('');
-            self.newSellerCheck('');
-            self.isenable(false);
-        }
-        else {
-            self.newInvoice('');
-            self.newSellerCheck('');
-            self.isenable(true);
-        }
-    } .bind(self));
-
     //Reason For Recall
     self.recallreason = ko.observable('');
     self.recallreasons = ko.observableArray([]);
@@ -108,14 +93,18 @@ function pageViewModel(userId, userAgency, userRole, id) {
     self.amtReceivableComputed = ko.observable('');
     self.newCostBasis = ko.observable('');
     self.newGUID = ko.observable('');
-    
-    
+    //Weather to upload required or not
+    self.newUploaded = ko.observable('');
+
+    //For Media types
+    self.checkDocuments = ko.observableArray([]);
+        
     //For Putback Initiated By - Lookup Table 
     $.ajax({
         url: apiUrl,
         type: 'GET',
         contentType: 'application/json',
-        data: { id: 'RecallInitiatedBy' },
+        data: { id: 'PutbackInitiatedBy' },
         success: function (data) {
             $.each(data, function (i, item) {
                 self.recallByOptions.push(item);
@@ -173,6 +162,12 @@ function pageViewModel(userId, userAgency, userRole, id) {
             log(status);
         }
     });
+
+
+    //Only show Upload button if files are selected for the upload
+    self.showUpload = ko.computed(function () {
+        return (self.checkDocuments().length > 0);
+    }, self);
 
     self.setShowMessagePanel = function (isVisible, message) {
         self.showMessage(isVisible);

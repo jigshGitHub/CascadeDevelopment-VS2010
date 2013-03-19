@@ -69,11 +69,11 @@ function pageViewModel(userId, userAgency, userRole, id) {
     self.responsibility = ko.observable('');
     self.responsibilities = ko.observableArray([]);
 
-    //Property to control Invoice and Seller check fields
-    self.isenable = ko.observable(false);
-
     //For Date
     self.newDateRec = ko.observable('');
+
+    self.UploadedOn = ko.observable('');
+    self.UploadedBy = ko.observable('');
        
     //Follow-up Data
     self.newExplanation = ko.observable('');
@@ -88,13 +88,68 @@ function pageViewModel(userId, userAgency, userRole, id) {
     self.amtReceivableComputed = ko.observable('');
     self.newCostBasis = ko.observable('');
     self.newGUID = ko.observable('');
+    //Weather to upload required or not
+    self.newUploaded = ko.observable('');
+
+    //For file upload
+    self.checkDocumentsFullName = ko.observable(''); //This will store filename seperated by | 
+    self.visible = ko.observable(false); //This controls if Existing Uploaded Images will be shown or not
+
+    self.checkImageDocuments = ko.observableArray([]); //This is array created from FullName obtained from Database
+    //This is Object which holds FileName and URL for the Check Image
+    function checkImage(checkFileName, checkDocUrl) {
+        var self = this;
+        self.checkFileName = ko.observable('');
+        self.checkDocUrl = ko.observable('');
+    }
+
+    self.checkDocuments = ko.observableArray([]); //This is used for fileupload control - same as in Index.cshtml page
+    //Only show Upload button if files are selected for the upload
+    self.showUpload = ko.computed(function () {
+        return (self.checkDocuments().length > 0);
+    }, self);
+    
+    function getFileName(document) {
+        var fileName = document.split('_');
+        return fileName[1];
+    }
+
+    //Initiate the Media Upload Process
+    self.manageCheckImages = function () {
+        //alert(self.checkDocumentsFullName());
+        self.showExistingImageDetails(self.checkDocumentsFullName());
+        $('#fileUploadContainer').show();
+        $('#fileUploadContainer').dialog('open');
+    }
+
+    self.showExistingImageDetails = function (existingImages) {
+
+        //Clear the collection first - this is useful when you come second time 
+        self.checkImageDocuments([]);
+        //alert("Opening the dialog box");
+        if (existingImages != null) {
+            self.visible(true);
+            //Now let us split files seperate by | to know how many records we have
+            var n = existingImages.split("|");
+            //alert(n.length);
+            for (var i = 0; i < n.length; i++) {
+                var checkMedia;
+                checkMedia = new checkImage();
+                checkMedia.checkDocUrl(baseUrl + '/Recall/DownloadDoc?fileName=' + n[i]);
+                checkMedia.checkFileName(getFileName(n[i]));
+                self.checkImageDocuments.push(checkMedia);
+            }
+        }
+
+    };
+
     
     //For Putback Initiated By - Lookup Table 
     $.ajax({
         url: apiUrl,
         type: 'GET',
         contentType: 'application/json',
-        data: { id: 'RecallInitiatedBy' },
+        data: { id: 'PutbackInitiatedBy' },
         success: function (data) {
             $.each(data, function (i, item) {
                 self.recallByOptions.push(item);
@@ -152,8 +207,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
             log(status);
         }
     });
-
-
+    
     //For Page Data
     $.ajax({
         url: baseUrl + '/Recall/GetPutbackData/',
@@ -189,10 +243,13 @@ function pageViewModel(userId, userAgency, userRole, id) {
             self.newInvoice(response.Invoice);
             self.newSellerCheck(response.SellerCheck);
             self.newGUID(response.GUID);
-            if (response.PutBackInitiatedBy != 'Cascade') {
-                self.isenable(true);
+            self.checkDocumentsFullName(response.CheckDocuments);
+            self.UploadedOn(response.UploadedOn);
+            self.UploadedBy(response.UploadedBy);
+            if (response.CheckDocuments != "" && response.CheckDocuments != null) {
+                self.newUploaded(true);
             }
-
+            
         },
         error: function (xhr, status, somthing) {
             log(status);
@@ -242,8 +299,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
             return ''
         }
     }
-
-        
+            
     //Save or Add button click event
     self.save = function () {
                 
@@ -274,7 +330,10 @@ function pageViewModel(userId, userAgency, userRole, id) {
                 AmtReceivable: self.amtReceivableComputed(),
                 GUID: self.newGUID(),
                 PutBackInitiatedBy: self.recallByOption(),
-                ClientName: self.clientName()
+                ClientName: self.clientName(),
+                UploadedBy: self.UploadedBy(),
+                UploadedOn: self.UploadedOn(),
+                CheckDocuments: self.checkDocumentsFullName()
                 
             });
 
@@ -289,14 +348,6 @@ function pageViewModel(userId, userAgency, userRole, id) {
                     //$('#resultSummary ul').append('<li>Coach with username ' + response.UserName + ' has been created.</li>');
                     $('#resultSummaryData ul').append('<li>Putback Record updated successfully.</li>');
                     $('#saveNewBtn').hide();
-                    //Now display the File Upload Div if user wants to upload
-                    if (self.newUploaded() == true) {
-                        //log(self.uploadChecked());
-                        //alert(response.ID);
-                        hdnRecallRecordID.value = response.ID;
-                        $('#fileUploadContainer').show();
-                        $('#fileUploadContainer').dialog('open');
-                    }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     alert(errorThrown);

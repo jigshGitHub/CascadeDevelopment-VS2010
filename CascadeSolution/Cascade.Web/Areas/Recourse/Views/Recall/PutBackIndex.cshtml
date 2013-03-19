@@ -280,15 +280,15 @@
                                     <td style="text-align: left; width: 30%">Cost Basis</td>
                                     <td style="text-align: center; width: 1%">:</td>
                                     <td style="width: 69%; text-align: left">
-                                        <input id="newCostBasis" type="text" data-bind="value:newCostBasis" readonly="true"/>
+                                        <input id="newCostBasis" type="text" data-bind="value:newCostBasis,enable:false"/>
                 
                         </td>
                                 </tr>
                                 <tr>
-                                    <td style="text-align: left; width: 60%">Receivable Amount</td>
+                                    <td style="text-align: left; width: 30%">Receivable Amount</td>
                                     <td style="text-align: center; width: 1%">:</td>
-                                    <td style="width: 39%; text-align: left">
-                                        <input id="newAmtReceivable" type="text"  readonly="true"  data-bind='value: amtReceivableComputed'  />
+                                    <td style="width: 69%; text-align: left">
+                                        <input id="newAmtReceivable" type="text"  data-bind='value: amtReceivableComputed,enable:false'  />
                 
                                      </td>
                                 </tr>
@@ -296,7 +296,7 @@
                                     <td style="text-align: left; width: 30%">Invoice</td>
                                     <td style="text-align: center; width: 1%">:</td>
                                     <td style="width: 69%; text-align: left">
-                                        <input id="newInvoice" type="text" data-bind="value:newInvoice, enable:isenable"/>
+                                        <input id="newInvoice" type="text" data-bind="value:newInvoice"/>
                 
                                     </td>
                                 </tr>
@@ -304,13 +304,17 @@
                                     <td style="text-align: left; width: 30%">Seller Check#</td>
                                     <td style="text-align: center; width: 1%">:</td>
                                     <td style="width: 69%; text-align: left">
-                                    <input id="newSellerCheck" type="text" data-bind="value:newSellerCheck,enable:isenable" />
+                                    <input id="newSellerCheck" type="text" data-bind="value:newSellerCheck" />
                 
                                      </td>
                                 </tr>
-                                
-                               
-
+                                <tr>
+                                    <td style="text-align: left; width: 60%">Check Upload (Y/N)?</td>
+                                    <td style="text-align: center; width: 1%">:</td>
+                                    <td style="width: 39%; text-align: left">
+                                        <input type="checkbox" data-bind="checked: newUploaded" />
+                                    </td>
+                                </tr>
                             </table>
                         </td>
                         <td style="text-align: right; width: 1%">&nbsp;</td>
@@ -321,7 +325,7 @@
                                     <td style="text-align: left; width: 30%">Sales Basis</td>
                                     <td style="text-align: center; width: 1%">:</td>
                                     <td style="width: 69%; text-align: left">
-                            <input id="newSalesBasis" type="text" data-bind="value:newSalesBasis" readonly="true"/>
+                            <input id="newSalesBasis" type="text" data-bind="value:newSalesBasis,enable:false"/>
                 
                              </td>
                                 </tr>
@@ -329,7 +333,7 @@
                                     <td style="text-align: left; width: 30%">Payable Amount</td>
                                     <td style="text-align: center; width: 1%">:</td>
                                     <td style="width: 69%; text-align: left">
-                            <input id="newAmtPayable" type="text"  readonly="true" data-bind='value: amtPayableComputed' />
+                            <input id="newAmtPayable" type="text" data-bind='value: amtPayableComputed,enable:false' />
                 
                         </td>
                                 </tr>
@@ -337,7 +341,7 @@
                             <td style="text-align: left; width: 30%">Check No</td>
                             <td style="text-align: center; width: 1%">:</td>
                             <td style="width: 69%; text-align: left">
-                            <input id="newCheckNo" type="text" data-bind="value:newCheckNo" />
+                            <input id="newCheckNo" type="text" data-bind="value:newCheckNo,enable:false" />
                 
                         </td>
                                 </tr>
@@ -367,8 +371,41 @@
                     </tr>
                 </table>
 
+</div>
 
-
+<div id="fileUploadContainer" style="display:none">
+    @using (Html.BeginForm("UploadAllDocumentsPutBack", "Recall", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <table class="FileUploadTable">
+                
+               <thead style="color:Blue">
+                        <tr>
+                            <th colspan="2" style="text-align: left">
+                                Media Type
+                            </th>
+                            <th colspan="2"style="text-align: left">
+                                Browse/Upload
+                            </th>
+                            
+                        </tr>
+               </thead>
+               <tr><td colspan="4" class="dummyitem">&nbsp;</td></tr>
+               <tr>
+                    <td colspan="2">Check Images</td>
+                    <td colspan="2">
+                        <input name="checkDocuments" id="checkDocuments" data-bind="value:checkDocuments"  type="file"  multiple/>
+                    </td>
+                    
+                </tr>
+                <tr><td colspan="4" class="dummyitem">&nbsp;</td></tr>
+                <tr>
+                    <td colspan="4">
+                        <input type="submit" class="editButton" value="&nbsp;Upload&nbsp;& Exit" data-bind="visible:showUpload"/>
+                    </td>
+                </tr>
+        </table>
+        @Html.Hidden("hdnPutbackRecordID", "")
+    }
 </div>
 
 @Scripts.Render("~/bundles/knockout")
@@ -380,6 +417,8 @@
         $(document).ready(function () {
             $('#messageSummary').dialog({ modal: true, title: 'Summary:', autoOpen: false, width: 200, height: 200 });
             $('#pimsResults').dialog({ modal: true, title: 'Select account:', autoOpen: false, width: 800, height: 500 });
+            //For file upload Div
+            $('#fileUploadContainer').dialog({ modal: true, title: 'Upload Check Images:', autoOpen: false, width: 500, height: 400 });
             //Page view model
             var pageVM = new pageViewModel($('#userId').val(), $('#agencyId').val(), $('#hdnUserRole').val(), $('#hdnId').val());
             //Knockout Bindings

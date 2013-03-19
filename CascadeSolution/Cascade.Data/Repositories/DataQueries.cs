@@ -1823,6 +1823,7 @@ namespace Cascade.Data.Repositories
                         record.AmtReceivable = rdr["AmtReceivable"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["AmtReceivable"]);
                         record.AmtPayable = rdr["AmtPayable"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["AmtPayable"]);
                         record.GUID = rdr["GUID"].ToString();
+                        record.InitiatedBy = rdr["RecallInitiatedBy"].ToString();
                         record.Portfolio = rdr["Portfolio"].ToString();
                         record.FaceValueofAcct = rdr["FaceValueofAcct"] == DBNull.Value ? Convert.ToDecimal(0.0) : Convert.ToDecimal(rdr["FaceValueofAcct"]);
                         if (record.FaceValueofAcct == Convert.ToDecimal(0.0))

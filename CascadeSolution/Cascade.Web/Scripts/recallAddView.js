@@ -58,8 +58,6 @@ function pageViewModel(userId, userAgency, userRole, id) {
     self.coDate = ko.observable('');
     self.seller = ko.observable('');
 
-    
-
     self.CurrentResponsibility = ko.observable('');
     self.FaceValueOfAcct = ko.observable('');
 
@@ -73,11 +71,13 @@ function pageViewModel(userId, userAgency, userRole, id) {
         if (Selected == 'Cascade') {
             self.newInvoice('');
             self.newSellerCheck('');
+            self.newCheckNo('');
             self.isenable(false);
         }
         else {
             self.newInvoice('');
             self.newSellerCheck('');
+            self.newCheckNo('');
             self.isenable(true);
         }
     } .bind(self));

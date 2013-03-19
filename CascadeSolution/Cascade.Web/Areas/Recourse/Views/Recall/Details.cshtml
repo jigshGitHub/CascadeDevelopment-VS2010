@@ -224,7 +224,7 @@
                                     <td style="text-align: left; width: 30%">Cost Basis</td>
                                     <td style="text-align: center; width: 1%">:</td>
                                     <td style="width: 69%; text-align: left">
-                                        <input id="newCostBasis" type="text" data-bind="value:newCostBasis" readonly="true"/>
+                                        <input id="newCostBasis" type="text" data-bind="value:newCostBasis,enable:false" />
                 
                         </td>
                                 </tr>
@@ -232,7 +232,7 @@
                                     <td style="text-align: left; width: 30%">Receivable Amount</td>
                                     <td style="text-align: center; width: 1%">:</td>
                                     <td style="width: 69%; text-align: left">
-                                        <input id="newAmtReceivable" type="text"  readonly="true"  data-bind='value: amtReceivableComputed'  />
+                                        <input id="newAmtReceivable" type="text"  data-bind='value: amtReceivableComputed,enable:false'  />
                 
                                      </td>
                                 </tr>
@@ -272,7 +272,7 @@
                                     <td style="text-align: left; width: 30%">Sales Basis</td>
                                     <td style="text-align: center; width: 1%">:</td>
                                     <td style="width: 69%; text-align: left">
-                            <input id="newSalesBasis" type="text" data-bind="value:newSalesBasis" readonly="true"/>
+                            <input id="newSalesBasis" type="text" data-bind="value:newSalesBasis,enable:false" />
                 
                              </td>
                                 </tr>
@@ -280,7 +280,7 @@
                                     <td style="text-align: left; width: 30%">Payable Amount</td>
                                     <td style="text-align: center; width: 1%">:</td>
                                     <td style="width: 69%; text-align: left">
-                            <input id="newAmtPayable" type="text"  readonly="true" data-bind='value: amtPayableComputed' />
+                            <input id="newAmtPayable" type="text" data-bind='value: amtPayableComputed,enable:false' />
                 
                         </td>
                                 </tr>
@@ -288,7 +288,7 @@
                             <td style="text-align: left; width: 30%">Check No</td>
                             <td style="text-align: center; width: 1%">:</td>
                             <td style="width: 69%; text-align: left">
-                            <input id="newCheckNo" type="text" data-bind="value:newCheckNo" />
+                            <input id="newCheckNo" type="text" data-bind="value:newCheckNo,disable:isenable" />
                 
                         </td>
                                 </tr>
@@ -321,7 +321,6 @@
 
 
 </div>
-
 
 <div id="fileUploadContainer" style="display:none;font-size:small">
     @using (Html.BeginForm("UploadAllDocuments", "Recall", FormMethod.Post, new { enctype = "multipart/form-data" }))

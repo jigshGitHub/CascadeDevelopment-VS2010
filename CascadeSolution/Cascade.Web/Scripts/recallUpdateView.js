@@ -148,9 +148,6 @@ function pageViewModel(userId, userAgency, userRole, id) {
 
     };
 
-
-
-
     //For Recall Initiated By - Lookup Table 
     $.ajax({
         url: apiUrl,
@@ -318,69 +315,61 @@ function pageViewModel(userId, userAgency, userRole, id) {
         
     //Save or Add button click event
     self.save = function () {
-                
-            //alert("we are here");
-            var json = JSON.stringify({
-                ID: $('#hdnId').val(),
-                Date: self.newDateRec(),
-                OrigAcct: self.originalAccountNumber(),
-                PIMSAcct: self.pimsAccountNumber(),
-                RecallReason: self.recallreason(),
-                NewStatus: self.status(),
-                NewResp: self.responsibility(),
-                FaceValueOfAcct: self.FaceValueOfAcct(),
-                AcctName: self.clientName(),
-                Seller: self.seller(),
-                CurrentResp: self.CurrentResponsibility(),
-                Portfolio: self.portfolio(),
-                UploadedDate: self.newUploadedDate(),
-                Explanation: self.newExplanation(),
-                DateNoteSent: self.newDateNotificationSent(),
-                DateAcctClosed: self.newDateAcctClosed(),
-                CostBasis: self.newCostBasis(),
-                SalesBasis: self.newSalesBasis(),
-                Invoice: self.newInvoice(),
-                SellerCheck: self.newSellerCheck(),
-                CheckNumber: self.newCheckNo(),
-                AmtPayable: self.amtPayableComputed(),
-                AmtReceivable: self.amtReceivableComputed(),
-                GUID: self.newGUID(),
-                RecallInitiatedBy: self.recallByOption(),
-                ClientName: self.clientName(),
-                UploadedBy: self.UploadedBy(),
-                UploadedOn: self.UploadedOn(),
-                CheckDocuments: self.checkDocumentsFullName()
 
-            });
+        //alert("we are here");
+        var json = JSON.stringify({
+            ID: $('#hdnId').val(),
+            Date: self.newDateRec(),
+            OrigAcct: self.originalAccountNumber(),
+            PIMSAcct: self.pimsAccountNumber(),
+            RecallReason: self.recallreason(),
+            NewStatus: self.status(),
+            NewResp: self.responsibility(),
+            FaceValueOfAcct: self.FaceValueOfAcct(),
+            AcctName: self.clientName(),
+            Seller: self.seller(),
+            CurrentResp: self.CurrentResponsibility(),
+            Portfolio: self.portfolio(),
+            UploadedDate: self.newUploadedDate(),
+            Explanation: self.newExplanation(),
+            DateNoteSent: self.newDateNotificationSent(),
+            DateAcctClosed: self.newDateAcctClosed(),
+            CostBasis: self.newCostBasis(),
+            SalesBasis: self.newSalesBasis(),
+            Invoice: self.newInvoice(),
+            SellerCheck: self.newSellerCheck(),
+            CheckNumber: self.newCheckNo(),
+            AmtPayable: self.amtPayableComputed(),
+            AmtReceivable: self.amtReceivableComputed(),
+            GUID: self.newGUID(),
+            RecallInitiatedBy: self.recallByOption(),
+            ClientName: self.clientName(),
+            UploadedBy: self.UploadedBy(),
+            UploadedOn: self.UploadedOn(),
+            CheckDocuments: self.checkDocumentsFullName()
 
-            $.ajax({
-                url: baseUrl + "/Recall/Add/",
-                type: "POST",
-                data: json,
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                success: function (response) {
-                    //log(response.ID);
-                    //$('#resultSummary ul').append('<li>Coach with username ' + response.UserName + ' has been created.</li>');
-                    $('#resultSummaryData ul').append('<li>Recall Record updated successfully.</li>');
-                    $('#saveNewBtn').hide();
-                    //Now display the File Upload Div if user wants to upload
-                    if (self.newUploaded() == true) {
-                        //log(self.uploadChecked());
-                        //alert(response.ID);
-                        hdnRecallRecordID.value = response.ID;
-                        $('#fileUploadContainer').show();
-                        $('#fileUploadContainer').dialog('open');
-                    }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    alert(errorThrown);
-                    console.log(textStatus, errorThrown);
-                    $('#resultSummaryData ul').append('<li>We have some issue processing your request. Please try again later.</li>');
-                }
+        });
 
-            });
-        }
+        $.ajax({
+            url: baseUrl + "/Recall/Add/",
+            type: "POST",
+            data: json,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                //log(response.ID);
+                //$('#resultSummary ul').append('<li>Coach with username ' + response.UserName + ' has been created.</li>');
+                $('#resultSummaryData ul').append('<li>Recall Record updated successfully.</li>');
+                $('#saveNewBtn').hide();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+                console.log(textStatus, errorThrown);
+                $('#resultSummaryData ul').append('<li>We have some issue processing your request. Please try again later.</li>');
+            }
+
+        });
+    }
         
     };
         
