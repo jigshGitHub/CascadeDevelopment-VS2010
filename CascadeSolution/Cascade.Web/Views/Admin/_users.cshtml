@@ -112,6 +112,17 @@
                             </select>
                         </td>
                     </tr>
+                    <tr data-bind="visible:makeBuyerVivible">
+                        <td data-bind="text:roleKeyTitle">
+                        </td>
+                        <td>
+                            :
+                        </td>
+                        <td>
+                            <select data-bind="options:buyers,optionsValue:'Value', optionsCaption:' ',optionsText: 'Text', value: buyerSelected">
+                            </select>
+                        </td>
+                    </tr>
                     <tr>
                         <td colspan="3" style="text-align: center">
                             <input type="button" class="editButton" value="Create New" data-bind="visible:createNewVisible,click:save" />
@@ -145,6 +156,7 @@
         self.role = ko.observable('');
         self.roleKeyValue = ko.observable('');
         self.roleKeyTitle = ko.observable('');
+        self.buyerSelected = ko.observable('');
         self.agencies = ko.computed(function () {
             var localAgencies = [];
             $.ajax({
@@ -170,6 +182,31 @@
             return localAgencies;
         }, self);
 
+        self.buyers = ko.computed(function () {
+            var localBuyers = [];
+            $.ajax({
+                url: baseUrl + '/api/Lookup/',
+                type: 'GET',
+                contentType: 'application/json',
+                data: { id: 'Buyer' },
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    //log(data.length);
+                    if (data.length > 0) {
+                        $.each(data, function (i, item) {
+                            //log(item.Text);
+                            localBuyers.push(item);
+                        });
+                    }
+                },
+                error: function (xhr, status, somthing) {
+                    log(status);
+                }
+            });
+            return localBuyers;
+        }, self);
+
         self.fill = function (id, name, fname, lname, email, role, roleKeyVal) {
             self.userId = id;
             self.userName(name)
@@ -178,6 +215,15 @@
             self.email(email);
             self.role(role);
             self.roleKeyValue(roleKeyVal);
+            self.buyerSelected(roleKeyVal);
+            if (role != undefined) {
+                if (role == 'agency')
+                    self.roleKeyValue(roleKeyVal);
+                else if (role == 'buyer')
+                    self.buyerSelected(roleKeyVal);
+                else
+                    self.roleKeyValue(roleKeyVal);                
+            }
         }
 
         self.showMessage = ko.observable(false);
@@ -186,6 +232,7 @@
         self.saveVisible = ko.observable(false);
         self.createNewVisible = ko.observable(true);
         self.roleKeyValVisible = ko.observable(false);
+        self.makeBuyerVivible = ko.observable(false);
 
         self.roles = ko.computed(function () {
             var localRoles = [];
@@ -212,23 +259,44 @@
         }, self);
         self.showEditContainer = ko.observable(false);
         self.role.subscribe(function (roleSelected) {
+            self.roleKeyValVisible(false);
+            self.makeBuyerVivible(false);
             if (roleSelected == 'agency') {
                 self.roleKeyTitle('Agency');
                 self.roleKeyValVisible(true);
+            }
+            else if (roleSelected == 'buyer') {
+                self.roleKeyTitle('Buyer');
+                self.makeBuyerVivible(true);
             }
             else {
                 self.roleKeyTitle('');
                 self.roleKeyValVisible(false);
             }
         } .bind(self));
+
+        //        self.buyerSelected.subscribe(function (value) {
+        //            self.roleKeyValue(value);
+        //        } .bind(self));
         self.save = function () {
             if (self.firstName() == '' || self.firstName() == undefined || self.lastName() == '' || self.lastName() == undefined || self.email() == '' || self.email() == undefined) {
                 alert('First Name, Last Name and Email is required');
                 return false;
             }
-            if (self.role() == 'agency' && self.roleKeyValue() == '') {
-                alert('Agency value is required');
-                return false;
+            if (self.roleKeyValVisible()) {
+                if (self.role() == 'agency' && self.roleKeyValue() == '' || self.roleKeyValue() == undefined) {
+                    alert('Agency value is required');
+                    return false;
+                }
+            }
+            if (self.makeBuyerVivible()) {
+                if (self.role() == 'buyer' && (self.buyerSelected() == '' || self.buyerSelected() == undefined)) {
+                    alert('Buyer value is required');
+                    return false;
+                }
+                else {
+                    self.roleKeyValue(self.buyerSelected());
+                }
             }
             var json = JSON.stringify({
                 userId: self.userId, firstName: self.firstName(), lastName: self.lastName(), email: self.email(), role: self.role(), roleEntityValue: self.roleKeyValue()
@@ -254,7 +322,7 @@
             });
         }
         self.clear = function () {
-            self.fill('', '', '', '', '', undefined, '');
+            self.fill('', '', '', '', '', undefined, undefined);
             self.roleKeyValVisible(false);
             self.roleKeyTitle('');
         }

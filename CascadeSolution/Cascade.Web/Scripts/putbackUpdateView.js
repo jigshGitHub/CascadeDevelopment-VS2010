@@ -244,7 +244,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
             self.newSellerCheck(response.SellerCheck);
             self.newGUID(response.GUID);
             self.checkDocumentsFullName(response.CheckDocuments);
-            self.UploadedOn(response.UploadedOn);
+            self.UploadedOn(JSONDate(response.UploadedOn));
             self.UploadedBy(response.UploadedBy);
             if (response.CheckDocuments != "" && response.CheckDocuments != null) {
                 self.newUploaded(true);

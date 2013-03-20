@@ -159,13 +159,19 @@
                 &nbsp;&nbsp;<input type="button" class="editButton" value="&nbsp;Manage Check Images&nbsp;" data-bind="click:manageCheckImages" />
             </td>
         </tr>
-        <tr class="dummyitem"><td colspan="2"></td></tr>
         <tr>
             <td>Unique Identification #</td>
             <td>
                 <input id="newGUID" type="text" data-bind="value:newGUID"  class="guidwidth" readonly="true" />
             </td>
         </tr>
+        <tr>
+            <td>Is Active? (Uncheck to Archive):</td>
+            <td>
+                <input type="checkbox" data-bind="checked: IsActive" />
+            </td>
+        </tr>
+        <tr class="dummyitem"><td colspan="2"></td></tr>
         <tr>
             <td colspan="2" class="confirmBtnContainer">
                 <input type="button" id="saveEditBtn" title="Save" data-bind="click:save"/>
@@ -276,6 +282,8 @@
             self.newGUID = ko.observable('');
             self.UploadedOn = ko.observable('');
             self.UploadedBy = ko.observable('');
+            //For Archive Purpose
+            self.IsActive = ko.observable('');
 
             //For file upload
             self.checkDocumentsFullName = ko.observable(''); //This will store filename seperated by | 
@@ -447,8 +455,9 @@
                     self.newOurCheck(data.OurCheckNumber);
                     self.newGUID(data.GUID);
                     self.checkDocumentsFullName(data.CheckDocuments);
-                    self.UploadedOn(data.UploadedOn);
+                    self.UploadedOn(JSONDate(data.UploadedOn));
                     self.UploadedBy(data.UploadedBy);
+                    self.IsActive(data.IsActive);
                 },
                 error: function (xhr, status, somthing) {
                     log(status);
@@ -459,7 +468,7 @@
             self.save = function () {
                 
                     //alert($('#Id').val());
-                    //alert(self.transcode());
+                    //alert(self.UploadedOn());
                     var json = JSON.stringify({
                         ID: $('#Id').val(),
                         DateRec: self.newDateRec(),
@@ -480,7 +489,8 @@
                         GUID: self.newGUID(),
                         UploadedBy: self.UploadedBy(),
                         UploadedOn: self.UploadedOn(),
-                        CheckDocuments: self.checkDocumentsFullName()
+                        CheckDocuments: self.checkDocumentsFullName(),
+                        IsActive: self.IsActive()
                     });
 
                     $.ajax({

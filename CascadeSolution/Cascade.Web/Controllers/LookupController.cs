@@ -230,6 +230,12 @@ namespace Cascade.Web.Controllers
                     data.Add(new LookUp("Seller", "Seller"));
                     lookupData = data.AsEnumerable<LookUp>();
                     break;
+                case "PutbackInitiatedBy":
+                    data = new List<LookUp>();
+                    data.Add(new LookUp("Cascade", "Cascade"));
+                    data.Add(new LookUp("Buyer", "Buyer"));
+                    lookupData = data.AsEnumerable<LookUp>();
+                    break;
                 default:
                     break;
             }

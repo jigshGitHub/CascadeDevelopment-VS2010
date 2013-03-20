@@ -28,7 +28,7 @@ namespace Cascade.Web.Areas.Recourse.Controllers
         [HttpPost]
         public JsonResult Add(MSI_DPSForm _dpsform)
         {
-            _dpsform.IsActive = true;
+            
             MSIDPSFormDataRepository repository;
             try
             {
@@ -39,6 +39,8 @@ namespace Cascade.Web.Areas.Recourse.Controllers
                 }
                 else
                 {
+                    //Set IsActive as True for every new Record
+                    _dpsform.IsActive = true;
                     repository.Add(_dpsform);
                 }
             }
