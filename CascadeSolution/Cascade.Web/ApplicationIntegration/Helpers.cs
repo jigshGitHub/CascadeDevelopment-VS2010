@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Cascade.Helpers;
+using System.Web.Security;
 namespace Cascade.Web.ApplicationIntegration
 {
     public static class MenuHelper
@@ -56,6 +58,52 @@ namespace Cascade.Web.ApplicationIntegration
 
             if (routeData == null) return false;
             return routeData == item;
+        }
+    }
+
+    public static class MemberShipHelper
+    {
+
+        public static List<string> GetEmailAddressUserInRole(string role)
+        {
+            string[] usersInRole = Roles.GetUsersInRole(role);
+            List<string> userEmails = new List<string>();
+            string emailId;
+            foreach (String user in usersInRole)
+            {
+                emailId = Membership.GetUser(user).Email;
+                if (Validators.ValidateEmail(emailId))
+                    userEmails.Add(emailId);
+                else
+                    LogHelper.Info(emailId + " is not valid");
+            }
+            return userEmails;
+        }
+
+        public static string GetEmailAddress(Guid userId)
+        {
+            string email = Membership.GetUser(userId).Email;
+            if (Validators.ValidateEmail(email))
+                return email;
+            else
+            {
+                LogHelper.Info(email + " is not valid");
+                return "";
+            }
+
+        }
+
+        public static List<string> GetUserIdsUserInRole(string role)
+        {
+            string[] usersInRole = Roles.GetUsersInRole(role);
+            List<string> userIds = new List<string>();
+            string userId;
+            foreach (String user in usersInRole)
+            {
+                userId = Membership.GetUser(user).ProviderUserKey.ToString();
+                userIds.Add(userId);
+            }
+            return userIds;
         }
     }
 }

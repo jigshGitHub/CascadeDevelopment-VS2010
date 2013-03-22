@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,13 +41,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums.cs" />
+    <Compile Include="Portfolio\Original.cs" />
     <Compile Include="Recourse\Media\MediaRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="NotificationMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cascade.Data\Cascade.Data.csproj">
       <Project>{A1AF78DD-96BA-440A-A19F-34481DB8BADE}</Project>
       <Name>Cascade.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cascade.Helpers\Cascade.Helpers.csproj">
+      <Project>{97303427-3EF5-46E4-AD52-E717B41F1428}</Project>
+      <Name>Cascade.Helpers</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cascade.ViewModels\Cascade.ViewModels.csproj">
       <Project>{FA3094E1-2921-44EF-87C7-AC95D69535E3}</Project>

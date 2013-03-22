@@ -32,6 +32,7 @@ function mediaType(id,text, value, visible, fulFilledChecked) {
     self.typeConstraints = ko.observable('');
     self.documents = ko.observable('');
     self.docUrl = ko.observable('');
+    self.requestedUserID = ko.observable('');
 }
 function pageViewModel(userId, userAgency, userRole, id) {
     log(userId + ' ' + userAgency + ' ' + userRole);
@@ -153,6 +154,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
                             
                             if (item.Value == requestedItem.TypeId && requestedItem.RequestStatusId != 4  ) {
                                 requestedMedia = new mediaType(requestedItem.Id, item.Text, item.Value, (requestedItem.RespondedDocuments == null) ? false : true, false);
+                                requestedMedia.requestedUserID(requestedItem.RequestedUserID);
                                 requestedMedia.docUrl((requestedItem.RespondedDocuments == null) ? '' : baseUrl + '/Recourse/Media/DownloadDoc?fileName=' + requestedItem.RespondedDocuments);
                                 requestedMedia.documents((requestedItem.RespondedDocuments == null) ? 'NO MEDIA IN HOUSE' : getFileName(requestedItem.RespondedDocuments));
                                 self.mediaTypes.push(requestedMedia);
@@ -232,7 +234,8 @@ function pageViewModel(userId, userAgency, userRole, id) {
     function getSelectedMediaRequested() {
         var localSelectedMediaTypes = [];
         $.each(self.fulFilledMediaTypes(), function (i, item) {
-            localSelectedMediaTypes.push(new mediaReuqestType(item.id, undefined, item.value(), undefined, new Date(), self.userId(), new Date(), self.userId(), undefined));
+            log(item.requestedUserID());
+            localSelectedMediaTypes.push(new mediaReuqestType(item.id, undefined, item.value(), undefined, new Date(), item.requestedUserID(), new Date(), self.userId(), undefined));
         });
         return localSelectedMediaTypes;
     }

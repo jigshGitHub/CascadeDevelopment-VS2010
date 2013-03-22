@@ -236,6 +236,11 @@ namespace Cascade.Web.Controllers
                     data.Add(new LookUp("Buyer", "Buyer"));
                     lookupData = data.AsEnumerable<LookUp>();
                     break;
+                case "MediaRequestStatus":
+                    MSI_MediaRequestStatusRepository statusData = new MSI_MediaRequestStatusRepository();
+                    lookupData = from status in statusData.GetAll()
+                                 select new LookUp(status.Name,status.Id.ToString());
+                    break;
                 default:
                     break;
             }

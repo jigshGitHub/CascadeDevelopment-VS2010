@@ -32,6 +32,7 @@ namespace Cascade.Web
 
             MenuFactory menufactory = new MenuFactory();
             menufactory.InitializeMenu();
+            log4net.Config.XmlConfigurator.Configure();
         }
     }
 }

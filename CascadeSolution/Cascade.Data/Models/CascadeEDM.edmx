@@ -20,6 +20,7 @@
           <EntitySet Name="MSI_MediaRequestTypes" EntityType="CascadeDBModel.Store.MSI_MediaRequestTypes" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_MediaTracker" EntityType="CascadeDBModel.Store.MSI_MediaTracker" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_MediaTypes" EntityType="CascadeDBModel.Store.MSI_MediaTypes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MSI_MessageNotification" EntityType="CascadeDBModel.Store.MSI_MessageNotification" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_OwnerResponses" EntityType="CascadeDBModel.Store.MSI_OwnerResponses" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_Port_Acq_Edited" EntityType="CascadeDBModel.Store.MSI_Port_Acq_Edited" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_Port_Acq_Original" EntityType="CascadeDBModel.Store.MSI_Port_Acq_Original" store:Type="Tables" Schema="dbo" />
@@ -1272,6 +1273,17 @@
           </Key>
           <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="varchar" MaxLength="100" />
+          <Property Name="IsActive" Type="bit" />
+        </EntityType>
+        <EntityType Name="MSI_MessageNotification">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Body" Type="varchar(max)" />
+          <Property Name="Subject" Type="varchar" MaxLength="150" />
+          <Property Name="RecipientUserId" Type="uniqueidentifier" />
+          <Property Name="SentOn" Type="datetime" />
           <Property Name="IsActive" Type="bit" />
         </EntityType>
         <EntityType Name="MSI_OwnerResponses">
@@ -3683,6 +3695,7 @@
           <EntitySet Name="MSI_Port_SalesTrans_Original" EntityType="CascadeDBModel.MSI_Port_SalesTrans_Original" />
           <EntitySet Name="MSI_RecallForm" EntityType="CascadeDBModel.MSI_RecallForm" />
           <EntitySet Name="MSI_PutBackForm" EntityType="CascadeDBModel.MSI_PutBackForm" />
+          <EntitySet Name="MSI_MessageNotification" EntityType="CascadeDBModel.MSI_MessageNotification" />
           </EntityContainer>
         <EntityType Name="MSI_ComplaintIssues">
           <Key>
@@ -6212,6 +6225,17 @@
           <Property Type="String" Name="PutBackInitiatedBy" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="ClientName" MaxLength="150" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="MSI_MessageNotification">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Guid" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Body" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Subject" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Type="Guid" Name="RecipientUserId" />
+          <Property Type="DateTime" Name="SentOn" />
+          <Property Type="Boolean" Name="IsActive" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -8424,6 +8448,18 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="MSI_MessageNotification">
+            <EntityTypeMapping TypeName="CascadeDBModel.MSI_MessageNotification">
+              <MappingFragment StoreEntitySet="MSI_MessageNotification">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="SentOn" ColumnName="SentOn" />
+                <ScalarProperty Name="RecipientUserId" ColumnName="RecipientUserId" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="Body" ColumnName="Body" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -8569,6 +8605,7 @@
         <EntityTypeShape EntityType="CascadeDBModel.MSI_Port_SalesTrans_Original" Width="1.5" PointX="7.375" PointY="28.75" Height="4.287903645833353" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_RecallForm" Width="1.5" PointX="28.375" PointY="12.75" Height="6.9801236979166674" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_PutBackForm" Width="1.5" PointX="18.375" PointY="28.75" Height="6.7878222656249818" />
+        <EntityTypeShape EntityType="CascadeDBModel.MSI_MessageNotification" Width="1.5" PointX="12.375" PointY="6.75" Height="2.1725878906249818" />
         </Diagram>
     </Diagrams>
   </Designer>

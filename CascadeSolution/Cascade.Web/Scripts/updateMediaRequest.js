@@ -7,7 +7,7 @@
 /// <reference path="knockout-2.0.0.debug.js" />
 
 
-function mediaReuqestType(id, reqId, typeId, documents, reqDt, reqUser, respDt, respUser, typeConstraints) {
+function mediaReuqestType(id, reqId, typeId, documents, reqDt, reqUser, respDt, respUser, typeConstraints, statusId) {
     this.Id = id;
     this.RequestedId = reqId;
     this.TypeId = typeId;
@@ -17,7 +17,7 @@ function mediaReuqestType(id, reqId, typeId, documents, reqDt, reqUser, respDt, 
     this.RespondedDate = respDt;
     this.RespondedUserID = respUser;
     this.TypeConstraints = typeConstraints;
-    this.RequestStatusId = 6;  //RequestComplete
+    this.RequestStatusId = statusId;// 6;  //RequestComplete
 }
 
 function mediaType(id, text, value, visible, checked) {
@@ -30,6 +30,7 @@ function mediaType(id, text, value, visible, checked) {
     self.typeConstraints = ko.observable('');
     self.documents = ko.observable('');
     self.docUrl = ko.observable('');
+    self.statusId = ko.observable('');
 }
 function pageViewModel(userId, userAgency, userRole, id) {
     log(userId + ' ' + userAgency + ' ' + userRole);
@@ -82,6 +83,32 @@ function pageViewModel(userId, userAgency, userRole, id) {
     self.seller = ko.observable('');
 
     self.mediaTypes = ko.observableArray([]);
+    
+    self.statusList = ko.computed(function () {
+        var availableStatus = [];
+        $.ajax({
+            url: baseUrl + '/api/Lookup/',
+            type: 'GET',
+            contentType: 'application/json',
+            data: { id: 'MediaRequestStatus' },
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                //log(data.length);
+                if (data.length > 0) {
+                    $.each(data, function (i, item) {
+                        //log(item.Text);
+                        availableStatus.push(item);
+                    });
+                }
+            },
+            error: function (xhr, status, somthing) {
+                log(status);
+            }
+        });
+        return availableStatus;
+    }, self);
+
     self.setShowMessagePanel = function (isVisible, message) {
         self.showMessage(isVisible);
         self.message(message);
@@ -177,7 +204,8 @@ function pageViewModel(userId, userAgency, userRole, id) {
                     $.each(data, function (i, item) {
                         $.each(requestedTypes, function (i, requestedItem) {
                             if (item.Value == requestedItem.TypeId && requestedItem.RequestStatusId != 6) {
-                                requestedMedia = new mediaType(requestedItem.Id, item.Text, item.Value,true,false);
+                                requestedMedia = new mediaType(requestedItem.Id, item.Text, item.Value, true, false);
+                                requestedMedia.statusId(requestedItem.RequestStatusId);
                                 self.mediaTypes.push(requestedMedia);
                             }
                         });
@@ -247,7 +275,8 @@ function pageViewModel(userId, userAgency, userRole, id) {
     function getSelectedMediaRequested() {
         var localSelectedMediaTypes = [];
         $.each(self.selectedMediaTypes(), function (i, item) {
-            localSelectedMediaTypes.push(new mediaReuqestType(item.id, undefined, item.value(), undefined, new Date(), self.userId(), new Date(), self.userId(), undefined));
+            log(item.statusId());
+            localSelectedMediaTypes.push(new mediaReuqestType(item.id, undefined, item.value(), undefined, new Date(), self.userId(), new Date(), self.userId(), undefined, item.statusId()));
         });
         return localSelectedMediaTypes;
     }
@@ -275,7 +304,7 @@ function pageViewModel(userId, userAgency, userRole, id) {
     }
     self.submit = function () {
         self.saveData();
-        window.open(baseUrl + '/Recourse/Home', '_self', '', '');
+        //window.open(baseUrl + '/Recourse/Home', '_self', '', '');
     }
 
     self.submitRequestMore = function () {

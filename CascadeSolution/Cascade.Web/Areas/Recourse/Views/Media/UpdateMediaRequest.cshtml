@@ -167,8 +167,9 @@
                             <td style="width: 3%">
                                 <input type="checkbox" data-bind="checked:checked,click: $parent.mediaChecked,value:value,attr: {id: 'mediaType' + value}" />
                             </td>
-                            <td style="width: 97%" data-bind="text: text, attr:{for: 'mediaType'+ value}">
+                            <td style="width: 37%" data-bind="text: text, attr:{for: 'mediaType'+ value}">
                             </td>
+                            <td style="width: 60%" ><select id="statusList" data-bind="options:$parent.statusList,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value:statusId"></select></td>
                         </tr>
                     </tbody>
                 </table>

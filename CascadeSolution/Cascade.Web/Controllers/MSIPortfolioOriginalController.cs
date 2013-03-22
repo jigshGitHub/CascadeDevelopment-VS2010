@@ -5,78 +5,63 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Cascade.Data.Models;
-using Cascade.Data.Repositories;
+using Cascade.Business.Portfolio;
+using Cascade.Helpers;
 
 namespace Cascade.Web.Controllers
 {
     public class MSIPortfolioOriginalController : ApiController
     {
+        private static readonly string thisClass = "Cascade.Web.Controllers.MSIPortfolioOriginalController";
+        Original business;
+
+        public MSIPortfolioOriginalController()
+        {
+            business = new Original();
+        }
+
         public MSI_Port_Acq_Original Get(string portfolioNumber)
         {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters productCode={1}", thisMethod, portfolioNumber);
+            LogHelper.Info(logMessage);
+
             MSI_Port_Acq_Original portfolio = null;
 
             try
             {
-                DataQueries query = new DataQueries();
-                portfolio = query.GetPortfolioPurchaseSummary(portfolioNumber);
+                portfolio = business.Get(portfolioNumber);
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.Error(logMessage, ex);
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent(string.Format("Error occur in Gets MediaRequest : {0}", ex.Message))
+                });
             }
             return portfolio;
 
         }
+
         public MSI_Port_Acq_Original Post(MSI_Port_Acq_Original inPortfolio)
         {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters portfolioNumber={1}", thisMethod, inPortfolio.Portfolio_);
+            LogHelper.Info(logMessage);
+
             MSI_Port_Acq_Original portfolioToSave = null;
-            MSI_Port_Acq_OriginalRepository repository = null;
-            bool editingRequired = true;
             try
             {
-
-                repository = new MSI_Port_Acq_OriginalRepository();
-                portfolioToSave = repository.GetById(inPortfolio.Portfolio_);
-
-                if (portfolioToSave == null)
-                {
-                    editingRequired = false;
-                    portfolioToSave = new MSI_Port_Acq_Original();
-                }
-                portfolioToSave.Portfolio_ = inPortfolio.Portfolio_;
-                portfolioToSave.Company = inPortfolio.Company;
-                portfolioToSave.Cut_OffDate = inPortfolio.Cut_OffDate;
-                portfolioToSave.ClosingDate = inPortfolio.ClosingDate;
-                portfolioToSave.Lender_FileDescription = inPortfolio.Lender_FileDescription;
-                portfolioToSave.Seller = inPortfolio.Seller;
-                portfolioToSave.CostBasis = inPortfolio.CostBasis;
-                portfolioToSave.Face = inPortfolio.Face;
-                portfolioToSave.C_ofAccts = inPortfolio.C_ofAccts;
-                portfolioToSave.PutbackDeadline = inPortfolio.PutbackDeadline;
-                portfolioToSave.PutbackTerm__days_ = inPortfolio.PutbackTerm__days_;
-                portfolioToSave.PurchasePrice = inPortfolio.PurchasePrice;
-                portfolioToSave.ResaleRestrictionId = inPortfolio.ResaleRestrictionId;
-                portfolioToSave.Notes = inPortfolio.Notes;
-                portfolioToSave.CreatedBy = inPortfolio.CreatedBy;
-                portfolioToSave.UpdatedBy = inPortfolio.UpdatedBy;
-                portfolioToSave.CreatedDate = DateTime.Now;
-                portfolioToSave.UpdatedDate = DateTime.Now;
-                if (editingRequired)
-                    repository.Update(portfolioToSave);
-                else
-                    repository.Add(portfolioToSave);
-            }
-            catch (System.Data.Entity.Validation.DbEntityValidationException validationException)
-            {
-                foreach (System.Data.Entity.Validation.DbEntityValidationResult errorResult in validationException.EntityValidationErrors)
-                {
-                    foreach (System.Data.Entity.Validation.DbValidationError error in errorResult.ValidationErrors)
-                    {
-                        string data = error.ErrorMessage;
-                    }
-                }
+                portfolioToSave = business.Save(inPortfolio);
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.Error(logMessage, ex);
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent(string.Format("Error occur in POST MediaRequest : {0}", ex.Message))
+                });
             }
             return portfolioToSave;
         }
@@ -84,18 +69,33 @@ namespace Cascade.Web.Controllers
 
     public class MSIPortfolioSalesTransactionsOriginalController : ApiController
     {
+        private static readonly string thisClass = "Cascade.Web.Controllers.MSIPortfolioSalesTransactionsOriginalController";
+        Original business;
+
+        public MSIPortfolioSalesTransactionsOriginalController()
+        {
+            business = new Original();
+        }
+
         public IEnumerable<MSI_Port_SalesTrans_Original> Get(string portfolioNumber, string userId = "")
         {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters productCode={1}", thisMethod, portfolioNumber);
+            LogHelper.Info(logMessage);
+
             IEnumerable<MSI_Port_SalesTrans_Original> transactions = null;
 
             try
             {
-                DataQueries query = new DataQueries();
-                transactions = query.GetPortfolioSalesSummary(portfolioNumber, userId);
+                transactions = business.GetSalesTransactions(portfolioNumber, userId);
             }
             catch (Exception ex)
             {
-                throw ex;
+                ErrorLogHelper.Error(logMessage, ex);
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent(string.Format("Error occur in Getting Sales transactions : {0}", ex.Message))
+                });
             }
             return transactions;
 
@@ -105,15 +105,23 @@ namespace Cascade.Web.Controllers
         [HttpGet]
         public MSI_Port_SalesTrans_Original Details(int id)
         {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters id={1}", thisMethod, id);
+            LogHelper.Info(logMessage);
+
             MSI_Port_SalesTrans_Original transaction = null;
-            MSI_Port_SalesTrans_OriginalRepository repository = null;
+
             try
             {
-                repository = new MSI_Port_SalesTrans_OriginalRepository();
-                transaction = repository.GetById(id);
+                transaction = business.GetSalesTransaction(id);
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.Error(logMessage, ex);
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent(string.Format("Error occur in Getting Sales transaction : {0}", ex.Message))
+                });
             }
             return transaction;
 
@@ -122,37 +130,25 @@ namespace Cascade.Web.Controllers
 
         public MSI_Port_SalesTrans_Original Post(MSI_Port_SalesTrans_Original inTransaction)
         {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters id={1}", thisMethod, inTransaction.ID);
+            LogHelper.Info(logMessage);
+
             MSI_Port_SalesTrans_Original transactionToSave = null;
-            MSI_Port_SalesTrans_OriginalRepository repository = null;
+
 
             try
             {
-                repository = new MSI_Port_SalesTrans_OriginalRepository();
-                transactionToSave = repository.GetById(inTransaction.ID);
-
-                transactionToSave.PutbackDeadline = inTransaction.PutbackDeadline;
-                transactionToSave.PutbackTerm_days_ = inTransaction.PutbackTerm_days_;
-                transactionToSave.C_ofAccts = inTransaction.C_ofAccts;
-                transactionToSave.FaceValue = inTransaction.FaceValue;
-                transactionToSave.SalesBasis = inTransaction.SalesBasis;
-                transactionToSave.SalesPrice = inTransaction.SalesPrice;
-                transactionToSave.Buyer = inTransaction.Buyer;
-                transactionToSave.Lender = inTransaction.Lender;
-                transactionToSave.ClosingDate = inTransaction.ClosingDate;
-                transactionToSave.Cut_OffDate = inTransaction.Cut_OffDate;
-                transactionToSave.Notes = inTransaction.Notes;
-                transactionToSave.Portfolio_ = inTransaction.Portfolio_;
-                transactionToSave.C_ofAccts = inTransaction.C_ofAccts;
-                transactionToSave.CreatedBy = inTransaction.CreatedBy;
-                transactionToSave.CreatedDate = DateTime.Now;
-                transactionToSave.UpdatedBy = inTransaction.UpdatedBy;
-                transactionToSave.UpdatedDate = DateTime.Now;
-
-                repository.Update(transactionToSave);
+                transactionToSave = business.SaveSalesTransaction(inTransaction);
 
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.Error(logMessage, ex);
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent(string.Format("Error occur in saving Sales transaction : {0}", ex.Message))
+                });
             }
             return inTransaction;
 

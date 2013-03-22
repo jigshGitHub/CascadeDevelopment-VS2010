@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 using Cascade.Data.Models;
 using System.Data.SqlClient;
 using System.Data;
+using Cascade.Helpers;
 namespace Cascade.Data.Repositories
 {
     public class DataQueries
     {
+        private static readonly string thisClass = "Cascade.Data.Repositories.DataQueries";
 
         public IEnumerable<Purchases> GetPurchases(DateTime? startDate, DateTime? endDate, string productCode)
         {
@@ -622,8 +624,13 @@ namespace Cascade.Data.Repositories
 
         }
 
+        #region Portfolio Data
         public MSI_Port_Acq_Original GetPortfolioPurchaseSummary(string productCode)
         {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters productCode={1}", thisMethod, productCode);
+            LogHelper.Info(logMessage);
+
             MSI_Port_Acq_Original portfolio = null;
             DBFactory db;
             System.Data.DataSet ds;
@@ -664,12 +671,57 @@ namespace Cascade.Data.Repositories
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.Error(logMessage, ex);
             }
             return portfolio;
         }
 
+        public MSI_Port_Acq_Original GetPortfolioOriginal(string portfolioNumber)
+        {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters portfolioNumber={1}", thisMethod, portfolioNumber);
+            LogHelper.Info(logMessage);
+
+            MSI_Port_Acq_Original portfolio = null;
+            MSI_Port_Acq_OriginalRepository repository = null;
+            try
+            {
+                repository = new MSI_Port_Acq_OriginalRepository();
+                portfolio = repository.GetById(portfolioNumber);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogHelper.Error(logMessage, ex);
+            }
+            return portfolio;
+        }
+
+        public MSI_Port_SalesTrans_Original GetPortfolioSalesTransactionOriginal(int id)
+        {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters id={1}", thisMethod, id);
+            LogHelper.Info(logMessage);
+
+            MSI_Port_SalesTrans_Original transaction = null;
+            MSI_Port_SalesTrans_OriginalRepository repository = null;
+            try
+            {
+                repository = new MSI_Port_SalesTrans_OriginalRepository();
+                transaction = repository.GetById(id);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogHelper.Error(logMessage, ex);
+            }
+            return transaction;
+        }
+
         public IEnumerable<MSI_Port_SalesTrans_Original> GetPortfolioSalesSummary(string productCode, string userId)
         {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters productCode={1}, userId={2}", thisMethod, productCode, userId);
+            LogHelper.Info(logMessage);
+
             MSI_Port_SalesTrans_Original salesTransaction = null;
             DBFactory db;
             List<MSI_Port_SalesTrans_Original> salesTransactions = null;
@@ -715,7 +767,7 @@ namespace Cascade.Data.Repositories
 
                         if (DateTime.TryParse(dr["UpdatedDate"].ToString(), out notNullDt))
                             salesTransaction.UpdatedDate = notNullDt;
-                        salesTransaction.CreatedBy = dr["CreatedBy"].ToString();                        
+                        salesTransaction.CreatedBy = dr["CreatedBy"].ToString();
                         salesTransaction.UpdatedBy = dr["UpdatedBy"].ToString();
                         salesTransactions.Add(salesTransaction);
                     }
@@ -724,13 +776,99 @@ namespace Cascade.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw ex;
+                ErrorLogHelper.Error(logMessage, ex);
             }
             return salesTransactions.AsEnumerable<MSI_Port_SalesTrans_Original>();
         }
 
+        public void AddPortfolio(MSI_Port_Acq_Original portfolioToSave)
+        {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters Portfolio Number={1}", thisMethod, portfolioToSave.Portfolio_);
+            LogHelper.Info(logMessage);
+
+            MSI_Port_Acq_OriginalRepository repository = null;
+            try
+            {
+
+                repository = new MSI_Port_Acq_OriginalRepository();
+                repository.Add(portfolioToSave);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogHelper.Error(logMessage, ex);
+            }
+        }
+
+        public void UpdatePortfolio(MSI_Port_Acq_Original portfolioToSave)
+        {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters Portfolio Number={1}", thisMethod, portfolioToSave.Portfolio_);
+            LogHelper.Info(logMessage);
+
+            MSI_Port_Acq_OriginalRepository repository = null;
+            try
+            {
+
+                repository = new MSI_Port_Acq_OriginalRepository();
+                repository.Update(portfolioToSave);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogHelper.Error(logMessage, ex);
+            }
+        }
+
+        public MSI_Port_SalesTrans_Original UpdateSalesTransaction(MSI_Port_SalesTrans_Original inTransaction)
+        {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters id={1}", thisMethod, inTransaction.ID);
+            LogHelper.Info(logMessage);
+
+            MSI_Port_SalesTrans_Original transactionToSave = null;
+            MSI_Port_SalesTrans_OriginalRepository repository = null;
+
+            try
+            {
+                repository = new MSI_Port_SalesTrans_OriginalRepository();
+                transactionToSave = repository.GetById(inTransaction.ID);
+
+                transactionToSave.PutbackDeadline = inTransaction.PutbackDeadline;
+                transactionToSave.PutbackTerm_days_ = inTransaction.PutbackTerm_days_;
+                transactionToSave.C_ofAccts = inTransaction.C_ofAccts;
+                transactionToSave.FaceValue = inTransaction.FaceValue;
+                transactionToSave.SalesBasis = inTransaction.SalesBasis;
+                transactionToSave.SalesPrice = inTransaction.SalesPrice;
+                transactionToSave.Buyer = inTransaction.Buyer;
+                transactionToSave.Lender = inTransaction.Lender;
+                transactionToSave.ClosingDate = inTransaction.ClosingDate;
+                transactionToSave.Cut_OffDate = inTransaction.Cut_OffDate;
+                transactionToSave.Notes = inTransaction.Notes;
+                transactionToSave.Portfolio_ = inTransaction.Portfolio_;
+                transactionToSave.C_ofAccts = inTransaction.C_ofAccts;
+                transactionToSave.CreatedBy = inTransaction.CreatedBy;
+                transactionToSave.CreatedDate = DateTime.Now;
+                transactionToSave.UpdatedBy = inTransaction.UpdatedBy;
+                transactionToSave.UpdatedDate = DateTime.Now;
+
+                repository.Update(transactionToSave);
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLogHelper.Error(logMessage, ex);
+            }
+
+            return transactionToSave;
+        }
+
+        #endregion
         public IEnumerable<LookUp> GetDistinctProductCodes()
         {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}", thisMethod);
+            LogHelper.Info(logMessage);
+
             DBFactory db;
             SqlDataReader rdr;
             List<LookUp> data = null;
@@ -750,13 +888,17 @@ namespace Cascade.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Exception in DataQueries.GetSearchResults:" + ex.Message);
+                ErrorLogHelper.Error(logMessage, ex);
             }
             return data.AsQueryable<LookUp>();
         }
 
         public IEnumerable<LookUp> GetDistinctResponsibility()
         {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}", thisMethod);
+            LogHelper.Info(logMessage);
+
             DBFactory db;
             SqlDataReader rdr;
             List<LookUp> data = null;
@@ -776,13 +918,17 @@ namespace Cascade.Data.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Exception in DataQueries.GetDistinctResponsibility:" + ex.Message);
+                ErrorLogHelper.Error(logMessage, ex);
             }
             return data.AsQueryable<LookUp>();
         }
 
         public IEnumerable<MSI_Debtor> GetDebtors(string accountNumber)
         {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters accountNumber={1}", thisMethod, accountNumber);
+            LogHelper.Info(logMessage);
+
             MSI_Debtor debtor = null;
             DBFactory db;
             List<MSI_Debtor> debtors = null;
@@ -823,11 +969,16 @@ namespace Cascade.Data.Repositories
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.Error(logMessage, ex);
             }
             return debtors.AsEnumerable<MSI_Debtor>();
         }
         public IEnumerable<ComplianceViewResult> GetComplianceReportRecords(string AgencyId, string reportType)
         {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters AgencyId={1}, reportType={2}", thisMethod, AgencyId, reportType);
+            LogHelper.Info(logMessage);
+
             DBFactory db;
             SqlDataReader rdr = null;
             string reportName = "";
@@ -902,12 +1053,17 @@ namespace Cascade.Data.Repositories
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.Error(logMessage, ex);
                 throw new Exception("Exception in DataQueries.ReportType:" + reportType + "GetComplianceReportRecords:" + ex.Message);
             }
             return data.AsEnumerable<ComplianceViewResult>();
         }
         public IEnumerable<ComplianceViewResult> GetComplianceReportRecordsExport(string AgencyId, string reportType)
         {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters AgencyId={1}, reportType={2}", thisMethod, AgencyId, reportType);
+            LogHelper.Info(logMessage);
+
             DBFactory db;
             SqlDataReader rdr;
             List<ComplianceViewResult> data = null;
@@ -1059,15 +1215,25 @@ namespace Cascade.Data.Repositories
             }
             catch (Exception ex)
             {
+                ErrorLogHelper.Error(logMessage, ex);
                 throw new Exception("Exception in DataQueries.GetComplianceNCRAReportRecords:" + ex.Message);
             }
             return data.AsEnumerable<ComplianceViewResult>();
+        }
+
+        public IEnumerable<MSI_MediaTypes> GetMediaTypes()
+        {
+            return new MSI_MediaTypesRepository().GetAll();
         }
 
         #region Media Request Response Data
 
         public IEnumerable<MSI_MediaRequestResponse> GetMediaRequestResponses()
         {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}", thisMethod);
+            LogHelper.Info(logMessage);
+
             IEnumerable<MSI_MediaRequestResponse> data = null;
             MSI_MediaRequestResponseRepository repository = new MSI_MediaRequestResponseRepository();
             try
@@ -1078,14 +1244,19 @@ namespace Cascade.Data.Repositories
 
             catch (Exception ex)
             {
-                throw ex;
+                ErrorLogHelper.Error(logMessage, ex);
 
             }
             return data;
 
         }
+
         public IEnumerable<MSI_MediaRequestResponse> GetMediaRequestResponses(string agency, Guid userId)
         {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters agency={1}, userId={2}", thisMethod, agency, userId.ToString());
+            LogHelper.Info(logMessage);
+
             IEnumerable<MSI_MediaRequestResponse> data = null;
             MSI_MediaRequestResponseRepository repository = new MSI_MediaRequestResponseRepository();
             try
@@ -1100,8 +1271,7 @@ namespace Cascade.Data.Repositories
 
             catch (Exception ex)
             {
-                throw ex;
-
+                ErrorLogHelper.Error(logMessage, ex);
             }
             return data;
 
@@ -1109,6 +1279,10 @@ namespace Cascade.Data.Repositories
 
         public MSI_MediaRequestResponse GetMediaRequestResponse(string id)
         {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters id={1}", thisMethod, id);
+            LogHelper.Info(logMessage);
+
             MSI_MediaRequestResponse data = null;
             MSI_MediaRequestResponseRepository repository = new MSI_MediaRequestResponseRepository();
             try
@@ -1118,8 +1292,7 @@ namespace Cascade.Data.Repositories
 
             catch (Exception ex)
             {
-                throw ex;
-
+                ErrorLogHelper.Error(logMessage, ex);
             }
             return data;
 
@@ -1127,6 +1300,10 @@ namespace Cascade.Data.Repositories
 
         public MSI_MediaRequestResponse GetMediaRequestResponse(string accountNumber, string agency, Guid userId)
         {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters accountNumber={1}, agency={2}, userId={3}", thisMethod, accountNumber, agency, userId.ToString());
+            LogHelper.Info(logMessage);
+
             MSI_MediaRequestResponse data = null;
             MSI_MediaRequestResponseRepository repository = new MSI_MediaRequestResponseRepository();
             try
@@ -1139,8 +1316,7 @@ namespace Cascade.Data.Repositories
 
             catch (Exception ex)
             {
-                throw ex;
-
+                ErrorLogHelper.Error(logMessage, ex);
             }
             return data;
 
@@ -1148,6 +1324,10 @@ namespace Cascade.Data.Repositories
 
         public MSI_MediaRequestResponse AddMediaRequestResponse(MSI_MediaRequestResponse submittedRequest)
         {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters AccountNumber={1}", thisMethod, submittedRequest.ACCOUNT);
+            LogHelper.Info(logMessage);
+
             MSI_MediaRequestResponseRepository repository = new MSI_MediaRequestResponseRepository();
             try
             {
@@ -1156,8 +1336,7 @@ namespace Cascade.Data.Repositories
 
             catch (Exception ex)
             {
-                throw ex;
-
+                ErrorLogHelper.Error(logMessage, ex);
             }
             return submittedRequest;
         }
@@ -1270,6 +1449,39 @@ namespace Cascade.Data.Repositories
             }
             return data;
 
+        }
+
+        #endregion
+
+        #region Message Notification
+
+        public IEnumerable<MSI_MessageNotification> GetMessageNotifications()
+        {
+            return new MSI_MessageNotificationRepository().GetAll();
+        }
+
+        public MSI_MessageNotification GetMessageNotification(string id)
+        {
+            return new MSI_MessageNotificationRepository().GetById(id);
+        }
+
+        public MSI_MessageNotification AddMessageNotification(MSI_MessageNotification notification)
+        {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters RecipientUserId={1}", thisMethod, notification.RecipientUserId);
+            LogHelper.Info(logMessage);
+
+            MSI_MessageNotificationRepository repository = new MSI_MessageNotificationRepository();
+            try
+            {
+                repository.Add(notification);
+            }
+
+            catch (Exception ex)
+            {
+                ErrorLogHelper.Error(logMessage, ex);
+            }
+            return notification;
         }
 
         #endregion
@@ -1718,7 +1930,7 @@ namespace Cascade.Data.Repositories
                     record.Seller = rdr["Seller"].ToString();
                     record.SellerCheck = rdr["SellerCheck"].ToString();
                     record.AcctName = rdr["AcctName"].ToString();
-                    
+
                     record.InitiatedBy = rdr["PutBackInitiatedBy"].ToString();
                     record.CheckDocuments = rdr["CheckDocuments"].ToString();
 
@@ -1735,7 +1947,7 @@ namespace Cascade.Data.Repositories
                     {
                         record.FaceValueofAcct = null;
                     }
-                                        
+
                     if (record.CostBasis == Convert.ToDecimal(0.0))
                     {
                         record.CostBasis = null;
