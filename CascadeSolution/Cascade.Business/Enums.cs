@@ -10,7 +10,7 @@ namespace Cascade.Business
         SentToOwner = 1,
         RequestInProgress = 2,
         OriginatorResearching = 3,
-        RequestFulfillment = 4,
+        Fulfilled = 4,
         OwnerUpdateRequested = 5,
         RequestComplete = 6,
         SentToOriginator = 7,
@@ -18,7 +18,8 @@ namespace Cascade.Business
         OriginatorInProcess = 9,
         NoOriginatorMediaAvailable =10,
         Uploaded = 11,
-        OriginatorFulfilled = 12
+        OriginatorFulfilled = 12,
+        Downloaded = 13
     }
 
     public enum UserRoles

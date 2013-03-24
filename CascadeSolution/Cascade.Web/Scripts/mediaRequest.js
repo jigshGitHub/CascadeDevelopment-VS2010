@@ -5,7 +5,7 @@
 /// <reference path="jquery.validate.js" />
 /// <reference path="jquery.validate.unobtrusive.js" />
 /// <reference path="knockout-2.0.0.debug.js" />
-if ($('#hdnUserRole').val() == 'user') {
+if ($('#hdnUserRole').val() == 'user' || $('#hdnUserRole').val() == "mediaAdmin") {
     var pimsAccountFocusString = 'PIMS Account Number';
 }
 else {
@@ -47,6 +47,32 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
     self.showMessage = ko.observable(false);
     self.message = ko.observable('');
     self.setFocus = ko.observable(false);
+    
+    self.agenciesDisable = ko.computed(function () { return (userAgency != '' && userAgency != undefined); }, self);
+    self.agencies = ko.computed(function () {
+        var localAgencies = [];
+        $.ajax({
+            url: baseUrl + '/api/Lookup/',
+            type: 'GET',
+            contentType: 'application/json',
+            data: { id: 'Agencies' },
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                //log(data.length);
+                if (data.length > 0) {
+                    $.each(data, function (i, item) {
+                        //log(item.Text);
+                        localAgencies.push(item);
+                    });
+                }
+            },
+            error: function (xhr, status, somthing) {
+                log(status);
+            }
+        });
+        return localAgencies;
+    }, self);
     function getFormatedDate(data) {
         if (data != null && data != '' && data != undefined) {
             return $.datepicker.formatDate('mm/dd/yy', new Date(data));
@@ -131,6 +157,11 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
             self.setFocus(true);
             return;
         }
+
+        if (self.agency() == '' || self.agency() == undefined) {
+            self.setShowMessagePanel(true, 'Agency is required');
+            return;
+        }
         self.searchedIdnetity = self.pimsAccountNumber(); //default
         if (self.originalAccountNumber() != originalAccountFocusString) {
             self.searchedIdnetity = self.originalAccountNumber();
@@ -186,6 +217,9 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
                     });
                 }
                 else {
+//                    if ($('#hdnUserRole').val() == 'user' || $('#hdnUserRole').val() == "mediaAdmin") {
+//                        window.open(baseUrl + '/Recourse/Media/UpdateMediaRequest/' + data.Id, '_self', '', '');
+//                    }
                     $("#loading").html("&nbsp;");
                     $("#loading").dialog('close');
                     self.pimsDataAvailable(true);
@@ -211,8 +245,7 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
 
         $.each(data, function (i, item) {
             $.each(self.mediaTypes(), function (i, mediaItem) {
-                if (mediaItem.value() == item.TypeId) {
-                    log('Metching media type ' + mediaItem.text());
+                if (mediaItem.value() == item.TypeId) {                    
                     mediaItem.enable(false);
                     mediaItem.checked(true);
                     if (item.RespondedDocuments != null) {
@@ -323,6 +356,7 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
     }
     checkMediaTypeChecked = function (isChecked, media) {
         if (isChecked && self.selectedMediaTypes.indexOf(media) < 0) {
+            log(media.enable());
             self.selectedMediaTypes.push(media);
             if (media.value() == '5') {
                 $("#statementMediaTypeConstraint").dialog('open');
@@ -344,8 +378,10 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
         write: function (value) {
 
             ko.utils.arrayForEach(self.mediaTypes(), function (item) {
-                item.checked(value);
-                checkMediaTypeChecked(value, item);
+                if (item.enable()) {
+                    item.checked(value);
+                    checkMediaTypeChecked(value, item);
+                }
             });
         }
     });

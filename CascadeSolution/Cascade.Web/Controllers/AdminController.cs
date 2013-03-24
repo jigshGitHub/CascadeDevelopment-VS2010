@@ -42,6 +42,7 @@ namespace Cascade.Web.Controllers
             {
                 profile = new AccountProfile(UserEntitiesDataFactory.GetUser(Guid.Parse(userId)).UserName);
                 UserEntitiesDataFactory.UpdateUser(userId, email);
+                UserEntitiesDataFactory.UpdateRole(userId, role);
             }
             else
             {

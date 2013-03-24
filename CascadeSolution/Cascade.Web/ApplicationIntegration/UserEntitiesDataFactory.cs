@@ -28,6 +28,16 @@ namespace Cascade.Web.ApplicationIntegration
             Membership.UpdateUser(user);
         }
 
+        public static void UpdateRole(string userId, string role)
+        {
+            if (!Roles.IsUserInRole(role))
+            {
+                MembershipUser user = Membership.GetUser(new Guid(userId));
+                Roles.RemoveUserFromRoles(user.UserName, Roles.GetAllRoles().Where(userRole => Roles.IsUserInRole(userRole)).ToArray());
+                Roles.AddUserToRole(user.UserName, role);
+            }
+        }
+
         public static bool IsUserExits(string userName)
         {
             return (Membership.GetUser(userName) != null);

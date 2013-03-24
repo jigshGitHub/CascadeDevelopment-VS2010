@@ -1262,8 +1262,7 @@ namespace Cascade.Data.Repositories
             try
             {
                 if (string.IsNullOrEmpty(agency))
-                    data = from requestResponse in repository.GetAll().Where(record => record.RequestedByUserId != userId)//don't bring the request from owner it self. if owner has requested then we don't need to pull them
-                           select requestResponse;
+                    data = repository.GetAll();
                 else
                     data = from requestResponse in repository.GetAll().Where(record => record.AgencyId == agency)
                            select requestResponse;
@@ -1332,6 +1331,16 @@ namespace Cascade.Data.Repositories
             try
             {
                 repository.Add(submittedRequest);
+            }
+            catch (System.Data.Entity.Validation.DbEntityValidationException validationException)
+            {
+                foreach (System.Data.Entity.Validation.DbEntityValidationResult errorResult in validationException.EntityValidationErrors)
+                {
+                    foreach (System.Data.Entity.Validation.DbValidationError error in errorResult.ValidationErrors)
+                    {
+                        ErrorLogHelper.Error(error.ErrorMessage, validationException);
+                    }
+                }
             }
 
             catch (Exception ex)

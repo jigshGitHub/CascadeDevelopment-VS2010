@@ -149,7 +149,7 @@
     </table>
     <table class="FollowupDatatable" data-bind="visible:showMediaTypeSelection" style="width: 60%; display:none">
         <tr>
-             @if (ViewBag.UserRole == "user")
+             @if (ViewBag.UserRole == "user" || ViewBag.UserRole == "mediaAdmin")
              {<td colspan="2">Select all Media to request for this Account</td> }
              else
              {<td colspan="2">Select Media Type and Click "Submit" (Note: Media Shown is Immediately Available)</td> }
@@ -169,14 +169,14 @@
                             </td>
                             <td style="width: 37%" data-bind="text: text, attr:{for: 'mediaType'+ value}">
                             </td>
-                            <td style="width: 60%" ><select id="statusList" data-bind="options:$parent.statusList,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value:statusId"></select></td>
+                            <td style="width: 60%" ><select id="statusList" data-bind="options:$parent.statusList,optionsValue:'Value', optionsText: 'Text', value:statusId"></select></td>
                         </tr>
                     </tbody>
                 </table>
             </td>
         </tr>
         <tr>
-             @if (ViewBag.UserRole == "user")
+             @if (ViewBag.UserRole == "user" || ViewBag.UserRole == "mediaAdmin")
              {
                  <td style="text-align: left">
                     <input type="button" class="editButton" value="&nbsp;Submit Request&nbsp;& Exit" data-bind="click:submit,visible:showSubmit" />

@@ -32,7 +32,7 @@ namespace Cascade.Business
             try
             {
                 data = from mainRecord in query.GetMediaRequestResponses(agency, userId)
-                       from mediaRequestType in query.GetMediaRequestTypes(agency).Where(record => record.RequestedId == mainRecord.Id && record.RequestStatusId.Value != (int)MediaRequestStatus.RequestFulfillment && record.RequestStatusId.Value != (int)MediaRequestStatus.RequestComplete)
+                       from mediaRequestType in query.GetMediaRequestTypes(agency).Where(record => record.RequestedId == mainRecord.Id && record.RequestStatusId.Value != (int)MediaRequestStatus.Fulfilled && record.RequestStatusId.Value != (int)MediaRequestStatus.RequestComplete)
                        from mediaType in new MSI_MediaTypesRepository().GetAll().Where(record => record.IsActive.Value == true && record.ID == mediaRequestType.TypeId)
                        from mediaStatus in new MSI_MediaRequestStatusRepository().GetAll().Where(record => record.Id == mediaRequestType.RequestStatusId)
                        select new MediaRequestTypes(mediaRequestType, mainRecord) { MediaType = mediaType.Name, MediaStatus = mediaStatus.Name };
@@ -68,7 +68,7 @@ namespace Cascade.Business
             try
             {
                 data = from mainRecord in query.GetMediaRequestResponses(agency, userId)
-                       from mediaRequestType in query.GetMediaRequestTypes(agency).Where(record => record.RequestedId == mainRecord.Id && record.RequestStatusId.Value == (int)MediaRequestStatus.RequestFulfillment && record.MediaUploaded.Value == true && record.MediaDownloaded != true)
+                       from mediaRequestType in query.GetMediaRequestTypes(agency).Where(record => record.RequestedId == mainRecord.Id && record.RequestStatusId.Value == (int)MediaRequestStatus.Fulfilled && record.MediaUploaded.Value == true && record.MediaDownloaded != true)
                        from mediaType in new MSI_MediaTypesRepository().GetAll().Where(record => record.IsActive.Value == true && record.ID == mediaRequestType.TypeId)
                        from mediaStatus in new MSI_MediaRequestStatusRepository().GetAll().Where(record => record.Id == mediaRequestType.RequestStatusId)
                        select new MediaRequestTypes(mediaRequestType, mainRecord) { MediaType = mediaType.Name, MediaStatus = mediaStatus.Name };
@@ -91,15 +91,19 @@ namespace Cascade.Business
                 {
                     foreach (MSI_MediaTracker media in mediaAvailable)
                     {
-                        requestedType = (from requestResponse in query.GetMediaRequestResponses().Where(record => record.ACCOUNT == accountNumber && record.RequestedByUserId != (userId.HasValue ? userId : Guid.Parse(media.CreatedBy)))
-                                         from requestMediaType in query.GetMediaRequestTypes("").Where(record => record.RequestedId == requestResponse.Id && record.TypeId == media.MediaTypeId && record.RequestStatusId != (int)MediaRequestStatus.RequestFulfillment)
+                        requestedType = (from requestResponse in query.GetMediaRequestResponses().Where(record => record.ACCOUNT == accountNumber )
+                                         from requestMediaType in query.GetMediaRequestTypes("").Where(record => record.RequestedId == requestResponse.Id && record.TypeId == media.MediaTypeId && record.RequestStatusId != (int)MediaRequestStatus.Fulfilled)
                                          select requestMediaType).SingleOrDefault();
                         if (requestedType != null)
                         {
-                            requestedType.RequestStatusId = (int)MediaRequestStatus.Uploaded;
-                            requestedType.RespondedDocuments = media.MediaDocuments;
-                            Query.UpdateMediaRequestdType(requestedType);
+                            if (requestedType.RequestStatusId != (int)MediaRequestStatus.Uploaded)
+                            {
+                                requestedType.RequestStatusId = (int)MediaRequestStatus.Uploaded;
+                                requestedType.RespondedDocuments = media.MediaDocuments;
+                                Query.UpdateMediaRequestdType(requestedType);
+                            }
                         }
+                        requestedType = null;
                     }
                 }
             }
@@ -116,7 +120,7 @@ namespace Cascade.Business
             {
                 requestedType = Query.GetMediaRequestdType(id);
 
-                requestedType.RequestStatusId = (int)MediaRequestStatus.RequestFulfillment;
+                requestedType.RequestStatusId = (int)MediaRequestStatus.Fulfilled;
                 requestedType.RespondedUserID = userId;
                 requestedType.RespondedDate = DateTime.Now;
                 requestedType.MediaUploaded = true;
@@ -194,7 +198,7 @@ namespace Cascade.Business
             try
             {
                 requestedType = Query.GetMediaRequestdType(id);
-
+                requestedType.RequestStatusId = (int)MediaRequestStatus.Downloaded;
                 requestedType.MediaDownloaded = true;
                 requestedType.LastUpdatedBy = userId;
                 requestedType.LastUpdatedDate = DateTime.Now;

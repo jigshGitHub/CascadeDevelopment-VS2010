@@ -19,7 +19,7 @@ function mediaReuqestType(id, reqId, typeId, documents, reqDt, reqUser, respDt, 
     this.RespondedDate = respDt;
     this.RespondedUserID = respUser;
     this.TypeConstraints = typeConstraints;
-    this.RequestStatusId = 4;  //RequestFulfillment
+    this.RequestStatusId = 4;  //Fulfilled
 }
 
 function mediaType(id,text, value, visible, fulFilledChecked) {
