@@ -305,6 +305,42 @@ namespace Cascade.Business
             return message;
         }
 
+        public NotificationMessage GetInitialMediaRequestMessage(IEnumerable<MSI_MediaRequestTypes> mediaRequestTypes)
+        {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+
+            NotificationMessage message = null;
+            StringBuilder bodyBuilder;
+            MSI_MediaRequestResponse submittedRequest = query.GetMediaRequestResponse(query.GetMediaRequestdType(mediaRequestTypes.First().Id).RequestedId);
+            try
+            {
+                message = new NotificationMessage();
+                message.Subject = "New media request-" + DateTime.Now.ToShortDateString();
+
+                bodyBuilder = new StringBuilder();
+                bodyBuilder.Append("<table>");
+                bodyBuilder.Append("<tr><td>Portfolio Number</td><td>:</td><td>" + submittedRequest.Portfolio + "</td></tr>");
+                bodyBuilder.Append("<tr><td>Account Holder's Name</td><td>:</td><td>" + submittedRequest.NAME + "</td></tr>");
+                bodyBuilder.Append("<tr><td>Requested Date</td><td>:</td><td>" + submittedRequest.RequestedDate + "</td></tr>");
+
+                string mediaTypesRequested = "";
+                IEnumerable<MSI_MediaTypes> availableMediaTypes = Query.GetMediaTypes();
+
+                foreach (MSI_MediaRequestTypes mediaReqType in mediaRequestTypes)
+                {
+                    mediaTypesRequested = mediaTypesRequested + availableMediaTypes.Where(record => record.ID == mediaReqType.TypeId).SingleOrDefault().Name + ", ";
+                }
+                bodyBuilder.Append("<tr><td>Requested Media Types</td><td>:</td><td>" + mediaTypesRequested.Substring(0, mediaTypesRequested.Length - 2) + "</td></tr>");
+
+                message.BodyText = bodyBuilder.ToString();
+            }
+            catch (Exception ex)
+            {
+                ErrorLogHelper.Error("Error while constructing InitialMediaRequestMessage", ex);
+            }
+            return message;
+        }
+
         public NotificationMessage GetUpdateRequestedToOriginatorMessage(IEnumerable<MSI_MediaRequestTypes> mediaRequestTypes)
         {
             string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);

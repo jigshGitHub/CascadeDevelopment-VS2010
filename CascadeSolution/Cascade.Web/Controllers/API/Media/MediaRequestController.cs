@@ -125,7 +125,8 @@ namespace Cascade.Web.Controllers.API.Media
                                 mediaReqType.RequestStatusId == (int)CascadeBusiness.MediaRequestStatus.OriginatorInProcess ||
                                 mediaReqType.RequestStatusId == (int)CascadeBusiness.MediaRequestStatus.NoOriginatorMediaAvailable ||
                                 mediaReqType.RequestStatusId == (int)CascadeBusiness.MediaRequestStatus.OriginatorFulfilled ||
-                                mediaReqType.RequestStatusId == (int)CascadeBusiness.MediaRequestStatus.OriginatorResearching
+                                mediaReqType.RequestStatusId == (int)CascadeBusiness.MediaRequestStatus.OriginatorResearching ||
+                                mediaReqType.RequestStatusId == (int)CascadeBusiness.MediaRequestStatus.SentToOriginator
                                 )
                             {
                                 isMediaRequestTypeUpdateMode = true;
@@ -134,6 +135,7 @@ namespace Cascade.Web.Controllers.API.Media
                         }
                         else
                         {
+                            // When Initial Media request through Agency to Media Admin or MediaAdmin to originator
                             userRole = Roles.GetRolesForUser(Membership.GetUser(submittedRequest.RequestedByUserId).UserName).Single();
                             mediaReqType.Id = Guid.NewGuid().ToString();
                             mediaReqType.RequestedId = submittedRequest.Id;
@@ -219,6 +221,25 @@ namespace Cascade.Web.Controllers.API.Media
                         }
 
                         #endregion
+
+                        #region Sent To Originator Notification
+                        requestType = null;
+                        requestType = submittedRequest.MSI_MediaRequestTypes.Where(record => record.RequestStatusId == (int)CascadeBusiness.MediaRequestStatus.SentToOriginator).FirstOrDefault();
+                        if (requestType != null)
+                        {                            
+                            emailRecipients.Add(System.Configuration.ConfigurationManager.AppSettings["emailOriginatorAccount"]);
+                            userIds.Add(Membership.GetUser(Membership.GetUserNameByEmail(System.Configuration.ConfigurationManager.AppSettings["emailOriginatorAccount"])).ProviderUserKey.ToString());
+
+                            if (emailRecipients.Count > 0)
+                            {
+                                CascadeBusiness.NotificationMessage message = business.GetInitialMediaRequestMessage(submittedRequest.MSI_MediaRequestTypes.Where(record => record.RequestStatusId == (int)CascadeBusiness.MediaRequestStatus.SentToOriginator));
+                                Emailer.SendMessage(Emailer.CreateMessage(message.Subject, emailRecipients, message.BodyText, ""));
+                                business.SaveMessageNotification(message, userIds);
+                            }
+
+                        }
+
+                        #endregion
                     }
 
                 }
@@ -269,8 +290,10 @@ namespace Cascade.Web.Controllers.API.Media
                             Emailer.SendMessage(Emailer.CreateMessage(message.Subject, emailRecipients, message.BodyText, ""));
                             business.SaveMessageNotification(message, userIds);
                         }
+
+                        #endregion
                     }
-                    #endregion
+                    
                 }
             }
 

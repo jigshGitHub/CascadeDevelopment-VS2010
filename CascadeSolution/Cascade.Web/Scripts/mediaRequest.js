@@ -416,7 +416,7 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
         return localSelectedMediaTypes;
     }
     self.saveData = function () {
-
+        
         var json = JSON.stringify({
             Id: self.id(),
             AgencyId: self.agency(),
@@ -429,7 +429,7 @@ function pageViewModel(userId, userAgency, userRole, id, account) {
             OpenDate: self.openDate(),
             ChargeOffDate: self.coDate(),
             Seller: self.seller(),
-            RequestedDate: new Date(),
+            RequestedDate: $.datepicker.formatDate('mm/dd/yy', new Date()),
             RequestedByUserId: self.userId(),
             MSI_MediaRequestTypes: getSelectedMediaRequested()
         });
