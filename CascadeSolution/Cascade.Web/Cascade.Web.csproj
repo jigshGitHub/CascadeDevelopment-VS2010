@@ -319,6 +319,9 @@
     <Content Include="Scripts\mediaUpload.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\portfolio.js" />
+    <Content Include="Scripts\portfolioLookups.js" />
+    <Content Include="Scripts\portfolioPurchaseSummary.js" />
+    <Content Include="Scripts\portfolioSales.js" />
     <Content Include="Scripts\portfolio_viewedit.js" />
     <Content Include="Scripts\recallAddView.js" />
     <Content Include="Scripts\recallUpdateView.js" />

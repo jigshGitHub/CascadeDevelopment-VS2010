@@ -1,12 +1,8 @@
 ﻿@{
     ViewBag.Title = "Index";
 }
-
 @Scripts.Render("~/bundles/jquery")
-
-
 <link href="@Url.Content("~/Content/dataTables/demo_table.css")" rel="stylesheet" type="text/css" />
-
 @Html.Hidden("userId", (string)(@ViewBag.UserName))
 <style>
     .portfolioGrid thead th {
@@ -46,224 +42,404 @@
         background: #E2E4FF;
     }
 </style>
-<h2>Portfolio Form</h2>
+<h2>
+    Portfolio Form</h2>
 <table>
 </table>
-<div id="portfolioAcqSection" data-bind="with:purchaseSummarySectionVM">
-    <table class="tblCommon" style="">
-        <tr>
-            <td style="width: 90%">
-                <table>
-                    <tr>
-                        <td style="text-align: right; width: 25%"><b>Portfolio Purchase Summary</b>
-                        </td>
-                        <td style="width: 1%">:</td>
-                        <td colspan="4">
-                            <select id="portfolioList" data-bind="options:$parent.portfolios,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: $parent.portfolioNumber"></select></td>
-                    </tr>
-                    <tr>
-                        <td style="border: 0px solid red; text-align: right; width: 25%">Company</td>
-                        <td style="width: 1%">:</td>
-                        <td style="border: 0px solid red; text-align: left; width: 35%">
-                            <input type="text" id="company" data-bind="value:company" disabled="disabled" size="50" /></td>
-                        <td style="border: 0px solid red; text-align: right; width: 15%">Resale Restriction</td>
-                        <td style="width: 1%">:</td>
-                        <td style="border: 0px solid red; text-align: left; width: 23%">
-                            <select data-bind="options:resaleRestrictions,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: resaleRestriction">
-                            </select></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right; width: 25%">Lender/File Description</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left; width: 35%">
-                            <input type="text" id="lenderFileDes" data-bind="value:lender" size="50" /></td>
-                        <td style="text-align: right; width: 15%">Purchase Date</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left; width: 23%">
-                            <input type="text" id="purchaseDate" data-bind="value:purchaseDate" disabled="disabled" /></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right; width: 25%">Seller</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left; width: 35%">
-                            <input type="text" id="seller" data-bind="value:seller" size="50" />
-                        </td>
-                        <td style="text-align: right; width: 15%">Cut-Off Date</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left; width: 23%">
-                            <input type="text" id="cutoffDt" data-bind="value:cutOffDt" /></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right; width: 25%">Cost Basis</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left; width: 35%">
-                            <input type="text" id="costbasis" data-bind="value:costBasis" disabled="disabled" /></td>
-                        <td style="text-align: right; width: 15%">Putback Term(days)</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left; width: 23%">
-                            <select id="putbackTerm" data-bind="options:putbackTerms,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: putbackTerm"></select></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right; width: 25%">Face Value</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left; width: 35%">
-                            <input type="text" id="face" data-bind="value:face" disabled="disabled" /></td>
-                        <td style="text-align: right; width: 15%">Putback Deadline</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left; width: 23%">
-                            <input type="text" id="putbackDeadline" data-bind="value:putbackDeadline" disabled="disabled" /></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right; width: 25%">#Of Accounts</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left; width: 35%">
-                            <input type="text" id="accts" data-bind="value:accounts" disabled="disabled" /></td>
-                        <td style="text-align: right; width: 15%">Purchase Price</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left; width: 23%">
-                            <input type="text" id="purchasePrice" data-bind="value:purchasePrice" disabled="disabled" /></td>
-
-                    </tr>
-                    <tr>
-                        <td style="text-align: right; width: 25%">Notes</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left;" colspan="4">
-                            <textarea id="purchaseNotes" cols="70" rows="3" data-bind="value:notes"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td colspan="6" style="text-align: center;">
-                            <div data-bind="fadeVisible:showMessage" style="background-color: #1f497d; color: #fff"><span data-bind="text:message"></span></div>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-            <td>
-                <table>
-                    <tr>
-                        <td style="text-align: center">
-                            <img src="~/Content/images/savebutton.png" data-bind="click:saveMainRecord, visible:saveVisible" />
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-
-    </table>
+<div id="portfolioContainer">
+    <div id="portfolioAcqSection" data-bind="with:purchaseSummarySectionVM">
+        <table class="tblCommon" style="">
+            <tr>
+                <td style="width: 90%">
+                    <table>
+                        <tr>
+                            <td style="text-align: right; width: 25%">
+                                <b>Portfolio Purchase Summary</b>
+                            </td>
+                            <td style="width: 1%" colspan="4">
+                                :
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 25%">
+                                Portfolio #
+                            </td>
+                            <td style="width: 1%">
+                                :
+                            </td>
+                            <td colspan="4">
+                                <select id="portfolioList" data-bind="options:$parent.portfolios,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: $parent.portfolioNumber,visible:$parent.portfolioListVisible">
+                                </select>
+                                <input type="text" data-bind="value:portfolioNumber, not: {visible:$parent.portfolioListVisible}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0px solid red; text-align: right; width: 25%">
+                                Company
+                            </td>
+                            <td style="width: 1%">
+                                :
+                            </td>
+                            <td style="border: 0px solid red; text-align: left; width: 35%">
+                                <input type="text" id="company" data-bind="value:company, enable:$parent.portfolioEditableFields"
+                                    size="50" />
+                            </td>
+                            <td style="border: 0px solid red; text-align: right; width: 15%">
+                                Resale Restriction
+                            </td>
+                            <td style="width: 1%">
+                                :
+                            </td>
+                            <td style="border: 0px solid red; text-align: left; width: 23%">
+                                <select data-bind="options:resaleRestrictions,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: resaleRestriction">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 25%">
+                                Lender/File Description
+                            </td>
+                            <td style="width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 35%">
+                                <input type="text" id="lenderFileDes" data-bind="value:lender" size="50" />
+                            </td>
+                            <td style="text-align: right; width: 15%">
+                                Purchase Date
+                            </td>
+                            <td style="width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 23%">
+                                <input type="text" id="purchaseDate" data-bind="value:purchaseDate, enable:$parent.portfolioEditableFields" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 25%">
+                                Seller
+                            </td>
+                            <td style="width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 35%">
+                                <input type="text" id="seller" data-bind="value:seller" size="50" />
+                            </td>
+                            <td style="text-align: right; width: 15%">
+                                Cut-Off Date
+                            </td>
+                            <td style="width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 23%">
+                                <input type="text" id="cutoffDt" data-bind="value:cutOffDt" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 25%">
+                                Cost Basis
+                            </td>
+                            <td style="width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 35%">
+                                <input type="text" id="costbasis" data-bind="value:costBasis, enable:$parent.portfolioEditableFields" />
+                            </td>
+                            <td style="text-align: right; width: 15%">
+                                Putback Term(days)
+                            </td>
+                            <td style="width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 23%">
+                                <select id="putbackTerm" data-bind="options:putbackTerms,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: putbackTerm">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 25%">
+                                Face Value
+                            </td>
+                            <td style="width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 35%">
+                                <input type="text" id="face" data-bind="value:face, enable:$parent.portfolioEditableFields" />
+                            </td>
+                            <td style="text-align: right; width: 15%">
+                                Putback Deadline
+                            </td>
+                            <td style="width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 23%">
+                                <input type="text" id="putbackDeadline" data-bind="value:putbackDeadline, enable:$parent.portfolioEditableFields" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 25%">
+                                #Of Accounts
+                            </td>
+                            <td style="width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 35%">
+                                <input type="text" id="accts" data-bind="value:accounts, enable:$parent.portfolioEditableFields" />
+                            </td>
+                            <td style="text-align: right; width: 15%">
+                                Purchase Price
+                            </td>
+                            <td style="width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left; width: 23%">
+                                <input type="text" id="purchasePrice" data-bind="value:purchasePrice, enable:$parent.portfolioEditableFields" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right; width: 25%">
+                                Notes
+                            </td>
+                            <td style="width: 1%">
+                                :
+                            </td>
+                            <td style="text-align: left;" colspan="4">
+                                <textarea id="purchaseNotes" cols="70" rows="3" data-bind="value:notes"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6" style="text-align: center;">
+                                <div data-bind="fadeVisible:showMessage" style="background-color: #1f497d; color: #fff">
+                                    <span data-bind="text:message"></span>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td style="text-align: center">
+                                <img src="~/Content/images/savebutton.png" data-bind="click:saveMainRecord, visible:saveVisible" />
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <br />
+    <div id="portfolioDetailsSection" data-bind="not: {visible:portfolioBlankScenario}">
+        <ul>
+            <li><a href="#salesTab">Sales</a></li>
+            <li><a href="#collectionsTab">Collections</a></li>
+            <li><a href="#investmentsTab">Investments</a></li>
+            <li><a href="#distributionsTab">Distributions</a></li>
+            <li><a href="#interestTab">Interest</a></li>
+            <li><a href="#notesTab">Notes</a></li>
+        </ul>
+        <div id="salesTab" data-bind="with: salesTabVM">
+            <table class="tblCommon">
+                <tr>
+                    <td style="width: 90%">
+                        <table>
+                            <tr>
+                                <td style="text-align: right; width: 25%" colspan="3">
+                                    <b>Portfolio Sales Summary</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; width: 25%">
+                                    Portfolio #
+                                </td>
+                                <td style="width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left" colspan="4">
+                                    <input type="text" id="portfolioNumber-sales" data-bind="enable:false,value:currentSalesRecord().portfolioNumber" />
+                                </td>
+                            </tr>
+                            <tr data-bind="visible:currentSalesRecord().Id != ''">
+                                <td style="text-align: right; width: 25%">
+                                    Sales Batch #
+                                </td>
+                                <td style="width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left" colspan="4">
+                                    <select data-bind="options:salesRecords,optionsValue:'salesBatch', optionsText: 'salesBatch', value: salesBatchSelected">
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: 0px solid red; text-align: right; width: 25%">
+                                    Lender
+                                </td>
+                                <td style="width: 1%">
+                                    :
+                                </td>
+                                <td style="border: 0px solid red; text-align: left; width: 35%">
+                                    <input type="text" id="lender" data-bind="value:currentSalesRecord().lender" size="50" />
+                                </td>
+                                <td style="border: 0px solid red; text-align: right; width: 15%">
+                                    Sale Date
+                                </td>
+                                <td style="width: 1%">
+                                    :
+                                </td>
+                                <td style="border: 0px solid red; text-align: left; width: 23%">
+                                    <input type="text" id="saleDate" data-bind="enable:$parent.portfolioEditableFields,value:currentSalesRecord().cutoffDt" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; width: 25%">
+                                    Buyer
+                                </td>
+                                <td style="width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 35%">
+                                    <select data-bind="options:buyers,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: currentSalesRecord().buyer">
+                                    </select>
+                                </td>
+                                <td style="text-align: right; width: 15%">
+                                    Sales Cutoff Date
+                                </td>
+                                <td style="width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 23%">
+                                    <input type="text" id="cutOffDate" data-bind="enable:$parent.portfolioEditableFields,value:currentSalesRecord().cutoffDt" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; width: 25%">
+                                    SalesBasis
+                                </td>
+                                <td style="width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 35%">
+                                    <input type="text" id="salesBasis" data-bind="enable:$parent.portfolioEditableFields,value:currentSalesRecord().salesBasis" />
+                                </td>
+                                <td style="text-align: right; width: 15%">
+                                    PutbackTerm(Days)
+                                </td>
+                                <td style="width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 23%">
+                                    <select id="putbackTerms" data-bind="options:putbackTerms,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: currentSalesRecord().putbackTerm">
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; width: 25%">
+                                    FaceValue
+                                </td>
+                                <td style="width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 35%">
+                                    <input type="text" id="faceValue-sales" data-bind="enable:$parent.portfolioEditableFields,value:currentSalesRecord().faceValue" />
+                                </td>
+                                <td style="text-align: right; width: 15%">
+                                    PutbackDeadline
+                                </td>
+                                <td style="width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 23%">
+                                    <input type="text" id="putbackDeadline-sales" data-bind="enable:$parent.portfolioEditableFields,value:currentSalesRecord().putbackDeadline" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; width: 25%">
+                                    SalesPrice
+                                </td>
+                                <td style="width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 35%">
+                                    <input type="text" id="salesPrice-sales" data-bind="enable:$parent.portfolioEditableFields,value:currentSalesRecord().salesPrice" />
+                                </td>
+                                <td style="text-align: right; width: 15%">
+                                    Number Of Accounts
+                                </td>
+                                <td style="width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left; width: 23%">
+                                    <input type="text" id="accounts" data-bind="enable:$parent.portfolioEditableFields,value:currentSalesRecord().accounts" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; width: 25%">
+                                    Notes
+                                </td>
+                                <td style="width: 1%">
+                                    :
+                                </td>
+                                <td style="text-align: left;" colspan="4">
+                                    <textarea id="salesNotes" cols="70" rows="3" data-bind="value:currentSalesRecord().notes"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" style="text-align: center">
+                                    <img src="~/Content/images/back_enabled.jpg" data-bind="click:previousRecord,visible:visiblePrevious" />&nbsp;<span
+                                        data-bind="text:recordCounts"></span> &nbsp;
+                                    <img src="~/Content/images/forward_enabled.jpg" data-bind="click:nextRecord,visible:visibleNext" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" style="text-align: center">
+                                    <div data-bind="fadeVisible:showMessage" style="background-color: #1f497d; color: #fff">
+                                        <span data-bind="text:message"></span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table>
+                            <tr>
+                                <td colspan="6" style="text-align: center">
+                                    <img src="~/Content/images/savebutton.png" data-bind="click:saveRecord, visible:saveVisible" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="collectionsTab">
+        </div>
+        <div id="investmentsTab">
+        </div>
+        <div id="distributionsTab">
+        </div>
+        <div id="interestTab">
+        </div>
+        <div id="notesTab">
+        </div>
+    </div>
 </div>
-<br />
-<div id="salesTab" data-bind="with: salesTabVM">
-    <table class="tblCommon">
-        <tr>
-            <td style="width: 90%">
-                <table>
-                    <tr>
-                        <td style="text-align: right; width: 25%"><b>Portfolio Sales Summary</b></td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left" colspan="4">
-                            <input type="text" id="portfolioNumber-sales" data-bind="enable:false,value:currentSalesRecord().portfolioNumber" /></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right; width: 25%">Sales Batch #</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left" colspan="4">
-                            <select data-bind="options:salesRecords,optionsValue:'salesBatch', optionsText: 'salesBatch', value: salesBatchSelected">
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="border: 0px solid red; text-align: right; width: 25%">Lender</td>
-                        <td style="width: 1%">:</td>
-                        <td style="border: 0px solid red; text-align: left; width: 35%">
-                            <input type="text" id="lender" data-bind="value:currentSalesRecord().lender" size="50" /></td>
-                        <td style="border: 0px solid red; text-align: right; width: 15%">Sale Date</td>
-                        <td style="width: 1%">:</td>
-                        <td style="border: 0px solid red; text-align: left; width: 23%">
-                            <input type="text" id="saleDate" data-bind="enable:false,value:currentSalesRecord().cutoffDt" /></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right; width: 25%">Buyer</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left; width: 35%">
-                            <select data-bind="options:buyers,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: currentSalesRecord().buyer">
-                            </select></td>
-                        <td style="text-align: right; width: 15%">Sales Cutoff Date</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left; width: 23%">
-                            <input type="text" id="cutOffDate" data-bind="enable:false,value:currentSalesRecord().cutoffDt" /></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right; width: 25%">SalesBasis</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left; width: 35%">
-                            <input type="text" id="salesBasis" data-bind="enable:false,value:currentSalesRecord().salesBasis" /></td>
-                        <td style="text-align: right; width: 15%">PutbackTerm(Days)</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left; width: 23%">
-                            <select id="putbackTerms" data-bind="options:putbackTerms,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: currentSalesRecord().putbackTerm"></select></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right; width: 25%">FaceValue</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left; width: 35%">
-                            <input type="text" id="faceValue-sales" data-bind="enable:false,value:currentSalesRecord().faceValue" /></td>
-                        <td style="text-align: right; width: 15%">PutbackDeadline</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left; width: 23%">
-                            <input type="text" id="putbackDeadline-sales" data-bind="enable:false,value:currentSalesRecord().putbackDeadline" /></td>
-                    </tr>
-                    <tr>
-
-                        <td style="text-align: right; width: 25%">SalesPrice</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left; width: 35%">
-                            <input type="text" id="salesPrice-sales" data-bind="enable:false,value:currentSalesRecord().salesPrice" /></td>
-                        <td style="text-align: right; width: 15%">Number Of Accounts</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left; width: 23%">
-                            <input type="text" id="accounts" data-bind="enable:false,value:currentSalesRecord().accounts" /></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right; width: 25%">Notes</td>
-                        <td style="width: 1%">:</td>
-                        <td style="text-align: left;" colspan="4">
-                            <textarea id="salesNotes" cols="70" rows="3" data-bind="value:currentSalesRecord().notes"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td colspan="6" style="text-align: center">
-                            <img src="~/Content/images/back_enabled.jpg" data-bind="click:previousRecord,visible:visiblePrevious" />&nbsp;<span data-bind="text:recordCounts"></span> &nbsp;
-                                    <img src="~/Content/images/forward_enabled.jpg" data-bind="click:nextRecord,visible:visibleNext" /></td>
-                    </tr>
-                    <tr>
-                        <td colspan="6" style="text-align: center">
-                            <div data-bind="fadeVisible:showMessage" style="background-color: #1f497d; color: #fff"><span data-bind="text:message"></span></div>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-            <td>
-                <table>
-                    <tr>
-                        <td colspan="6" style="text-align: center">
-                            <img src="~/Content/images/savebutton.png" data-bind="click:saveRecord, visible:saveVisible" />
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</div>
-
 @Scripts.Render("~/bundles/knockout")
 @section scripts{
-
-
     <script src="~/Scripts/jquery-ui-1.8.11.js" type="text/javascript"></script>
     <script src="~/Scripts/datatable/jquery.dataTables.min.js" type="text/javascript"></script>
     <script src="~/Scripts/jquery.formatCurrency-1.4.0.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/portfolioLookups.js" type="text/javascript"></script>
+    <script src="~/Scripts/portfolioSales.js" type="text/javascript"></script>
+    <script src="~/Scripts/portfolioPurchaseSummary.js" type="text/javascript"></script>
     <script src="~/Scripts/portfolio.js" type="text/javascript"></script>
-
     <script type="text/javascript">
-        $(document).ready(function () {            
+        $(document).ready(function () {
+
+            $(function () {
+                $("#portfolioDetailsSection").tabs();
+            });
+
             ko.applyBindings(new portfolioVM($('#userId').val()));
             $('#closingDt').datepicker();
             $('#cutoffDt').datepicker();

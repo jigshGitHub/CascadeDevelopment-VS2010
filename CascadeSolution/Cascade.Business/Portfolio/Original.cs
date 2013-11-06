@@ -138,13 +138,45 @@ namespace Cascade.Business.Portfolio
         {
             string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
             string logMessage = string.Format("{0}|Method incoming parameters id={1}", thisMethod, inTransaction.ID);
-            LogHelper.Info(logMessage); 
-            
+            LogHelper.Info(logMessage);
+
             MSI_Port_SalesTrans_Original transactionToSave = null;
+            bool editingRequired = true;
 
             try
             {
-                transactionToSave = Query.UpdateSalesTransaction(inTransaction);
+                
+                if (inTransaction.ID == 0)
+                {
+                    editingRequired = false;
+                    transactionToSave = new MSI_Port_SalesTrans_Original();
+                }
+                else{
+                    transactionToSave = Query.GetPortfolioSalesTransactionOriginal(inTransaction.ID);
+                }
+                transactionToSave.PutbackDeadline = inTransaction.PutbackDeadline;
+                transactionToSave.PutbackTerm_days_ = inTransaction.PutbackTerm_days_;
+                transactionToSave.C_ofAccts = inTransaction.C_ofAccts;
+                transactionToSave.FaceValue = inTransaction.FaceValue;
+                transactionToSave.SalesBasis = inTransaction.SalesBasis;
+                transactionToSave.SalesPrice = inTransaction.SalesPrice;
+                transactionToSave.Buyer = inTransaction.Buyer;
+                transactionToSave.Lender = inTransaction.Lender;
+                transactionToSave.ClosingDate = inTransaction.ClosingDate;
+                transactionToSave.Cut_OffDate = inTransaction.Cut_OffDate;
+                transactionToSave.Notes = inTransaction.Notes;
+                transactionToSave.Portfolio_ = inTransaction.Portfolio_;
+                transactionToSave.C_ofAccts = inTransaction.C_ofAccts;
+                transactionToSave.CreatedBy = inTransaction.CreatedBy;
+                transactionToSave.CreatedDate = DateTime.Now;
+                transactionToSave.UpdatedBy = inTransaction.UpdatedBy;
+                transactionToSave.UpdatedDate = DateTime.Now;
+
+
+                if (!editingRequired)
+                    Query.AddSalesTransaction(transactionToSave);
+                else
+                    Query.UpdateSalesTransaction(transactionToSave);
 
             }
             catch (Exception ex)

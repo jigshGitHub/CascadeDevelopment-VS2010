@@ -819,47 +819,46 @@ namespace Cascade.Data.Repositories
             }
         }
 
-        public MSI_Port_SalesTrans_Original UpdateSalesTransaction(MSI_Port_SalesTrans_Original inTransaction)
+        public MSI_Port_SalesTrans_Original AddSalesTransaction(MSI_Port_SalesTrans_Original inTransaction)
         {
             string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
             string logMessage = string.Format("{0}|Method incoming parameters id={1}", thisMethod, inTransaction.ID);
             LogHelper.Info(logMessage);
 
-            MSI_Port_SalesTrans_Original transactionToSave = null;
             MSI_Port_SalesTrans_OriginalRepository repository = null;
 
             try
             {
                 repository = new MSI_Port_SalesTrans_OriginalRepository();
-                transactionToSave = repository.GetById(inTransaction.ID);
-
-                transactionToSave.PutbackDeadline = inTransaction.PutbackDeadline;
-                transactionToSave.PutbackTerm_days_ = inTransaction.PutbackTerm_days_;
-                transactionToSave.C_ofAccts = inTransaction.C_ofAccts;
-                transactionToSave.FaceValue = inTransaction.FaceValue;
-                transactionToSave.SalesBasis = inTransaction.SalesBasis;
-                transactionToSave.SalesPrice = inTransaction.SalesPrice;
-                transactionToSave.Buyer = inTransaction.Buyer;
-                transactionToSave.Lender = inTransaction.Lender;
-                transactionToSave.ClosingDate = inTransaction.ClosingDate;
-                transactionToSave.Cut_OffDate = inTransaction.Cut_OffDate;
-                transactionToSave.Notes = inTransaction.Notes;
-                transactionToSave.Portfolio_ = inTransaction.Portfolio_;
-                transactionToSave.C_ofAccts = inTransaction.C_ofAccts;
-                transactionToSave.CreatedBy = inTransaction.CreatedBy;
-                transactionToSave.CreatedDate = DateTime.Now;
-                transactionToSave.UpdatedBy = inTransaction.UpdatedBy;
-                transactionToSave.UpdatedDate = DateTime.Now;
-
-                repository.Update(transactionToSave);
-
+                repository.Add(inTransaction);
             }
             catch (Exception ex)
             {
                 ErrorLogHelper.Error(logMessage, ex);
             }
 
-            return transactionToSave;
+            return inTransaction;
+        }
+
+        public MSI_Port_SalesTrans_Original UpdateSalesTransaction(MSI_Port_SalesTrans_Original inTransaction)
+        {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters id={1}", thisMethod, inTransaction.ID);
+            LogHelper.Info(logMessage);
+
+            MSI_Port_SalesTrans_OriginalRepository repository = null;
+
+            try
+            {
+                repository = new MSI_Port_SalesTrans_OriginalRepository();
+                repository.Update(inTransaction);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogHelper.Error(logMessage, ex);
+            }
+
+            return inTransaction;
         }
 
         #endregion
@@ -880,6 +879,9 @@ namespace Cascade.Data.Repositories
                 LookUp record;
                 while (rdr.Read())
                 {
+                    if(data.Count == 0){
+                        data.Add(new LookUp("Add New", ""));
+                    }
                     record = new LookUp(rdr["Product_Code"].ToString(), rdr["Product_Code"].ToString());
 
                     data.Add(record);
