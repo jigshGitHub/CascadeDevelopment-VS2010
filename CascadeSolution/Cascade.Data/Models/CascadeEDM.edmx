@@ -24,6 +24,7 @@
           <EntitySet Name="MSI_OwnerResponses" EntityType="CascadeDBModel.Store.MSI_OwnerResponses" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_Port_Acq_Edited" EntityType="CascadeDBModel.Store.MSI_Port_Acq_Edited" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_Port_Acq_Original" EntityType="CascadeDBModel.Store.MSI_Port_Acq_Original" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MSI_Port_CollectionsTrans" EntityType="CascadeDBModel.Store.MSI_Port_CollectionsTrans" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_Port_SalesTrans_Edited" EntityType="CascadeDBModel.Store.MSI_Port_SalesTrans_Edited" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_Port_SalesTrans_Original" EntityType="CascadeDBModel.Store.MSI_Port_SalesTrans_Original" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_PutBackForm" EntityType="CascadeDBModel.Store.MSI_PutBackForm" store:Type="Tables" Schema="dbo" />
@@ -1334,6 +1335,23 @@
           <Property Name="Notes" Type="nvarchar(max)" />
           <Property Name="ResaleRestrictionId" Type="int" />
           <Property Name="Company" Type="nvarchar" MaxLength="255" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="256" />
+          <Property Name="UpdatedBy" Type="nvarchar" MaxLength="256" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="UpdatedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="MSI_Port_CollectionsTrans">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Portfolio#" Type="nvarchar" MaxLength="255" />
+          <Property Name="ClosingDate" Type="datetime" />
+          <Property Name="SalesPrice" Type="money" />
+          <Property Name="FaceValue" Type="money" />
+          <Property Name="Inv_AgencyName" Type="nvarchar" MaxLength="255" />
+          <Property Name="TransType" Type="nvarchar" MaxLength="50" />
+          <Property Name="IsOriginal" Type="bit" />
           <Property Name="CreatedBy" Type="nvarchar" MaxLength="256" />
           <Property Name="UpdatedBy" Type="nvarchar" MaxLength="256" />
           <Property Name="CreatedDate" Type="datetime" />
@@ -3696,6 +3714,7 @@
           <EntitySet Name="MSI_RecallForm" EntityType="CascadeDBModel.MSI_RecallForm" />
           <EntitySet Name="MSI_PutBackForm" EntityType="CascadeDBModel.MSI_PutBackForm" />
           <EntitySet Name="MSI_MessageNotification" EntityType="CascadeDBModel.MSI_MessageNotification" />
+          <EntitySet Name="MSI_Port_CollectionsTrans" EntityType="CascadeDBModel.MSI_Port_CollectionsTrans" />
           </EntityContainer>
         <EntityType Name="MSI_ComplaintIssues">
           <Key>
@@ -6236,6 +6255,23 @@
           <Property Type="DateTime" Name="SentOn" />
           <Property Type="Boolean" Name="IsActive" />
         </EntityType>
+        <EntityType Name="MSI_Port_CollectionsTrans">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Portfolio_" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="ClosingDate" />
+          <Property Type="Decimal" Name="SalesPrice" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="FaceValue" Precision="19" Scale="4" />
+          <Property Type="String" Name="Inv_AgencyName" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="TransType" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="IsOriginal" />
+          <Property Type="String" Name="CreatedBy" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="UpdatedBy" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="CreatedDate" />
+          <Property Type="DateTime" Name="UpdatedDate" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -8460,6 +8496,24 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="MSI_Port_CollectionsTrans">
+            <EntityTypeMapping TypeName="CascadeDBModel.MSI_Port_CollectionsTrans">
+              <MappingFragment StoreEntitySet="MSI_Port_CollectionsTrans">
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsOriginal" ColumnName="IsOriginal" />
+                <ScalarProperty Name="TransType" ColumnName="TransType" />
+                <ScalarProperty Name="Inv_AgencyName" ColumnName="Inv_AgencyName" />
+                <ScalarProperty Name="FaceValue" ColumnName="FaceValue" />
+                <ScalarProperty Name="SalesPrice" ColumnName="SalesPrice" />
+                <ScalarProperty Name="ClosingDate" ColumnName="ClosingDate" />
+                <ScalarProperty Name="Portfolio_" ColumnName="Portfolio#" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -8592,8 +8646,10 @@
         <EntityTypeShape EntityType="CascadeDBModel.MSI_MediaTracker" Width="1.5" PointX="14" PointY="37.125" Height="3.3263964843749818" />
         <AssociationConnector Association="CascadeDBModel.FK_MSI_MediaTracker_MSI_MediaTypes" >
           <ConnectorPoint PointX="12.5" PointY="11.730286458333334" />
-          <ConnectorPoint PointX="12.5" PointY="18.5" />
-          <ConnectorPoint PointX="13.5" PointY="18.5" />
+          <ConnectorPoint PointX="12.5" PointY="12.5" />
+          <ConnectorPoint PointX="14.125" PointY="12.5" />
+          <ConnectorPoint PointX="14.125" PointY="23.5" />
+          <ConnectorPoint PointX="13.5" PointY="23.5" />
           <ConnectorPoint PointX="13.5" PointY="38.788198242187491" />
           <ConnectorPoint PointX="14" PointY="38.788198242187491" />
         </AssociationConnector>
@@ -8606,6 +8662,7 @@
         <EntityTypeShape EntityType="CascadeDBModel.MSI_RecallForm" Width="1.5" PointX="28.375" PointY="12.75" Height="6.9801236979166674" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_PutBackForm" Width="1.5" PointX="18.375" PointY="28.75" Height="6.7878222656249818" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_MessageNotification" Width="1.5" PointX="12.375" PointY="6.75" Height="2.1725878906249818" />
+        <EntityTypeShape EntityType="CascadeDBModel.MSI_Port_CollectionsTrans" Width="1.5" PointX="12.375" PointY="12.75" Height="3.3263964843749818" />
         </Diagram>
     </Diagrams>
   </Designer>

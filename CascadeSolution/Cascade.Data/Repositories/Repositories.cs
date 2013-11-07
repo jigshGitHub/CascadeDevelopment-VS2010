@@ -750,4 +750,16 @@ namespace Cascade.Data.Repositories
         {
         }
     }
+
+    public class MSI_PortCollectionsTransRepository : RepositoryBase<MSI_Port_CollectionsTrans>
+    {
+        public MSI_PortCollectionsTransRepository(IDatabaseFactory dbFactory)
+            : base(dbFactory)
+        {
+        }
+        public MSI_PortCollectionsTransRepository()
+            : base(new DBFactory())
+        {
+        }
+    }
 }

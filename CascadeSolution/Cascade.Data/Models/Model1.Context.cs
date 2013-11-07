@@ -89,5 +89,6 @@ namespace Cascade.Data.Models
         public DbSet<MSI_RecallForm> MSI_RecallForm { get; set; }
         public DbSet<MSI_PutBackForm> MSI_PutBackForm { get; set; }
         public DbSet<MSI_MessageNotification> MSI_MessageNotification { get; set; }
+        public DbSet<MSI_Port_CollectionsTrans> MSI_Port_CollectionsTrans { get; set; }
     }
 }

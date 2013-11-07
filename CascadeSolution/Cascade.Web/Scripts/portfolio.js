@@ -112,6 +112,7 @@ function portfolioVM(userId) {
                 self.salesTabVM.portfolioNumber(self.portfolioNumber());
                 self.salesTabVM.salesBatchSelected(self.portfolioNumber() + '-1');
                 self.salesTabVM.saveVisible(false);
+                self.collectionsTabVM.portfolioNumber(self.portfolioNumber());
             }
         }
         else {
@@ -128,7 +129,7 @@ function portfolioVM(userId) {
     self.portfolioBlankScenario = ko.computed(function () {
         return self.purchaseSummarySectionVM.detailsVisible();
     }, self);
-    //self.collectionsTabVM = new collectionsTransVM();
+    self.collectionsTabVM = new collectionsTransVM();
     //self.investmentsTabVM = new investmentsTransVM();
     //self.distributionsTabVM = new distributionsTransVM();
     //self.interestTabVM = new interestTransVM();
@@ -145,6 +146,10 @@ portfolioViewModels.getActiveTabViewModel = function () {
 
 portfolioViewModels.salesTransVM = function () { return $(document).data('salesTransVM') };
 portfolioViewModels.purchaseSummaryVM = function () { return $(document).data('purchaseSummaryVM') };
+//portfolioViewModels.interestVM = function () { return $(document).data('interestVM') };
+//portfolioViewModels.distributionsTransVM = function () { return $(document).data('distributionsTransVM') };
+//portfolioViewModels.investmentsTransVM = function () { return $(document).data('investmentsTransVM') };
+portfolioViewModels.collectionsTransVM = function () { return $(document).data('collectionsTransVM') };
 
 
 
@@ -153,7 +158,7 @@ portfolioViewModels.inittializeVMS = function (portfolioNumber) {
     //$(document).data('interestVM', new interestVM(portfolioNumber));
     //$(document).data('distributionsTransVM', new distributionsTransVM(portfolioNumber));
     //$(document).data('investmentsTransVM', new investmentsTransVM(portfolioNumber));
-    //$(document).data('collectionsTransVM', new collectionsTransVM(portfolioNumber));
+    $(document).data('collectionsTransVM', new collectionsTransVM(portfolioNumber));
     $(document).data('salesTransVM', new salesTransVM(portfolioNumber));
     $(document).data('purchaseSummaryVM', new purchaseSummaryVM(portfolioNumber));
 }
@@ -163,7 +168,7 @@ portfolioViewModels.resetVMS = function () {
     //$(document).data('interestVM', '');
     //$(document).data('distributionsTransVM', '');
     //$(document).data('investmentsTransVM', '');
-    //$(document).data('collectionsTransVM', '');
+    $(document).data('collectionsTransVM', '');
     $(document).data('salesTransVM', '');
 }
 

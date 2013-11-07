@@ -14,7 +14,7 @@ namespace Cascade.Web.Controllers
         {
             IEnumerable<LookUp> lookupData = null;
             List<LookUp> data = new List<LookUp>();
-            //SupCompanyRepository supCompanyRepo = null;
+            SupCompanyRepository respoRepo = new SupCompanyRepository();
             switch (id)
             {
                 case "TransCode":
@@ -60,10 +60,13 @@ namespace Cascade.Web.Controllers
                     data.Add(new LookUp("180", "180"));
                     lookupData = data.AsEnumerable<LookUp>();
                     break;
-                case "Responsibility":
-                    SupCompanyRepository respoRepo = new SupCompanyRepository();
-                    lookupData = from respo in respoRepo.GetAll().OrderBy(x => x.Name)
+                case "Responsibility":                    
+                    lookupData = from respo in respoRepo.GetAll().Where(r => r.Active == "TRUE").OrderBy(x => x.Name)
                                  select new LookUp(respo.Agency + GetDescriptionDetails(respo.Name), respo.Agency);
+                    break;
+                case "SupCompany":
+                    lookupData = from respo in respoRepo.GetAll().Where(r => r.Active == "TRUE").OrderBy(x => x.Name)
+                                 select new LookUp(respo.Name, respo.Agency);
                     break;
                 case "Buyer":
                     SupCompanyRepository supCompanyRepo = new SupCompanyRepository();

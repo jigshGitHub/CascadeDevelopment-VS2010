@@ -190,3 +190,27 @@ portfolioViewModels.investors = function () {
     }
     return $(document).data('investors');
 }
+
+portfolioViewModels.supCompanies = function () {
+    if ($(document).data('supCompanies') == undefined) {
+        function setSupCompanies(data) {
+            $(document).data('supCompanies', data);
+        };
+
+        $.ajax({
+            url: baseUrl + '/api/Lookup/',
+            type: 'GET',
+            contentType: 'application/json',
+            data: { id: 'SupCompany' },
+            async: false,
+            success: function (data) {
+                log(data);
+                setSupCompanies(data);
+            },
+            error: function (xhr, status, somthing) {
+                log(status);
+            }
+        });
+    }
+    return $(document).data('supCompanies');
+}

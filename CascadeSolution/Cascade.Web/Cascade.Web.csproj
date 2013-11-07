@@ -298,6 +298,10 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\application.js" />
     <Content Include="Scripts\compliance.js" />
+    <Content Include="Scripts\portfolioCollections.js" />
+    <Content Include="Scripts\portfolioInvestment.js" />
+    <Content Include="Scripts\portfolioDistribution.js" />
+    <Content Include="Scripts\portfolioInterest.js" />
     <Content Include="Scripts\datatable\index.js" />
     <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />

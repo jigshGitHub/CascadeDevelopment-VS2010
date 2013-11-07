@@ -781,6 +781,57 @@ namespace Cascade.Data.Repositories
             return salesTransactions.AsEnumerable<MSI_Port_SalesTrans_Original>();
         }
 
+        public IEnumerable<MSI_Port_CollectionsTrans> GetPortfolioCollectionsSummary(string productCode, string userId, bool isOriginal)
+        {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters productCode={1}, userId={2}", thisMethod, productCode, userId);
+            LogHelper.Info(logMessage);
+
+            MSI_Port_CollectionsTrans collectionTransaction = null;
+            DBFactory db;
+            List<MSI_Port_CollectionsTrans> collectionTransactions = null;
+            System.Data.DataSet ds;
+            try
+            {
+                db = new DBFactory();
+                ds = db.ExecuteDataset("MSI_sp_GetPortfolioCollectionsSummary", "PurchaseCollectionsSummary", new SqlParameter("@productCode", productCode), new SqlParameter("@userId", userId), new SqlParameter("@isOriginal", isOriginal));
+
+                if (ds.Tables["PurchaseCollectionsSummary"].Rows.Count > 0)
+                {
+                    collectionTransactions = new List<MSI_Port_CollectionsTrans>();
+                    foreach (System.Data.DataRow dr in ds.Tables["PurchaseCollectionsSummary"].Rows)
+                    {
+                        collectionTransaction = new MSI_Port_CollectionsTrans();
+                        collectionTransaction.ID = int.Parse(dr["ID"].ToString());
+                        collectionTransaction.Portfolio_ = dr["Portfolio#"].ToString();
+                        if (dr["FaceValue"] != DBNull.Value)
+                            collectionTransaction.FaceValue = Convert.ToDecimal(dr["FaceValue"].ToString());
+                        if (dr["SalesPrice"] != DBNull.Value)
+                            collectionTransaction.SalesPrice = Convert.ToDecimal(dr["SalesPrice"].ToString());
+                        DateTime closingDate;
+                        if (DateTime.TryParse(dr["ClosingDate"].ToString(), out closingDate))
+                            collectionTransaction.ClosingDate = closingDate;
+                        collectionTransaction.Inv_AgencyName = dr["Inv_AgencyName"].ToString();
+                        DateTime notNullDt;
+                        if (DateTime.TryParse(dr["CreatedDate"].ToString(), out notNullDt))
+                            collectionTransaction.CreatedDate = notNullDt;
+                        if (DateTime.TryParse(dr["UpdatedDate"].ToString(), out notNullDt))
+                            collectionTransaction.UpdatedDate = notNullDt;
+                        collectionTransaction.CreatedBy = dr["CreatedBy"].ToString();
+                        collectionTransaction.UpdatedBy = dr["UpdatedBy"].ToString();
+                        collectionTransaction.TransType = dr["TransType"].ToString();
+                        collectionTransactions.Add(collectionTransaction);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLogHelper.Error(logMessage, ex);
+            }
+            return collectionTransactions.AsEnumerable<MSI_Port_CollectionsTrans>();
+        }
+
         public void AddPortfolio(MSI_Port_Acq_Original portfolioToSave)
         {
             string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);

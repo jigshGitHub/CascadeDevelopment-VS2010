@@ -1,4 +1,4 @@
-﻿// Default code generation is disabled for model 'C:\Users\jshah\Documents\GitHub\CascadeDevelopmentSolution\CascadeDevelopment-VS2010\CascadeSolution\Cascade.Data\Models\CascadeEDM.edmx'. 
+﻿// Default code generation is disabled for model 'C:\Users\jshah\Documents\GitHub\CascadeDevelopment-VS2010\CascadeSolution\Cascade.Data\Models\CascadeEDM.edmx'. 
 // To enable default code generation, change the value of the 'Code Generation Strategy' designer
 // property to an alternate value. This property is available in the Properties Window when the model is
 // open in the designer.
