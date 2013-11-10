@@ -205,6 +205,7 @@ namespace Cascade.Web.Controllers
                 if (inTransaction.ID == 0)
                 {
                     transactionToSave = new MSI_Port_CollectionsTrans();
+                    transactionToSave.Portfolio_ = inTransaction.Portfolio_;
                     editingRequired = false;
                 }
                 else

@@ -412,8 +412,53 @@
                 </tr>
             </table>
         </div>
-        <div id="collectionsTab" data-bind="with: collectionsTabVM">
+        <div id="collectionsTab" data-bind="with: collectionsTabVM">  
+            <input style="float:right" type="button" class="editButton" value="  Add New  " data-bind="click:addNewCollection" />                      
+            <div id="editView" data-bind="with: currentCollectionRecord">
+                <table>
+                    <tr>
+                        <td style="text-align: right; width: 20%">Closing Date</td>
+                        <td style="width: 2%">:</td>
+                        <td style="text-align: left; width: 36%">
+                            <input type="text" id="closingDate-coln" data-bind="value:closingDt" /></td>
+                        <td style="text-align: right; width: 20%">Portfolio Number</td>
+                        <td style="width: 2%">:</td>
+                        <td style="text-align: left; width: 20%">
+                            <input type="text" id="portfolioNumber-coln" data-bind="enable:false,value:portfolioNumber" /></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; width: 20%">Agency Name</td>
+                        <td style="width: 2%">:</td>
+                        <td style="text-align: left" colspan="4">
+                            <select data-bind="options:$parent.agencies,optionsValue:'Text', optionsText: 'Text', value: $parent.selectedAgency">
+                            </select></td>
 
+                    </tr>
+                    <tr>
+                        <td style="text-align: right; width: 20%">Face Value</td>
+                        <td style="width: 2%">:</td>
+                        <td style="text-align: left; width: 36%">
+                            <input type="text" id="faceValue" data-bind="value:faceValue" /></td>
+                        <td style="text-align: right; width: 20%">Net Colls</td>
+                        <td style="width: 2%">:</td>
+                        <td style="text-align: left; width: 20%">
+                            <input type="text" id="netColls" data-bind="value:netColls" /></td>
+
+                    </tr>
+                    <tr style="display:none">
+                        <td style="text-align: right; width: 20%">TransType</td>
+                        <td style="width: 2%">:</td>
+                        <td style="text-align: left" colspan="4">
+                            <select disabled="disabled" data-bind="options:$parent.collectionsTransTypes,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: collectionsTransType">
+                            </select></td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" style="text-align: center">
+                            <img src="~/Content/images/savebutton.png" data-bind="click:$parent.saveRecord" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
             <div style="width: 100%; height: 300px; overflow: auto;">
                 <table id="collectionsGrid" class="portfolioGrid">
                     <thead>
@@ -439,51 +484,7 @@
             <br />
             <p style="background-color: #1f497d; color: #fff; text-align: right">Total collections:<span data-bind="text:totalCollections"></span></p>
 
-            <div id="editView" data-bind="with: currentCollectionRecord">
-                <table>
-                    <tr>
-                        <td style="text-align: right; width: 20%">Closing Date</td>
-                        <td style="width: 2%">:</td>
-                        <td style="text-align: left; width: 36%">
-                            <input type="text" id="closingDate-coln" data-bind="value:closingDt" /></td>
-                        <td style="text-align: right; width: 20%">Portfolio Number</td>
-                        <td style="width: 2%">:</td>
-                        <td style="text-align: left; width: 20%">
-                            <input type="text" id="portfolioNumber-coln" data-bind="enable:false,value:portfolioNumber" /></td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: right; width: 20%">Agency Name</td>
-                        <td style="width: 2%">:</td>
-                        <td style="text-align: left" colspan="4">
-                            <select data-bind="options:$parent.agencies,optionsValue:'Text', optionsText: 'Text',optionsCaption: ' ', value: $parent.selectedAgency">
-                            </select></td>
-
-                    </tr>
-                    <tr>
-                        <td style="text-align: right; width: 20%">Face Value</td>
-                        <td style="width: 2%">:</td>
-                        <td style="text-align: left; width: 36%">
-                            <input type="text" id="faceValue" data-bind="value:faceValue" /></td>
-                        <td style="text-align: right; width: 20%">Net Colls</td>
-                        <td style="width: 2%">:</td>
-                        <td style="text-align: left; width: 20%">
-                            <input type="text" id="netColls" data-bind="value:netColls" /></td>
-
-                    </tr>
-                    <tr>
-                        <td style="text-align: right; width: 20%">TransType</td>
-                        <td style="width: 2%">:</td>
-                        <td style="text-align: left" colspan="4">
-                            <select disabled="disabled" data-bind="options:$parent.collectionsTransTypes,optionsValue:'Value', optionsText: 'Text',optionsCaption: ' ', value: collectionsTransType">
-                            </select></td>
-                    </tr>
-                    <tr>
-                        <td colspan="6" style="text-align: center">
-                            <img src="~/Content/images/savebutton.png" data-bind="click:$parent.saveRecord" />
-                        </td>
-                    </tr>
-                </table>
-            </div>
+            
             <div data-bind="fadeVisible:showMessage" style="background-color: #1f497d; color: #fff;text-align:center"><span data-bind="text:message"></span></div>
                     </div>
 

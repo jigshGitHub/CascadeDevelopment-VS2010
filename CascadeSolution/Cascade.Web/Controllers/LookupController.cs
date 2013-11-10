@@ -65,8 +65,16 @@ namespace Cascade.Web.Controllers
                                  select new LookUp(respo.Agency + GetDescriptionDetails(respo.Name), respo.Agency);
                     break;
                 case "SupCompany":
+                    List<LookUp> items = new List<LookUp>();
+                    items.Add(new LookUp("",""));
+
                     lookupData = from respo in respoRepo.GetAll().Where(r => r.Active == "TRUE").OrderBy(x => x.Name)
                                  select new LookUp(respo.Name, respo.Agency);
+
+                    foreach(var item in lookupData)
+                        items.Add(item as LookUp);
+
+                    return items as IEnumerable<LookUp>;
                     break;
                 case "Buyer":
                     SupCompanyRepository supCompanyRepo = new SupCompanyRepository();

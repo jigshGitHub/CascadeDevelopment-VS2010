@@ -102,6 +102,7 @@ function portfolioVM(userId) {
                         self.purchaseSummarySectionVM.resaleRestriction(data.ResaleRestrictionId);
                         self.purchaseSummarySectionVM.notes(data.Notes);
                         self.purchaseSummarySectionVM.saveVisible(true);
+                        self.collectionsTabVM.loadCollectionRecords();
                         $("#loading").html("&nbsp;");
                         $("#loading").dialog('close');
                     },
