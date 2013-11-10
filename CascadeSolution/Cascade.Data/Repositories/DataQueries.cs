@@ -832,6 +832,60 @@ namespace Cascade.Data.Repositories
             return collectionTransactions.AsEnumerable<MSI_Port_CollectionsTrans>();
         }
 
+        public IEnumerable<MSI_Port_InvestmentsTrans> GetPortfolioInvestmentsSummary(string productCode, string userId, bool isOriginal)
+        {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters productCode={1}, userId={2}", thisMethod, productCode, userId);
+            LogHelper.Info(logMessage);
+            
+            MSI_Port_InvestmentsTrans investmentTransaction = null;
+            DBFactory db;
+            List<MSI_Port_InvestmentsTrans> investmentTransactions = null;
+            System.Data.DataSet ds;
+            try
+            {
+                db = new DBFactory();
+                ds = db.ExecuteDataset("MSI_sp_GetPortfolioInvestmentsSummary", "PurchaseInvestmentsSummary", new SqlParameter("@productCode", productCode), new SqlParameter("@userId", userId), new SqlParameter("@isOriginal", isOriginal));
+
+                if (ds.Tables["PurchaseInvestmentsSummary"].Rows.Count > 0)
+                {
+                    investmentTransactions = new List<MSI_Port_InvestmentsTrans>();
+                    foreach (System.Data.DataRow dr in ds.Tables["PurchaseInvestmentsSummary"].Rows)
+                    {
+                        investmentTransaction = new MSI_Port_InvestmentsTrans();
+                        investmentTransaction.ID = int.Parse(dr["ID"].ToString());
+                        investmentTransaction.Portfolio_ = dr["Portfolio#"].ToString();
+                        if (dr["ProfitShare_before"] != DBNull.Value)
+                            investmentTransaction.ProfitShare_before = Convert.ToDouble(dr["ProfitShare_before"].ToString());
+                        if (dr["ProfitShare_after"] != DBNull.Value)
+                            investmentTransaction.ProfitShare_after = Convert.ToDouble(dr["ProfitShare_after"].ToString());
+                        if (dr["SalesPrice"] != DBNull.Value)
+                            investmentTransaction.SalesPrice = Convert.ToDecimal(dr["SalesPrice"].ToString());
+                        if (dr["Notes"] != DBNull.Value)
+                            investmentTransaction.Notes = dr["Notes"].ToString();
+                        if (dr["Interest"] != DBNull.Value)
+                            investmentTransaction.Interest = Convert.ToDouble( dr["Interest"].ToString());
+                        investmentTransaction.Inv_AgencyName = dr["Inv_AgencyName"].ToString();
+                        DateTime notNullDt;
+                        if (DateTime.TryParse(dr["CreatedDate"].ToString(), out notNullDt))
+                            investmentTransaction.CreatedDate = notNullDt;
+                        if (DateTime.TryParse(dr["UpdatedDate"].ToString(), out notNullDt))
+                            investmentTransaction.UpdatedDate = notNullDt;
+                        investmentTransaction.CreatedBy = dr["CreatedBy"].ToString();
+                        investmentTransaction.UpdatedBy = dr["UpdatedBy"].ToString();
+                        investmentTransaction.TransType = dr["TransType"].ToString();
+                        investmentTransactions.Add(investmentTransaction);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLogHelper.Error(logMessage, ex);
+            }
+            return investmentTransactions.AsEnumerable<MSI_Port_InvestmentsTrans>();
+        }
+
         public void AddPortfolio(MSI_Port_Acq_Original portfolioToSave)
         {
             string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);

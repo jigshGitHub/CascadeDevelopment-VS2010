@@ -762,4 +762,16 @@ namespace Cascade.Data.Repositories
         {
         }
     }
+    
+    public class MSI_PortInvestmentsTransRepository : RepositoryBase<MSI_Port_InvestmentsTrans>
+    {
+        public MSI_PortInvestmentsTransRepository(IDatabaseFactory dbFactory)
+            : base(dbFactory)
+        {
+        }
+        public MSI_PortInvestmentsTransRepository()
+            : base(new DBFactory())
+        {
+        }
+    }
 }

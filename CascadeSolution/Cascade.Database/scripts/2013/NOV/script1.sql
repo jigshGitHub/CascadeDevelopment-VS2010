@@ -148,3 +148,72 @@ FROM [dbo].[MSI_Port_CollectionsTrans]
 WHERE [Portfolio#] = @productCode AND IsOriginal = @isOriginal;
 
 GO
+
+/****** Object:  Table [dbo].[MSI_Port_InvestmentsTrans]    Script Date: 11/06/2013 00:32:31 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[MSI_Port_InvestmentsTrans]') AND type in (N'U'))
+DROP TABLE [dbo].[MSI_Port_InvestmentsTrans]
+GO
+
+
+/****** Object:  Table [dbo].[MSI_Port_InvestmentsTrans]    Script Date: 11/06/2013 00:32:31 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MSI_Port_InvestmentsTrans](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Portfolio#] [nvarchar](255) NULL,
+	[SalesPrice] [money] NULL,
+	[ProfitShare_before] [float] NULL,
+	[ProfitShare_after] [float] NULL,
+	[Interest] [float] NULL,
+	[Inv_AgencyName] [nvarchar](255) NULL,
+	[Notes] [nvarchar](max) NULL,
+	[TransType] [nvarchar](50) NULL,
+	[IsOriginal] bit,
+	[CreatedBy] [nvarchar](256) NULL,
+	[UpdatedBy] [nvarchar](256) NULL,
+	[CreatedDate] [datetime] NULL,
+	[UpdatedDate] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[MSI_sp_GetPortfolioInvestmentsSummary]    Script Date: 11/06/2013 00:26:40 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[MSI_sp_GetPortfolioInvestmentsSummary]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [dbo].[MSI_sp_GetPortfolioInvestmentsSummary]
+GO
+
+/****** Object:  StoredProcedure [dbo].[MSI_sp_GetPortfolioInvestmentsSummary]    Script Date: 11/06/2013 00:26:40 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE Procedure [dbo].[MSI_sp_GetPortfolioInvestmentsSummary](
+@productCode VARCHAR(6),
+@userId NVARCHAR(256),
+@isOriginal bit
+)
+AS
+
+If Not Exists(Select Top 1 [Portfolio#] From [MSI_Port_InvestmentsTrans] Where [Portfolio#] = @productCode)
+BEGIN
+	INSERT INTO [dbo].[MSI_Port_InvestmentsTrans]([Portfolio#],[SalesPrice],[Inv_AgencyName],[Interest],TransType,ProfitShare_before,ProfitShare_after,Notes,[IsOriginal],[CreatedBy],[UpdatedBy],[CreatedDate],[UpdatedDate])
+	SELECT Portfolio#, SalesPrice,Inv_AgencyName,[$Interest],TransType,ProfitShare_after,ProfitShare_before,Notes,1,@userId, @userId,GETDATE(),GETDATE()
+	FROM [dbo].Port_Trans
+	WHERE [Portfolio#] = @productCode AND TransType = 'INVESTMENT';
+END
+
+SELECT [ID],[Portfolio#],[SalesPrice],[Inv_AgencyName],[Interest],ProfitShare_before,ProfitShare_after,TransType,Notes,[IsOriginal],[CreatedBy],[UpdatedBy],[CreatedDate],[UpdatedDate]
+FROM [dbo].[MSI_Port_InvestmentsTrans]
+WHERE [Portfolio#] = @productCode AND IsOriginal = @isOriginal;
+
+GO

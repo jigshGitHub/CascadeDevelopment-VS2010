@@ -15,6 +15,7 @@ namespace Cascade.Web.Controllers
             IEnumerable<LookUp> lookupData = null;
             List<LookUp> data = new List<LookUp>();
             SupCompanyRepository respoRepo = new SupCompanyRepository();
+            List<LookUp> items = new List<LookUp>();
             switch (id)
             {
                 case "TransCode":
@@ -65,7 +66,6 @@ namespace Cascade.Web.Controllers
                                  select new LookUp(respo.Agency + GetDescriptionDetails(respo.Name), respo.Agency);
                     break;
                 case "SupCompany":
-                    List<LookUp> items = new List<LookUp>();
                     items.Add(new LookUp("",""));
 
                     lookupData = from respo in respoRepo.GetAll().Where(r => r.Active == "TRUE").OrderBy(x => x.Name)
@@ -94,10 +94,15 @@ namespace Cascade.Web.Controllers
                                  select new LookUp(company.Company, company.Id.ToString());
                     break;
                 case "Investor":
+
+                    items.Add(new LookUp("", ""));
                     supCompanyRepo = new SupCompanyRepository();
                     lookupData = from investor in supCompanyRepo.GetAll().Where(record => record.Type == id).OrderBy(x => x.Agency)
                                  select new LookUp(investor.Name, investor.Agency);
-                    break;
+                    foreach(var item in lookupData)
+                        items.Add(item as LookUp);
+
+                    return items as IEnumerable<LookUp>;
                 case "RProdCode":
                     RProductCodeRepository rprodCodeRepo = new RProductCodeRepository();
                     lookupData = from prodCode in rprodCodeRepo.GetAll().OrderBy(x => x.PRODUCT_CODE)

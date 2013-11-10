@@ -127,6 +127,9 @@
     <Compile Include="Models\MSI_Port_CollectionsTrans.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\MSI_Port_InvestmentsTrans.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\MSI_Port_SalesTrans_Edited.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

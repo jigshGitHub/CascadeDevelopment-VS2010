@@ -132,8 +132,26 @@ namespace Cascade.Business.Portfolio
                 ErrorLogHelper.Error(logMessage, ex);
             }
             return transactions;
+        }
 
+        public IEnumerable<MSI_Port_InvestmentsTrans> GetInvestmentsTransactions(string portfolioNumber, bool isOriginal, string userId = "")
+        {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters portfolioNumber={1}, userId={2}", thisMethod, portfolioNumber, userId);
+            LogHelper.Info(logMessage);
 
+            IEnumerable<MSI_Port_InvestmentsTrans> transactions = null;
+
+            try
+            {
+                DataQueries query = new DataQueries();
+                transactions = query.GetPortfolioInvestmentsSummary(portfolioNumber, userId, isOriginal);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogHelper.Error(logMessage, ex);
+            }
+            return transactions;
         }
 
         public MSI_Port_SalesTrans_Original GetSalesTransaction(int id)

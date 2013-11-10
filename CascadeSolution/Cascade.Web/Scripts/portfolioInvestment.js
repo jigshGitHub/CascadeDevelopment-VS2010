@@ -14,26 +14,31 @@ function investmentsTransVM(portfolioNumber) {
     var self = this;
     self.portfolioNumber = ko.observable('');
     self.totalContributions = ko.observable('');
-    self.investmentRecords = ko.computed(function () {
-        var investmentRecords = [];
+    self.investmentRecords = ko.observableArray([]);
+    self.loadInvestments = function () {
+        //var investmentRecords = [];
         var totalContributions = 0;
         if (self.portfolioNumber() != '') {
             $.ajax({
-                url: baseUrl + '/api/PortfolioTransactions/',
+                url: baseUrl + '/api/MSIPortfolioInvestmentsTransactions/',
                 type: 'GET',
                 contentType: 'application/json',
-                data: { portfolioNumber: self.portfolioNumber(), transType: 'Investment' },
+                data: { portfolioNumber: self.portfolioNumber(), isOriginal: 'true' },
                 dataType: 'json',
                 async: false,
                 success: function (data) {
-                    //log(data);
-                    if (data.length > 0) {
-                        self.currentRecordIndex(0);
-                        $.each(data, function (i, item) {
-                            totalContributions += item.SalesPrice;
-                            investmentRecords.push(new investmentRecord(item.ID, self.portfolioNumber(), item.Inv_AgencyName, item.ProfitShare_before, item.ProfitShare_after,formatCurrency(item.SalesPrice), item.C_Interest, item.TransType,item.Notes));
-                        });
+                    if (data != undefined) {
+                        if (data.length > 0) {
+                            self.currentRecordIndex(0);
+                            $.each(data, function (i, item) {
+                                totalContributions += item.SalesPrice;
+                                self.investmentRecords.push(new investmentRecord(item.ID, self.portfolioNumber(), item.Inv_AgencyName, item.ProfitShare_before, item.ProfitShare_after, formatCurrency(item.SalesPrice), item.Interest, item.TransType, item.Notes));
+                            });
+                        }
                     }
+                    else
+                        self.investmentRecords()[0].portfolioNumber(self.portfolioNumber());
+                    
                 },
                 error: function (xhr, status, somthing) {
                     log(status);
@@ -41,15 +46,21 @@ function investmentsTransVM(portfolioNumber) {
             });
         }
         self.totalContributions(formatCurrency(totalContributions));
-        return investmentRecords;
-    }, self);
+        //return investmentRecords;
+    };
+
     self.currentRecordIndex = ko.observable(0);
     self.currentInvestmentRecord = ko.computed(function () {
-        if (self.investmentRecords.length > 0)
-            return self.investmentRecords()[self.currentRecordIndex()];
-        else
-            return new investmentRecord('', '', '', '','','', '', '','');
+        if (self.investmentRecords().length == 0) {
+            return new investmentRecord('0', '', '', '', '', '', '', '', '');
+        }
+        return self.investmentRecords()[self.currentRecordIndex()];
     }, self);
+
+    self.addNewInvestment = function () {
+        self.investmentRecords().push(new investmentRecord('0', self.portfolioNumber(), '', '', '', '', '', '', ''));
+        self.currentRecordIndex(self.investmentRecords().length-1);
+    };
 
     self.investors = ko.observableArray([]);
     $.each(portfolioViewModels.investors(), function (i, item) {
@@ -82,18 +93,20 @@ function investmentsTransVM(portfolioNumber) {
     self.saveRecord = function () {
         //log(self.currentInvestmentRecord().contribution() + ',' + self.currentInvestmentRecord().investor());
         var json = JSON.stringify({
+            Portfolio_: self.currentInvestmentRecord().portfolioNumber(),
             ProfitShare_after: self.currentInvestmentRecord().prftShareAftr(),
             ProfitShare_before: self.currentInvestmentRecord().prftShareBfr(),
             SalesPrice: self.currentInvestmentRecord().contribution().replace(/[^0-9.]/ig, ''),
-            InterestRate: self.currentInvestmentRecord().interestRate(),
+            Interest: self.currentInvestmentRecord().interestRate(),
             Notes: self.currentInvestmentRecord().notes(),
             ID: self.currentInvestmentRecord().id,
             Inv_AgencyName: self.currentInvestmentRecord().investor(),
-            TransType: 'Investment'
+            TransType: 'Investment',
+            IsOriginal: 'true'
         });
 
         $.ajax({
-            url: baseUrl + '/api/PortfolioTransactions/',
+            url: baseUrl + '/api/MSIPortfolioInvestmentsTransactions/',
             type: "POST",
             data: json,
             dataType: "json",

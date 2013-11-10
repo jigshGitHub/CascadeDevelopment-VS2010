@@ -103,6 +103,7 @@ function portfolioVM(userId) {
                         self.purchaseSummarySectionVM.notes(data.Notes);
                         self.purchaseSummarySectionVM.saveVisible(true);
                         self.collectionsTabVM.loadCollectionRecords();
+                        self.investmentsTabVM.loadInvestments();
                         $("#loading").html("&nbsp;");
                         $("#loading").dialog('close');
                     },
@@ -114,6 +115,7 @@ function portfolioVM(userId) {
                 self.salesTabVM.salesBatchSelected(self.portfolioNumber() + '-1');
                 self.salesTabVM.saveVisible(false);
                 self.collectionsTabVM.portfolioNumber(self.portfolioNumber());
+                self.investmentsTabVM.portfolioNumber(self.portfolioNumber());
             }
         }
         else {
@@ -131,7 +133,7 @@ function portfolioVM(userId) {
         return self.purchaseSummarySectionVM.detailsVisible();
     }, self);
     self.collectionsTabVM = new collectionsTransVM();
-    //self.investmentsTabVM = new investmentsTransVM();
+    self.investmentsTabVM = new investmentsTransVM();
     //self.distributionsTabVM = new distributionsTransVM();
     //self.interestTabVM = new interestTransVM();
 
@@ -149,7 +151,7 @@ portfolioViewModels.salesTransVM = function () { return $(document).data('salesT
 portfolioViewModels.purchaseSummaryVM = function () { return $(document).data('purchaseSummaryVM') };
 //portfolioViewModels.interestVM = function () { return $(document).data('interestVM') };
 //portfolioViewModels.distributionsTransVM = function () { return $(document).data('distributionsTransVM') };
-//portfolioViewModels.investmentsTransVM = function () { return $(document).data('investmentsTransVM') };
+portfolioViewModels.investmentsTransVM = function () { return $(document).data('investmentsTransVM') };
 portfolioViewModels.collectionsTransVM = function () { return $(document).data('collectionsTransVM') };
 
 
