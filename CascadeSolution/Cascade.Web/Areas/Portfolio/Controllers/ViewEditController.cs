@@ -101,5 +101,12 @@ namespace Cascade.Web.Areas.Portfolio.Controllers
                 return View();
             }
         }
+
+
+        //For SSRS Reports
+        public ActionResult Reports()
+        {
+            return View();
+        }
     }
 }

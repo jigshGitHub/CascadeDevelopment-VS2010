@@ -43,6 +43,10 @@
       <HintPath>bin\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Microsoft.ReportViewer.WebForms.dll</HintPath>
+    </Reference>
     <Reference Include="MvcContrib, Version=3.0.51.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\MvcContrib.dll</HintPath>
@@ -238,6 +242,13 @@
     <Compile Include="Presentation\ExtensionMethods\DecimalHelpers.cs" />
     <Compile Include="Presentation\ViewModels\DPS\AddDPSViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Report.aspx.cs">
+      <DependentUpon>Report.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Report.aspx.designer.cs">
+      <DependentUpon>Report.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -296,6 +307,7 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Report.aspx" />
     <Content Include="Scripts\application.js" />
     <Content Include="Scripts\compliance.js" />
     <Content Include="Scripts\portfolioCollections.js" />
@@ -514,6 +526,7 @@
     <Content Include="Areas\Recourse\Views\Recall\PutBackIndex.cshtml" />
     <Content Include="Areas\Recourse\Views\Recall\ViewPutback.cshtml" />
     <Content Include="Areas\Recourse\Views\Recall\_putbackRecords.cshtml" />
+    <Content Include="Areas\Portfolio\Views\ViewEdit\Reports.cshtml" />
     <None Include="Areas\Reports\Views\Cascade0206Deploy.rar" />
     <Content Include="Areas\Reports\Views\Collections\PortfolioOwnerBreakDown.cshtml" />
     <Content Include="Areas\Reports\Views\Collections\PortfolioWorkStatusBreakDown.cshtml" />
