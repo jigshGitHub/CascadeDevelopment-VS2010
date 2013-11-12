@@ -36,9 +36,13 @@ function investmentsTransVM(portfolioNumber) {
                             });
                         }
                     }
-                    else
-                        self.investmentRecords()[0].portfolioNumber(self.portfolioNumber());
-                    
+                    else {
+                        log('ts')
+                        log(self.investmentRecords());
+                        if (self.investmentRecords().length == 1) 
+                            self.investmentRecords()[0].portfolioNumber(self.portfolioNumber());
+                    }
+
                 },
                 error: function (xhr, status, somthing) {
                     log(status);

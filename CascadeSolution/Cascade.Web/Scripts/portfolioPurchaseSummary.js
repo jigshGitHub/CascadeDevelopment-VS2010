@@ -77,10 +77,9 @@
             success: function (response) {
                 log('After save' + response);
 
-                salesVM.portfolioNumber(self.portfolioNumber());
-                salesVM.salesBatchSelected(self.portfolioNumber() + '-1');
-                salesVM.saveVisible(true);
-                self.detailsVisible(false);
+//                salesVM.portfolioNumber(self.portfolioNumber());
+//                salesVM.salesBatchSelected(self.portfolioNumber() + '-1');
+//                self.detailsVisible(true);
             },
             error: function (response, errorText) {
             }
@@ -88,7 +87,6 @@
         self.showMessage(true);
         self.message('Data saved successfully!');
     }
-    self.saveVisible = ko.observable(false);
     self.resetFields = function () {
         self.portfolioNumber('');
         self.company('');
@@ -106,5 +104,4 @@
         self.purchasePrice('');
         self.notes('');
     }
-    self.detailsVisible = ko.observable(false);
 };

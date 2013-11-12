@@ -52,14 +52,17 @@ function portfolioVM(userId) {
             if (number == '') {
                 self.portfolioListVisible(false);
                 self.portfolioEditableFields(true);
-                self.purchaseSummarySectionVM.detailsVisible(true);
-                self.purchaseSummarySectionVM.saveVisible(true);
                 return;
             }
-            if (!self.portfolioBlankScenario()) {
+            else {
                 //load acqusitions portfolio data
                 $("#loading").dialog('open');
                 $("#loading").html("<img src=\"" + absoluteapp + imagedir + "/ajax-loader.gif\" />");
+                log(number);
+                self.salesTabVM.portfolioNumber(number);
+                self.salesTabVM.salesBatchSelected(number + '-1');
+                self.collectionsTabVM.portfolioNumber(number);
+                self.investmentsTabVM.portfolioNumber(number);
 
                 $.ajax({
                     //                url: baseUrl + '/api/Portfolio/',
@@ -101,7 +104,7 @@ function portfolioVM(userId) {
                             self.purchaseSummarySectionVM.purchasePrice(formatCurrency(data.PurchasePrice)); //formatCurrency({ colorize: true, negativeFormat: '(%s%n)' });
                         self.purchaseSummarySectionVM.resaleRestriction(data.ResaleRestrictionId);
                         self.purchaseSummarySectionVM.notes(data.Notes);
-                        self.purchaseSummarySectionVM.saveVisible(true);
+                        self.salesTabVM.loadSalesRecords();
                         self.collectionsTabVM.loadCollectionRecords();
                         self.investmentsTabVM.loadInvestments();
                         $("#loading").html("&nbsp;");
@@ -111,27 +114,17 @@ function portfolioVM(userId) {
                         log(status);
                     }
                 });
-                self.salesTabVM.portfolioNumber(self.portfolioNumber());
-                self.salesTabVM.salesBatchSelected(self.portfolioNumber() + '-1');
-                self.salesTabVM.saveVisible(false);
-                self.collectionsTabVM.portfolioNumber(self.portfolioNumber());
-                self.investmentsTabVM.portfolioNumber(self.portfolioNumber());
             }
         }
         else {
             self.salesTabVM.resetFields();
             self.purchaseSummarySectionVM.resetFields();
-            self.purchaseSummarySectionVM.saveVisible(false);
-            self.salesTabVM.saveVisible(false);
         }
 
     } .bind(self));
 
     self.salesTabVM = new salesTransVM(userId);
     self.purchaseSummarySectionVM = new purchaseSummaryVM(userId, self.salesTabVM);
-    self.portfolioBlankScenario = ko.computed(function () {
-        return self.purchaseSummarySectionVM.detailsVisible();
-    }, self);
     self.collectionsTabVM = new collectionsTransVM();
     self.investmentsTabVM = new investmentsTransVM();
     //self.distributionsTabVM = new distributionsTransVM();

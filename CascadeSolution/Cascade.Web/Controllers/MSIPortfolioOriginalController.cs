@@ -151,7 +151,7 @@ namespace Cascade.Web.Controllers
                     Content = new StringContent(string.Format("Error occur in saving Sales transaction : {0}", ex.Message))
                 });
             }
-            return inTransaction;
+            return transactionToSave;
 
 
         }

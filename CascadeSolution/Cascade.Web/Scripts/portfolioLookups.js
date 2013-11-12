@@ -95,7 +95,6 @@ portfolioViewModels.putbackTerms = function () {
 portfolioViewModels.portfolios = function () {
     if ($(document).data('portfolios') == undefined) {
         function setPortfolios(data) {
-            log('here');
             $(document).data('portfolios', data);
         };
         $.ajax({

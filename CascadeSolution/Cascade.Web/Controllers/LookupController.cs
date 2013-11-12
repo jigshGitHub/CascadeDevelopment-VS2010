@@ -56,6 +56,7 @@ namespace Cascade.Web.Controllers
                     break;
                 case "PutbackTerm":
                     data = new List<LookUp>();
+                    data.Add(new LookUp("", ""));
                     data.Add(new LookUp("90", "90"));
                     data.Add(new LookUp("120", "120"));
                     data.Add(new LookUp("180", "180"));
@@ -77,11 +78,17 @@ namespace Cascade.Web.Controllers
                     return items as IEnumerable<LookUp>;
                     break;
                 case "Buyer":
+                    items.Add(new LookUp("", ""));
                     SupCompanyRepository supCompanyRepo = new SupCompanyRepository();
                     //lookupData = from buyer in supCompanyRepo.GetAll().OrderBy(x => x.Agency)
                     //             select new LookUp(buyer.Name, buyer.Agency);
                     query = new DataQueries();
                     lookupData = query.GetDistinctResponsibility();
+                    foreach(var item in lookupData)
+                        items.Add(item as LookUp);
+
+                    return items as IEnumerable<LookUp>;
+                    break;
                     break;
                 case "Seller":
                     supCompanyRepo = new SupCompanyRepository();

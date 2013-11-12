@@ -18,17 +18,24 @@
 
     self.putbackTerm.subscribe(function (termValue) {
         if (termValue != undefined) {
-            log(self.cutoffDt());
-            if (self.cutoffDt() != undefined && self.cutoffDt() != '') {
-                var putbackDeadline = new Date(self.cutoffDt());
-                putbackDeadline.setDate(putbackDeadline.getDate() + Number(termValue));
-                self.putbackDeadline($.datepicker.formatDate('mm/dd/yy', putbackDeadline));
-            }
+            self.setPutbackDeadline(termValue, self.cutoffDt());
         }
         else {
             self.putbackDeadline('');
         }
     } .bind(self));
+
+    self.cutoffDt.subscribe(function (value) {
+        self.setPutbackDeadline(self.putbackTerm(), value);
+    } .bind(self));
+    self.setPutbackDeadline = function (termValue,cutOffDt) {
+        log(cutOffDt);
+        if (cutOffDt != undefined && cutOffDt != '') {
+            var putbackDeadline = new Date(cutOffDt);
+            putbackDeadline.setDate(putbackDeadline.getDate() + Number(termValue));
+            self.putbackDeadline($.datepicker.formatDate('mm/dd/yy', putbackDeadline));
+        }
+    }
 }
 
 
@@ -36,8 +43,8 @@ function salesTransVM(userId) {
     var self = this;
     self.userId = userId;
     self.portfolioNumber = ko.observable('');
-    self.salesRecords = ko.computed(function () {
-        var salesRecords = [];
+    self.salesRecords = ko.observableArray();
+    self.loadSalesRecords = function () {
         var batchIndex;
         var salesBatch;
         var cutOffDate;
@@ -59,7 +66,7 @@ function salesTransVM(userId) {
                                 salesBatch = self.portfolioNumber() + '-' + batchIndex;
                                 cutOffDate = new Date(item.Cut_OffDate);
                                 cutOffDate.setDate(cutOffDate.getDate() + 1);
-                                salesRecords.push(new salesRecord(item.ID, self.portfolioNumber(), item.Lender, item.Buyer, ((item.Cut_OffDate == undefined) ? '' : $.datepicker.formatDate('mm/dd/yy', cutOffDate)), ((item.ClosingDate == undefined) ? '' : $.datepicker.formatDate('mm/dd/yy', new Date(item.ClosingDate))), item.PutbackTerm_days_, ((item.PutbackDeadline == undefined) ? '' : $.datepicker.formatDate('mm/dd/yy', new Date(item.PutbackDeadline))), item.SalesBasis, ((item.SalesPrice == undefined) ? '' : formatCurrency(item.SalesPrice)), ((item.FaceValue == undefined) ? '' : formatCurrency(item.FaceValue)), item.C_ofAccts, salesBatch, item.Notes));
+                                self.salesRecords.push(new salesRecord(item.ID, self.portfolioNumber(), item.Lender, item.Buyer, ((item.Cut_OffDate == undefined) ? '' : $.datepicker.formatDate('mm/dd/yy', cutOffDate)), ((item.ClosingDate == undefined) ? '' : $.datepicker.formatDate('mm/dd/yy', new Date(item.ClosingDate))), item.PutbackTerm_days_, ((item.PutbackDeadline == undefined) ? '' : $.datepicker.formatDate('mm/dd/yy', new Date(item.PutbackDeadline))), item.SalesBasis, ((item.SalesPrice == undefined) ? '' : formatCurrency(item.SalesPrice)), ((item.FaceValue == undefined) ? '' : formatCurrency(item.FaceValue)), item.C_ofAccts, salesBatch, item.Notes));
                             });
                         }
                     }
@@ -69,15 +76,15 @@ function salesTransVM(userId) {
                         salesBatch = self.portfolioNumber() + '-1';
                         salesRecords.push(new salesRecord('', self.portfolioNumber(), '', '', '', '', '', '', '', '', '', '', salesBatch, ''));
                     }
-//                    log(salesRecords);
+                    //                    log(salesRecords);
                 },
                 error: function (xhr, status, somthing) {
                     log(status);
                 }
             });
         }
-        return salesRecords;
-    }, self);
+    };
+
     self.putbackTerms = ko.observableArray([]);
     $.each(portfolioViewModels.putbackTerms(), function (i, item) {
         self.putbackTerms.push(item);
@@ -95,14 +102,22 @@ function salesTransVM(userId) {
         //log(index);
         return self.portfolioNumber() + '-' + index;
     }
+    self.portfolioSalesEditableFields = ko.observable(false);
+    self.addNewSales = function () {
+        self.portfolioSalesEditableFields(true);
+        var batchIndex = self.salesRecords().length + 1;
+        var salesBatch = self.portfolioNumber() + '-' + batchIndex;
+        log('salesBatch:' + salesBatch);
+        self.salesRecords().push(new salesRecord('', self.portfolioNumber(), '', '', '', '', '', '', '', '', '', '', salesBatch, ''));
+        self.currentRecordIndex(self.salesRecords().length - 1);
+    };
     self.currentRecordIndex = ko.observable(0);
     self.currentSalesRecord = ko.computed(function () {
-        log('cs');
-        log(self.currentRecordIndex());
-        if (self.portfolioNumber() != '')
-            return self.salesRecords()[self.currentRecordIndex()];
-        else
-            return new salesRecord('', '', '', '', '', '', '', '', '', '', '', '', '', '');
+        log(self.currentRecordIndex()); 
+        log(self.salesRecords());
+        if (self.salesRecords().length == 0)
+            return new salesRecord('0', '', '', '', '', '', '', '', '', '', '', '', '', '');
+        return self.salesRecords()[self.currentRecordIndex()];
     }, self);
     self.buyers = ko.observableArray([]);
 
@@ -176,25 +191,25 @@ function salesTransVM(userId) {
                 log(response);
                 self.showMessage(true);
                 self.message('Data saved successfully!');
-                if (self.currentSalesRecord().Id == '') {
-                    self.currentSalesRecord().lender('');
-                    self.currentSalesRecord().buyer(undefined);
-                    self.currentSalesRecord().cutoffDt('');
-                    self.currentSalesRecord().closingDt('');
-                    self.currentSalesRecord().putbackTerm(undefined);
-                    self.currentSalesRecord().putbackDeadline('');
-                    self.currentSalesRecord().salesBasis('');
-                    self.currentSalesRecord().salesPrice('');
-                    self.currentSalesRecord().faceValue('');
-                    self.currentSalesRecord().accounts('');
-                    self.currentSalesRecord().notes('');
-                }
+                self.currentSalesRecord().Id = response.ID;
+                //                if (self.currentSalesRecord().Id == '') {
+                //                    self.currentSalesRecord().lender('');
+                //                    self.currentSalesRecord().buyer(undefined);
+                //                    self.currentSalesRecord().cutoffDt('');
+                //                    self.currentSalesRecord().closingDt('');
+                //                    self.currentSalesRecord().putbackTerm(undefined);
+                //                    self.currentSalesRecord().putbackDeadline('');
+                //                    self.currentSalesRecord().salesBasis('');
+                //                    self.currentSalesRecord().salesPrice('');
+                //                    self.currentSalesRecord().faceValue('');
+                //                    self.currentSalesRecord().accounts('');
+                //                    self.currentSalesRecord().notes('');
+                //                }
             },
             error: function (response, errorText) {
             }
         });
     }
-    self.saveVisible = ko.observable(false);
     self.resetFields = function () {
         self.portfolioNumber('');
         self.currentSalesRecord().Id = undefined;
