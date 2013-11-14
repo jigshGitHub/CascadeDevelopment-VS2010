@@ -56,7 +56,7 @@ namespace Cascade.Web.Controllers
                     break;
                 case "PutbackTerm":
                     data = new List<LookUp>();
-                    data.Add(new LookUp("", ""));
+                    //data.Add(new LookUp("", ""));
                     data.Add(new LookUp("90", "90"));
                     data.Add(new LookUp("120", "120"));
                     data.Add(new LookUp("180", "180"));

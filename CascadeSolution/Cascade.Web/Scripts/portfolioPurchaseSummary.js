@@ -47,7 +47,7 @@
     //});
     self.showMessage = ko.observable(false);
     self.message = ko.observable('');
-    self.saveMainRecord = function () {
+    self.save = function () {
         var json = JSON.stringify({
             Company: self.company(),
             PutbackDeadline: self.putbackDeadline(),
@@ -75,11 +75,6 @@
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (response) {
-                log('After save' + response);
-
-//                salesVM.portfolioNumber(self.portfolioNumber());
-//                salesVM.salesBatchSelected(self.portfolioNumber() + '-1');
-//                self.detailsVisible(true);
             },
             error: function (response, errorText) {
             }

@@ -236,9 +236,7 @@ namespace Cascade.Web.Controllers
             catch (Exception ex)
             {
             }
-            return inTransaction;
-
-
+            return transactionToSave;
         }
         //[HttpGet]
         //public MSI_Port_SalesTrans_Original Details(int id)
@@ -302,6 +300,7 @@ namespace Cascade.Web.Controllers
         {
             business = new Original();
         }
+
         public IEnumerable<MSI_Port_InvestmentsTrans> Get(string portfolioNumber, string isOriginal, string userId = "")
         {
             string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
@@ -326,6 +325,7 @@ namespace Cascade.Web.Controllers
 
 
         }
+
         public MSI_Port_InvestmentsTrans Post(MSI_Port_InvestmentsTrans inTransaction)
         {
             MSI_Port_InvestmentsTrans transactionToSave = null;
@@ -372,9 +372,7 @@ namespace Cascade.Web.Controllers
             catch (Exception ex)
             {
             }
-            return inTransaction;
-
-
+            return transactionToSave;
         }
         
     }

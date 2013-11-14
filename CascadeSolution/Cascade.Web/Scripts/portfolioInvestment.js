@@ -37,8 +37,6 @@ function investmentsTransVM(portfolioNumber) {
                         }
                     }
                     else {
-                        log('ts')
-                        log(self.investmentRecords());
                         if (self.investmentRecords().length == 1) 
                             self.investmentRecords()[0].portfolioNumber(self.portfolioNumber());
                     }
@@ -53,9 +51,9 @@ function investmentsTransVM(portfolioNumber) {
         //return investmentRecords;
     };
 
-    self.currentRecordIndex = ko.observable(0);
+    self.currentRecordIndex = ko.observable(-1);
     self.currentInvestmentRecord = ko.computed(function () {
-        if (self.investmentRecords().length == 0) {
+        if (self.currentRecordIndex() == -1) {
             return new investmentRecord('0', '', '', '', '', '', '', '', '');
         }
         return self.investmentRecords()[self.currentRecordIndex()];
@@ -94,6 +92,8 @@ function investmentsTransVM(portfolioNumber) {
     self.previousRecord = function () {
         self.currentRecordIndex(self.currentRecordIndex() - 1);
     }
+    self.showMessage = ko.observable(false);
+    self.message = ko.observable('');
     self.saveRecord = function () {
         //log(self.currentInvestmentRecord().contribution() + ',' + self.currentInvestmentRecord().investor());
         var json = JSON.stringify({
@@ -116,10 +116,15 @@ function investmentsTransVM(portfolioNumber) {
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (response) {
-                log(response);
+                self.showMessage(true);
+                self.message('Data saved successfully!');
+                self.currentInvestmentRecord().id = response.ID;
             },
             error: function (response, errorText) {
             }
         });
     }
+    self.resetFields = function () {
+        self.investmentRecords([]);
+    };
 };

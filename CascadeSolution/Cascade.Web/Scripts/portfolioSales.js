@@ -28,7 +28,7 @@
     self.cutoffDt.subscribe(function (value) {
         self.setPutbackDeadline(self.putbackTerm(), value);
     } .bind(self));
-    self.setPutbackDeadline = function (termValue,cutOffDt) {
+    self.setPutbackDeadline = function (termValue, cutOffDt) {
         log(cutOffDt);
         if (cutOffDt != undefined && cutOffDt != '') {
             var putbackDeadline = new Date(cutOffDt);
@@ -43,7 +43,7 @@ function salesTransVM(userId) {
     var self = this;
     self.userId = userId;
     self.portfolioNumber = ko.observable('');
-    self.salesRecords = ko.observableArray();
+    self.salesRecords = ko.observableArray([]);
     self.loadSalesRecords = function () {
         var batchIndex;
         var salesBatch;
@@ -84,7 +84,6 @@ function salesTransVM(userId) {
             });
         }
     };
-
     self.putbackTerms = ko.observableArray([]);
     $.each(portfolioViewModels.putbackTerms(), function (i, item) {
         self.putbackTerms.push(item);
@@ -102,23 +101,25 @@ function salesTransVM(userId) {
         //log(index);
         return self.portfolioNumber() + '-' + index;
     }
-    self.portfolioSalesEditableFields = ko.observable(false);
+    self.currentRecordIndex = ko.observable(-1);
+    self.currentSalesRecord = ko.computed(function () {
+        if (self.currentRecordIndex() == -1) 
+            return new salesRecord('', '', '', '', '', '', '', '', '', '', '', '', '', '');
+        else
+            return self.salesRecords()[self.currentRecordIndex()];
+    }, self);
     self.addNewSales = function () {
         self.portfolioSalesEditableFields(true);
         var batchIndex = self.salesRecords().length + 1;
         var salesBatch = self.portfolioNumber() + '-' + batchIndex;
-        log('salesBatch:' + salesBatch);
-        self.salesRecords().push(new salesRecord('', self.portfolioNumber(), '', '', '', '', '', '', '', '', '', '', salesBatch, ''));
+        //log('salesBatch:' + salesBatch);
+        self.salesRecords().push(new salesRecord('0', self.portfolioNumber(), '', '', '', '', '', '', '', '', '', '', salesBatch, ''));
         self.currentRecordIndex(self.salesRecords().length - 1);
+        //log(self.salesRecords());
+
     };
-    self.currentRecordIndex = ko.observable(0);
-    self.currentSalesRecord = ko.computed(function () {
-        log(self.currentRecordIndex()); 
-        log(self.salesRecords());
-        if (self.salesRecords().length == 0)
-            return new salesRecord('0', '', '', '', '', '', '', '', '', '', '', '', '', '');
-        return self.salesRecords()[self.currentRecordIndex()];
-    }, self);
+    self.portfolioSalesEditableFields = ko.observable(false);
+    
     self.buyers = ko.observableArray([]);
 
     $.each(portfolioViewModels.buyers(), function (i, item) {
@@ -192,42 +193,31 @@ function salesTransVM(userId) {
                 self.showMessage(true);
                 self.message('Data saved successfully!');
                 self.currentSalesRecord().Id = response.ID;
-                //                if (self.currentSalesRecord().Id == '') {
-                //                    self.currentSalesRecord().lender('');
-                //                    self.currentSalesRecord().buyer(undefined);
-                //                    self.currentSalesRecord().cutoffDt('');
-                //                    self.currentSalesRecord().closingDt('');
-                //                    self.currentSalesRecord().putbackTerm(undefined);
-                //                    self.currentSalesRecord().putbackDeadline('');
-                //                    self.currentSalesRecord().salesBasis('');
-                //                    self.currentSalesRecord().salesPrice('');
-                //                    self.currentSalesRecord().faceValue('');
-                //                    self.currentSalesRecord().accounts('');
-                //                    self.currentSalesRecord().notes('');
-                //                }
             },
             error: function (response, errorText) {
             }
         });
     }
+    self.saveVisible = ko.observable(false);
     self.resetFields = function () {
-        self.portfolioNumber('');
-        self.currentSalesRecord().Id = undefined;
-        self.currentSalesRecord().portfolioNumber('');
-        self.currentSalesRecord().lender('');
-        self.currentSalesRecord().buyer(undefined);
-        self.currentSalesRecord().cutoffDt('');
-        self.currentSalesRecord().closingDt('');
-        self.currentSalesRecord().putbackTerm(undefined);
-        self.currentSalesRecord().putbackDeadline('');
-        self.currentSalesRecord().salesBasis('');
-        self.currentSalesRecord().salesPrice('');
-        self.currentSalesRecord().faceValue('');
-        self.currentSalesRecord().accounts('');
-        self.currentSalesRecord().salesBatch('');
-        self.currentSalesRecord().notes('');
-        self.currentRecordIndex(0);
-        self.salesBatchSelected(undefined);
+        //        self.portfolioNumber('');
+        //        self.currentSalesRecord().Id = undefined;
+        //        self.currentSalesRecord().portfolioNumber('');
+        //        self.currentSalesRecord().lender('');
+        //        self.currentSalesRecord().buyer(undefined);
+        //        self.currentSalesRecord().cutoffDt('');
+        //        self.currentSalesRecord().closingDt('');
+        //        self.currentSalesRecord().putbackTerm(undefined);
+        //        self.currentSalesRecord().putbackDeadline('');
+        //        self.currentSalesRecord().salesBasis('');
+        //        self.currentSalesRecord().salesPrice('');
+        //        self.currentSalesRecord().faceValue('');
+        //        self.currentSalesRecord().accounts('');
+        //        self.currentSalesRecord().salesBatch('');
+        //        self.currentSalesRecord().notes('');
+        //        self.currentRecordIndex(0);
+        //        self.salesBatchSelected(undefined);
+        self.salesRecords([]);
+        self.currentRecordIndex(-1);
     }
 };
-

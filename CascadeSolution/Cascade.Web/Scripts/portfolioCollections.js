@@ -55,43 +55,6 @@ function collectionsTransVM() {
         }
         //return collectionRecords;
     }
-//    self.collectionRecords = ko.computed(function () {
-//        var collectionRecords = [];
-//        //log(self.portfolioNumber());
-//        if (self.portfolioNumber() != undefined) {
-//            $.ajax({
-//                url: baseUrl + '/api/MSIPortfolioCollectionsTransactions/',
-//                type: 'GET',
-//                contentType: 'application/json',
-//                data: { portfolioNumber: self.portfolioNumber(), isOriginal: 'true' },
-//                dataType: 'json',
-//                async: false,
-//                success: function (data) {
-//                    if (data != undefined) {
-//                        if (data.length > 0) {
-//                            $.each(data, function (i, item) {
-//                                collectionRecords.push(new collectionRecord(item.ID, item.Portfolio_,
-//                                    item.Inv_AgencyName,
-//                                    dateFormat(Date.parse(item.ClosingDate), 'mm/dd/yyyy'),
-//                                    (item.FaceValue == undefined) ? '' : formatCurrency(item.FaceValue),
-//                                    (item.SalesPrice == undefined) ? '' : formatCurrency(item.SalesPrice),
-//                                    item.TransType));
-//                            });
-//                        }
-//                    }
-//                    else {
-//                        collectionRecords.push(new collectionRecord('0', self.portfolioNumber(), '', '', '', ''));
-//                        self.currentCollectionRecord(collectionRecords[0]);
-//                        self.selectedAgency('');
-//                    }
-//                },
-//                error: function (xhr, status, somthing) {
-//                    log(status);
-//                }
-//            });
-//        }
-//        return collectionRecords;
-//    }, self);
     self.currentRecordIndex = ko.observable(0);
     self.addNewCollection = function () {
         self.currentCollectionRecord(new collectionRecord('0', self.portfolioNumber(), '', '', '', ''));
@@ -160,10 +123,12 @@ function collectionsTransVM() {
 
     self.resetFields = function () {
         //self.currentCollectionRecord().portfolioNumber(''),
-        self.currentCollectionRecord().faceValue('');
-        self.currentCollectionRecord().netColls('');
-        self.currentCollectionRecord().closingDt('');
-        self.currentCollectionRecord().id = 0;
-        self.selectedAgency('')
+        if (self.currentCollectionRecord() != undefined) {
+            self.currentCollectionRecord().faceValue('');
+            self.currentCollectionRecord().netColls('');
+            self.currentCollectionRecord().closingDt('');
+            self.currentCollectionRecord().id = 0;
+            self.selectedAgency('')
+        }
     };
 };
