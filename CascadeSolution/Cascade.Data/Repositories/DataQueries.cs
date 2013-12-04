@@ -886,6 +886,108 @@ namespace Cascade.Data.Repositories
             return investmentTransactions.AsEnumerable<MSI_Port_InvestmentsTrans>();
         }
 
+        public IEnumerable<MSI_Port_DistributionTrans> GetPortfolioDistributionSummary(string productCode, string userId, bool isOriginal)
+        {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters productCode={1}, userId={2}", thisMethod, productCode, userId);
+            LogHelper.Info(logMessage);
+
+            MSI_Port_DistributionTrans distributionTransaction = null;
+            DBFactory db;
+            List<MSI_Port_DistributionTrans> distributionTransactions = null;
+            System.Data.DataSet ds;
+            try
+            {
+                db = new DBFactory();
+                ds = db.ExecuteDataset("MSI_sp_GetPortfolioDistributionSummary", "DistributionSummary", new SqlParameter("@productCode", productCode), new SqlParameter("@userId", userId), new SqlParameter("@isOriginal", isOriginal));
+
+                if (ds.Tables["DistributionSummary"].Rows.Count > 0)
+                {
+                    distributionTransactions = new List<MSI_Port_DistributionTrans>();
+                    foreach (System.Data.DataRow dr in ds.Tables["DistributionSummary"].Rows)
+                    {
+                        distributionTransaction = new MSI_Port_DistributionTrans();
+                        distributionTransaction.ID = int.Parse(dr["ID"].ToString());
+                        distributionTransaction.Portfolio_ = dr["Portfolio#"].ToString();
+                        if (dr["SalesPrice"] != DBNull.Value)
+                            distributionTransaction.SalesPrice = Convert.ToDecimal(dr["SalesPrice"].ToString());
+                        if (dr["Notes"] != DBNull.Value)
+                            distributionTransaction.Notes = dr["Notes"].ToString();
+                        if (dr["CheckNo"] != DBNull.Value)
+                            distributionTransaction.CheckNo = dr["CheckNo"].ToString();
+                        distributionTransaction.Inv_AgencyName = dr["Inv_AgencyName"].ToString();
+                        DateTime notNullDt;
+                        if (DateTime.TryParse(dr["ClosingDate"].ToString(), out notNullDt))
+                            distributionTransaction.ClosingDate = notNullDt;
+                        if (DateTime.TryParse(dr["CreatedDate"].ToString(), out notNullDt))
+                            distributionTransaction.CreatedDate = notNullDt;
+                        if (DateTime.TryParse(dr["UpdatedDate"].ToString(), out notNullDt))
+                            distributionTransaction.UpdatedDate = notNullDt;
+                        distributionTransaction.CreatedBy = dr["CreatedBy"].ToString();
+                        distributionTransaction.UpdatedBy = dr["UpdatedBy"].ToString();
+                        distributionTransactions.Add(distributionTransaction);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLogHelper.Error(logMessage, ex);
+            }
+            return distributionTransactions.AsEnumerable<MSI_Port_DistributionTrans>();
+        }
+
+        public IEnumerable<MSI_Port_InterestTrans> GetPortfolioInterestSummary(string productCode, string userId, bool isOriginal)
+        {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters productCode={1}, userId={2}", thisMethod, productCode, userId);
+            LogHelper.Info(logMessage);
+
+            MSI_Port_InterestTrans interestTransaction = null;
+            DBFactory db;
+            List<MSI_Port_InterestTrans> interestTransactions = null;
+            System.Data.DataSet ds;
+            try
+            {
+                db = new DBFactory();
+                ds = db.ExecuteDataset("MSI_sp_GetPortfolioInterestSummary", "InterestSummary", new SqlParameter("@productCode", productCode), new SqlParameter("@userId", userId), new SqlParameter("@isOriginal", isOriginal));
+
+                if (ds.Tables["InterestSummary"].Rows.Count > 0)
+                {
+                    interestTransactions = new List<MSI_Port_InterestTrans>();
+                    foreach (System.Data.DataRow dr in ds.Tables["InterestSummary"].Rows)
+                    {
+                        interestTransaction = new MSI_Port_InterestTrans();
+                        interestTransaction.ID = int.Parse(dr["ID"].ToString());
+                        interestTransaction.Portfolio_ = dr["Portfolio#"].ToString();
+                        if (dr["SalesPrice"] != DBNull.Value)
+                            interestTransaction.SalesPrice = Convert.ToDecimal(dr["SalesPrice"].ToString());
+                        if (dr["Notes"] != DBNull.Value)
+                            interestTransaction.Notes = dr["Notes"].ToString();
+                        if (dr["CheckNo"] != DBNull.Value)
+                            interestTransaction.CheckNo = dr["CheckNo"].ToString();
+                        interestTransaction.Inv_AgencyName = dr["Inv_AgencyName"].ToString();
+                        DateTime notNullDt;
+                        if (DateTime.TryParse(dr["ClosingDate"].ToString(), out notNullDt))
+                            interestTransaction.ClosingDate = notNullDt;
+                        if (DateTime.TryParse(dr["CreatedDate"].ToString(), out notNullDt))
+                            interestTransaction.CreatedDate = notNullDt;
+                        if (DateTime.TryParse(dr["UpdatedDate"].ToString(), out notNullDt))
+                            interestTransaction.UpdatedDate = notNullDt;
+                        interestTransaction.CreatedBy = dr["CreatedBy"].ToString();
+                        interestTransaction.UpdatedBy = dr["UpdatedBy"].ToString();
+                        interestTransactions.Add(interestTransaction);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLogHelper.Error(logMessage, ex);
+            }
+            return interestTransactions.AsEnumerable<MSI_Port_InterestTrans>();
+        }
+
         public void AddPortfolio(MSI_Port_Acq_Original portfolioToSave)
         {
             string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);

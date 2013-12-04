@@ -91,5 +91,7 @@ namespace Cascade.Data.Models
         public DbSet<MSI_MessageNotification> MSI_MessageNotification { get; set; }
         public DbSet<MSI_Port_CollectionsTrans> MSI_Port_CollectionsTrans { get; set; }
         public DbSet<MSI_Port_InvestmentsTrans> MSI_Port_InvestmentsTrans { get; set; }
+        public DbSet<MSI_Port_DistributionTrans> MSI_Port_DistributionTrans { get; set; }
+        public DbSet<MSI_Port_InterestTrans> MSI_Port_InterestTrans { get; set; }
     }
 }

@@ -376,4 +376,173 @@ namespace Cascade.Web.Controllers
         }
         
     }
+
+
+    public class MSIPortfolioDistributionTransactionsController : ApiController
+    {
+        private static readonly string thisClass = "Cascade.Web.Controllers.MSIPortfolioDistributionTransactionsController";
+        Original business;
+
+        public MSIPortfolioDistributionTransactionsController()
+        {
+            business = new Original();
+        }
+
+        public IEnumerable<MSI_Port_DistributionTrans> Get(string portfolioNumber, string isOriginal, string userId = "")
+        {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters productCode={1}", thisMethod, portfolioNumber);
+            LogHelper.Info(logMessage);
+
+            IEnumerable<MSI_Port_DistributionTrans> transactions = null;
+
+            try
+            {
+                transactions = business.GetIDistributionTransactions(portfolioNumber, bool.Parse(isOriginal), userId);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogHelper.Error(logMessage, ex);
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent(string.Format("Error occur in Getting Sales transactions : {0}", ex.Message))
+                });
+            }
+            return transactions;
+
+
+        }
+
+        public MSI_Port_DistributionTrans Post(MSI_Port_DistributionTrans inTransaction)
+        {
+            MSI_Port_DistributionTrans transactionToSave = null;
+            MSI_PortDistributionTransRepository repository = null;
+            bool editingRequired = true;
+
+            try
+            {
+                repository = new MSI_PortDistributionTransRepository();
+                if (inTransaction.ID == 0)
+                {
+                    transactionToSave = new MSI_Port_DistributionTrans();
+                    transactionToSave.Portfolio_ = inTransaction.Portfolio_;
+                    editingRequired = false;
+                }
+                else
+                {
+                    transactionToSave = repository.GetById(inTransaction.ID);
+                    if (inTransaction.IsOriginal.Value)
+                        editingRequired = true;
+                    if (!inTransaction.IsOriginal.Value)
+                    {
+                        if (transactionToSave.IsOriginal.Value)
+                            editingRequired = false;
+                        else
+                            editingRequired = true;
+                    }
+                }
+
+                transactionToSave.SalesPrice = inTransaction.SalesPrice;
+                transactionToSave.CheckNo = inTransaction.CheckNo;
+                transactionToSave.Notes = inTransaction.Notes;
+                transactionToSave.Inv_AgencyName = inTransaction.Inv_AgencyName;
+                transactionToSave.IsOriginal = inTransaction.IsOriginal;
+                transactionToSave.ClosingDate = inTransaction.ClosingDate;
+
+                if (editingRequired)
+                    repository.Update(transactionToSave);
+                else
+                    repository.Add(transactionToSave);
+            }
+            catch (Exception ex)
+            {
+            }
+            return transactionToSave;
+        }
+
+    }
+
+    public class MSIPortfolioInterestTransactionsController : ApiController
+    {
+        private static readonly string thisClass = "Cascade.Web.Controllers.MSIPortfolioInterestTransactionsController";
+        Original business;
+
+        public MSIPortfolioInterestTransactionsController()
+        {
+            business = new Original();
+        }
+
+        public IEnumerable<MSI_Port_InterestTrans> Get(string portfolioNumber, string isOriginal, string userId = "")
+        {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters productCode={1}", thisMethod, portfolioNumber);
+            LogHelper.Info(logMessage);
+
+            IEnumerable<MSI_Port_InterestTrans> transactions = null;
+
+            try
+            {
+                transactions = business.GetInterestTransactions(portfolioNumber, bool.Parse(isOriginal), userId);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogHelper.Error(logMessage, ex);
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent(string.Format("Error occur in Getting Sales transactions : {0}", ex.Message))
+                });
+            }
+            return transactions;
+
+
+        }
+
+        public MSI_Port_InterestTrans Post(MSI_Port_InterestTrans inTransaction)
+        {
+            MSI_Port_InterestTrans transactionToSave = null;
+            MSI_PortInterestTransRepository repository = null;
+            bool editingRequired = true;
+
+            try
+            {
+                repository = new MSI_PortInterestTransRepository();
+                if (inTransaction.ID == 0)
+                {
+                    transactionToSave = new MSI_Port_InterestTrans();
+                    transactionToSave.Portfolio_ = inTransaction.Portfolio_;
+                    editingRequired = false;
+                }
+                else
+                {
+                    transactionToSave = repository.GetById(inTransaction.ID);
+                    if (inTransaction.IsOriginal.Value)
+                        editingRequired = true;
+                    if (!inTransaction.IsOriginal.Value)
+                    {
+                        if (transactionToSave.IsOriginal.Value)
+                            editingRequired = false;
+                        else
+                            editingRequired = true;
+                    }
+                }
+
+                transactionToSave.SalesPrice = inTransaction.SalesPrice;
+                transactionToSave.CheckNo = inTransaction.CheckNo;
+                transactionToSave.Notes = inTransaction.Notes;
+                transactionToSave.Inv_AgencyName = inTransaction.Inv_AgencyName;
+                transactionToSave.IsOriginal = inTransaction.IsOriginal;
+                transactionToSave.ClosingDate = inTransaction.ClosingDate;
+
+                if (editingRequired)
+                    repository.Update(transactionToSave);
+                else
+                    repository.Add(transactionToSave);
+            }
+            catch (Exception ex)
+            {
+            }
+            return transactionToSave;
+        }
+
+    }
 }

@@ -59,8 +59,9 @@ function salesTransVM(userId) {
                 success: function (data) {
                     //log(data.length);
                     if (data != null || data != undefined) {
+                        log('Creating sales record for:' + self.portfolioNumber());
+                        
                         if (data.length > 0) {
-                            self.currentRecordIndex(0);
                             $.each(data, function (i, item) {
                                 batchIndex = i + 1
                                 salesBatch = self.portfolioNumber() + '-' + batchIndex;
@@ -68,13 +69,16 @@ function salesTransVM(userId) {
                                 cutOffDate.setDate(cutOffDate.getDate() + 1);
                                 self.salesRecords.push(new salesRecord(item.ID, self.portfolioNumber(), item.Lender, item.Buyer, ((item.Cut_OffDate == undefined) ? '' : $.datepicker.formatDate('mm/dd/yy', cutOffDate)), ((item.ClosingDate == undefined) ? '' : $.datepicker.formatDate('mm/dd/yy', new Date(item.ClosingDate))), item.PutbackTerm_days_, ((item.PutbackDeadline == undefined) ? '' : $.datepicker.formatDate('mm/dd/yy', new Date(item.PutbackDeadline))), item.SalesBasis, ((item.SalesPrice == undefined) ? '' : formatCurrency(item.SalesPrice)), ((item.FaceValue == undefined) ? '' : formatCurrency(item.FaceValue)), item.C_ofAccts, salesBatch, item.Notes));
                             });
+                            self.currentRecordIndex(0);
                         }
                     }
                     else {
                         log('Creating new sales record for:' + self.portfolioNumber());
-                        self.currentRecordIndex(0);
-                        salesBatch = self.portfolioNumber() + '-1';
-                        salesRecords.push(new salesRecord('', self.portfolioNumber(), '', '', '', '', '', '', '', '', '', '', salesBatch, ''));
+                        self.currentRecordIndex(-1);
+//                        salesBatch = self.portfolioNumber() + '-1';
+                        //                        salesRecords.push(new salesRecord('', self.portfolioNumber(), '', '', '', '', '', '', '', '', '', '', salesBatch, ''));
+                        if (self.salesRecords().length == 1)
+                            self.salesRecords()[0].portfolioNumber(self.portfolioNumber());
                     }
                     //                    log(salesRecords);
                 },
@@ -88,19 +92,19 @@ function salesTransVM(userId) {
     $.each(portfolioViewModels.putbackTerms(), function (i, item) {
         self.putbackTerms.push(item);
     });
-    self.salesBatchSelected = ko.observable();
-    self.salesBatchSelected.subscribe(function (value) {
-        if (value != undefined) {
-            var startIndex = value.indexOf('-');
-            var totalChars = value.length - startIndex;
-            var index = value.substr(startIndex + 1, totalChars);
-            self.currentRecordIndex(index - 1);
-        }
-    } .bind(self));
-    self.getsalesBatchSelected = function (index) {
-        //log(index);
-        return self.portfolioNumber() + '-' + index;
-    }
+//    self.salesBatchSelected = ko.observable();
+//    self.salesBatchSelected.subscribe(function (value) {
+//        if (value != undefined) {
+//            var startIndex = value.indexOf('-');
+//            var totalChars = value.length - startIndex;
+//            var index = value.substr(startIndex + 1, totalChars);
+//            self.currentRecordIndex(index - 1);
+//        }
+//    } .bind(self));
+//    self.getsalesBatchSelected = function (index) {
+//        //log(index);
+//        return self.portfolioNumber() + '-' + index;
+//    }
     self.currentRecordIndex = ko.observable(-1);
     self.currentSalesRecord = ko.computed(function () {
         if (self.currentRecordIndex() == -1) 

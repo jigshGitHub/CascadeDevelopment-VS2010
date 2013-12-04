@@ -206,6 +206,7 @@
     <Compile Include="Areas\Recourse\Controllers\HomeController.cs" />
     <Compile Include="Areas\Recourse\Controllers\MediaController.cs" />
     <Compile Include="Areas\Recourse\Controllers\RecallController.cs" />
+    <Compile Include="Areas\Recourse\Controllers\ViewEditController.cs" />
     <Compile Include="Areas\Recourse\Models\Random.cs" />
     <Compile Include="Areas\Recourse\RecourseAreaRegistration.cs" />
     <Compile Include="Areas\Reports\Controllers\CollectionsController.cs" />
@@ -527,6 +528,9 @@
     <Content Include="Areas\Recourse\Views\Recall\ViewPutback.cshtml" />
     <Content Include="Areas\Recourse\Views\Recall\_putbackRecords.cshtml" />
     <Content Include="Areas\Portfolio\Views\ViewEdit\Reports.cshtml" />
+    <Content Include="Areas\Recourse\Views\ViewEdit\ReportsDPS.cshtml" />
+    <Content Include="Areas\Recourse\Views\ViewEdit\ReportsMedia.cshtml" />
+    <Content Include="Areas\Recourse\Views\ViewEdit\ReportsRecall.cshtml" />
     <None Include="Areas\Reports\Views\Cascade0206Deploy.rar" />
     <Content Include="Areas\Reports\Views\Collections\PortfolioOwnerBreakDown.cshtml" />
     <Content Include="Areas\Reports\Views\Collections\PortfolioWorkStatusBreakDown.cshtml" />

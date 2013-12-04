@@ -12,38 +12,42 @@ function interestTransVM() {
     var self = this;
     self.portfolioNumber = ko.observable();
     self.editMode = ko.observable(false);
-    self.interestRecords = ko.computed(function () {
-        var interestRecords = [];
+    self.interestRecords = ko.observableArray([]);
+    self.loadInterest = function () {
+        if (self.interestRecords().length > 0)
+            self.interestRecords([]);
         if (self.portfolioNumber() != '') {
             $.ajax({
-                url: baseUrl + '/api/PortfolioTransactions/',
+                url: baseUrl + '/api/MSIPortfolioInterestTransactions/',
                 type: 'GET',
                 contentType: 'application/json',
-                data: { portfolioNumber: self.portfolioNumber(), transType: 'Interest' },
+                data: { portfolioNumber: self.portfolioNumber(), isOriginal: 'true' },
                 dataType: 'json',
                 async: false,
                 success: function (data) {
-                    if (data.length > 0) {
-                        $.each(data, function (i, item) {
-                            interestRecords.push(new interestRecord(item.ID, item.Portfolio_,
-                                item.Inv_AgencyName,item.Check_,
+                    if (data != undefined) {
+                        if (data.length > 0) {
+                            $.each(data, function (i, item) {
+                                self.interestRecords.push(new interestRecord(item.ID, item.Portfolio_,
+                                item.Inv_AgencyName, item.Check_,
                                 dateFormat(Date.parse(item.ClosingDate), 'mm/dd/yyyy'),
-                                formatCurrency(item.SalesPrice),
-                                item.TransType));
-                        });
-                    }
-                    else {
-                        interestRecords.push(new interestRecord('', '', '', '', '', '',''));
-                    }
+                                (item.SalesPrice == undefined) ? '' : formatCurrency(item.SalesPrice),
+                                'Interest'));
+                            });
+                        }
+                    }                    
                 },
                 error: function (xhr, status, somthing) {
                     log(status);
                 }
             });
         }
-        return interestRecords;
-    }, self);
+    };
+
     self.currentRecordIndex = ko.observable(0);
+    self.addNewInterest = function () {
+        self.currentInterestRecord(new interestRecord('0', self.portfolioNumber(), '', '', '', '','interest'));
+    };
     self.selectedRecordIndexChanged = function (item) {
         self.currentInterestRecord(item);
         $.each(self.agencies(), function (i, agencyRecord) {
@@ -82,26 +86,37 @@ function interestTransVM() {
         });
         log(agency);
         var json = JSON.stringify({
+            Portfolio_: self.currentInterestRecord().portfolioNumber(),
             SalesPrice: self.currentInterestRecord().salesPrice().replace(/[^0-9.]/ig, ''),
             ClosingDate: self.currentInterestRecord().closingDt(),
             Inv_AgencyName: agency,
             Check_:self.currentInterestRecord().checkNumber(),
             ID: self.currentInterestRecord().id,
-            TransType: 'Interest'
+            TransType: 'Interest',
+            IsOriginal: 'true'
         });
 
         $.ajax({
-            url: baseUrl + '/api/PortfolioTransactions/',
+            url: baseUrl + '/api/MSIPortfolioInterestTransactions/',
             type: "POST",
             data: json,
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (response) {
-                log(response);
+                self.loadInterest();
+                self.resetFields();
             },
             error: function (response, errorText) {
             }
         });
     }
-
+    self.resetFields = function () {
+        //self.currentCollectionRecord().portfolioNumber(''),
+        if (self.currentInterestRecord() != undefined) {
+            self.currentInterestRecord().salesPrice('');
+            self.currentInterestRecord().closingDt('');
+            self.currentInterestRecord().id=0;
+            self.selectedAgency('');
+        }
+    };
 };

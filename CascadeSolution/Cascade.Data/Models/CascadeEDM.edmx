@@ -25,6 +25,8 @@
           <EntitySet Name="MSI_Port_Acq_Edited" EntityType="CascadeDBModel.Store.MSI_Port_Acq_Edited" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_Port_Acq_Original" EntityType="CascadeDBModel.Store.MSI_Port_Acq_Original" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_Port_CollectionsTrans" EntityType="CascadeDBModel.Store.MSI_Port_CollectionsTrans" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MSI_Port_DistributionTrans" EntityType="CascadeDBModel.Store.MSI_Port_DistributionTrans" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="MSI_Port_InterestTrans" EntityType="CascadeDBModel.Store.MSI_Port_InterestTrans" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_Port_InvestmentsTrans" EntityType="CascadeDBModel.Store.MSI_Port_InvestmentsTrans" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_Port_SalesTrans_Edited" EntityType="CascadeDBModel.Store.MSI_Port_SalesTrans_Edited" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="MSI_Port_SalesTrans_Original" EntityType="CascadeDBModel.Store.MSI_Port_SalesTrans_Original" store:Type="Tables" Schema="dbo" />
@@ -1352,6 +1354,40 @@
           <Property Name="FaceValue" Type="money" />
           <Property Name="Inv_AgencyName" Type="nvarchar" MaxLength="255" />
           <Property Name="TransType" Type="nvarchar" MaxLength="50" />
+          <Property Name="IsOriginal" Type="bit" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="256" />
+          <Property Name="UpdatedBy" Type="nvarchar" MaxLength="256" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="UpdatedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="MSI_Port_DistributionTrans">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Portfolio#" Type="nvarchar" MaxLength="255" />
+          <Property Name="ClosingDate" Type="datetime" />
+          <Property Name="SalesPrice" Type="money" />
+          <Property Name="Inv_AgencyName" Type="nvarchar" MaxLength="256" />
+          <Property Name="IsOriginal" Type="bit" />
+          <Property Name="Notes" Type="nvarchar(max)" />
+          <Property Name="CheckNo" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="256" />
+          <Property Name="UpdatedBy" Type="nvarchar" MaxLength="256" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="UpdatedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="MSI_Port_InterestTrans">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Portfolio#" Type="nvarchar" MaxLength="255" />
+          <Property Name="ClosingDate" Type="datetime" />
+          <Property Name="SalesPrice" Type="money" />
+          <Property Name="Inv_AgencyName" Type="nvarchar" MaxLength="256" />
+          <Property Name="Notes" Type="nvarchar(max)" />
+          <Property Name="CheckNo" Type="nvarchar" MaxLength="50" />
           <Property Name="IsOriginal" Type="bit" />
           <Property Name="CreatedBy" Type="nvarchar" MaxLength="256" />
           <Property Name="UpdatedBy" Type="nvarchar" MaxLength="256" />
@@ -3736,6 +3772,8 @@
           <EntitySet Name="MSI_MessageNotification" EntityType="CascadeDBModel.MSI_MessageNotification" />
           <EntitySet Name="MSI_Port_CollectionsTrans" EntityType="CascadeDBModel.MSI_Port_CollectionsTrans" />
           <EntitySet Name="MSI_Port_InvestmentsTrans" EntityType="CascadeDBModel.MSI_Port_InvestmentsTrans" />
+          <EntitySet Name="MSI_Port_DistributionTrans" EntityType="CascadeDBModel.MSI_Port_DistributionTrans" />
+          <EntitySet Name="MSI_Port_InterestTrans" EntityType="CascadeDBModel.MSI_Port_InterestTrans" />
           </EntityContainer>
         <EntityType Name="MSI_ComplaintIssues">
           <Key>
@@ -6312,6 +6350,40 @@
           <Property Type="DateTime" Name="CreatedDate" />
           <Property Type="DateTime" Name="UpdatedDate" />
         </EntityType>
+        <EntityType Name="MSI_Port_DistributionTrans">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Portfolio_" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="ClosingDate" />
+          <Property Type="Decimal" Name="SalesPrice" Precision="19" Scale="4" />
+          <Property Type="String" Name="Inv_AgencyName" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="IsOriginal" />
+          <Property Type="String" Name="Notes" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CheckNo" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CreatedBy" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="UpdatedBy" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="CreatedDate" />
+          <Property Type="DateTime" Name="UpdatedDate" />
+        </EntityType>
+        <EntityType Name="MSI_Port_InterestTrans">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Portfolio_" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="ClosingDate" />
+          <Property Type="Decimal" Name="SalesPrice" Precision="19" Scale="4" />
+          <Property Type="String" Name="Inv_AgencyName" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Notes" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CheckNo" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="IsOriginal" />
+          <Property Type="String" Name="CreatedBy" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="UpdatedBy" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="CreatedDate" />
+          <Property Type="DateTime" Name="UpdatedDate" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -8574,6 +8646,42 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="MSI_Port_DistributionTrans">
+            <EntityTypeMapping TypeName="CascadeDBModel.MSI_Port_DistributionTrans">
+              <MappingFragment StoreEntitySet="MSI_Port_DistributionTrans">
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CheckNo" ColumnName="CheckNo" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="IsOriginal" ColumnName="IsOriginal" />
+                <ScalarProperty Name="Inv_AgencyName" ColumnName="Inv_AgencyName" />
+                <ScalarProperty Name="SalesPrice" ColumnName="SalesPrice" />
+                <ScalarProperty Name="ClosingDate" ColumnName="ClosingDate" />
+                <ScalarProperty Name="Portfolio_" ColumnName="Portfolio#" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MSI_Port_InterestTrans">
+            <EntityTypeMapping TypeName="CascadeDBModel.MSI_Port_InterestTrans">
+              <MappingFragment StoreEntitySet="MSI_Port_InterestTrans">
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsOriginal" ColumnName="IsOriginal" />
+                <ScalarProperty Name="CheckNo" ColumnName="CheckNo" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="Inv_AgencyName" ColumnName="Inv_AgencyName" />
+                <ScalarProperty Name="SalesPrice" ColumnName="SalesPrice" />
+                <ScalarProperty Name="ClosingDate" ColumnName="ClosingDate" />
+                <ScalarProperty Name="Portfolio_" ColumnName="Portfolio#" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -8724,6 +8832,8 @@
         <EntityTypeShape EntityType="CascadeDBModel.MSI_MessageNotification" Width="1.5" PointX="12.375" PointY="6.75" Height="2.1725878906249818" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_Port_CollectionsTrans" Width="1.5" PointX="12.375" PointY="12.75" Height="3.3263964843749818" />
         <EntityTypeShape EntityType="CascadeDBModel.MSI_Port_InvestmentsTrans" Width="1.5" PointX="28.375" PointY="20.75" Height="3.7109993489583246" />
+        <EntityTypeShape EntityType="CascadeDBModel.MSI_Port_DistributionTrans" Width="1.5" PointX="20.375" PointY="28.75" Height="3.3263964843749818" />
+        <EntityTypeShape EntityType="CascadeDBModel.MSI_Port_InterestTrans" Width="1.5" PointX="28.375" PointY="25.75" Height="3.3263964843749818" />
         </Diagram>
     </Diagrams>
   </Designer>

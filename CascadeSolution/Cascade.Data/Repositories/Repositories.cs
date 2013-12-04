@@ -774,4 +774,28 @@ namespace Cascade.Data.Repositories
         {
         }
     }
+
+    public class MSI_PortDistributionTransRepository : RepositoryBase<MSI_Port_DistributionTrans>
+    {
+        public MSI_PortDistributionTransRepository(IDatabaseFactory dbFactory)
+            : base(dbFactory)
+        {
+        }
+        public MSI_PortDistributionTransRepository()
+            : base(new DBFactory())
+        {
+        }
+    }
+
+    public class MSI_PortInterestTransRepository : RepositoryBase<MSI_Port_InterestTrans>
+    {
+        public MSI_PortInterestTransRepository(IDatabaseFactory dbFactory)
+            : base(dbFactory)
+        {
+        }
+        public MSI_PortInterestTransRepository()
+            : base(new DBFactory())
+        {
+        }
+    }
 }

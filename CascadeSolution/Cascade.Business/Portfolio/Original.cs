@@ -154,6 +154,48 @@ namespace Cascade.Business.Portfolio
             return transactions;
         }
 
+        public IEnumerable<MSI_Port_DistributionTrans> GetIDistributionTransactions(string portfolioNumber, bool isOriginal, string userId = "")
+        {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters portfolioNumber={1}, userId={2}", thisMethod, portfolioNumber, userId);
+            LogHelper.Info(logMessage);
+
+            IEnumerable<MSI_Port_DistributionTrans> transactions = null;
+
+            try
+            {
+                DataQueries query = new DataQueries();
+                transactions = query.GetPortfolioDistributionSummary(portfolioNumber, userId, isOriginal);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogHelper.Error(logMessage, ex);
+            }
+            return transactions;
+        }
+
+        public IEnumerable<MSI_Port_InterestTrans> GetInterestTransactions(string portfolioNumber, bool isOriginal, string userId = "")
+        {
+            string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            string logMessage = string.Format("{0}|Method incoming parameters portfolioNumber={1}, userId={2}", thisMethod, portfolioNumber, userId);
+            LogHelper.Info(logMessage);
+
+            IEnumerable<MSI_Port_InterestTrans> transactions = null;
+
+            try
+            {
+                DataQueries query = new DataQueries();
+                transactions = query.GetPortfolioInterestSummary(portfolioNumber, userId, isOriginal);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogHelper.Error(logMessage, ex);
+            }
+            return transactions;
+        }
+
+
+
         public MSI_Port_SalesTrans_Original GetSalesTransaction(int id)
         {
             string thisMethod = string.Format("{0}.{1}", thisClass, System.Reflection.MethodBase.GetCurrentMethod().Name);

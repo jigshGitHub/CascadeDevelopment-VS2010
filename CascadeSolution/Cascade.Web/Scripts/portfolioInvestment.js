@@ -20,7 +20,7 @@ function investmentsTransVM(portfolioNumber) {
         var totalContributions = 0;
         if (self.portfolioNumber() != '') {
             $.ajax({
-                url: baseUrl + '/api/MSIPortfolioInvestmentsTransactions/',
+                url: baseUrl + '/api/MSIPortfolioDistributionTransactions/',
                 type: 'GET',
                 contentType: 'application/json',
                 data: { portfolioNumber: self.portfolioNumber(), isOriginal: 'true' },
@@ -29,11 +29,11 @@ function investmentsTransVM(portfolioNumber) {
                 success: function (data) {
                     if (data != undefined) {
                         if (data.length > 0) {
-                            self.currentRecordIndex(0);
                             $.each(data, function (i, item) {
                                 totalContributions += item.SalesPrice;
                                 self.investmentRecords.push(new investmentRecord(item.ID, self.portfolioNumber(), item.Inv_AgencyName, item.ProfitShare_before, item.ProfitShare_after, formatCurrency(item.SalesPrice), item.Interest, item.TransType, item.Notes));
                             });
+                            self.currentRecordIndex(0);
                         }
                     }
                     else {
@@ -126,5 +126,6 @@ function investmentsTransVM(portfolioNumber) {
     }
     self.resetFields = function () {
         self.investmentRecords([]);
+        self.currentRecordIndex(-1);
     };
 };

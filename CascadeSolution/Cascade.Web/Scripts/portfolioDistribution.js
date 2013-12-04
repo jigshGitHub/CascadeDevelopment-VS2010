@@ -12,24 +12,30 @@ function distributionsTransVM(portfolioNumber) {
     var self = this;
     self.portfolioNumber = ko.observable(portfolioNumber);
     self.totalDistributions = ko.observable('');
-    self.distributionRecords = ko.computed(function () {
-        var distributionRecords = [];
+    self.distributionRecords = ko.observableArray([]);
+    self.loadDistribution = function () {
         var totalDistributions = 0;
         if (self.portfolioNumber() != '') {
             $.ajax({
-                url: baseUrl + '/api/PortfolioTransactions/',
+                url: baseUrl + '/api/MSIPortfolioDistributionTransactions/',
                 type: 'GET',
                 contentType: 'application/json',
-                data: { portfolioNumber: self.portfolioNumber(), transType: 'Distribution' },
+                data: { portfolioNumber: self.portfolioNumber(), isOriginal: 'true' },
                 dataType: 'json',
                 async: false,
                 success: function (data) {
-                    if (data.length > 0) {
-                        self.currentRecordIndex(0);
-                        $.each(data, function (i, item) {
-                            totalDistributions += item.SalesPrice;
-                            distributionRecords.push(new distributionRecord(item.ID,self.portfolioNumber(),item.Inv_AgencyName,item.Check_,item.ClosingDate,item.TransType,formatCurrency(item.SalesPrice),item.Notes));
-                        });
+                    if (data != undefined) {
+                        if (data.length > 0) {
+                            $.each(data, function (i, item) {
+                                totalDistributions += item.SalesPrice;
+                                self.distributionRecords.push(new distributionRecord(item.ID, self.portfolioNumber(), item.Inv_AgencyName, item.Check_, item.ClosingDate, item.TransType, formatCurrency(item.SalesPrice), item.Notes));
+                            }); 
+                            self.currentRecordIndex(0);
+                        }
+                    }
+                    else {
+                        if (self.distributionRecords().length == 1)
+                            self.distributionRecords()[0].portfolioNumber(self.portfolioNumber());
                     }
                 },
                 error: function (xhr, status, somthing) {
@@ -38,15 +44,21 @@ function distributionsTransVM(portfolioNumber) {
             });
         }
         self.totalDistributions(formatCurrency(totalDistributions));
-        return distributionRecords;
-    }, self);
-    self.currentRecordIndex = ko.observable(0);
+    };
+    self.currentRecordIndex = ko.observable(-1);
     self.currentDistributionRecord = ko.computed(function () {
-        if (self.distributionRecords().length > 0)
-            return self.distributionRecords()[self.currentRecordIndex()];
+        if (self.currentRecordIndex() == -1) 
+            return new distributionRecord('0', '', '', '', '', '', '','');
         else
-            return new distributionRecord('', '', '', '', '', '', '','');
+            return self.distributionRecords()[self.currentRecordIndex()];
+
     }, self);
+
+    self.addNewDistribution = function () {
+        self.distributionRecords().push(new distributionRecord('0',self.portfolioNumber(), '', '', '', '', '',''));
+        self.currentRecordIndex(self.distributionRecords().length - 1);
+    };
+
     self.investorName = ko.observable('');
     self.investors = ko.observableArray([]);
     $.each(portfolioViewModels.investors(), function (i, item) {
@@ -76,6 +88,8 @@ function distributionsTransVM(portfolioNumber) {
     self.previousRecord = function () {
         self.currentRecordIndex(self.currentRecordIndex() - 1);
     }
+    self.showMessage = ko.observable(false);
+    self.message = ko.observable('');
     self.saveRecord = function () {
         //log(self.currentdistributionRecord().contribution() + ',' + self.currentdistributionRecord().investor());
         var json = JSON.stringify({
@@ -84,21 +98,27 @@ function distributionsTransVM(portfolioNumber) {
             Notes: self.currentDistributionRecord().notes(),
             ID: self.currentDistributionRecord().id,
             Inv_AgencyName: self.currentDistributionRecord().investor(),
-            ClosingDate:self.currentDistributionRecord().closingDt(),
-            TransType: 'Distribution'
+            ClosingDate:self.currentDistributionRecord().closingDt()
         });
 
         $.ajax({
-            url: baseUrl + '/api/PortfolioTransactions/',
+            url: baseUrl + '/api/MSIPortfolioDistributionTransactions/',
             type: "POST",
             data: json,
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (response) {
-                log(response);
+                self.showMessage(true);
+                self.message('Data saved successfully!');
+                self.currentDistributionRecord().id = response.ID;
             },
             error: function (response, errorText) {
             }
         });
     }
+
+    self.resetFields = function () {
+        self.distributionRecords([]);
+        self.currentRecordIndex(-1);
+    };
 };
