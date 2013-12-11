@@ -19,9 +19,11 @@ namespace Cascade.Web.Areas.Recourse.Controllers
         // GET: /Recourse/DPS/
 
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult Index(int? prevRecord)
         {
             //This will return blank view for ADD feature
+            ViewBag.prevRecord = "";
+            if (prevRecord != null) ViewBag.prevRecord = prevRecord.ToString();
             return View();
         }
 

@@ -4,7 +4,14 @@
 
 @Scripts.Render("~/bundles/jquery")
 
-<h2>DPS(Direct Payments) - Add New Record</h2>
+@if ((string)ViewBag.prevRecord != null && (string)ViewBag.prevRecord != "")
+{
+    <h2>DPS(Direct Payments) - <label style="color:Red">Bulk Check addition in Progress</label></h2>
+}
+else
+{
+    <h2>DPS(Direct Payments) - Add New Record</h2> 
+}
 
 <div id="fileUploadContainer" style="display:none">
     @using (Html.BeginForm("UploadAllDocuments", "DPS", FormMethod.Post, new { enctype = "multipart/form-data" }))
@@ -65,6 +72,25 @@
                 <span data-bind="text:newOriginalAccountRequired, visible:newOriginalAccountRequiredHasError" style="color: Red"></span>
             </td>
         </tr>
+        @if ((string)ViewBag.prevRecord != null && (string)ViewBag.prevRecord != "")
+        {
+            <tr><td colspan="2"><b>Previous DPS record Information:</b></td></tr>
+            <tr>
+                <td>Account Number Entered:
+                </td>
+                <td>
+                    <input id="prevPIMSAccount" type="text" data-bind="value:prevPIMSAccount" readonly="true" />
+                </td>
+            </tr>
+            
+            <tr>
+                <td>Amount Entered:
+                </td>
+                <td>
+                    <input id="prevAmount" type="text" data-bind="value:prevAmount" readonly="true" />
+                </td>
+            </tr>
+        }
         <tr>
             <td colspan="2" class="confirmBtnContainer">
                 <input type="button" id="refreshBtn" title="Add" data-bind="click:search"/>
@@ -210,6 +236,13 @@
                 <input type="checkbox" data-bind="checked: newUploaded" />
             </td>
         </tr>
+
+        <tr>
+            <td>Bulk Check?:</td>
+            <td>
+                <input type="checkbox" data-bind="enable: bulkCheckEnable, checked: IsBulkCheck" />
+            </td>
+        </tr>
         <tr class="dummyitem">
             <td colspan="2"></td>
         </tr>
@@ -234,7 +267,7 @@
             </td>
         </tr>
     </table>
-    
+    @Html.Hidden("hdnprevRecordId", (string)ViewBag.prevRecord)
 </div>
 
 @Scripts.Render("~/bundles/knockout")
@@ -245,10 +278,9 @@
 
         //Client side View Model
         function dpsformVM() {
-
-            
+    
             var apiUrl = baseUrl + '/api/Lookup/';
-            
+
             var self = this;
             //DPS(Direct Payments) Form
             self.newOriginalAccount = ko.observable('');
@@ -271,19 +303,41 @@
             self.newDateRec = ko.computed(function () {
                 return dateFormat(Date.parse(new Date()), 'mm/dd/yyyy');
             });
+
             self.newAmount = ko.observable('');
             self.newNetPayment = ko.observable('');
             self.transcode = ko.observable('');
             self.transcodes = ko.observableArray([]);
             self.newTranDate = ko.observable('');
             self.newCheckNumber = ko.observable('');
+
+            //For Validation
+            self.newCheckNumberRequired = ko.observable('*');
+            self.newCheckNumberRequiredMsg = ko.observable('');
+            self.newCheckNumberRequiredHasError = ko.observable(false);
+
+            //For Validation
+            self.newAmountRequired = ko.observable('*');
+            self.newAmountRequiredMsg = ko.observable('');
+            self.newAmountRequiredHasError = ko.observable(false);
+
             self.pmttype = ko.observable('');
             self.pmttypes = ko.observableArray([]);
             self.transsource = ko.observable('');
             self.transsources = ko.observableArray([]);
             self.newOurCheck = ko.observable('');
             self.newUploaded = ko.observable('');
+            self.IsBulkCheck = ko.observable('');
             self.newGUID = ko.observable('');
+
+            self.prevPIMSAccount = ko.observable('');
+            self.prevAmount = ko.observable('');
+
+            self.bulkCheckEnable  = ko.computed(function () 
+            {
+                self.IsBulkCheck(false); 
+                return (self.newUploaded() == true ? false : true);
+            });
             
             //For Media types
             self.checkDocuments = ko.observableArray([]);
@@ -300,6 +354,27 @@
                 return (self.checkDocuments().length > 0);
             }, self);
            
+
+            if(hdnprevRecordId.value != null && hdnprevRecordId.value != "")
+            {
+                $.ajax({
+                    url: baseUrl + '/Recourse/DPS/GetDPSData/',
+                    type: 'GET',
+                    contentType: 'application/json',
+                    data: { id: hdnprevRecordId.value },
+                    dataType: 'json',
+                    success: function (data) {
+                        //Set Selected options                     
+                        self.prevPIMSAccount(data.PIMSAcct);
+                        self.newCheckNumber(data.CheckNumber);
+                        self.prevAmount(data.Amount);
+                    },
+                    error: function (xhr, status, somthing) {
+                        log(status);
+                    }
+                });
+            }
+
             //For TransCode
             $.ajax({
                 //url: baseUrl + '/api/Lookup/',
@@ -459,12 +534,30 @@
                     self.newOriginalAccountRequiredHasError(true);
                     self.newOriginalAccountRequiredMsg('Original Account Number is required.');
                     self.validationErrorsData.push(self.newOriginalAccountRequiredMsg());
+                    $('#newOriginalAccount').focus();
                 }
                 //PIMS Acccount
                 if (self.newPIMSAccount() == '') {
                     self.newPIMSAccountRequiredHasError(true);
                     self.newPIMSAccountRequiredMsg('PIMS Account Number is required.');
                     self.validationErrorsData.push(self.newPIMSAccountRequiredMsg());
+                    $('#newPIMSAccount').focus();
+                }
+
+                //Amount
+                if (self.newAmount() == '') {
+                    self.newAmountRequiredHasError(true);
+                    self.newAmountRequiredMsg('Amount is required.');
+                    self.validationErrorsData.push(self.newAmountRequiredMsg());
+                    $('#newAmount').focus();
+                }
+
+                //Check Number
+                if (self.newCheckNumber() == '') {
+                    self.newCheckNumberRequiredHasError(true);
+                    self.newCheckNumberRequiredMsg('Check Number is required.');
+                    self.validationErrorsData.push(self.newCheckNumberRequiredMsg());
+                    $('#newCheckNumber').focus();
                 }
                 
                 if (self.validationErrorsData() == '') {
@@ -488,6 +581,7 @@
                         OurCheckNumber: self.newOurCheck(),
                         Uploaded: self.newUploaded(),
                         GUID: self.newGUID()
+                        
                     });
 
                     $.ajax({
@@ -508,6 +602,11 @@
                                 hdnDPSRecordID.value = response.ID;
                                 $('#fileUploadContainer').show();
                                 $('#fileUploadContainer').dialog('open');
+                            }
+                            if (self.IsBulkCheck() == true )
+                            {
+                               //We need to continue the DPS Operation
+                               window.location("DPS?prevRecord=" + response.ID);
                             }
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
